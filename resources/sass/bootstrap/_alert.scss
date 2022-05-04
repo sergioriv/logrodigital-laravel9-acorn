@@ -1,0 +1,102 @@
+/*
+*
+* Alert
+*
+* Bootstrap alert styles.
+*
+*/
+
+.alert {
+  border: initial;
+  border-radius: var(--border-radius-md);
+}
+
+.alert-primary {
+  color: var(--primary);
+  background-color: rgba(var(--primary-rgb), 0.15);
+  .alert-link {
+    color: var(--primary);
+  }
+}
+
+.alert-secondary {
+  color: var(--secondary);
+  background-color: rgba(var(--secondary-rgb), 0.15);
+  .alert-link {
+    color: var(--secondary);
+  }
+}
+
+.alert-tertiary {
+  color: var(--tertiary);
+  background-color: rgba(var(--tertiary-rgb), 0.15);
+  .alert-link {
+    color: var(--tertiary);
+  }
+}
+
+.alert-quaternary {
+  color: var(--quaternary);
+  background-color: rgba(var(--quaternary-rgb), 0.15);
+  .alert-link {
+    color: var(--quaternary);
+  }
+}
+
+.alert-success {
+  color: var(--success);
+  background-color: rgba(var(--success-rgb), 0.15);
+  .alert-link {
+    color: var(--success);
+  }
+}
+
+.alert-danger {
+  color: var(--danger);
+  background-color: rgba(var(--danger-rgb), 0.15);
+  .alert-link {
+    color: var(--danger);
+  }
+}
+
+.alert-info {
+  color: var(--info);
+  background-color: rgba(var(--info-rgb), 0.15);
+  .alert-link {
+    color: var(--info);
+  }
+}
+
+.alert-warning {
+  color: var(--warning);
+  background-color: rgba(var(--warning-rgb), 0.15);
+  .alert-link {
+    color: var(--warning);
+  }
+}
+
+.alert-light {
+  color: var(--alternate);
+  background-color: rgba(var(--dark-rgb), 0.05);
+  .alert-link {
+    color: var(--alternate);
+  }
+}
+
+.alert-dark {
+  color: var(--alternate);
+  background-color: rgba(var(--dark-rgb), 0.15);
+  .alert-link {
+    color: var(--alternate);
+  }
+}
+
+.alert-heading {
+  color: inherit !important;
+}
+
+.alert-dismissible .btn-close {
+  top: 3px;
+  right: 3px;
+  padding: 0.5rem;
+}

@@ -1,0 +1,37 @@
+/*
+*
+* Tooltip
+*
+* Bootstrap tooltip styles.
+*
+*/
+
+.tooltip {
+  .tooltip-inner {
+    background: var(--primary);
+    color: var(--light-text);
+    font-size: 0.875em;
+    border-radius: var(--border-radius-md);
+    padding: 0.3rem 0.5rem;
+  }
+}
+
+.bs-tooltip-top .tooltip-arrow::before,
+.bs-tooltip-auto[x-placement^='top'] .tooltip-arrow::before {
+  border-top-color: var(--primary);
+}
+
+.bs-tooltip-start .tooltip-arrow::before,
+.bs-tooltip-auto[x-placement^='left'] .tooltip-arrow::before {
+  border-left-color: var(--primary);
+}
+
+.bs-tooltip-end .tooltip-arrow::before,
+.bs-tooltip-auto[x-placement^='right'] .tooltip-arrow::before {
+  border-right-color: var(--primary);
+}
+
+.bs-tooltip-bottom .tooltip-arrow::before,
+.bs-tooltip-auto[x-placement^='bottom'] .tooltip-arrow::before {
+  border-bottom-color: var(--primary);
+}

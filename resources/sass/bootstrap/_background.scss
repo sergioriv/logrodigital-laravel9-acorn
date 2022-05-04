@@ -1,0 +1,266 @@
+/*
+*
+* Background
+*
+* Bootstrap background utilities and additional ones.
+*
+*/
+
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.bg-secondary {
+  background-color: var(--secondary) !important;
+}
+
+.bg-tertiary {
+  color: var(--light-text) !important;
+  background-color: var(--tertiary) !important;
+}
+
+.bg-quaternary {
+  color: var(--light-text) !important;
+  background-color: var(--quaternary) !important;
+}
+
+.bg-success {
+  background-color: var(--success) !important;
+  color: var(--light-text) !important;
+}
+
+.bg-danger {
+  background-color: var(--danger) !important;
+  color: var(--light-text) !important;
+}
+
+.bg-warning {
+  background-color: var(--warning) !important;
+  color: var(--light-text) !important;
+}
+
+.bg-info {
+  background-color: var(--info) !important;
+  color: var(--light-text) !important;
+}
+
+.bg-light {
+  background-color: var(--background-light) !important;
+  color: var(--dark-text) !important;
+}
+
+.bg-dark {
+  background-color: var(--dark) !important;
+  color: var(--light-text) !important;
+}
+
+.bg-separator {
+  background-color: var(--separator) !important;
+  color: var(--light-text) !important;
+}
+
+.bg-separator-light {
+  background-color: var(--separator-light) !important;
+  color: var(--light-text) !important;
+}
+
+.bg-theme {
+  background-color: var(--background-theme) !important;
+}
+
+.bg-muted {
+  background-color: var(--muted) !important;
+  color: var(--light-text) !important;
+}
+
+.bg-alternate {
+  background-color: var(--alternate) !important;
+}
+
+.bg-body {
+  background-color: var(--body) !important;
+}
+
+.bg-foreground {
+  background-color: var(--foreground) !important;
+  color: var(--primary) !important;
+}
+
+.bg-background {
+  background-color: var(--background) !important;
+  color: var(--primary) !important;
+}
+
+.bg-outline-primary {
+  box-shadow: inset 0 0 0 1px var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+.bg-outline-secondary {
+  box-shadow: inset 0 0 0 1px var(--secondary) !important;
+  color: var(--secondary) !important;
+}
+
+.bg-outline-tertiary {
+  box-shadow: inset 0 0 0 1px var(--tertiary) !important;
+  color: var(--tertiary) !important;
+}
+
+.bg-outline-quaternary {
+  box-shadow: inset 0 0 0 1px var(--quaternary) !important;
+  color: var(--quaternary) !important;
+}
+
+.bg-outline-success {
+  box-shadow: inset 0 0 0 1px var(--success) !important;
+  color: var(--success) !important;
+}
+
+.bg-outline-danger {
+  box-shadow: inset 0 0 0 1px var(--danger) !important;
+  color: var(--danger) !important;
+}
+
+.bg-outline-warning {
+  box-shadow: inset 0 0 0 1px var(--warning) !important;
+  color: var(--warning) !important;
+}
+
+.bg-outline-info {
+  box-shadow: inset 0 0 0 1px var(--info) !important;
+  color: var(--info) !important;
+}
+
+.bg-outline-light {
+  box-shadow: inset 0 0 0 1px var(--light) !important;
+  color: var(--light) !important;
+}
+
+.bg-outline-dark {
+  box-shadow: inset 0 0 0 1px var(--dark) !important;
+  color: var(--dark) !important;
+}
+
+.bg-outline-muted {
+  box-shadow: inset 0 0 0 1px var(--muted) !important;
+  color: var(--muted) !important;
+}
+
+.bg-outline-body {
+  box-shadow: inset 0 0 0 1px var(--body) !important;
+  color: var(--body) !important;
+}
+
+.bg-outline-alternate {
+  box-shadow: inset 0 0 0 1px var(--alternate) !important;
+  color: var(--alternate) !important;
+}
+
+.bg-outline-separator {
+  box-shadow: inset 0 0 0 1px var(--separator) !important;
+  color: var(--separator) !important;
+}
+
+.bg-outline-foreground {
+  box-shadow: inset 0 0 0 1px var(--foreground) !important;
+  color: var(--primary) !important;
+}
+
+.bg-outline-background {
+  box-shadow: inset 0 0 0 1px var(--background) !important;
+  color: var(--primary) !important;
+}
+
+.bg-gradient-single-1 {
+  background-color: var(--gradient-1) !important;
+}
+
+.bg-gradient-single-2 {
+  background-color: var(--gradient-2) !important;
+}
+
+.bg-gradient-single-3 {
+  background-color: var(--gradient-3) !important;
+}
+
+.bg-gradient-light {
+  background-image: linear-gradient(160deg, var(--gradient-1), var(--gradient-1), var(--gradient-1-lighter)) !important;
+}
+
+.bg-gradient-dark {
+  background-image: linear-gradient(160deg, var(--gradient-1), var(--gradient-1), var(--gradient-1-darker)) !important;
+}
+
+a:focus,
+a:hover {
+  &.bg-primary {
+    background-color: var(--primary-darker) !important;
+    border-color: var(--primary-darker) !important;
+    color: var(--light-text) !important;
+  }
+  &.bg-secondary {
+    background-color: var(--secondary-darker) !important;
+    border-color: var(--secondary-darker) !important;
+    color: var(--light-text) !important;
+  }
+
+  &.bg-tertiary {
+    background-color: var(--tertiary-darker) !important;
+    border-color: var(--tertiary-darker) !important;
+    color: var(--light-text) !important;
+  }
+
+  &.bg-quaternary {
+    background-color: var(--quaternary-darker) !important;
+    border-color: var(--quaternary-darker) !important;
+    color: var(--light-text) !important;
+  }
+
+  &.bg-warning {
+    background-color: var(--warning-darker) !important;
+    border-color: var(--warning-darker) !important;
+    color: var(--light-text) !important;
+  }
+
+  &.bg-danger {
+    background-color: var(--danger-darker) !important;
+    border-color: var(--danger-darker) !important;
+    color: var(--light-text) !important;
+  }
+
+  &.bg-success {
+    background-color: var(--success-darker) !important;
+    border-color: var(--success-darker) !important;
+    color: var(--light-text) !important;
+  }
+
+  &.bg-info {
+    background-color: var(--info-darker) !important;
+    border-color: var(--info-darker) !important;
+    color: var(--light-text) !important;
+  }
+
+  &.bg-light {
+    background-color: var(--light-darker) !important;
+    border-color: var(--light-darker) !important;
+    color: var(--dark-text) !important;
+  }
+
+  &.bg-dark {
+    background-color: var(--dark-darker) !important;
+    border-color: var(--dark-darker) !important;
+    color: var(--light-text) !important;
+  }
+
+  &.bg-muted {
+    background-color: var(--muted-darker) !important;
+    border-color: var(--muted-darker) !important;
+    color: var(--light-text) !important;
+  }
+
+  &.bg-separator {
+    background-color: var(--separator-darker) !important;
+    border-color: var(--separator-darker) !important;
+    color: var(--light-text) !important;
+  }
+}

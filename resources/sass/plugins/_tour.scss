@@ -1,0 +1,144 @@
+/*
+*
+* Tour
+*
+* Introjs plugin styles.
+*
+*/
+
+.introjs-helperLayer {
+  padding: 1rem;
+  transform: translate(-1rem, -1rem);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--primary) 0px 0px 0 0, rgba(0, 0, 0, 0.6) 0px 0px 0px 5000px !important;
+}
+
+.introjs-tooltip {
+  border-radius: var(--border-radius-lg);
+  padding: var(--card-spacing-xs);
+  background: var(--foreground);
+}
+
+.introjs-overlay {
+  background: #000 !important;
+}
+
+.introjs-button {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: var(--font);
+  padding: 9px 20px;
+  height: var(--input-height);
+  font-size: 1em;
+  line-height: 1rem;
+  border-radius: var(--border-radius-md);
+  border: initial !important;
+  box-shadow: initial !important;
+  transition: all var(--transition-time-short);
+  transition-property: color, background-color, background-image, background;
+  border-radius: var(--border-radius-md);
+  color: var(--light-text) !important;
+  background-color: initial !important;
+  background-image: initial !important;
+  text-shadow: initial;
+  box-shadow: inset 0px 0px 0px 1px var(--primary) !important;
+  color: var(--primary) !important;
+  margin: 3px;
+  margin-bottom: 0;
+
+  i {
+    font-size: 14px;
+    width: 14px;
+    vertical-align: middle;
+    display: inline-block;
+  }
+
+  span {
+    vertical-align: middle;
+    display: inline-block;
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+
+  &:hover {
+    color: var(--light-text) !important;
+    background-color: var(--primary) !important;
+    box-shadow: initial !important;
+  }
+
+  &.introjs-disabled {
+    opacity: 0.5;
+    cursor: initial;
+    pointer-events: none;
+  }
+}
+
+.introjs-bullets {
+  margin-bottom: 15px;
+}
+
+.introjs-tooltiptext {
+  font-family: var(--font-heading);
+  margin-bottom: 15px;
+}
+
+.introjs-tooltipbuttons {
+  border-top: 1px solid var(--separator);
+  text-align: center;
+}
+
+.introjs-bullets ul li a {
+  background: var(--separator);
+}
+
+.introjs-bullets ul li a.active {
+  background: var(--primary);
+}
+
+.introjs-tooltipReferenceLayer *,
+.introjs-tooltipReferenceLayer {
+  font-family: var(--font);
+}
+
+.introjs-tooltip-title {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 1.1rem;
+}
+
+.introjs-tooltip-header {
+  padding-right: 10px;
+}
+
+.introjs-arrow.top {
+  left: 15px;
+}
+
+.introjs-arrow.left {
+  top: 15px;
+  border-right-color: var(--foreground);
+}
+
+.introjs-arrow.right-bottom {
+  bottom: 15px;
+  border-left-color: var(--foreground);
+}
+
+.introjs-arrow.bottom {
+  left: 15px;
+  border-top-color: var(--foreground);
+}
+
+.introjs-arrow.top,
+.introjs-arrow.top-middle,
+.introjs-arrow.top-right {
+  border-bottom-color: var(--foreground);
+}
+
+.introjs-skipbutton {
+  color: var(--alternate);
+
+  &:hover {
+    color: var(--primary);
+  }
+}

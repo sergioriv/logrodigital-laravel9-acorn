@@ -1,0 +1,60 @@
+/*
+*
+* Accordion
+*
+* Bootstrap accordion styles.
+*
+*/
+
+.accordion-button {
+  border-color: var(--separator);
+  color: var(--body);
+  font-size: 1em;
+}
+
+.accordion-button:not(.collapsed) {
+  color: var(--primary);
+  background: initial;
+}
+
+.accordion-button:focus {
+  border-color: var(--separator);
+}
+
+.accordion-collapse {
+  border-color: var(--separator);
+}
+
+.accordion-button::after {
+  background: initial !important;
+  font-family: 'CS-Interface' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: '\e915';
+  text-align: center;
+  transform-origin: center;
+}
+
+.accordion-item {
+  border: 1px solid var(--separator);
+}
+
+.accordion-item,
+.accordion-button {
+  background: initial;
+}
+
+.accordion-item:first-of-type .accordion-button {
+  border-top-left-radius: var(--border-radius-md);
+  border-top-right-radius: var(--border-radius-md);
+}
+
+.accordion-item:last-of-type .accordion-button.collapsed {
+  border-bottom-right-radius: var(--border-radius-md);
+  border-bottom-left-radius: var(--border-radius-md);
+}

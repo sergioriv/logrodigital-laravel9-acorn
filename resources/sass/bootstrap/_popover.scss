@@ -1,0 +1,70 @@
+/*
+*
+* Popover
+*
+* Bootstrap popover styles.
+*
+*/
+
+.popover {
+  border-radius: var(--border-radius-md);
+  border-color: var(--separator);
+  background-color: var(--foreground);
+  color: var(--body);
+  .popover-header {
+    background: initial;
+  }
+
+  .popover-body,
+  .popover-header {
+    padding: var(--card-spacing-xs) var(--card-spacing-sm);
+    color: var(--body);
+    border: initial;
+    font-size: 1em;
+  }
+}
+
+.bs-popover-bottom .popover-header::before,
+.bs-popover-auto[x-placement^='bottom'] .popover-header::before {
+  border-bottom: none !important;
+}
+
+.bs-popover-end > .popover-arrow::before,
+.bs-popover-auto[x-placement^='right'] > .popover-arrow::before {
+  border-right-color: var(--separator);
+}
+
+.bs-popover-end > .popover-arrow::after,
+.bs-popover-auto[x-placement^='right'] > .popover-arrow::after {
+  border-right-color: var(--foreground);
+}
+
+.bs-popover-bottom > .popover-arrow::after,
+.bs-popover-auto[x-placement^='bottom'] > .popover-arrow::after {
+  border-bottom-color: var(--foreground);
+}
+
+.bs-popover-bottom > .popover-arrow::before,
+.bs-popover-auto[x-placement^='bottom'] > .popover-arrow::before {
+  border-bottom-color: var(--separator);
+}
+
+.bs-popover-top > .popover-arrow::after,
+.bs-popover-auto[x-placement^='top'] > .popover-arrow::after {
+  border-top-color: var(--foreground);
+}
+
+.bs-popover-top > .popover-arrow::before,
+.bs-popover-auto[x-placement^='top'] > .popover-arrow::before {
+  border-top-color: var(--separator);
+}
+
+.bs-popover-start > .popover-arrow::after,
+.bs-popover-auto[x-placement^='left'] > .popover-arrow::after {
+  border-left-color: var(--foreground);
+}
+
+.bs-popover-start > .popover-arrow::before,
+.bs-popover-auto[x-placement^='left'] > .popover-arrow::before {
+  border-left-color: var(--separator);
+}

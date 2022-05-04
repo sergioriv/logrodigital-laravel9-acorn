@@ -1,0 +1,80 @@
+/*
+*
+* Progress
+*
+* Bootstrap progress styles.
+*
+*/
+
+.progress {
+  height: 0.25rem;
+  border-radius: var(--border-radius-md);
+  background-color: var(--separator-light);
+
+  .progress-bar {
+    background-color: var(--primary);
+  }
+
+  .progress-bar + .progress-bar:not(:last-child) {
+    border-radius: initial;
+  }
+
+  .progress-bar:last-child {
+    border-top-right-radius: var(--border-radius-md);
+    border-bottom-right-radius: var(--border-radius-md);
+  }
+
+  &.progress-xs {
+    height: 0.1rem;
+  }
+
+  &.progress-sm {
+    height: 0.15rem;
+  }
+
+  &.progress-md {
+    height: 0.2rem;
+  }
+
+  &.progress-lg {
+    height: 0.35rem;
+  }
+
+  &.progress-xl {
+    height: 0.5rem;
+  }
+
+  &.progress-xxl {
+    height: 1rem;
+  }
+}
+
+.text-body {
+  .progressbar-text {
+    color: var(--body) !important;
+  }
+}
+
+.text-alternate {
+  .progressbar-text {
+    color: var(--alternate) !important;
+  }
+}
+
+.text-muted {
+  .progressbar-text {
+    color: var(--muted) !important;
+  }
+}
+
+.text-separator {
+  .progressbar-text {
+    color: var(--separator) !important;
+  }
+}
+
+.text-separator-light {
+  .progressbar-text {
+    color: var(--separator-light) !important;
+  }
+}

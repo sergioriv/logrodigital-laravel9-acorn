@@ -1,0 +1,63 @@
+/*
+*
+* Autocomplete
+*
+* Autocomplete form component styles.
+*
+*/
+
+#searchPagesResults {
+  list-style: none;
+  padding-left: 0;
+
+  .auto-complete-result-item {
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-md) !important;
+    border: 1px solid var(--separator) !important;
+    margin-bottom: 5px;
+  }
+
+  .auto-complete-result-item.autoComplete_selected,
+  .auto-complete-result-item:hover {
+    border: 1px solid var(--primary) !important;
+    cursor: pointer;
+  }
+
+  .autoComplete_highlighted {
+    color: var(--primary) !important;
+  }
+}
+
+.autocomplete-container {
+  position: relative;
+
+  .autocomplete-results {
+    position: absolute;
+    list-style: none;
+    background: var(--foreground);
+    width: 100%;
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(var(--primary-rgb), 1) !important;
+    padding: 0.75rem;
+    margin-top: 4px;
+    &.show {
+      display: block;
+    }
+
+    .auto-complete-result-item {
+      padding: 0.5rem 0.75rem !important;
+    }
+  }
+
+  .auto-complete-result-item.autoComplete_selected,
+  .auto-complete-result-item:hover {
+    cursor: pointer;
+    color: var(--primary);
+    background: var(--separator-light) !important;
+    border-radius: var(--border-radius-sm);
+  }
+
+  .autoComplete_highlighted {
+    color: var(--primary) !important;
+  }
+}

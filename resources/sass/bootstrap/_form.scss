@@ -1,0 +1,856 @@
+/*
+*
+* Form
+*
+* Styles for Bootstrap forms, additional layouts and controls.
+*
+*/
+
+.form-control,
+.form-select,
+.custom-select {
+  font-size: 1em;
+  height: auto;
+  min-height: var(--input-height);
+  color: var(--body);
+  box-shadow: initial !important;
+  background-color: var(--foreground);
+  border-color: var(--separator);
+  border-radius: var(--border-radius-md);
+  filter: none;
+  &.borderless {
+    border: initial;
+    box-shadow: initial;
+  }
+
+  &:focus {
+    background-color: var(--foreground);
+    color: var(--body);
+    border-color: rgba(var(--primary-rgb), 1);
+  }
+
+  &.shadow {
+    border: initial;
+    @include shadow-and-border();
+  }
+
+  transition: border-color 0.15s ease-in-out;
+}
+
+.form-text {
+  color: var(--muted);
+}
+
+.form-select {
+  padding-right: 2rem;
+}
+
+textarea.form-control {
+  height: initial;
+}
+
+.form-label,
+.col-form-label {
+  color: var(--alternate);
+}
+
+.form-control-muted {
+  border-color: var(--muted);
+  &:focus {
+    border-color: var(--alternate);
+  }
+}
+
+.form-control-separator {
+  border-color: var(--separator);
+  &:focus {
+    border-color: var(--alternate);
+  }
+}
+
+.form-control-sm,
+.custom-select-sm {
+  min-height: 30px;
+  font-size: 0.9em;
+  padding: 0.25rem 0.75rem;
+  line-height: 1.25;
+}
+
+.form-control-lg,
+.custom-select-lg {
+  height: 44px;
+  font-size: 1.25em;
+  line-height: 1.5;
+  padding: 0.375rem 0.75rem 0.375rem 0.75rem;
+}
+
+.form-control-xl {
+  font-size: 1.6em;
+  height: 56px;
+}
+
+.search-input-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 15px;
+  pointer-events: none;
+  width: 17px;
+  height: 17px;
+}
+
+.custom-select {
+  background: var(--foreground)
+    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23777777' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e")
+    no-repeat right 0.75rem center/8px 10px;
+}
+
+.search-input-container {
+  position: relative;
+  border-radius: var(--border-radius-md);
+  .search-magnifier-icon,
+  .search-delete-icon {
+    color: var(--muted);
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  .search-magnifier-icon svg,
+  .search-delete-icon svg {
+    width: 17px;
+    height: 17px;
+    margin-top: 9px;
+  }
+
+  input {
+    background: transparent !important;
+    width: calc(100% - 25px);
+    border: initial;
+  }
+
+  &.search-sm {
+    .search-magnifier-icon,
+    .search-delete-icon {
+      width: 28px;
+      svg {
+        width: 15px;
+        height: 15px;
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+  background: rgba(var(--separator-rgb), 0.5) !important;
+  border-color: rgba(var(--separator-rgb), 0.5) !important;
+  color: var(--muted);
+  -webkit-text-fill-color: var(--muted) !important; // for safari
+}
+
+.form-control:disabled ~ span {
+  background: transparent !important;
+}
+
+// Filled
+.filled {
+  position: relative;
+  .form-control {
+    min-height: 44px;
+    border: 1px solid transparent;
+    background: var(--background-light);
+    padding-left: 45px;
+
+    &:focus {
+      border-color: rgba(var(--primary-rgb), 1);
+      background: initial;
+    }
+
+    &:disabled,
+    &[readonly] {
+      background: rgba(var(--separator-rgb), 0.5) !important;
+      color: var(--muted);
+
+      & > svg {
+        color: rgba(var(--alternate-rgb), 0.25);
+      }
+    }
+  }
+
+  .form-control-lg {
+    min-height: 52px;
+  }
+
+  .form-control-sm {
+    min-height: var(--input-height);
+  }
+
+  & > svg {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    color: rgba(var(--alternate-rgb), 0.5);
+    z-index: 1;
+  }
+
+  &.lg > svg {
+    top: 15px;
+  }
+
+  &.sm > svg {
+    top: 9px;
+    font-size: 14px;
+    width: 17px;
+    height: 17px;
+  }
+
+  textarea {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+  }
+
+  & > textarea ~ svg {
+    margin-top: 0;
+    top: 14px;
+  }
+
+  &.custom-control-container {
+    min-height: 44px;
+    border: 1px solid transparent;
+    background: var(--background-light);
+    padding-left: 45px;
+    border-radius: var(--border-radius-md);
+    padding-top: 0.75rem;
+    padding-bottom: 0.25rem;
+    padding-right: 0.75rem;
+  }
+
+  .form-check {
+    margin-bottom: initial;
+    margin-top: 0;
+  }
+}
+
+*[disabled] .filled {
+  i {
+    opacity: 0.3;
+  }
+}
+
+// Top Label
+
+.top-label .form-control,
+.top-label .bootstrap-tagsinput {
+  padding: 1.5rem 0.75rem 0.25rem 0.75rem;
+}
+
+.top-label {
+  display: block;
+  position: relative;
+}
+.top-label label:not(.form-check-label),
+.top-label > span:last-of-type {
+  position: absolute;
+  cursor: text;
+  font-size: 0.7em !important;
+  line-height: 1.1rem !important;
+  opacity: 1;
+  top: 0.5rem;
+  left: 0.75rem;
+  z-index: 1;
+  line-height: 1;
+  padding: 0 1px;
+  background: var(--foreground);
+}
+.top-label label:not(.form-check-label)::after,
+.top-label > span::after {
+  content: ' ';
+  display: block;
+  position: absolute;
+  height: 2px;
+  top: 50%;
+  left: -0.2em;
+  right: -0.2em;
+  z-index: -1;
+}
+
+.input-group .top-label {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  margin-bottom: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.top-label {
+  textarea ~ span {
+    left: 0 !important;
+    top: 0 !important;
+    margin-top: 1px;
+    margin-left: 1px;
+    padding-left: 0.75rem !important;
+    padding-top: calc(0.5rem - 1px) !important;
+    width: calc(100% - 2px);
+    border-top-left-radius: var(--border-radius-md);
+    border-top-right-radius: var(--border-radius-md);
+  }
+}
+
+.top-label .form-control,
+.top-label .bootstrap-tagsinput {
+  height: auto;
+  min-height: 52px;
+}
+
+.top-label textarea.form-control {
+  min-height: 52px;
+  height: initial;
+}
+
+.top-label select.form-control:not([size]):not([multiple]) {
+  height: auto;
+  min-height: 52px;
+  padding: 1.7rem 0.75rem 0.5rem 0.5rem;
+}
+
+.top-label label:not(.form-check-label),
+.top-label > span {
+  color: var(--muted);
+}
+
+.top-label .form-control.form-control-lg,
+.top-label .bootstrap-tagsinput.form-control-lg {
+  min-height: 62px;
+  height: auto;
+  padding: 1.8rem 0.75rem 0.5rem 0.75rem;
+}
+
+.top-label textarea.form-control.form-control-lg {
+  min-height: 62px;
+  height: auto;
+  padding: 1.8rem 0.75rem 0.5rem 0.75rem;
+}
+
+.top-label select.form-control.form-control-lg:not([size]):not([multiple]) {
+  min-height: 62px;
+  height: auto;
+  padding: 1.8rem 0.75rem 0.5rem 0.75rem;
+}
+
+.top-label .form-control.form-control-sm,
+.top-label .bootstrap-tagsinput.form-control-sm {
+  min-height: 44px;
+  height: auto;
+  padding: 1.4rem 0.75rem 0.25rem 0.75rem;
+}
+
+.top-label textarea.form-control.form-control-sm {
+  min-height: 44px;
+  height: initial;
+  padding: 1.4rem 0.75rem 0.25rem 0.75rem;
+}
+
+.top-label select.form-control.form-control-sm:not([size]):not([multiple]) {
+  min-height: 44px;
+  height: auto;
+  padding: 1.4rem 0.75rem 0.25rem 0.75rem;
+}
+
+.top-label {
+  .form-check {
+    margin-left: 4px;
+    margin-bottom: initial;
+    margin-top: 0;
+  }
+  &.custom-control-container {
+    border: 1px solid var(--separator) !important;
+    background: var(--foreground) !important;
+    border-radius: var(--border-radius-md) !important;
+    color: var(--alternate) !important;
+    padding: 1.5rem 0.75rem 0.1rem 0.75rem !important;
+    height: auto;
+    min-height: 52px;
+  }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+select:-webkit-autofill,
+select:-webkit-autofill:hover {
+  -webkit-text-fill-color: var(--body);
+  border-color: var(--separator) !important;
+  box-shadow: 0 0 0 1000px var(--foreground) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--foreground) inset !important;
+  background-color: initial !important;
+  background-clip: content-box !important;
+}
+
+input:-webkit-autofill ~ label,
+textarea:-webkit-autofill ~ label,
+select:-webkit-autofill ~ label {
+  transition: initial;
+}
+
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--body);
+  border-color: rgba(var(--primary-rgb), 1) !important;
+  box-shadow: 0 0 0 1000px var(--foreground) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--foreground) inset !important;
+  background-color: initial !important;
+  background-clip: content-box !important;
+}
+
+.filled {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--body);
+    border-color: var(--separator) !important;
+    box-shadow: 0 0 0 1000px var(--separator-light) inset !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--foreground) inset !important;
+    background-color: initial !important;
+    background-clip: content-box !important;
+  }
+}
+
+.form-check-input[type='checkbox'] {
+  border-radius: var(--border-radius-sm);
+}
+
+.form-switch.form-check {
+  padding-left: 2.5em;
+
+  .form-check-input {
+    margin-left: -2.5em;
+  }
+}
+
+.form-switch .form-check-input {
+  border-radius: var(--border-radius-md);
+}
+
+.form-switch .form-check-input:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280,0,0,0.25%29'/%3e%3c/svg%3e");
+}
+
+.form-switch .form-check-input:checked:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
+
+.form-check.custom-icon {
+  .content {
+    display: flex !important;
+    flex-direction: column;
+  }
+  .form-check-label {
+    padding-top: initial;
+    &::before {
+      width: 26px;
+      min-width: 26px;
+      height: 26px;
+      left: -40px;
+      top: 0;
+      border-radius: var(--border-radius-xl);
+      border-color: var(--muted) !important;
+      opacity: 0.3;
+    }
+  }
+
+  .form-check-input {
+    width: 25px;
+    height: 25px;
+    background: initial !important;
+    font-size: 16px;
+    text-align: center;
+    padding-top: 1px;
+    border-radius: var(--border-radius-xl);
+    border-color: var(--muted) !important;
+    color: var(--muted) !important;
+    opacity: 0.3;
+    margin-top: 0;
+    margin-right: 1rem;
+  }
+
+  .form-check-input:checked {
+    border-color: var(--primary) !important;
+    background: initial !important;
+    opacity: 1;
+
+    &:after {
+      font-family: 'CS-Interface' !important;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      color: var(--primary) !important;
+      opacity: 1;
+      content: '\e913';
+    }
+  }
+
+  .form-check-input[type='radio']:checked:after {
+    content: '\e922';
+  }
+}
+
+.form-check.custom-card {
+  &:hover .form-check-label,
+  .form-check-input:checked ~ .form-check-label {
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--border-radius-md);
+      box-shadow: inset 0 0 0 1px rgba(var(--primary-rgb), 0.5) !important;
+    }
+  }
+
+  .form-check-input {
+    border: initial;
+    background-color: initial !important;
+  }
+
+  .form-check-input:checked {
+    border: 1px solid var(--primary);
+    background-color: var(--primary) !important;
+  }
+}
+
+.form-check .custom-border {
+  border: initial !important;
+  box-shadow: initial !important;
+  &:hover .form-check-label,
+  .form-check-input:checked ~ .form-check-label {
+    &::before {
+      box-shadow: inset 0 0 0 1px rgba(var(--primary-rgb), 0.5) !important;
+    }
+  }
+
+  &.form-check-label {
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--border-radius-md);
+      box-shadow: inset 0 0 0 1px var(--separator);
+    }
+  }
+}
+
+.custom-icon input[type='radio'] {
+  .form-check-label {
+    &::after {
+      content: '\e9d3';
+    }
+  }
+}
+
+/* Input Spinner */
+.input-group.spinner {
+  z-index: 0;
+}
+.input-group.spinner .input-group-text {
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding: 0;
+}
+.input-group.spinner .input-group-text .spin-up,
+.input-group.spinner .input-group-text .spin-down {
+  display: flex;
+  background: none;
+  border: none;
+  padding: 0;
+  height: 40%;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  &.single {
+    height: 100%;
+    color: var(--alternate);
+  }
+
+  &:hover .arrow {
+    border-color: var(--primary);
+  }
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  .arrow {
+    border: initial;
+    border-top: 1px solid var(--alternate);
+    border-right: 1px solid var(--alternate);
+    width: 5px;
+    height: 5px;
+    margin: 0 auto;
+  }
+}
+
+.input-group.spinner .input-group-text .spin-up .arrow {
+  transform: rotate(-45deg);
+}
+
+.input-group.spinner .input-group-text .spin-down .arrow {
+  transform: rotate(135deg);
+}
+
+// Custom control customization
+.form-check.checked-line-through {
+  .form-check-input:checked ~ .form-check-label {
+    text-decoration: line-through;
+    span {
+      text-decoration: line-through;
+    }
+  }
+}
+
+.form-check.checked-opacity-100 {
+  .form-check-input:checked ~ .form-check-label {
+    & > span:first-of-type,
+    & > div:first-of-type {
+      opacity: 1;
+    }
+  }
+}
+
+.form-check.checked-opacity-75 {
+  .form-check-input:checked ~ .form-check-label {
+    & > span:first-of-type,
+    & > div:first-of-type {
+      opacity: 0.75;
+    }
+  }
+}
+
+.form-check.checked-opacity-50 {
+  .form-check-input:checked ~ .form-check-label {
+    & > span:first-of-type,
+    & > div:first-of-type {
+      opacity: 0.5;
+    }
+  }
+}
+
+.form-check.checked-opacity-25 {
+  .form-check-input:checked ~ .form-check-label {
+    & > span:first-of-type,
+    & > div:first-of-type {
+      opacity: 0.25;
+    }
+  }
+}
+
+.form-check.checked-opacity-0 {
+  .form-check-input:checked ~ .form-check-label {
+    & > span:first-of-type,
+    & > div:first-of-type {
+      opacity: 0;
+    }
+  }
+}
+
+.form-check.unchecked-opacity-100 {
+  .form-check-input:not(:checked) ~ .form-check-label {
+    & > span:first-of-type,
+    & > div:first-of-type {
+      opacity: 1;
+    }
+  }
+}
+
+.form-check.unchecked-opacity-75 {
+  .form-check-input:not(:checked) ~ .form-check-label {
+    & > span:first-of-type,
+    & > div:first-of-type {
+      opacity: 0.75;
+    }
+  }
+}
+
+.form-check.unchecked-opacity-50 {
+  .form-check-input:not(:checked) ~ .form-check-label {
+    & > span:first-of-type,
+    & > div:first-of-type {
+      opacity: 0.5;
+    }
+  }
+}
+
+.form-check.unchecked-opacity-25 {
+  .form-check-input:not(:checked) ~ .form-check-label {
+    & > span:first-of-type,
+    & > div:first-of-type {
+      opacity: 0.25;
+    }
+  }
+}
+
+.form-check.unchecked-opacity-0 {
+  .form-check-input:not(:checked) ~ .form-check-label {
+    & > span:first-of-type,
+    & > div:first-of-type {
+      opacity: 0;
+    }
+  }
+}
+
+textarea {
+  resize: none;
+}
+
+.form-check {
+  margin-bottom: 0.25rem;
+  padding-left: 1.75em;
+  line-height: 1.5;
+}
+
+.form-check-input[type='checkbox']:indeterminate {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.form-check-input,
+.form-check-input label,
+.form-check-input input {
+  outline: initial !important;
+  box-shadow: initial !important;
+}
+
+.form-check-input {
+  width: 16px;
+  height: 16px;
+}
+
+.form-check {
+  .form-check-input {
+    border-color: var(--muted) !important;
+    background-color: initial;
+    margin-top: 0.2em;
+    margin-left: -1.75em;
+  }
+}
+
+.form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary) !important;
+}
+
+.form-check-label {
+  color: var(--body);
+  margin-top: 1px;
+}
+
+.form-floating > label {
+  color: var(--alternate);
+  padding: 0.85rem 0.75rem;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.form-floating > textarea.form-control ~ label {
+  transition: transform 0.1s ease-in-out, padding 0.1s ease-in-out, background-color 0s ease-in-out, height 0.1s ease-in-out;
+}
+.form-floating > textarea.form-control:not(:placeholder-shown) ~ label,
+.form-floating > textarea.form-control:focus ~ label {
+  background-color: var(--foreground);
+  padding-top: 0.25rem;
+  padding-bottom: 0.05rem;
+  border-top-left-radius: var(--border-radius-md);
+  height: auto;
+  -webkit-transform: scale(0.85) translateY(1px) translateX(0.15rem);
+  transform: scale(0.85) translateY(1px) translateX(0.15rem);
+  transition: transform 0.1s ease-in-out, padding 0.1s ease-in-out, background-color 0.1s ease-in-out 0.1s, height 0.1s ease-in-out;
+}
+
+.form-floating > .form-control,
+.form-floating > .form-select {
+  height: auto;
+  min-height: 52px;
+  padding: 0.85rem 0.75rem;
+}
+
+.form-floating > .form-control:focus,
+.form-floating > .form-control:not(:placeholder-shown) {
+  padding-top: 1.45rem;
+  padding-bottom: 0.25rem;
+}
+
+.form-floating {
+  .form-control.form-control-lg {
+    min-height: 62px;
+    height: auto;
+    padding: 1.2rem 0.75rem 1.2rem 0.75rem;
+
+    ~ label {
+      padding: 1.2rem 0.75rem 1.2rem 0.75rem;
+    }
+
+    &:focus,
+    &:not(:placeholder-shown) {
+      padding-top: 2rem;
+      padding-bottom: 0.4rem;
+    }
+  }
+}
+
+.form-floating {
+  .form-control.form-control-sm {
+    min-height: 44px;
+    height: auto;
+    padding: 0.7rem 0.75rem 0.8rem 0.75rem;
+
+    ~ label {
+      padding: 0.7rem 0.75rem 0.8rem 0.75rem;
+    }
+
+    &:focus,
+    &:not(:placeholder-shown) {
+      padding-top: 1.4rem;
+      padding-bottom: 0.2rem;
+    }
+  }
+}

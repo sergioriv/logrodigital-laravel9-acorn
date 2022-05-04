@@ -1,0 +1,152 @@
+/*
+*
+* Wizard
+*
+* Styles for wizard ui.
+*
+*/
+
+.wizard {
+  .card-header {
+    padding-top: var(--card-spacing-sm);
+  }
+
+  .nav-tabs {
+    position: relative;
+    border: initial;
+    &:before {
+      content: ' ';
+      position: absolute;
+      bottom: 1px;
+      width: 100%;
+      height: 1px;
+      z-index: 0;
+      background: rgba(var(--separator-rgb), 0.8);
+    }
+  }
+
+  .nav-tabs {
+    &.disabled {
+      .nav-link {
+        pointer-events: none;
+      }
+    }
+    .nav-link {
+      border: initial;
+      position: relative;
+      background: initial;
+      margin: initial;
+      padding-bottom: 20px !important;
+
+      .title {
+        color: var(--alternate);
+      }
+
+      .description {
+        color: var(--separator);
+      }
+
+      &.active {
+        .title {
+          color: var(--primary);
+        }
+
+        .description {
+          color: var(--primary);
+        }
+
+        &:before {
+          background: var(--primary);
+        }
+      }
+
+      &:before {
+        content: ' ';
+        position: absolute;
+        border: initial;
+        background: var(--separator);
+        width: 18px;
+        height: 18px;
+        z-index: 1;
+        display: block;
+        border-radius: var(--border-radius-lg);
+        color: initial;
+        text-decoration: none;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -7px;
+      }
+
+      &.done {
+        &:before {
+          background: var(--primary);
+        }
+        &:after {
+          content: ' ';
+          width: 8px;
+          height: 8px;
+          left: 50%;
+          bottom: -2px;
+          transform: translateX(-50%);
+          z-index: 2;
+          position: absolute;
+          display: block;
+          background-repeat: no-repeat;
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e");
+        }
+      }
+
+      &:not([disabled='true']):hover {
+        .title {
+          color: var(--primary);
+        }
+
+        .description {
+          color: var(--primary);
+        }
+      }
+
+      &[disabled='true'] {
+        cursor: default;
+      }
+    }
+  }
+}
+
+.wizard.short-border {
+  .nav-tabs {
+    &:before {
+      background: initial;
+    }
+
+    .nav-item {
+      position: relative;
+      &:before {
+        content: ' ';
+        position: absolute;
+        bottom: 1px;
+        width: 100%;
+        height: 1px;
+        z-index: 0;
+        background: rgba(var(--separator-rgb), 0.8);
+      }
+
+      &:first-of-type {
+        &:before {
+          width: 50%;
+          left: 50%;
+        }
+      }
+
+      &:nth-last-child(2) {
+        &:before {
+          width: 50%;
+        }
+      }
+    }
+  }
+}
+
+.appointment-wizard .tab-pane {
+  min-height: 500px;
+}

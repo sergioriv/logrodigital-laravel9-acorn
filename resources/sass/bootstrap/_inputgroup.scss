@@ -1,0 +1,110 @@
+/*
+*
+* Input Group
+*
+* Bootstrap input group styles.
+*
+*/
+
+.input-group-text {
+  border-radius: var(--border-radius-md);
+  font-size: 1em;
+  padding: 0.25rem 0.75rem 0.35rem 0.75rem;
+  background-color: var(--foreground);
+  border-color: var(--separator);
+  color: var(--body);
+}
+
+.input-group .form-control {
+  border-top-right-radius: var(--border-radius-md);
+  border-bottom-right-radius: var(--border-radius-md);
+}
+
+.input-group-lg > .form-control,
+.input-group-lg > .custom-select {
+  border-radius: var(--border-radius-md);
+}
+
+.input-group .top-label .form-control {
+  width: 100%;
+}
+.input-group .top-label:not(:last-child),
+.input-group .top-label:not(:last-child) .form-control {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-right: 0;
+}
+.input-group .top-label:not(:first-child),
+.input-group .top-label:not(:first-child) .form-control {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.custom-file-label,
+.custom-file,
+.custom-file-input {
+  height: var(--input-height);
+  border-color: var(--separator);
+  background: var(--foreground);
+}
+
+.custom-file-label {
+  border-radius: var(--border-radius-md);
+}
+
+.input-group > .custom-file:not(:first-child) .custom-file-label {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.custom-file-label::after {
+  border-radius: var(--border-radius-md);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  height: 34px;
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--light-text);
+}
+
+.input-group-lg > .form-control,
+.input-group-lg > .form-select,
+.input-group-lg > .input-group-text,
+.input-group-lg > .btn {
+  height: 44px;
+  font-size: 1.25em;
+  line-height: 1.5;
+}
+
+.input-group-sm > .form-control,
+.input-group-sm > .form-select,
+.input-group-sm > .input-group-text,
+.input-group-sm > .btn {
+  border-radius: var(--border-radius-md);
+  font-size: 0.9em;
+  padding: 0.25rem 0.75rem;
+  height: 28px;
+  min-height: 28px;
+}
+
+.input-group-lg > .form-control,
+.input-group-lg > .form-select,
+.input-group-lg > .input-group-text,
+.input-group-lg > .btn {
+  border-radius: var(--border-radius-md);
+}
+
+.input-group-text .form-check-input {
+  margin-top: 1px !important;
+}
+
+.input-group .form-control[type='file'] {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  line-height: 1.6;
+}
+
+input[type='file']::file-selector-button {
+  background: var(--foreground);
+  color: var(--body);
+}

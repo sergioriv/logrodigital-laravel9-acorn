@@ -1,0 +1,29 @@
+/*
+*
+* Toast
+*
+* Bootstrap toast styles.
+*
+*/
+
+.toast {
+  border-radius: var(--border-radius-md);
+  border-color: var(--separator);
+  font-size: 1em;
+  background: rgba(var(--foreground-rgb), 0.9);
+  .toast-body,
+  .toast-header {
+    padding: var(--card-spacing-sm);
+    color: var(--body);
+    border: initial;
+    background: initial;
+  }
+
+  .toast-header + .toast-body {
+    padding-top: initial;
+  }
+  .btn-close {
+    margin-right: -0.25rem;
+    margin-left: 0.25rem;
+  }
+}
