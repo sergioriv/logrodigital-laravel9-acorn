@@ -29,6 +29,7 @@
 <!-- Vendor Styles Start -->
 <link rel="stylesheet" href="/css/vendor/bootstrap.min.css" />
 <link rel="stylesheet" href="/css/vendor/OverlayScrollbars.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
 @yield('css')
 <!-- Vendor Styles End -->
 <!-- Template Base Styles Start -->
@@ -36,4 +37,3 @@
 <link rel="stylesheet" href="/css/main.css" />
 <!-- Template Base Styles End -->
 <script src="/js/base/loader.js"></script>
-<script src="/js/app.js"></script>

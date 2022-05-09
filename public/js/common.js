@@ -30,8 +30,8 @@ class Common {
     this._setQuillDefaults();
     this._setDatePickerDefaults();
     this._setValidationDefaults();
-    this._setNotifyDefaults();
-    this._setSelect2Defaults();
+    // this._setNotifyDefaults();
+    // this._setSelect2Defaults();
     this._momentWarnings();
   }
 
@@ -226,7 +226,7 @@ class Common {
   }
 
   // Notify defaults
-  _setNotifyDefaults() {
+  /* _setNotifyDefaults() {
     if (jQuery.notify) {
       jQuery.notifyDefaults({
         template:
@@ -242,14 +242,14 @@ class Common {
           '</div>',
       });
     }
-  }
+  } */
 
   // Select2 theme
-  _setSelect2Defaults() {
+  /* _setSelect2Defaults() {
     if (jQuery.fn.select2) {
       jQuery.fn.select2.defaults.set('theme', 'bootstrap4');
     }
-  }
+  } */
 
   // Validate defaults
   _setValidationDefaults() {

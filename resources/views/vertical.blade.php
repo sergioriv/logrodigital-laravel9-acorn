@@ -1,9 +1,7 @@
 @php
-    $title = 'Vertical Starter Page';
-    $description= 'An empty page with a fluid vertical layout.';
-    $breadcrumbs = ["/"=>"Home"]
+$title = 'Vertical Starter Page';
 @endphp
-@extends('layout',['title'=>$title, 'description'=>$description])
+@extends('layout',['title'=>$title])
 
 @section('css')
 @endsection
@@ -12,7 +10,6 @@
 @endsection
 
 @section('js_page')
-    <script src="/js/pages/vertical.js"></script>
 @endsection
 
 @section('content')
@@ -23,7 +20,6 @@
                 <!-- Title Start -->
                 <div class="col-12 col-md-7">
                     <h1 class="mb-0 pb-0 display-4" id="title">{{ $title }}</h1>
-                    @include('_layout.breadcrumb',['breadcrumbs'=>$breadcrumbs])
                 </div>
                 <!-- Title End -->
             </div>
@@ -32,7 +28,7 @@
 
         <!-- Content Start -->
         <div class="card mb-2">
-            <div class="card-body h-100">{{ $description }}</div>
+            <div class="card-body h-100">Página vertical</div>
         </div>
         <!-- Content End -->
     </div>

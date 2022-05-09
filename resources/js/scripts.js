@@ -7,114 +7,127 @@
  *
  */
 
- class Scripts {
-  constructor() {
-    this._initSettings();
-    this._initVariables();
-    this._addListeners();
-    this._init();
-  }
-
-  // Showing the template after waiting for a bit so that the css variables are all set
-  // Initialization of the common scripts and page specific ones
-  _init() {
-    setTimeout(() => {
-      document.documentElement.setAttribute('data-show', 'true');
-      document.body.classList.remove('spinner');
-      this._initBase();
-      this._initCommon();
-      this._initPages();
-    }, 100);
-  }
-
-  // Base scripts initialization
-  _initBase() {
-    // Navigation
-    if (typeof Nav !== 'undefined') {
-      const nav = new Nav(document.getElementById('nav'));
+class Scripts {
+    constructor() {
+        this._initSettings();
+        this._initVariables();
+        this._addListeners();
+        this._init();
     }
 
-    // Search implementation
-    if (typeof Search !== 'undefined') {
-      const search = new Search();
+    // Showing the template after waiting for a bit so that the css variables are all set
+    // Initialization of the common scripts and page specific ones
+    _init() {
+        setTimeout(() => {
+            document.documentElement.setAttribute("data-show", "true");
+            document.body.classList.remove("spinner");
+            this._initBase();
+            this._initCommon();
+            this._initPlugins();
+        }, 100);
     }
 
-    // AcornIcons initialization
-    if (typeof AcornIcons !== 'undefined') {
-      new AcornIcons().replace();
-    }
-  }
+    // Base scripts initialization
+    _initBase() {
+        // Navigation
+        if (typeof Nav !== "undefined") {
+            const nav = new Nav(document.getElementById("nav"));
+        }
 
-  // Common plugins and overrides initialization
-  _initCommon() {
-    // common.js initialization
-    if (typeof Common !== 'undefined') {
-      let common = new Common();
-    }
-  }
+        // Search implementation
+        if (typeof Search !== "undefined") {
+            const search = new Search();
+        }
 
-  _initPages() {
-    // horizontal.js initialization
-    if (typeof HorizontalPage !== 'undefined') {
-      const horizontalPage = new HorizontalPage();
+        // AcornIcons initialization
+        if (typeof AcornIcons !== "undefined") {
+            new AcornIcons().replace();
+        }
     }
 
-    // vertical.js initialization
-    if (typeof VerticalPage !== 'undefined') {
-      const verticalPage = new VerticalPage();
+    // Common plugins and overrides initialization
+    _initCommon() {
+        // common.js initialization
+        if (typeof Common !== "undefined") {
+            let common = new Common();
+        }
     }
-  }
 
-  // Settings initialization
-  _initSettings() {
-    if (typeof Settings !== 'undefined') {
-        const settings = new Settings({attributes: {placement: 'vertical'}, showSettings: false, storagePrefix: 'acorn-classic-dashboard-'});
-    //   const settings = new Settings({attributes: {placement: 'vertical', color: 'light-lime', layout: 'fluid', radius: 'rounded', behaviour: 'unpinned' }, showSettings: false, storagePrefix: 'acorn-starter-project-'});
+    // Plugin pages initialization
+    _initPlugins() {
+        // datatable.editablerows.js initialization
+        if (typeof RowsAjaxDatatable !== 'undefined') {
+            const rowsAjaxDatatable = new RowsAjaxDatatable();
+        }
+        if (typeof RowsAjaxRoles !== 'undefined') {
+            const rowsAjaxRoles = new RowsAjaxRoles();
+        }
+
     }
-  }
 
-  // Variables initialization of Globals.js file which contains valus from css
-  _initVariables() {
-    if (typeof Variables !== 'undefined') {
-      const variables = new Variables();
+    // Settings initialization
+    _initSettings() {
+        if (typeof Settings !== "undefined") {
+            const settings = new Settings({
+                attributes: { placement: "vertical" },
+                showSettings: false,
+                storagePrefix: "acorn-classic-dashboard-",
+            });
+            //   const settings = new Settings({attributes: {placement: 'vertical', color: 'light-lime', layout: 'fluid', radius: 'rounded', behaviour: 'unpinned' }, showSettings: false, storagePrefix: 'acorn-starter-project-'});
+        }
     }
-  }
 
-  // Listeners of menu and layout changes which fires a resize event
-  _addListeners() {
-    document.documentElement.addEventListener(Globals.menuPlacementChange, (event) => {
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 25);
-    });
+    // Variables initialization of Globals.js file which contains valus from css
+    _initVariables() {
+        if (typeof Variables !== "undefined") {
+            const variables = new Variables();
+        }
+    }
 
-    document.documentElement.addEventListener(Globals.layoutChange, (event) => {
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 25);
-    });
+    // Listeners of menu and layout changes which fires a resize event
+    _addListeners() {
+        document.documentElement.addEventListener(
+            Globals.menuPlacementChange,
+            (event) => {
+                setTimeout(() => {
+                    window.dispatchEvent(new Event("resize"));
+                }, 25);
+            }
+        );
 
-    document.documentElement.addEventListener(Globals.menuBehaviourChange, (event) => {
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 25);
-    });
-  }
+        document.documentElement.addEventListener(
+            Globals.layoutChange,
+            (event) => {
+                setTimeout(() => {
+                    window.dispatchEvent(new Event("resize"));
+                }, 25);
+            }
+        );
+
+        document.documentElement.addEventListener(
+            Globals.menuBehaviourChange,
+            (event) => {
+                setTimeout(() => {
+                    window.dispatchEvent(new Event("resize"));
+                }, 25);
+            }
+        );
+    }
 }
 
 // Shows the template after initialization of the settings, nav, variables and common plugins.
 (function () {
-  window.addEventListener('DOMContentLoaded', () => {
-    // Initializing of the Scripts
-    if (typeof Scripts !== 'undefined') {
-      const scripts = new Scripts();
-    }
-  });
+    window.addEventListener("DOMContentLoaded", () => {
+        // Initializing of the Scripts
+        if (typeof Scripts !== "undefined") {
+            const scripts = new Scripts();
+        }
+    });
 })();
 
 // Disabling dropzone auto discover before DOMContentLoaded
 (function () {
-  if (typeof Dropzone !== 'undefined') {
-    Dropzone.autoDiscover = false;
-  }
+    if (typeof Dropzone !== "undefined") {
+        Dropzone.autoDiscover = false;
+    }
 })();

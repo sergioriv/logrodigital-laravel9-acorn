@@ -12,7 +12,7 @@ $description = 'Login Page'
 @endsection
 
 @section('js_page')
-<script src="/js/pages/auth.login.js"></script>
+{{-- <script src="/js/pages/auth.login.js"></script> --}}
 @endsection
 
 @section('content_right')

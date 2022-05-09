@@ -1,18 +1,20 @@
 @php
-$title = 'Register Page';
-$description = 'Register Page';
+$title = 'Create user';
 @endphp
-@extends('layout',['title'=>$title, 'description'=>$description])
+@extends('layout',['title'=>$title])
+
 @section('css')
+{{-- <link rel="stylesheet" href="/css/vendor/select2.min.css" /> --}}
+{{-- <link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" /> --}}
 @endsection
 
 @section('js_vendor')
-<script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
-<script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
+{{-- <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
+<script src="/js/vendor/jquery.validate/additional-methods.min.js"></script> --}}
+{{-- <script src="/js/vendor/select2.full.min.js"></script> --}}
 @endsection
 
 @section('js_page')
-{{-- <script src="/js/pages/auth.register.js"></script> --}}
 @endsection
 
 @section('content')
@@ -27,14 +29,14 @@ $description = 'Register Page';
             </section>
             <!-- Title End -->
 
-            <section class="scroll-section" id="basic">
+            <section class="scroll-section">
                 <div class="card mb-5">
                     <div class="card-body">
 
                         <!-- Validation Errors -->
                         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-                        <form id="registerForm" method="POST" action="/register" class="tooltip-end-bottom" novalidate>
+                        <form id="registerForm" method="POST" action="{{ route('support.users.store') }}" class="tooltip-end-bottom" novalidate>
                             @csrf
 
                             <!-- Name -->
@@ -63,7 +65,20 @@ $description = 'Register Page';
                                     required />
                             </div>
 
-                            <button type="submit" class="btn btn-lg btn-primary">{{ __('Register') }}</button>
+                            <div class="mb-3">
+                                <label class="form-label">{{ __('Role') }}</label>
+
+                                @foreach ($roles as $role)
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        {{ $role->name }}
+                                        <input name="role" class="form-check-input" type="radio" value="{{ $role->id }}" />
+                                    </label>
+                                </div>
+                                @endforeach
+                            </div>
+
+                            <button type="submit" class="btn btn-lg btn-primary">{{ __('Save user') }}</button>
 
                         </form>
                     </div>

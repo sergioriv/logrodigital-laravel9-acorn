@@ -1,2 +1,30 @@
 /* This file is reserved for overriding and extending the template styles. */
 
+.dataTable th { padding-bottom: 0!important; }
+ul.pagination {
+    justify-content: center;
+    margin-top: 15px;
+}
+ul.pagination li.page-item:first-child {
+    font-size: 2rem;
+    font-weight: 500;
+}
+ul.pagination li.page-item:first-child .page-link {
+    line-height: 0.5;
+}
+ul.pagination li.page-item:last-child {
+    font-size: 2rem;
+    font-weight: 500;
+}
+ul.pagination li.page-item:last-child .page-link {
+    line-height: 0.5;
+}
+
+.dataTables_scrollHeadInner {
+    width: 100% !important;
+}
+
+.page-link {
+    width: fit-content;
+    min-width: var(--input-height);
+}

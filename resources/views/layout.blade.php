@@ -1,17 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-url-prefix="/" data-footer="true"
-@isset($html_tag_data)
-    @foreach ($html_tag_data as $key=> $value)
-    data-{{$key}}='{{$value}}'
-    @endforeach
-@endisset
->
+<html lang="en" data-url-prefix="/" data-footer="true">
 
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
     <title>{{ $title .' | '. config('app.name') }}</title>
-    <meta name="description" content="{{$description}}"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('_layout.head')
 </head>

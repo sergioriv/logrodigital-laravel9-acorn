@@ -23,6 +23,7 @@ class Scripts {
             document.body.classList.remove("spinner");
             this._initBase();
             this._initCommon();
+            this._initPages();
             this._initPlugins();
         }, 100);
     }
@@ -53,14 +54,26 @@ class Scripts {
         }
     }
 
+    _initPages() {
+        // horizontal.js initialization
+        if (typeof HorizontalPage !== "undefined") {
+            const horizontalPage = new HorizontalPage();
+        }
+
+        // vertical.js initialization
+        if (typeof VerticalPage !== "undefined") {
+            const verticalPage = new VerticalPage();
+        }
+    }
+
     // Plugin pages initialization
     _initPlugins() {
         // datatable.editablerows.js initialization
-        if (typeof RowsAjaxDatatable !== 'undefined') {
-            const rowsAjaxDatatable = new RowsAjaxDatatable();
+        if (typeof EditableRows !== "undefined") {
+            const editableRows = new EditableRows();
         }
-        if (typeof RowsAjaxRoles !== 'undefined') {
-            const rowsAjaxRoles = new RowsAjaxRoles();
+        if (typeof RowsAjax !== 'undefined') {
+            const rowsAjax = new RowsAjax();
         }
 
     }

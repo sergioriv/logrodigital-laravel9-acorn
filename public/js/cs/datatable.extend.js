@@ -49,19 +49,19 @@ class DatatableExtend {
 
   _addListeners() {
     // Check all button change listener
-    if (document.getElementById('datatableCheckAll')) {
+    /* if (document.getElementById('datatableCheckAll')) {
       document.getElementById('datatableCheckAll').addEventListener('change', this._onCheckAllChange.bind(this));
-    }
+    } */
 
     // Listener for top right check all
-    if (document.getElementById('datatableCheckAllButton')) {
+    /* if (document.getElementById('datatableCheckAllButton')) {
       document.getElementById('datatableCheckAllButton').addEventListener('click', this._onCheckAllButtonClick.bind(this));
-    }
+    } */
 
     // Click listeners for rows to make them selected or show the edit modal
-    if (this.element) {
+    /* if (this.element) {
       this.element.querySelectorAll('tbody').forEach((el) => el.addEventListener('click', this._onRowClick.bind(this)));
-    }
+    } */
 
     // Search listeners
     document.querySelectorAll('.datatable-search').forEach((el) => {
@@ -72,19 +72,19 @@ class DatatableExtend {
     });
 
     // Export listeners
-    document.querySelectorAll('.datatable-export .dropdown-item').forEach((el) => {
+    /* document.querySelectorAll('.datatable-export .dropdown-item').forEach((el) => {
       el.addEventListener('click', this._onExportClick.bind(this));
-    });
+    }); */
 
     // Print listeners
-    document.querySelectorAll('.datatable-print').forEach((el) => {
+    /* document.querySelectorAll('.datatable-print').forEach((el) => {
       el.addEventListener('click', this._onPrintClick.bind(this));
-    });
+    }); */
 
     // Length listeners
-    document.querySelectorAll('.datatable-length .dropdown-item').forEach((el) => {
+    /* document.querySelectorAll('.datatable-length .dropdown-item').forEach((el) => {
       el.addEventListener('click', this._onLengthClick.bind(this));
-    });
+    }); */
   }
 
   _addShortcuts() {
@@ -96,8 +96,8 @@ class DatatableExtend {
           // Only no data warning row available at this point
           return;
         }
-        this.checkAllRows();
-        this.controlCheckAll();
+        // this.checkAllRows();
+        // this.controlCheckAll();
       });
       Mousetrap.bind('mod+d', (event) => {
         event.preventDefault();
@@ -105,13 +105,13 @@ class DatatableExtend {
           // Only no data warning row available at this point
           return;
         }
-        this.unCheckAllRows();
-        this.controlCheckAll();
+        // this.unCheckAllRows();
+        // this.controlCheckAll();
       });
     }
   }
 
-  _onRowClick(event) {
+  /* _onRowClick(event) {
     event.preventDefault();
     if (!this.datatable.data().any()) {
       // Only no data warning row available at this point
@@ -120,7 +120,7 @@ class DatatableExtend {
     const currentTarget = event.target.closest('tr');
     if (event.target.tagName === 'A') {
       // Title clicked. Showing the edit view.
-      this.unCheckAllRows();
+    //   this.unCheckAllRows();
       this.settings.editRowCallback(this.datatable.row(currentTarget));
       return true;
     }
@@ -128,10 +128,10 @@ class DatatableExtend {
     const checkbox = currentTarget.querySelector('.form-check input');
     checkbox.checked = !checkbox.checked;
     checkbox.dispatchEvent(new Event('change'));
-    this.controlCheckAll();
-  }
+    // this.controlCheckAll();
+  } */
 
-  _onCheckAllChange(event) {
+  /* _onCheckAllChange(event) {
     const isCheckedAll = document.getElementById('datatableCheckAll').checked;
     if (isCheckedAll) {
       this.checkAllRows();
@@ -139,9 +139,9 @@ class DatatableExtend {
       this.unCheckAllRows();
     }
     this.controlCheckAll();
-  }
+  } */
 
-  _onCheckAllButtonClick(event) {
+  /* _onCheckAllButtonClick(event) {
     if (!this.datatable.data().any()) {
       // Only no data warning row available at this point
       return;
@@ -151,9 +151,9 @@ class DatatableExtend {
     if (!target.classList.contains('form-check-input')) {
       currentTarget.querySelector('input').click(); // Firing click event on the checkbox via the button click
     }
-  }
+  } */
 
-  controlCheckAll() {
+  /* controlCheckAll() {
     if (!document.getElementById('datatableCheckAll')) {
       return;
     }
@@ -188,9 +188,9 @@ class DatatableExtend {
     } else {
       this.settings.multipleSelectCallback && this.settings.multipleSelectCallback();
     }
-  }
+  } */
 
-  unCheckAllRows() {
+  /* unCheckAllRows() {
     if (!this.element) {
       return;
     }
@@ -198,9 +198,9 @@ class DatatableExtend {
     this.element.querySelectorAll('tbody tr .form-check input').forEach((el) => {
       el.checked = false;
     });
-  }
+  } */
 
-  checkAllRows() {
+  /* checkAllRows() {
     if (!this.element) {
       return;
     }
@@ -208,11 +208,11 @@ class DatatableExtend {
     this.element.querySelectorAll('tbody tr .form-check input').forEach((el) => {
       el.checked = true;
     });
-  }
+  } */
 
-  getSelectedRows() {
+  /* getSelectedRows() {
     return this.datatable.rows('.selected');
-  }
+  } */
 
   _getDatatable(target) {
     const selector = target.getAttribute('data-datatable');
@@ -230,8 +230,8 @@ class DatatableExtend {
       deleteIcon.classList.add('d-none');
       searchIcon.classList.remove('d-none');
     }
-    this.unCheckAllRows();
-    this.controlCheckAll();
+    // this.unCheckAllRows();
+    // this.controlCheckAll();
   }
 
   _onSearchDelete(event) {
@@ -242,20 +242,20 @@ class DatatableExtend {
     this._getDatatable(container.querySelector('input')).search('').draw();
     deleteIcon.classList.add('d-none');
     searchIcon.classList.remove('d-none');
-    this.unCheckAllRows();
-    this.controlCheckAll();
+    // this.unCheckAllRows();
+    // this.controlCheckAll();
   }
 
-  _onPrintClick(event) {
+  /* _onPrintClick(event) {
     event.preventDefault();
     try {
       this._getDatatable(event.currentTarget).buttons(3).trigger();
     } catch (error) {
       console.log('Trigger button is not found');
     }
-  }
+  } */
 
-  _onExportClick(event) {
+  /* _onExportClick(event) {
     event.preventDefault();
     const selector = event.currentTarget.closest('.datatable-export').getAttribute('data-datatable');
     if (event.currentTarget.classList.contains('export-copy')) {
@@ -279,14 +279,14 @@ class DatatableExtend {
         console.log('Trigger button is not found');
       }
     }
-  }
+  } */
 
-  _onLengthClick(event) {
+  /* _onLengthClick(event) {
     event.preventDefault();
     const length = parseInt(event.currentTarget.innerHTML);
     this._getDatatable(event.currentTarget.closest('.datatable-length')).page.len(length).draw();
-    this.unCheckAllRows();
-    this.controlCheckAll();
+    // this.unCheckAllRows();
+    // this.controlCheckAll();
     this.settings.lengthChangeCallback && this.settings.lengthChangeCallback();
-  }
+  } */
 }

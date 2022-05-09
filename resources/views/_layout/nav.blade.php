@@ -5,7 +5,7 @@
             <!-- Logo can be added directly -->
             <!-- <img src="/img/logo/logo-white.svg" alt="logo" /> -->
             {{-- <x-application-logo class="w-200 h-200 fill-current text-white" /> --}}
-            <div class="logo-default"></div>
+            <div class="img"></div>
             <!-- Or added via css to provide different ones for different color themes -->
             {{-- <div class="img"></div> --}}
         </a>
@@ -198,30 +198,38 @@
                     <span class="label">Dashboard</span>
                 </a>
             </li>
+            @can('horizontal')
             <li>
                 <a href="/horizontal">
                     <i data-acorn-icon="grid-2" class="icon" data-acorn-size="18"></i>
                     <span class="label">Horizontal</span>
                 </a>
             </li>
+            @endcan
+            @can('vertical')
             <li>
                 <a href="/vertical">
                     <i data-acorn-icon="grid-3" class="icon" data-acorn-size="18"></i>
                     <span class="label">Vertical</span>
                 </a>
             </li>
+            @endcan
+            @can('support.users')
             <li>
-                <a href="/acorn/forgot">
-                    <i data-acorn-icon="question-hexagon" class="icon" data-acorn-size="18"></i>
-                    <span class="label">Olvidó su contraseña</span>
+                <a href="{{ route('support.users.index') }}">
+                    <i class="bi-people-fill icon icon-18" class="icon"></i>
+                    <span class="label">Users</span>
                 </a>
             </li>
+            @endcan
+            {{-- @can('support.users') --}}
             <li>
-                <a href="/acorn/register">
-                    <i data-acorn-icon="user" class="icon" data-acorn-size="18"></i>
-                    <span class="label">Registrar</span>
+                <a href="{{ route('support.roles.index') }}">
+                    <i class="bi-person-badge icon icon-18" class="icon"></i>
+                    <span class="label">Roles</span>
                 </a>
             </li>
+            {{-- @endcan --}}
         </ul>
     </div>
     <!-- Menu End -->
