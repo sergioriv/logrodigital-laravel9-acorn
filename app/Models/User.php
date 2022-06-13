@@ -22,7 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'avatar'
     ];
 
     /**
@@ -45,15 +45,36 @@ class User extends Authenticatable implements MustVerifyEmail
         'created_at' => 'datetime:Y-m-d h:i:s',
     ];
 
+
     /**
-     * `Attribute::make()` is a factory function that returns an `Attribute` object
-     *
-     * @return Attribute An Attribute object.
+     * Mutadores y Accesores
      */
+
     protected function name(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => ucwords(strtolower($value)),
+        );
+    }
+
+    protected function emailVerifiedAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value, 'UTC')->timezone(config('app.timezone'))->format('Y-m-d H:i:s')
+        );
+    }
+
+    protected function createdAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value, 'UTC')->timezone(config('app.timezone'))->format('Y-m-d H:i:s')
+        );
+    }
+
+    protected function updatedAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value, 'UTC')->timezone(config('app.timezone'))->format('Y-m-d H:i:s')
         );
     }
 }

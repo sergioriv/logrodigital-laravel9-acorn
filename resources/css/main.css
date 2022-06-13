@@ -1,30 +1,102 @@
 /* This file is reserved for overriding and extending the template styles. */
 
-.dataTable th { padding-bottom: 0!important; }
-ul.pagination {
-    justify-content: center;
-    margin-top: 15px;
+/*
+ * Logo Nav Uchuva
+*/
+html[data-color^="light-"][data-navcolor="light"] .logo .img-uchuva {
+    background-image: url("../img/logo/logo-uchuva-light.svg") !important;
 }
-ul.pagination li.page-item:first-child {
-    font-size: 2rem;
-    font-weight: 500;
+html[data-color^="dark-"][data-navcolor="dark"] .logo .img-uchuva {
+    background-image: url("../img/logo/logo-uchuva-dark.svg") !important;
 }
-ul.pagination li.page-item:first-child .page-link {
-    line-height: 0.5;
+html[data-color^="light-"][data-navcolor="dark"] .logo .img-uchuva {
+    background-image: url("../img/logo/logo-uchuva-dark.svg") !important;
 }
-ul.pagination li.page-item:last-child {
-    font-size: 2rem;
-    font-weight: 500;
+html[data-color^="dark-"][data-navcolor="light"] .logo .img-uchuva {
+    background-image: url("../img/logo/logo-uchuva-light.svg") !important;
 }
-ul.pagination li.page-item:last-child .page-link {
-    line-height: 0.5;
+html[data-color^="light-"][data-navcolor="default"] .logo .img-uchuva {
+    background-image: url("../img/logo/uchuva-light.svg") !important;
+}
+html[data-color^="dark-"][data-navcolor="default"] .logo .img-uchuva {
+    background-image: url("../img/logo/uchuva-light.svg") !important;
+}
+html[data-color^="light-"] .logo .img-uchuva {
+    background-image: url("../img/logo/uchuva-light.svg") !important;
+}
+html[data-color^="dark-"] .logo .img-uchuva {
+    background-image: url("../img/logo/uchuva-light.svg") !important;
 }
 
+/*
+ * Logo Lobby Uchuva
+ */
+html[data-color^="light-"] .logo-default.img-uchuva {
+    background-image: url("../img/logo/logo-uchuva-lobby-light.svg") !important;
+}
+html[data-color^="dark-"] .logo-default.img-uchuva {
+    background-image: url("../img/logo/logo-uchuva-lobby-dark.svg") !important;
+}
+html[data-color=] .logo-default.img-uchuva {
+    background-image: url("../img/logo/logo-uchuva-lobby-light.svg") !important;
+}
+.logo-default.img-uchuva {
+    width: 93px;
+    min-height: 104px;
+}
+
+/*
+ * Loading start
+ */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes rotate {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.load {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    border: solid 4px rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-left-color: var(--primary);
+
+    animation: rotate 1s cubic-bezier(0.46, 0.03, 0.52, 0.96) infinite;
+    -webkit-animation: rotate 1s cubic-bezier(0.46, 0.03, 0.52, 0.96) infinite;
+}
+/*
+ * Loading End
+ */
+
+/*
+ * DataTables Start
+ */
+.dataTables_scrollBody {
+    height: fit-content !important;
+}
 .dataTables_scrollHeadInner {
     width: 100% !important;
 }
+.table>:not(caption)>*>* {
+    padding: .5rem .5rem !important;
+}
+/*
+ * DataTables End
+ */
 
-.page-link {
-    width: fit-content;
-    min-width: var(--input-height);
+input[type="file"] {
+    display: none;
 }

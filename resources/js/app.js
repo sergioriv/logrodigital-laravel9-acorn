@@ -1,12 +1,4 @@
-// require('./bootstrap');
-
-// import Alpine from 'alpinejs';
-
-// window.Alpine = Alpine;
-
-// Alpine.start();
-
-// $( document ).ready(function() {
+const lang = $('html').attr('lang');
 
 function callNotify(type = "success", title, message = "") {
     let icon = "cs-check";
@@ -41,17 +33,11 @@ function callNotify(type = "success", title, message = "") {
 
 if (jQuery().select2) {
     jQuery.fn.select2.defaults.set("theme", "bootstrap4");
-    jQuery(".kii_select2").select2({ minimumResultsForSearch: Infinity });
 }
 
-/* if (jQuery().DataTable) {
-    jQuery(".kii_datatable").DataTable({
-        scrollX: true,
-        paging: false,
-        ordering: false,
-        info: false,
-        sDom: '<"row"<"col-sm-12"<"table-container"t>r>><"row"<"col-12"p>>', // Hiding all other dom elements except table and pagination
-    });
+function DataTableInterval(datatable) {
+    setInterval(() => {
+        jQuery(datatable).DataTable().ajax.reload();
+    }, 2000);
 }
- */
 

@@ -34,7 +34,7 @@ $title = 'Edit user';
                     <div class="card-body">
 
                         <!-- Validation Errors -->
-                        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                        <x-validation-errors class="mb-4" :errors="$errors" />
 
                         <form id="registerForm" method="POST" action="{{ route('support.users.update', $user) }}" class="tooltip-end-bottom" novalidate>
                             @csrf
@@ -60,7 +60,7 @@ $title = 'Edit user';
                                     <label class="form-check-label">
                                         {{ $role->name }}
                                         <input name="role" class="form-check-input" type="radio" value="{{ $role->id }}"
-                                        @checked($user->getRoleNames()) />
+                                        {{ $user->getRoleNames()[0] === $role->name ? 'checked' : '' }} />
                                     </label>
                                 </div>
                                 @endforeach

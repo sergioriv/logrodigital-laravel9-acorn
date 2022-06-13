@@ -1320,15 +1320,15 @@ button {
   -moz-osx-font-smoothing: grayscale;
   color: var(--alternate);
 
-//   &:after {
-//     display: inline-block;
-//     content: '\e91b';
-//   }
+  &:after {
+    display: inline-block;
+    content: '\e91b';
+  }
 
   &:hover {
-    // &:after {
+    &:after {
       color: var(--primary);
-    // }
+    }
   }
 }
 

@@ -30,18 +30,6 @@ $title = 'User list';
                         <h1 class="mb-0 pb-0 display-4" id="title">{{ $title }}</h1>
                     </div>
                     <!-- Title End -->
-
-                    <!-- Top Buttons Start -->
-                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-                        <!-- Add New Button Start -->
-                        <a href="{{ route('support.users.create') }}"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
-                            <i data-acorn-icon="plus"></i>
-                            <span>{{ __('Add New') }}</span>
-                        </a>
-                        <!-- Add New Button End -->
-                    </div>
-                    <!-- Top Buttons End -->
                 </div>
             </div>
             <!-- Title and Top Buttons End -->

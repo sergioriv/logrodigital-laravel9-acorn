@@ -5,7 +5,7 @@
             <!-- Logo can be added directly -->
             <!-- <img src="/img/logo/logo-white.svg" alt="logo" /> -->
             {{-- <x-application-logo class="w-200 h-200 fill-current text-white" /> --}}
-            <div class="img"></div>
+            <div class="img img-uchuva"></div>
             <!-- Or added via css to provide different ones for different color themes -->
             {{-- <div class="img"></div> --}}
         </a>
@@ -26,7 +26,7 @@
     <!-- User Menu Start -->
     <div class="user-container d-flex">
         <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img class="profile" alt="profile" src="/img/profile/profile-9.webp" />
+            <x-avatar-nav :avatar="Auth::user()->avatar" />
             <div class="name">{{ Auth::user()->name }}</div>
         </a>
         <div class="dropdown-menu dropdown-menu-end user-menu wide">
@@ -108,7 +108,7 @@
                         <li>
                             <a href="#">
                                 <i data-acorn-icon="gear" class="me-2" data-acorn-size="17"></i>
-                                <span class="align-middle">Settings</span>
+                                <span class="align-middle">{{ __('Settings') }}</span>
                             </a>
                         </li>
                         <li>
@@ -195,41 +195,102 @@
             <li>
                 <a href="/dashboard">
                     <i data-acorn-icon="home" class="icon" data-acorn-size="18"></i>
-                    <span class="label">Dashboard</span>
+                    <span class="label">{{ __('Dashboard') }}</span>
                 </a>
             </li>
-            @can('horizontal')
+
+            @can('support.restaurants')
             <li>
-                <a href="/horizontal">
-                    <i data-acorn-icon="grid-2" class="icon" data-acorn-size="18"></i>
-                    <span class="label">Horizontal</span>
-                </a>
-            </li>
-            @endcan
-            @can('vertical')
-            <li>
-                <a href="/vertical">
-                    <i data-acorn-icon="grid-3" class="icon" data-acorn-size="18"></i>
-                    <span class="label">Vertical</span>
+                <a href="{{ route('support.restaurants.index') }}">
+                    <i class="bi-building icon icon-18"></i>
+                    <span class="label">{{ __('Restaurants') }}</span>
                 </a>
             </li>
             @endcan
             @can('support.users')
             <li>
                 <a href="{{ route('support.users.index') }}">
-                    <i class="bi-people-fill icon icon-18" class="icon"></i>
-                    <span class="label">Users</span>
+                    <i class="bi-people-fill icon icon-18"></i>
+                    <span class="label">{{ __('Users') }}</span>
                 </a>
             </li>
             @endcan
-            {{-- @can('support.users') --}}
+            @can('support.roles')
             <li>
                 <a href="{{ route('support.roles.index') }}">
-                    <i class="bi-person-badge icon icon-18" class="icon"></i>
-                    <span class="label">Roles</span>
+                    <i class="bi-person-badge icon icon-18"></i>
+                    <span class="label">{{ __('Roles') }}</span>
                 </a>
             </li>
-            {{-- @endcan --}}
+            @endcan
+
+
+            <!-- RESTAURANT NAV -->
+            @can('branches')
+            <li>
+                <a href="{{ route('restaurant.branches.index') }}">
+                    <i class="bi-collection icon icon-18"></i>
+                    <span class="label">{{ __('Branches') }}</span>
+                </a>
+            </li>
+            @endcan
+            @can('categories')
+            <li>
+                <a href="{{ route('restaurant.categories.index') }}">
+                    <i class="bi-stickies icon icon-18"></i>
+                    <span class="label">{{ __('Categories') }}</span>
+                </a>
+            </li>
+            @endcan
+
+
+            <!-- BRANCHES NAV -->
+            @can('dishes')
+            <li>
+                <a href="{{ route('branch.dishes.index') }}">
+                    <i data-acorn-icon="main-course" class="icon" data-acorn-size="18"></i>
+                    <span class="label">{{ __('Dishes') }}</span>
+                </a>
+            </li>
+            @endcan
+            @can('waiters')
+            <li>
+                <a href="{{ route('branch.waiters.index') }}">
+                    <i class="bi-person-lines-fill icon icon-18"></i>
+                    <span class="label">{{ __('Waiters') }}</span>
+                </a>
+            </li>
+            @endcan
+            @can('tables')
+            <li>
+                <a href="{{ route('branch.tables.index') }}">
+                    <i class="bi-list-ol icon icon-18"></i>
+                    <span class="label">{{ __('Tables') }}</span>
+                </a>
+            </li>
+            @endcan
+
+
+            <!-- WAITERS & BRANCHES NAV -->
+            @can('orders.index')
+            <li>
+                <a href="{{ route('waiter.orders.index') }}">
+                    <i class="bi-list-nested icon icon-18"></i>
+                    <span class="label">{{ __('Backorders') }}</span>
+                </a>
+            </li>
+            @endcan
+
+
+            <!-- USER NAV -->
+            @can('user.profile')
+            <li>
+                <a href="{{ route('user.profile') }}">
+                    <i data-acorn-icon="user" class="icon" data-acorn-size="18"></i>
+                    <span class="label">{{ __('Profile') }}</span>
+                </a>
+            </li>
+            @endcan
         </ul>
     </div>
     <!-- Menu End -->

@@ -11,7 +11,7 @@ class RoleController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('can:support.roles');
+        $this->middleware('can:support.roles');
     }
 
     /**
@@ -65,17 +65,6 @@ class RoleController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Role $role)
-    {
-        return view('support.roles.show')->with('role', $role);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -110,18 +99,4 @@ class RoleController extends Controller
         );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Role $role)
-    {
-        $role->delete();
-
-        return redirect()->route('support.roles.index')->with(
-            ['notify' => 'success', 'title' => __('Deleted role!')],
-        );
-    }
 }

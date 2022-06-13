@@ -29,9 +29,9 @@ $title = 'Create Role';
                     <div class="card-body">
 
                         <!-- Validation Errors -->
-                        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                        <x-validation-errors class="mb-4" :errors="$errors" />
 
-                        <form id="registerForm" method="POST" action="{{ route('support.roles.store') }}" class="tooltip-end-bottom" novalidate>
+                        <form method="POST" action="{{ route('support.roles.store') }}" class="tooltip-end-bottom" novalidate>
                             @csrf
 
                             <!-- Name -->

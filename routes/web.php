@@ -15,28 +15,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard'); })->name('dashboard');
-    Route::view('/vertical', 'vertical')->name('vertical');
-    Route::view('/horizontal', 'horizontal')->name('horizontal');
-    // Route::get('register', [RegisteredUserController::class, 'create'])->name('auth.register');
-    // Route::post('register', [RegisteredUserController::class, 'store']);
 
-    /* Route Users */
-    Route::resource('users', UserController::class)->except('destroy')->names('support.users');
-    Route::get('users.json', [UserController::class, 'data']);
     Route::get('insert_roles', [UserController::class, 'insert_roles']);
     Route::get('destroy_users', [UserController::class, 'destroy_users']);
 
+
+    /* Route Users */
+    Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');
+    Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');
+    Route::get('users.json', [UserController::class, 'data']);
+
     /* Route Roles */
-    Route::resource('roles', RoleController::class)->except('destroy')->names('support.roles');
+    Route::resource('roles', RoleController::class)->except('destroy','show')->names('support.roles');
     Route::get('roles.json', [RoleController::class, 'data']);
+
+    /* Route Profile */
+    Route::get('profile', [ProfileController::class, 'show'])->name('user.profile');
+    Route::get('profile/edit', [ProfileController::class, 'edit'])->name('user.profile.edit');
+    Route::put('profile', [ProfileController::class, 'update'])->name('user.profile.update');
 
 });
 

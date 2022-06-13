@@ -19,9 +19,9 @@ $description = 'Forgot Password Page'
 <div
     class="sw-lg-70 min-h-100 bg-foreground d-flex justify-content-center align-items-center shadow-deep py-5 full-page-content-right-border">
     <div class="sw-lg-50 px-5">
-        <div class="sh-11">
+        <div class="sh-13 mb-7 d-flex justify-content-center">
             <a href="/">
-                <div class="logo-default"></div>
+                <div class="logo-default img-uchuva"></div>
             </a>
         </div>
         <div class="mb-5">
@@ -42,7 +42,7 @@ $description = 'Forgot Password Page'
             <x-auth-session-status class="mb-4" :status="session('status')" />
 
             <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
+            <x-validation-errors class="mb-4" :errors="$errors" />
 
             <form id="forgotPasswordForm" class="tooltip-end-bottom" method="POST" action="{{ route('password.email') }}" novalidate>
                 @csrf

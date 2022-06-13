@@ -4,9 +4,15 @@ namespace App\Http\Controllers\support;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Closure;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 Use Spatie\Permission\Models\Role;
 use Illuminate\Validation\Rules;
 
@@ -17,63 +23,27 @@ class UserController extends Controller
         $this->middleware('can:support.users');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         return view('support.users.index');
     }
 
-    /**
-     * It returns the data of all users with their roles in descending order
-     */
     public function data()
     {
         return ['data' => User::with('roles')->orderBy('created_at','DESC')->get()];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public static function _create($name, $email, $role, $avatar)
     {
-        $roles = Role::all();
-        return view('support.users.create')->with('roles', $roles);
-    }
-
-    /**
-     * Handle an incoming registration request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => 'required'
-        ]);
-
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ])->assignRole($request->role);
+            'name' => $name,
+            'email' => $email,
+            'avatar' => $avatar,
+        ])->assignRole($role);
 
         event(new Registered($user));
 
-        return redirect()->route('support.users.index')->with(
-            ['notify' => 'success', 'title' => __('Saved user!')],
-        );
+        return $user;
     }
 
     /**
@@ -82,9 +52,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        return "show";
+        return redirect()->route('support.users.edit', $user);
     }
 
     /**
@@ -124,16 +94,47 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
+    public static function _update($user_id, $name, $email, $avatar)
     {
-        $user->delete();
+        $user = User::findOrFail($user_id);
+        $user->update([
+            'name' => $name,
+        ]);
+
+        if($email != null){
+            $user->update([
+                'email' => $email,
+            ]);
+        }
+
+        if($avatar != null){
+            $user->update([
+                'avatar' => $avatar
+            ]);
+        }
     }
+
+    public static function upload_avatar($request)
+    {
+        if ( $request->hasFile('avatar') )
+        {
+            $path = $request->file('avatar')->store('public/avatar');
+            return Storage::url($path);
+        }
+        else return null;
+    }
+
+    public static function role_auth()
+    {
+        return User::find(Auth::user()->id)->getRoleNames()[0];
+    }
+
+
+
+
+    /**
+     * adicionales, por borrar
+     */
 
     public function insert_roles ()
     {
@@ -154,4 +155,6 @@ class UserController extends Controller
 
         User::destroy($eliminados);
     }
+
+
 }

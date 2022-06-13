@@ -1,4 +1,4 @@
-const mix = require('laravel-mix');
+const mix = require("laravel-mix");
 
 /*
  |--------------------------------------------------------------------------
@@ -11,7 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
+mix.js("resources/js/app.js", "public/js")
 
     .sass("resources/sass/styles.scss", "public/css")
     .options({
@@ -23,8 +23,11 @@ mix.js('resources/js/app.js', 'public/js')
     .copy("resources/img", "public/img")
     .copy("resources/js", "public/js")
     .copy("resources/icon", "public/icon")
-    .copy("resources/json", "public/json")
+    .copy("resources/json", "public/json");
 
 if (mix.inProduction()) {
     mix.version();
-};
+    mix.disableNotifications();
+}
+
+mix.disableNotifications();

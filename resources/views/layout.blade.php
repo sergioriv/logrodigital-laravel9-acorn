@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-url-prefix="/" data-footer="true">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-url-prefix="/" data-footer="true">
 
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-    <title>{{ $title .' | '. config('app.name') }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @include('_layout.head')
+    <title>{{ $title .' | '. config('app.name') }}</title>
+    @include('layout.head')
 </head>
 
 <body>
@@ -16,14 +16,14 @@
         @endforeach
         @endisset
     >
-        @include('_layout.nav')
+        @include('layout.nav')
     </div>
     <main>
         @yield('content')
     </main>
-    @include('_layout.footer')
+    @include('layout.footer')
 </div>
-@include('_layout.scripts')
+@include('layout.scripts')
 </body>
 
 </html>
