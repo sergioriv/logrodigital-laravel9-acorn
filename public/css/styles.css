@@ -6766,7 +6766,11 @@ button {
   -moz-osx-font-smoothing: grayscale;
   color: var(--alternate);
 }
-.btn-close:hover {
+.btn-close:after {
+  display: inline-block;
+  content: "\e91b";
+}
+.btn-close:hover:after {
   color: var(--primary);
 }
 

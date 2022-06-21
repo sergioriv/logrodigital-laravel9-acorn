@@ -64,6 +64,9 @@ $description = 'Login Page'
                 <x-button type="submit" class="btn-primary">
                     {{ __('Log in') }}
                 </x-button>
+                <a class="btn btn-outline-info" href="/microsoft">
+                    Microsoft
+                </a>
             </form>
         </div>
     </div>

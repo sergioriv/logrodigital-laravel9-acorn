@@ -5,7 +5,7 @@
             <!-- Logo can be added directly -->
             <!-- <img src="/img/logo/logo-white.svg" alt="logo" /> -->
             {{-- <x-application-logo class="w-200 h-200 fill-current text-white" /> --}}
-            <div class="img img-uchuva"></div>
+            <div class="img"></div>
             <!-- Or added via css to provide different ones for different color themes -->
             {{-- <div class="img"></div> --}}
         </a>
@@ -283,14 +283,14 @@
 
 
             <!-- USER NAV -->
-            @can('user.profile')
+            {{-- @can('user.profile') --}}
             <li>
                 <a href="{{ route('user.profile') }}">
                     <i data-acorn-icon="user" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Profile') }}</span>
                 </a>
             </li>
-            @endcan
+            {{-- @endcan --}}
         </ul>
     </div>
     <!-- Menu End -->

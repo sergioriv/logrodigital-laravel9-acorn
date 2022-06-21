@@ -18,6 +18,9 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/', [AuthenticatedSessionController::class, 'store']);
 
+    Route::get('microsoft', [AuthenticatedSessionController::class, 'microsoft_redirect']);
+    Route::get('microsoft/callback', [AuthenticatedSessionController::class, 'microsoft_callback']);
+
     // Route::get('register', [RegisteredUserController::class, 'create'])
     //             ->name('register');
 

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -50,5 +52,27 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function microsoft_redirect()
+    {
+        return Socialite::driver('azure')->redirect();
+    }
+
+    public function microsoft_callback()
+    {
+        $user = Socialite::driver('azure')->user();
+
+        $user_logro = User::where('email', $user->email)->first();
+
+        if ( $user_logro )
+        {
+            Auth::login($user);
+            return 'LOGIN' .$user_logro->name;
+        }
+        else
+        {
+            return redirect()->route('login')->withErrors( $user->email .' no registrado' );
+        }
     }
 }

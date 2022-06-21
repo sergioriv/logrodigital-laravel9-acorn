@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 Use Spatie\Permission\Models\Role;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\File;
+
 
 class UserController extends Controller
 {
@@ -118,8 +120,8 @@ class UserController extends Controller
     {
         if ( $request->hasFile('avatar') )
         {
-            $path = $request->file('avatar')->store('public/avatar');
-            return Storage::url($path);
+            $path = $request->file('avatar')->store('avatar','public');
+            return config('filesystems.disks.public.url') .'/' . $path;
         }
         else return null;
     }
@@ -129,6 +131,30 @@ class UserController extends Controller
         return User::find(Auth::user()->id)->getRoleNames()[0];
     }
 
+    /* BORRAR */
+    /* BORRAR */
+    /* BORRAR */
+    /* BORRAR */
+    /* BORRAR */
+    /* BORRAR */
+    /* BORRAR */
+    /* BORRAR */
+    /* BORRAR */
+    /* BORRAR */
+    /* BORRAR */
+    public static function profile_update(Request $request, User $support)
+    {
+
+        $avatar = UserController::upload_avatar($request);
+
+        if ( $request->hasFile('avatar') )
+            File::delete(public_path($support->avatar));
+
+        $support->update([
+            'avatar' => $avatar
+        ]);
+
+    }
 
 
 

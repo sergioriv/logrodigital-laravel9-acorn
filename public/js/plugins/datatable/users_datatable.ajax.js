@@ -7,7 +7,7 @@
  *
  */
 
-class RowsAjaxUsers {
+ class RowsAjaxUsers {
     constructor() {
         if (!jQuery().DataTable) {
             console.log("DataTable is null!");
@@ -43,16 +43,16 @@ class RowsAjaxUsers {
                 { data: "roles" },
             ],
             language: {
-                paginate: {
-                    previous: '<i class="cs-chevron-left"></i>',
-                    next: '<i class="cs-chevron-right"></i>',
-                },
+                url: '/json/datatable.spanish.json',
             },
             initComplete: function (settings, json) {
                 _this._setInlineHeight();
             },
             drawCallback: function (settings) {
                 _this._setInlineHeight();
+            },
+            preDrawCallback: function (settings) {
+                _this._preDrawCallback($(this), settings);
             },
             columnDefs: [
                 // Adding Name content as an anchor with a target #
@@ -104,5 +104,13 @@ class RowsAjaxUsers {
         const pageLength = this._datatable.page.len();
         document.querySelector(".dataTables_scrollBody").style.height =
             this._staticHeight * pageLength + "px";
+    }
+
+    _preDrawCallback(datatable, settings){
+        var api = new $.fn.dataTable.Api(settings);
+        var pagination = datatable
+            .closest('.dataTables_wrapper')
+            .find('.dataTables_paginate');
+        pagination.toggle(api.page.info().pages > 1);
     }
 }

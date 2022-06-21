@@ -195,6 +195,14 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+        * Package Service Providers...
+        */
+        Laravel\Socialite\SocialiteServiceProvider::class,
+
+        // This is a dependency of the socialiteproviders/microsoft-graph provider, and will be installed with the provider via it's composer.json file
+        SocialiteProviders\Manager\ServiceProvider::class,
+
     ],
 
     /*
@@ -210,6 +218,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'Socialize' => 'Laravel\Socialite\Facades\Socialite',
     ])->toArray(),
 
 ];

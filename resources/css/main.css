@@ -3,7 +3,7 @@
 /*
  * Logo Nav Uchuva
 */
-html[data-color^="light-"][data-navcolor="light"] .logo .img-uchuva {
+/* html[data-color^="light-"][data-navcolor="light"] .logo .img-uchuva {
     background-image: url("../img/logo/logo-uchuva-light.svg") !important;
 }
 html[data-color^="dark-"][data-navcolor="dark"] .logo .img-uchuva {
@@ -26,12 +26,12 @@ html[data-color^="light-"] .logo .img-uchuva {
 }
 html[data-color^="dark-"] .logo .img-uchuva {
     background-image: url("../img/logo/uchuva-light.svg") !important;
-}
+} */
 
 /*
  * Logo Lobby Uchuva
  */
-html[data-color^="light-"] .logo-default.img-uchuva {
+/* html[data-color^="light-"] .logo-default.img-uchuva {
     background-image: url("../img/logo/logo-uchuva-lobby-light.svg") !important;
 }
 html[data-color^="dark-"] .logo-default.img-uchuva {
@@ -43,7 +43,21 @@ html[data-color=] .logo-default.img-uchuva {
 .logo-default.img-uchuva {
     width: 93px;
     min-height: 104px;
+} */
+
+/*
+ * Full Page Start
+ */
+
+@media (min-width: 992px) {
+    .full-page-content-right-border {
+        border-radius: var(--border-radius-lg) !important;
+    }
 }
+/*
+ * Full Page End
+ */
+
 
 /*
  * Loading start

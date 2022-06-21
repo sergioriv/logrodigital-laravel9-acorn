@@ -27,11 +27,11 @@ class ProfileController extends Controller
     public function show()
     {
         switch (UserController::role_auth()) {
-            /* case 'Restaurant':
-                $restaurant = Restaurant::with('user')->findOrFail(Auth::user()->id);
-                return view('profile.restaurant')->with('restaurant', $restaurant);
+             case 'Support':
+                $support = User::findOrFail(Auth::user()->id);
+                return view('profile.support-edit')->with('support', $support);
                 break;
-
+/*
             case 'Branch':
                 $branch = Branch::with('user')->findOrFail(Auth::user()->id);
                 $deps = json_decode(file_get_contents('json/colombia.min.json'), true);
@@ -79,6 +79,11 @@ class ProfileController extends Controller
     public function update(Request $request, User $user)
     {
         switch (UserController::role_auth()) {
+            case 'Support':
+                $support = User::findOrFail(Auth::user()->id);
+                UserController::profile_update($request, $support);
+                break;
+
             /* case 'Restaurant':
                 $restaurant = Restaurant::findOrFail(Auth::user()->id);
                 RestaurantController::profile_update($request, $restaurant);
