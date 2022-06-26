@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class StudyYearController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('can:studyYear');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,12 @@ class StudyYearController extends Controller
      */
     public function index()
     {
-        //
+        return view('support.studyyear.index');
+    }
+
+    public function data()
+    {
+        return ['data' => StudyYear::get()];
     }
 
     /**
@@ -24,7 +34,7 @@ class StudyYearController extends Controller
      */
     public function create()
     {
-        //
+        return view('support.studyyear.create');
     }
 
     /**
@@ -35,7 +45,18 @@ class StudyYearController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('study_years')]
+        ]);
+
+        StudyYear::create([
+            'name' => $request->name,
+            'available' => TRUE
+        ]);
+
+        return redirect()->route('studyYear.index')->with(
+            ['notify' => 'success', 'title' => __('Study year created!')],
+        );
     }
 
     /**
@@ -57,7 +78,7 @@ class StudyYearController extends Controller
      */
     public function edit(StudyYear $studyYear)
     {
-        //
+        return view('support.studyyear.edit')->with('studyYear', $studyYear);
     }
 
     /**
@@ -69,17 +90,16 @@ class StudyYearController extends Controller
      */
     public function update(Request $request, StudyYear $studyYear)
     {
-        //
-    }
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('study_years')->ignore($studyYear->id)]
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\StudyYear  $studyYear
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(StudyYear $studyYear)
-    {
-        //
+        $studyYear->update([
+            'name' => $request->name
+        ]);
+
+        return redirect()->route('studyYear.index')->with(
+            ['notify' => 'success', 'title' => __('Study year updated!')],
+        );
     }
 }

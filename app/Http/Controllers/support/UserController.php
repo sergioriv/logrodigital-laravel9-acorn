@@ -4,19 +4,11 @@ namespace App\Http\Controllers\support;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Closure;
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 Use Spatie\Permission\Models\Role;
-use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\File;
-
 
 class UserController extends Controller
 {
@@ -35,12 +27,11 @@ class UserController extends Controller
         return ['data' => User::with('roles')->orderBy('created_at','DESC')->get()];
     }
 
-    public static function _create($name, $email, $role, $avatar)
+    public static function _create($name, $email, $role)
     {
         $user = User::create([
             'name' => $name,
             'email' => $email,
-            'avatar' => $avatar,
         ])->assignRole($role);
 
         event(new Registered($user));
@@ -131,17 +122,6 @@ class UserController extends Controller
         return User::find(Auth::user()->id)->getRoleNames()[0];
     }
 
-    /* BORRAR */
-    /* BORRAR */
-    /* BORRAR */
-    /* BORRAR */
-    /* BORRAR */
-    /* BORRAR */
-    /* BORRAR */
-    /* BORRAR */
-    /* BORRAR */
-    /* BORRAR */
-    /* BORRAR */
     public static function profile_update(Request $request, User $support)
     {
 
@@ -155,32 +135,4 @@ class UserController extends Controller
         ]);
 
     }
-
-
-
-    /**
-     * adicionales, por borrar
-     */
-
-    public function insert_roles ()
-    {
-
-        for ($i=2; $i <= User::count(); $i++) {
-            $user = User::find($i);
-            $user->roles()->sync(2);
-        }
-        return "Usuarios creados " . User::count();
-    }
-
-    public function destroy_users ()
-    {
-        $eliminados = [];
-        for ($i=2; $i <= User::count(); $i++) {
-            array_push($eliminados, $i);
-        }
-
-        User::destroy($eliminados);
-    }
-
-
 }

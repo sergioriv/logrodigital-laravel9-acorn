@@ -3356,7 +3356,7 @@ html[data-radius=flat] {
 }
 
 :root {
-  --card-spacing: 2rem;
+  --card-spacing: 1.5rem;
   --card-spacing-sm: 1.25rem;
   --card-spacing-xs: 0.75rem;
   --card-spacing-sm-horizontal: 1.75rem 1.25rem;

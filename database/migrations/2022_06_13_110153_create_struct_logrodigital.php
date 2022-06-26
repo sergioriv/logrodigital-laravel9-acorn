@@ -161,6 +161,7 @@ return new class extends Migration
             $table->unsignedBigInteger('headquarters_id');
             $table->unsignedBigInteger('study_time_id');
             $table->unsignedBigInteger('study_year_id');
+            $table->unsignedBigInteger('teacher_id');
             $table->string('name');
             $table->timestamps();
 
@@ -185,6 +186,12 @@ return new class extends Migration
             $table->foreign('study_year_id')
                     ->references('id')
                     ->on('study_years')
+                    ->onUpdate('restrict')
+                    ->onDelete('restrict');
+
+            $table->foreign('teacher_id')
+                    ->references('id')
+                    ->on('teachers')
                     ->onUpdate('restrict')
                     ->onDelete('restrict');
         });

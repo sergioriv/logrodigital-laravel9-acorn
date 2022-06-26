@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\StudyTime;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class StudyTimeController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('can:studyTime');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,12 @@ class StudyTimeController extends Controller
      */
     public function index()
     {
-        //
+        return view('support.studytime.index');
+    }
+
+    public function data()
+    {
+        return ['data' => StudyTime::get()];
     }
 
     /**
@@ -24,7 +34,7 @@ class StudyTimeController extends Controller
      */
     public function create()
     {
-        //
+        return view('support.studytime.create');
     }
 
     /**
@@ -35,7 +45,17 @@ class StudyTimeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('study_times')],
+        ]);
+
+        StudyTime::create([
+            'name' => $request->name
+        ]);
+
+        return redirect()->route('studyTime.index')->with(
+            ['notify' => 'success', 'title' => __('Study time created!')],
+        );
     }
 
     /**
@@ -57,7 +77,7 @@ class StudyTimeController extends Controller
      */
     public function edit(StudyTime $studyTime)
     {
-        //
+        return view('support.studytime.edit')->with('studyTime', $studyTime);
     }
 
     /**
@@ -69,17 +89,16 @@ class StudyTimeController extends Controller
      */
     public function update(Request $request, StudyTime $studyTime)
     {
-        //
-    }
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('study_times')->ignore($studyTime->id)]
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\StudyTime  $studyTime
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(StudyTime $studyTime)
-    {
-        //
+        $studyTime->update([
+            'name' => $request->name
+        ]);
+
+        return redirect()->route('studyTime.index')->with(
+            ['notify' => 'success', 'title' => __('Study time updated!')],
+        );
     }
 }

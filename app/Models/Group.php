@@ -14,6 +14,7 @@ class Group extends CastCreateModel
         'headquarters_id',
         'study_time_id',
         'study_year_id',
+        'teacher_id',
         'name'
     ];
 
@@ -27,17 +28,22 @@ class Group extends CastCreateModel
 
     public function headquarters()
     {
-        return $this->belongsTo(Headquarters::class);
+        return $this->belongsTo(Headquarters::class)->select('id', 'name');
     }
 
     public function studyTime()
     {
-        return $this->belongsTo(StudyTime::class);
+        return $this->belongsTo(StudyTime::class)->select('id', 'name');
     }
 
     public function studyYear()
     {
-        return $this->belongsTo(StudyYear::class);
+        return $this->belongsTo(StudyYear::class)->select('id', 'name');
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class)->select('id', 'first_name', 'father_last_name');
     }
 
 

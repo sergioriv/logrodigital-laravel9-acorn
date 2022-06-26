@@ -199,8 +199,6 @@ return [
         * Package Service Providers...
         */
         Laravel\Socialite\SocialiteServiceProvider::class,
-
-        // This is a dependency of the socialiteproviders/microsoft-graph provider, and will be installed with the provider via it's composer.json file
         SocialiteProviders\Manager\ServiceProvider::class,
 
     ],

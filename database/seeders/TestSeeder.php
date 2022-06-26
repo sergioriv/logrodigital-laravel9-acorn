@@ -48,10 +48,10 @@ class TestSeeder extends Seeder
         $r_materia_biologia = ResourceSubject::create(['name' => 'biologia']);
         $r_materia_geometria = ResourceSubject::create(['name' => 'geometria']);
 
-        $ciencias_biologia = Subject::create(['school_year_id' => $year2021->id, 'resource_area_id' => $r_area_ciencias->id, 'resource_subject_id' => $r_materia_biologia->id]);
-        $ciencias_biologia = Subject::create(['school_year_id' => $year2021->id, 'resource_area_id' => $r_area_ciencias->id, 'resource_subject_id' => $r_materia_biologia->id]);
+        $ciencias_biologia_2021 = Subject::create(['school_year_id' => $year2021->id, 'resource_area_id' => $r_area_matematicas->id, 'resource_subject_id' => $r_materia_geometria->id]);
+        $matematicas_geometria_2021 = Subject::create(['school_year_id' => $year2021->id, 'resource_area_id' => $r_area_ciencias->id, 'resource_subject_id' => $r_materia_biologia->id]);
         $matematicas_geometria = Subject::create(['school_year_id' => $year->id, 'resource_area_id' => $r_area_matematicas->id, 'resource_subject_id' => $r_materia_geometria->id]);
-        $matematicas_geometria = Subject::create(['school_year_id' => $year->id, 'resource_area_id' => $r_area_matematicas->id, 'resource_subject_id' => $r_materia_geometria->id]);
+        $ciencias_biologia = Subject::create(['school_year_id' => $year->id, 'resource_area_id' => $r_area_ciencias->id, 'resource_subject_id' => $r_materia_biologia->id]);
 
         Group::create([
             'school_year_id' => $year2021->id,
@@ -169,22 +169,22 @@ class TestSeeder extends Seeder
 
         $biologia601 = TeacherSubjectGroup::create([
             'teacher_id' => $docente01->id,
-            'subject_id' => $ciencias_biologia->id,
+            'subject_id' => $ciencias_biologia_2021->id,
             'group_id' => $grupo601->id]);
 
         $biologia602 = TeacherSubjectGroup::create([
             'teacher_id' => $docente01->id,
-            'subject_id' => $ciencias_biologia->id,
+            'subject_id' => $ciencias_biologia_2021->id,
             'group_id' => $grupo602->id]);
 
         $biologia701 = TeacherSubjectGroup::create([
             'teacher_id' => $docente02->id,
-            'subject_id' => $ciencias_biologia->id,
+            'subject_id' => $ciencias_biologia_2021->id,
             'group_id' => $grupo701->id]);
 
         $biologia702 = TeacherSubjectGroup::create([
             'teacher_id' => $docente02->id,
-            'subject_id' => $ciencias_biologia->id,
+            'subject_id' => $ciencias_biologia_2021->id,
             'group_id' => $grupo702->id]);
 
         $geometria701 = TeacherSubjectGroup::create([

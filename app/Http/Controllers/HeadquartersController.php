@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Headquarters;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class HeadquartersController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('can:headquarters');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,12 @@ class HeadquartersController extends Controller
      */
     public function index()
     {
-        //
+        return view('logro.headquarters.index');
+    }
+
+    public function data()
+    {
+        return ['data' => Headquarters::orderBy('name')->get()];
     }
 
     /**
@@ -24,7 +34,7 @@ class HeadquartersController extends Controller
      */
     public function create()
     {
-        //
+        return view('logro.headquarters.create');
     }
 
     /**
@@ -35,7 +45,18 @@ class HeadquartersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('headquarters')]
+        ]);
+
+        Headquarters::create([
+            'name' => $request->name,
+            'available' => TRUE
+        ]);
+
+        return redirect()->route('headquarters.index')->with(
+            ['notify' => 'success', 'title' => __('Headquarters created!')],
+        );
     }
 
     /**
@@ -57,7 +78,7 @@ class HeadquartersController extends Controller
      */
     public function edit(Headquarters $headquarters)
     {
-        //
+        return view('logro.headquarters.edit')->with('headquarters', $headquarters);
     }
 
     /**
@@ -69,17 +90,16 @@ class HeadquartersController extends Controller
      */
     public function update(Request $request, Headquarters $headquarters)
     {
-        //
-    }
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('headquarters')->ignore($headquarters->id)]
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Headquarters  $headquarters
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Headquarters $headquarters)
-    {
-        //
+        $headquarters->update([
+            'name' => $request->name
+        ]);
+
+        return redirect()->route('headquarters.index')->with(
+            ['notify' => 'success', 'title' => __('Headquarters updated!')],
+        );
     }
 }

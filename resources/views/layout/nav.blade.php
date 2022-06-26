@@ -12,7 +12,7 @@
     </div>
     <!-- Logo End -->
 
-    <!-- Language Switch Start -->
+    <!-- Language Switch Start
     <div class="language-switch-container">
         <button class="btn btn-empty language-button dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">EN</button>
         <div class="dropdown-menu">
@@ -30,85 +30,28 @@
             <div class="name">{{ Auth::user()->name }}</div>
         </a>
         <div class="dropdown-menu dropdown-menu-end user-menu wide">
-            <div class="row mb-3 ms-0 me-0">
-                <div class="col-12 ps-1 mb-2">
-                    <div class="text-extra-small text-primary">ACCOUNT</div>
-                </div>
-                <div class="col-6 ps-1 pe-1">
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#">User Info</a>
-                        </li>
-                        <li>
-                            <a href="#">Preferences</a>
-                        </li>
-                        <li>
-                            <a href="#">Calendar</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-6 pe-1 ps-1">
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#">Security</a>
-                        </li>
-                        <li>
-                            <a href="#">Billing</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row mb-1 ms-0 me-0">
-                <div class="col-12 p-1 mb-2 pt-2">
-                    <div class="text-extra-small text-primary">APPLICATION</div>
-                </div>
-                <div class="col-6 ps-1 pe-1">
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#">Themes</a>
-                        </li>
-                        <li>
-                            <a href="#">Language</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-6 pe-1 ps-1">
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#">Devices</a>
-                        </li>
-                        <li>
-                            <a href="#">Storage</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
             <div class="row mb-1 ms-0 me-0">
                 <div class="col-12 p-1 mb-3 pt-3">
-                    <div class="separator-light"></div>
+                    <div class="text-extra-small text-primary">{{ __('ACCOUNT') }}</div>
                 </div>
-                <div class="col-6 ps-1 pe-1">
+                <div class="ps-1 pe-1">
                     <ul class="list-unstyled">
+                        <li>
+                            <a href="{{ route('user.profile') }}">
+                                <i data-acorn-icon="user" class="me-2" data-acorn-size="17"></i>
+                                <span class="align-middle">{{ __('Profile') }}</span>
+                            </a>
+                        </li>
                         <li>
                             <a href="#">
                                 <i data-acorn-icon="help" class="me-2" data-acorn-size="17"></i>
-                                <span class="align-middle">Help</span>
+                                <span class="align-middle">{{ __('Help') }}</span>
                             </a>
                         </li>
                         <li>
                             <a href="#">
                                 <i data-acorn-icon="file-text" class="me-2" data-acorn-size="17"></i>
-                                <span class="align-middle">Docs</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-6 pe-1 ps-1">
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#">
-                                <i data-acorn-icon="gear" class="me-2" data-acorn-size="17"></i>
-                                <span class="align-middle">{{ __('Settings') }}</span>
+                                <span class="align-middle">{{ __('Docs') }}</span>
                             </a>
                         </li>
                         <li>
@@ -129,7 +72,7 @@
     </div>
     <!-- User Menu End -->
 
-    <!-- Icons Menu Start -->
+    <!-- Icons Menu Start
     <ul class="list-unstyled list-inline text-center menu-icons">
         <li class="list-inline-item">
             <a href="#" data-bs-toggle="modal" data-bs-target="#searchPagesModal">
@@ -198,91 +141,36 @@
                     <span class="label">{{ __('Dashboard') }}</span>
                 </a>
             </li>
-
-            @can('support.restaurants')
             <li>
-                <a href="{{ route('support.restaurants.index') }}">
-                    <i class="bi-building icon icon-18"></i>
-                    <span class="label">{{ __('Restaurants') }}</span>
+                <a href="{{ route('headquarters.index') }}">
+                    <i data-acorn-icon="building-large" class="icon" data-acorn-size="18"></i>
+                    <span class="label">{{ __('Headquarters') }}</span>
                 </a>
             </li>
-            @endcan
-            @can('support.users')
             <li>
-                <a href="{{ route('support.users.index') }}">
-                    <i class="bi-people-fill icon icon-18"></i>
-                    <span class="label">{{ __('Users') }}</span>
+                <a href="{{ route('subject.index') }}">
+                    <i class="icon icon-18 bi-journals"></i>
+                    <span class="label">{{ __('Areas & Subjects') }}</span>
                 </a>
             </li>
-            @endcan
-            @can('support.roles')
             <li>
-                <a href="{{ route('support.roles.index') }}">
-                    <i class="bi-person-badge icon icon-18"></i>
-                    <span class="label">{{ __('Roles') }}</span>
+                <a href="{{ route('teacher.index') }}">
+                    <i data-acorn-icon="question-hexagon" class="icon" data-acorn-size="18"></i>
+                    <span class="label">{{ __('Teachers') }}</span>
                 </a>
             </li>
-            @endcan
-
-
-            <!-- RESTAURANT NAV -->
-            @can('branches')
             <li>
-                <a href="{{ route('restaurant.branches.index') }}">
-                    <i class="bi-collection icon icon-18"></i>
-                    <span class="label">{{ __('Branches') }}</span>
+                <a href="{{ route('group.index') }}">
+                    <i class="icon icon-18 bi-bookmarks"></i>
+                    <span class="label">{{ __('Groups') }}</span>
                 </a>
             </li>
-            @endcan
-            @can('categories')
-            <li>
-                <a href="{{ route('restaurant.categories.index') }}">
-                    <i class="bi-stickies icon icon-18"></i>
-                    <span class="label">{{ __('Categories') }}</span>
-                </a>
-            </li>
-            @endcan
 
 
-            <!-- BRANCHES NAV -->
-            @can('dishes')
-            <li>
-                <a href="{{ route('branch.dishes.index') }}">
-                    <i data-acorn-icon="main-course" class="icon" data-acorn-size="18"></i>
-                    <span class="label">{{ __('Dishes') }}</span>
-                </a>
-            </li>
-            @endcan
-            @can('waiters')
-            <li>
-                <a href="{{ route('branch.waiters.index') }}">
-                    <i class="bi-person-lines-fill icon icon-18"></i>
-                    <span class="label">{{ __('Waiters') }}</span>
-                </a>
-            </li>
-            @endcan
-            @can('tables')
-            <li>
-                <a href="{{ route('branch.tables.index') }}">
-                    <i class="bi-list-ol icon icon-18"></i>
-                    <span class="label">{{ __('Tables') }}</span>
-                </a>
-            </li>
-            @endcan
+            <div class="separator-light"></div>
 
 
-            <!-- WAITERS & BRANCHES NAV -->
-            @can('orders.index')
-            <li>
-                <a href="{{ route('waiter.orders.index') }}">
-                    <i class="bi-list-nested icon icon-18"></i>
-                    <span class="label">{{ __('Backorders') }}</span>
-                </a>
-            </li>
-            @endcan
-
-
-            <!-- USER NAV -->
+            <!-- User Nav Start -->
             {{-- @can('user.profile') --}}
             <li>
                 <a href="{{ route('user.profile') }}">
@@ -290,7 +178,55 @@
                     <span class="label">{{ __('Profile') }}</span>
                 </a>
             </li>
+            <li>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <a href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                        <i data-acorn-icon="logout" class="icon" data-acorn-size="18"></i>
+                        <span class="label">{{ __('Log Out') }}</span>
+                    </a>
+                </form>
+            </li>
             {{-- @endcan --}}
+            <!-- User Nav End -->
+
+
+            <div class="separator-light"></div>
+
+
+            <!-- Support Nav Start -->
+            <li>
+                <a href="{{ route('studyTime.index') }}">
+                    <i data-acorn-icon="clock" class="icon" data-acorn-size="18"></i>
+                    <span class="label">{{ __('Study times') }}</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('studyYear.index') }}">
+                    <i class="icon icon-18 bi-card-checklist"></i>
+                    <span class="label">{{ __('Study years') }}</span>
+                </a>
+            </li>
+
+
+            <div class="separator-light"></div>
+
+
+            <li>
+                <a href="{{ route('support.users.index') }}">
+                    <i class="bi-people-fill icon icon-18"></i>
+                    <span class="label">{{ __('Users') }}</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('support.roles.index') }}">
+                    <i class="bi-person-badge icon icon-18"></i>
+                    <span class="label">{{ __('Roles') }}</span>
+                </a>
+            </li>
+            <!-- Support Nav End -->
         </ul>
     </div>
     <!-- Menu End -->

@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\ResourceSubject;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ResourceSubjectController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('can:resourceSubject');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,12 @@ class ResourceSubjectController extends Controller
      */
     public function index()
     {
-        //
+        return view('logro.resource.subject.index');
+    }
+
+    public function data()
+    {
+        return ['data' => ResourceSubject::orderBy('name')->get()];
     }
 
     /**
@@ -24,7 +34,7 @@ class ResourceSubjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('logro.resource.subject.create');
     }
 
     /**
@@ -35,7 +45,17 @@ class ResourceSubjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('resource_subjects')],
+        ]);
+
+        ResourceSubject::create([
+            'name' => $request->name
+        ]);
+
+        return redirect()->route('resourceSubject.index')->with(
+            ['notify' => 'success', 'title' => __('Subject created!')],
+        );
     }
 
     /**
@@ -55,9 +75,9 @@ class ResourceSubjectController extends Controller
      * @param  \App\Models\ResourceSubject  $resourceSubject
      * @return \Illuminate\Http\Response
      */
-    public function edit(ResourceSubject $resourceSubject)
+    public function edit(ResourceSubject $subject)
     {
-        //
+        return view('logro.resource.subject.edit')->with('subject', $subject);
     }
 
     /**
@@ -67,19 +87,18 @@ class ResourceSubjectController extends Controller
      * @param  \App\Models\ResourceSubject  $resourceSubject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ResourceSubject $resourceSubject)
+    public function update(Request $request, ResourceSubject $subject)
     {
-        //
-    }
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('resource_subjects')->ignore($subject->id)]
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ResourceSubject  $resourceSubject
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ResourceSubject $resourceSubject)
-    {
-        //
+        $subject->update([
+            'name' => $request->name
+        ]);
+
+        return redirect()->route('resourceSubject.index')->with(
+            ['notify' => 'success', 'title' => __('Subject updated!')],
+        );
     }
 }

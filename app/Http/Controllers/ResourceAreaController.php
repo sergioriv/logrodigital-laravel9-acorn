@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\ResourceArea;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ResourceAreaController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('can:resourceArea');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,12 @@ class ResourceAreaController extends Controller
      */
     public function index()
     {
-        //
+        return view('logro.resource.area.index');
+    }
+
+    public function data()
+    {
+        return ['data' => ResourceArea::orderBy('name')->get()];
     }
 
     /**
@@ -24,7 +34,7 @@ class ResourceAreaController extends Controller
      */
     public function create()
     {
-        //
+        return view('logro.resource.area.create');
     }
 
     /**
@@ -35,7 +45,17 @@ class ResourceAreaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('resource_areas')],
+        ]);
+
+        ResourceArea::create([
+            'name' => $request->name
+        ]);
+
+        return redirect()->route('resourceArea.index')->with(
+            ['notify' => 'success', 'title' => __('Area created!')],
+        );
     }
 
     /**
@@ -55,9 +75,9 @@ class ResourceAreaController extends Controller
      * @param  \App\Models\ResourceArea  $resourceArea
      * @return \Illuminate\Http\Response
      */
-    public function edit(ResourceArea $resourceArea)
+    public function edit(ResourceArea $area)
     {
-        //
+        return view('logro.resource.area.edit')->with('area', $area);
     }
 
     /**
@@ -67,19 +87,18 @@ class ResourceAreaController extends Controller
      * @param  \App\Models\ResourceArea  $resourceArea
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ResourceArea $resourceArea)
+    public function update(Request $request, ResourceArea $area)
     {
-        //
-    }
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('resource_areas')->ignore($area->id)]
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ResourceArea  $resourceArea
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ResourceArea $resourceArea)
-    {
-        //
+        $area->update([
+            'name' => $request->name
+        ]);
+
+        return redirect()->route('resourceArea.index')->with(
+            ['notify' => 'success', 'title' => __('Area updated!')],
+        );
     }
 }

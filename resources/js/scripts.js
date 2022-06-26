@@ -24,6 +24,7 @@ class Scripts {
             this._initBase();
             this._initCommon();
             this._initPages();
+            this._initForms();
             this._initPlugins();
         }, 100);
     }
@@ -31,17 +32,17 @@ class Scripts {
     // Base scripts initialization
     _initBase() {
         // Navigation
-        if (typeof Nav !== "undefined") {
+        if ("undefined" !== typeof Nav) {
             const nav = new Nav(document.getElementById("nav"));
         }
 
         // Search implementation
-        if (typeof Search !== "undefined") {
+        if ("undefined" !== typeof Search) {
             const search = new Search();
         }
 
         // AcornIcons initialization
-        if (typeof AcornIcons !== "undefined") {
+        if ("undefined" !== typeof AcornIcons) {
             new AcornIcons().replace();
         }
     }
@@ -49,27 +50,56 @@ class Scripts {
     // Common plugins and overrides initialization
     _initCommon() {
         // common.js initialization
-        if (typeof Common !== "undefined") {
+        if ("undefined" !== typeof Common) {
             let common = new Common();
         }
     }
 
     // Pages initialization
     _initPages() {
-        if (typeof ResponsiveTab !== "undefined") {
+        if ("undefined" !== typeof ResponsiveTab) {
             document.querySelector(".responsive-tabs") !== null &&
                 new ResponsiveTab(document.querySelector(".responsive-tabs"));
         }
     }
 
+    // Form and form controls pages initialization
+    _initForms() {
+      // controls.autocomplete.js initialization
+      if ("undefined" !== typeof GenericForms) {
+        new GenericForms;
+      }
+    }
+
     // Plugin pages initialization
     _initPlugins() {
         // datatable.editablerows.js initialization
-        if (typeof RowsAjaxUsers !== 'undefined') {
-            const rowsAjaxUsers = new RowsAjaxUsers();
+        if ("undefined" !== typeof RowsAjaxUsers) {
+            new RowsAjaxUsers;
         }
-        if (typeof RowsAjaxRoles !== 'undefined') {
-            const rowsAjaxRoles = new RowsAjaxRoles();
+        if ("undefined" !== typeof RowsAjaxRoles) {
+            new RowsAjaxRoles;
+        }
+        if ("undefined" !== typeof DatatableStudyTimes) {
+            new DatatableStudyTimes;
+        }
+        if ("undefined" !== typeof DatatableStudyYears) {
+            new DatatableStudyYears;
+        }
+        if ("undefined" !== typeof DatatableSchoolYears) {
+            new DatatableSchoolYears;
+        }
+        if ("undefined" !== typeof DatatableHeadquarters) {
+            new DatatableHeadquarters;
+        }
+        if ("undefined" !== typeof DatatableAreas) {
+            new DatatableAreas;
+        }
+        if ("undefined" !== typeof DatatableSubjects) {
+            new DatatableSubjects;
+        }
+        if ("undefined" !== typeof DatatableTeachers) {
+            new DatatableTeachers;
         }
 
     }

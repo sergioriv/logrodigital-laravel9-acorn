@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\SchoolYear;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class SchoolYearController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('can:schoolYear');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +20,12 @@ class SchoolYearController extends Controller
      */
     public function index()
     {
-        //
+        return view('logro.schoolyear.index');
+    }
+
+    public function data()
+    {
+        return ['data' => SchoolYear::orderBy('id','DESC')->get()];
     }
 
     /**
@@ -24,7 +35,7 @@ class SchoolYearController extends Controller
      */
     public function create()
     {
-        //
+        return view('logro.schoolyear.create');
     }
 
     /**
@@ -35,7 +46,21 @@ class SchoolYearController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', Rule::unique('school_years')],
+        ]);
+
+        /* school years available = false */
+        SchoolYear::query()->update(['available' => FALSE]);
+
+        SchoolYear::create([
+            'name' => $request->name,
+            'available' => TRUE
+        ]);
+
+        return redirect()->route('schoolYear.index')->with(
+            ['notify' => 'success', 'title' => __('New School Year in process!')],
+        );
     }
 
     /**
@@ -45,40 +70,6 @@ class SchoolYearController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(SchoolYear $schoolYear)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\SchoolYear  $schoolYear
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(SchoolYear $schoolYear)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SchoolYear  $schoolYear
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, SchoolYear $schoolYear)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\SchoolYear  $schoolYear
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(SchoolYear $schoolYear)
     {
         //
     }

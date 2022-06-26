@@ -1,0 +1,141 @@
+@php
+$title = 'Areas & Subjects';
+@endphp
+@extends('layout',['title'=>$title])
+
+@section('css')
+@endsection
+
+@section('js_vendor')
+<script src="/js/cs/scrollspy.js"></script>
+<script src="/js/vendor/sortable.min.js"></script>
+@endsection
+
+@section('js_page')
+<script>
+    if (document.getElementById('areaGroupNull')) {
+      Sortable.create(document.getElementById('areaGroupNull'), {
+        animation: 200,
+        group: {
+          name: 'groupNull',
+          put: true,
+          pull: true
+        }
+      });
+    }
+
+    @foreach ($resourceAreas as $area)
+    if (document.getElementById('areaGroup{{ $area->id }}')) {
+      Sortable.create(document.getElementById('areaGroup{{ $area->id }}'), {
+        draggable: ".input_subject",
+        animation: 200,
+        group: {
+          name: 'group{{ $area->id }}',
+          put: true,
+          pull: true
+        }
+      });
+    }
+    @endforeach
+
+    $('.input_subject').mouseleave(function () {
+        $(this).children('input').val( $(this).parent().data('area') + '~' + $(this).data('id') );
+    })
+</script>
+@endsection
+
+@section('content')
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <!-- Title and Top Buttons Start -->
+            <div class="page-title-container">
+                <div class="row">
+                    <!-- Title Start -->
+                    <div class="col-12 col-md-7">
+                        <h1 class="mb-0 pb-0 display-4" id="title">{{ $title .' | ' . $year }}</h1>
+                    </div>
+                    <!-- Title End -->
+
+                    <!-- Top Buttons Start -->
+                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                        <!-- Add Areas Button Start -->
+                        <a href="{{ route('resourceArea.index') }}"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                            <span>{{ __('Areas') }}</span>
+                        </a>
+                        <!-- Add Areas Button End -->
+                        <!-- Add Subjects Button Start -->
+                        <a href="{{ route('resourceSubject.index') }}"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto ms-1">
+                            <span>{{ __('Subjects') }}</span>
+                        </a>
+                        <!-- Add Subjects Button End -->
+                    </div>
+                    <!-- Top Buttons End -->
+                </div>
+            </div>
+            <!-- Title and Top Buttons End -->
+
+            <!-- Content Start -->
+            <div class="">
+
+                <form method="POST" action="{{ route('subject.store') }}" class="tooltip-end-bottom" novalidate>
+                    @csrf
+
+                    <!-- Moving Start -->
+                    <section class="scroll-section">
+                        <div class="row">
+                            <section class="col-12">
+                                <div class="card mb-5 border border-pink">
+                                    <div class="card-body">
+                                        <div class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm sortable"
+                                            id="areaGroupNull" data-area="null">
+                                            @foreach ($resourceSubjects as $subject)
+                                            <span
+                                                class="badge bg-outline-primary hover-bg-primary text-uppercase input_subject"
+                                                data-id="{{ $subject->id }}">
+                                                {{ $subject->name }}
+                                                <input type="hidden" name="subjects[]" value="null~{{ $subject->id }}">
+                                            </span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="row">
+                            @foreach ($resourceAreas as $area)
+                            <section class="col-sm-6 col-xxl-3">
+                                <h2 class="small-title">{{ $area->name }}</h2>
+                                <div class="card mb-5">
+                                    <div class="card-body d-inline-flex">
+                                        <div id="areaGroup{{ $area->id }}" data-area="{{ $area->id }}" class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm">
+                                            @foreach ($subjects as $subject_area)
+                                            @if ($subject_area->resource_area_id == $area->id)
+                                            <span class="badge bg-muted text-uppercase disabled"
+                                                data-id="{{ $subject_area->resourceSubject->id }}">
+                                                {{ $subject_area->resourceSubject->name }}
+                                            </span>
+                                            @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            @endforeach
+                        </div>
+                    </section>
+                    <!-- Moving End -->
+
+                    <x-button type="submit" class="btn-primary">{{ __('Save Areas & Subjects') }}</x-button>
+
+                </form>
+                <!-- Advanced End -->
+
+            </div>
+            <!-- Content End -->
+        </div>
+    </div>
+</div>
+@endsection
