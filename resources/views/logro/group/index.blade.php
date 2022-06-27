@@ -4,12 +4,21 @@ $title = 'Groups';
 @extends('layout',['title'=>$title])
 
 @section('css')
+<link rel="stylesheet" href="/css/vendor/select2.min.css" />
+<link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" />
 @endsection
 
 @section('js_vendor')
+<script src="/js/vendor/select2.full.min.js"></script>
 @endsection
 
 @section('js_page')
+<script>
+    jQuery('#select2Headquarters').select2({minimumResultsForSearch: Infinity});
+    jQuery('#select2StudyTime').select2({minimumResultsForSearch: Infinity});
+    jQuery('#select2StudyYear').select2({minimumResultsForSearch: Infinity});
+</script>
+<script src="/js/pages/groups.filters.js"></script>
 @endsection
 
 @section('content')
@@ -44,26 +53,58 @@ $title = 'Groups';
             <div class="data-table-rows slim">
                 <!-- Controls Start -->
                 <section class="row">
-                    <!-- Search Start -->
+                    <!-- Search Headquarters Start -->
+                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
+                        <div class="w-100">
+                            <select data-placeholder="{{ __(" Headquarters") }}" id="select2Headquarters">
+                                <option label="&nbsp;"></option>
+                                @foreach ($headquarters as $hq)
+                                <option value="{{ $hq->id }}">{{ $hq->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Search Headquarters End -->
+                    <!-- Search Study Time Start -->
+                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
+                        <div class="w-100">
+                            <select data-placeholder="{{ __(" Study Time") }}" id="select2StudyTime">
+                                <option label="&nbsp;"></option>
+                                @foreach ($studyTimes as $st)
+                                <option value="{{ $st->id }}">{{ $st->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Search Study Time End -->
+                    <!-- Search Study Year Start -->
+                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
+                        <div class="w-100">
+                            <select data-placeholder="{{ __(" Study Year") }}" id="select2StudyYear">
+                                <option label="&nbsp;"></option>
+                                @foreach ($studyYears as $sy)
+                                <option value="{{ $sy->id }}">{{ $sy->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Search Study Year End -->
+                    <!-- Search Name Start -->
                     <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
                         <div
                             class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
-                            <input class="form-control datatable-search" placeholder="Search"
-                                data-datatable="#datatable_school_years" />
+                            <input class="form-control" id="searchName" placeholder="Search" />
                             <span class="search-magnifier-icon">
                                 <i data-acorn-icon="search"></i>
                             </span>
-                            <span class="search-delete-icon d-none">
-                                <i data-acorn-icon="close"></i>
-                            </span>
                         </div>
                     </div>
-                    <!-- Search End -->
+                    <!-- Search Name End -->
                 </section>
                 <!-- Controls End -->
 
                 <!-- Cards Start -->
-                <section class="row g-2 row-cols-3 row-cols-md-4 row-cols-lg-6">
+                <section class="row g-2 row-cols-3 row-cols-md-4 row-cols-lg-6" id="groupsList">
                     @foreach ($groups as $group)
                     <div class="col small-gutter-col">
                         <div class="card h-100">

@@ -34,7 +34,7 @@ class StudyYear extends CastCreateModel
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ucwords(strtolower($value)),
+            get: fn ($value) => ucfirst(strtolower($value)),
         );
     }
 }

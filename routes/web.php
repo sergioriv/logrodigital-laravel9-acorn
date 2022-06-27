@@ -88,6 +88,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route Groups */
     Route::resource('groups', GroupController::class)->except('destroy')->names('group');
+    Route::get('groups.filter', [GroupController::class, 'filter']);
 
 
 

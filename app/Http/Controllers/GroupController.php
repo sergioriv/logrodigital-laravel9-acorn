@@ -21,7 +21,40 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::with('headquarters', 'studyTime', 'studyYear', 'teacher')->where('school_year_id', $this->current_year()->id)->get();
-        return view('logro.group.index')->with('groups', $groups);
+
+        $headquarters = Headquarters::all();
+        $studyTimes = StudyTime::all();
+        $studyYears = StudyYear::all();
+
+        return view('logro.group.index')->with([
+            'groups' => $groups,
+            'headquarters' => $headquarters,
+            'studyTimes' => $studyTimes,
+            'studyYears' => $studyYears
+        ]);
+    }
+
+    public function filter(Request $request){
+        $hq = $request->headquarters;
+        $st = $request->studyTime;
+        $sy = $request->studyYear;
+        $name = $request->name;
+
+        $groups = Group::with('headquarters', 'studyTime', 'studyYear', 'teacher')->where('school_year_id', $this->current_year()->id);
+
+        if (NULL !== $hq)
+            $groups->where('headquarters_id', $hq);
+
+        if (NULL !== $st)
+            $groups->where('study_time_id', $st);
+
+        if (NULL !== $sy)
+            $groups->where('study_year_id', $sy);
+
+        if(NULL !== $name)
+            $groups->where('name', 'like', '%' . $name . '%');
+
+        return $groups->get();
     }
 
     /**
