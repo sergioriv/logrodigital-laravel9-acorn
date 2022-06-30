@@ -49,13 +49,24 @@ $title = $group->name;
 
                                 <!-- Groups Buttons Start -->
                                 <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
-                                    <!-- Add New Button Start -->
-                                    <a href="{{ route('group.teachers.edit', $group) }}"
-                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                        <i data-acorn-icon="edit-square"></i>
-                                        <span>{{ __("Edit") .' '. __("Teachers") }}</span>
-                                    </a>
-                                    <!-- Add New Button End -->
+                                    @if ($areas->count() !== 0)
+                                        <!-- Add New Button Start -->
+                                            <a href="{{ route('group.teachers.edit', $group) }}"
+                                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                            <i data-acorn-icon="edit-square"></i>
+                                            <span>{{ __("Edit") .' '. __("Teachers") }}</span>
+                                        </a>
+                                        <!-- Add New Button End -->
+                                    @else
+                                        <!-- Assing Teachers Button Start -->
+                                        <a href="{{ route('studyYear.subject.show', $group->studyYear) }}"
+                                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                            <i data-acorn-icon="edit-square"></i>
+                                            <span>{{ __("Assign") .' '. __("Subjects") }}</span>
+                                        </a>
+                                        <!-- Assing Teachers Button End -->
+                                    @endif
+
                                 </div>
                                 <!-- Groups Buttons End -->
 
