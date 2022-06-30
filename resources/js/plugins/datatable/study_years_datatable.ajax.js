@@ -58,7 +58,7 @@
                     targets: 0,
                     render: function (data, type, row, meta) {
                         return (
-                            '<a class="list-item-heading body" href="study_years/' + row.id + '/edit">' + data + "</a>"
+                            '<a class="list-item-heading body" href="study_years/' + row.id + '/subjects">' + data + "</a>"
                         );
                     },
                 }

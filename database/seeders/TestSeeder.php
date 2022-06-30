@@ -168,31 +168,37 @@ class TestSeeder extends Seeder
         Teacher::create(['id' => $docente03->id, 'telephone' => '00003']);
 
         $biologia601 = TeacherSubjectGroup::create([
+            'school_year_id' => $year->id,
             'teacher_id' => $docente01->id,
             'subject_id' => $ciencias_biologia_2021->id,
             'group_id' => $grupo601->id]);
 
         $biologia602 = TeacherSubjectGroup::create([
+            'school_year_id' => $year->id,
             'teacher_id' => $docente01->id,
             'subject_id' => $ciencias_biologia_2021->id,
             'group_id' => $grupo602->id]);
 
         $biologia701 = TeacherSubjectGroup::create([
+            'school_year_id' => $year->id,
             'teacher_id' => $docente02->id,
             'subject_id' => $ciencias_biologia_2021->id,
             'group_id' => $grupo701->id]);
 
         $biologia702 = TeacherSubjectGroup::create([
+            'school_year_id' => $year->id,
             'teacher_id' => $docente02->id,
             'subject_id' => $ciencias_biologia_2021->id,
             'group_id' => $grupo702->id]);
 
         $geometria701 = TeacherSubjectGroup::create([
+            'school_year_id' => $year->id,
             'teacher_id' => $docente03->id,
             'subject_id' => $matematicas_geometria->id,
             'group_id' => $grupo701->id]);
 
         $geometria702 = TeacherSubjectGroup::create([
+            'school_year_id' => $year->id,
             'teacher_id' => $docente03->id,
             'subject_id' => $matematicas_geometria->id,
             'group_id' => $grupo702->id]);

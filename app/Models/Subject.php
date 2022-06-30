@@ -41,4 +41,10 @@ class Subject extends CastCreateModel
     {
         return $this->hasMany(TeacherSubjectGroup::class);
     }
+
+    public function studyYearSubject()
+    {
+        return $this->hasMany(StudyYearSubject::class);
+    }
+
 }

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ResourceArea;
+use App\Models\SchoolYear;
 use App\Models\StudyYear;
+use App\Models\StudyYearSubject;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -19,7 +22,7 @@ class StudyYearController extends Controller
      */
     public function index()
     {
-        return view('support.studyyear.index');
+        return view('logro.studyyear.index');
     }
 
     public function data()
@@ -101,5 +104,71 @@ class StudyYearController extends Controller
         return redirect()->route('studyYear.index')->with(
             ['notify' => 'success', 'title' => __('Study year updated!')],
         );
+    }
+
+    public function subjects(StudyYear $studyYear)
+    {
+        $subject_count = StudyYearSubject::where('school_year_id', $this->current_year()->id)->where('study_year_id', $studyYear->id)->count();
+
+        if ($subject_count == 0)
+        {
+            /*
+             * Create Study Year Subjects
+             */
+            $areas = ResourceArea::with('subjects')->whereHas('subjects', function ($sj) {
+                $sj->where('school_year_id', $this->current_year()->id);
+            })->get();
+
+            return view('logro.studyyear.subjects')->with([
+                'studyYear' => $studyYear,
+                'areas' => $areas,
+            ]);
+
+        } else
+        {
+            /*
+             * Show Study Year Subjects
+             */
+            $areas = ResourceArea::with('subjects')->whereHas('subjects', function ($sj) use ($studyYear) {
+                $sj->where('school_year_id', $this->current_year()->id)
+                        ->whereHas('studyYearSubject', function ($sy) use ($studyYear) {
+                            $sy->where('study_year_id', $studyYear->id);
+                        });
+            })->get();
+
+            return view('logro.studyyear.subjects_show')->with([
+                'studyYear' => $studyYear,
+                'areas' => $areas,
+            ]);
+        }
+
+    }
+
+    public function subjects_store(StudyYear $studyYear, Request $request)
+    {
+        $request->validate([
+            'subjects' => ['required', 'array']
+        ]);
+
+
+        foreach ($request->subjects as $subject) {
+            StudyYearSubject::create([
+                'school_year_id' => $this->current_year()->id,
+                'study_year_id' => $studyYear->id,
+                'subject_id' => $subject
+            ]);
+        }
+
+        return redirect()->route('studyYear.index')->with(
+            ['notify' => 'success', 'title' => __('Study year updated!')],
+        );
+
+    }
+
+
+    /* Aditionals */
+    private function current_year()
+    {
+        return SchoolYear::select('id','name')->where('available',TRUE)->first();
     }
 }

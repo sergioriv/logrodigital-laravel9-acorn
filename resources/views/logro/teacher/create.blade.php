@@ -7,13 +7,13 @@ $title = 'Create Teacher';
 @endsection
 
 @section('js_vendor')
-<script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
-<script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
-<script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
+{{-- <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script> --}}
+{{-- <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script> --}}
+{{-- <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script> --}}
 @endsection
 
 @section('js_page')
-<script src="/js/forms/genericforms.js"></script>
+{{-- <script src="/js/forms/genericforms.js"></script> --}}
 @endsection
 
 @section('content')
@@ -30,7 +30,7 @@ $title = 'Create Teacher';
 
             <!-- Content Start -->
             <section class="scroll-section">
-                <form method="post" action="{{ route('teacher.store') }}" class="tooltip-start-top" id="teacherForm" novalidate>
+                <form method="post" action="{{ route('teacher.store') }}" class="tooltip-end-bottom" id="teacherForm">
                     @csrf
 
                     <!-- Validation Errors -->
@@ -40,55 +40,52 @@ $title = 'Create Teacher';
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="mb-3 top-label">
-                                        <input class="form-control" name="firstName" />
-                                        <span>{{ __("FIRST NAME") }}</span>
-                                    </label>
+                                    <div class="mb-3">
+                                        <x-label>{{ __("First name") }}</x-label>
+                                        <x-input :value="old('firstName')" name="firstName" required />
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="mb-3 top-label">
-                                        <input class="form-control" name="secondName" />
-                                        <span>{{ __("SECOND NAME") }}</span>
-                                    </label>
+                                    <div class="mb-3">
+                                        <x-label>{{ __("Second name") }}</x-label>
+                                        <x-input :value="old('secondName')" name="secondName" />
+                                    </div>
                                 </div>
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="mb-3 top-label">
-                                        <input class="form-control" name="fatherLastName" />
-                                        <span>{{ __("FATHER'S LAST NAME") }}</span>
-                                    </label>
+                                    <div class="mb-3">
+                                        <x-label>{{ __("Father's last name") }}</x-label>
+                                        <x-input :value="old('fatherLastName')" name="fatherLastName" required />
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="mb-3 top-label">
-                                        <input class="form-control" name="motherLastName" />
-                                        <span>{{ __("MOTHER'S LAST NAME") }}</span>
-                                    </label>
+                                    <div class="mb-3">
+                                        <x-label>{{ __("Mother's last name") }}</x-label>
+                                        <x-input :value="old('motherLastName')" name="motherLastName" />
+                                    </div>
                                 </div>
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="mb-3 top-label">
-                                        <input class="form-control" name="phone" />
-                                        <span>{{ __("PHONE NUMBER") }}</span>
-                                    </label>
+                                    <div class="mb-3">
+                                        <x-label>{{ __("Phone number") }}</x-label>
+                                        <x-input :value="old('phone')" name="phone" />
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="mb-3 top-label">
-                                        <input class="form-control" name="email" />
-                                        <span>{{ __("EMAIL") }}</span>
-                                    </label>
+                                    <div class="mb-3">
+                                        <x-label>{{ __("Email") }}</x-label>
+                                        <x-input :value="old('email')" name="email" required />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer border-0 pt-0 d-flex justify-content-end align-items-center">
-                            <div>
-                                <x-button class="btn-primary" type="submit">
-                                    <span>{{ __("Save") }}</span>
-                                </x-button>
-                            </div>
+
+                            <x-button class="btn-primary" type="submit">{{ __("Save") }}</x-button>
+
                         </div>
                     </div>
+
                 </form>
             </section>
             <!-- Content End -->

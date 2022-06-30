@@ -52,7 +52,7 @@ class Group extends CastCreateModel
      */
     public function teacherSubjectGroups()
     {
-        return $this->hasMany(TeacherSubjectGroup::class);
+        return $this->hasMany(TeacherSubjectGroup::class); //->with('teacher','subject');
     }
 
     public function groupStudents()

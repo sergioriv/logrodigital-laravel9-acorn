@@ -53,6 +53,13 @@ class Teacher extends CastCreateModel
         return "{$this->first_name} {$this->father_last_name}";
     }
 
+    protected function bondingType(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => ucfirst(strtolower($value)),
+        );
+    }
+
     protected function secondName(): Attribute
     {
         return Attribute::make(

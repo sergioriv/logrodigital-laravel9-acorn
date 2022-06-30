@@ -101,6 +101,9 @@ class Scripts {
         if ("undefined" !== typeof DatatableTeachers) {
             new DatatableTeachers;
         }
+        if ("undefined" !== typeof DatatableTeacherSubjects) {
+            new DatatableTeacherSubjects;
+        }
 
     }
 

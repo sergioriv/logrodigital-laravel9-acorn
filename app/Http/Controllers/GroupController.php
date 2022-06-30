@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\Headquarters;
+use App\Models\ResourceArea;
 use App\Models\SchoolYear;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
 use App\Models\Teacher;
+use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -114,7 +116,72 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-        //
+        $sy = $group->study_year_id;
+
+        $areas = ResourceArea::with('subjects')->whereHas('subjects', function ($sj) use ($sy) {
+            $sj->where('school_year_id', $this->current_year()->id)
+                    ->whereHas('studyYearSubject', function ($sys) use ($sy) {
+                        $sys->where('study_year_id', $sy);
+                    });
+        })->get();
+
+        return view('logro.group.show')->with([
+            'group' => $group,
+            'areas' => $areas
+        ]);
+    }
+
+    public function teacher_edit(Group $group)
+    {
+        $sy = $group->study_year_id;
+
+        $teachers = Teacher::where('active', TRUE)->get();
+
+        $areas = ResourceArea::with('subjects')->whereHas('subjects', function ($sj) use ($sy) {
+            $sj->where('school_year_id', $this->current_year()->id)
+                    ->whereHas('studyYearSubject', function ($sys) use ($sy) {
+                        $sys->where('study_year_id', $sy);
+                    });
+        })->get();
+
+        return view('logro.group.teachers_edit')->with([
+            'group' => $group,
+            'areas' => $areas,
+            'teachers' => $teachers
+        ]);
+    }
+
+    public function teacher_update(Group $group, Request $request)
+    {
+        // dd($request->teachers);
+        foreach ($request->teachers as $teacher_subject) {
+            if(NULL !== $teacher_subject)
+            {
+
+                [$create, $subject, $teacher] = explode('~',$teacher_subject);
+
+                if ('null' === $create) {
+                    TeacherSubjectGroup::create([
+                        'school_year_id' => $this->current_year()->id,
+                        'teacher_id' => $teacher,
+                        'subject_id' => $subject,
+                        'group_id' => $group->id
+                    ]);
+                } else
+                {
+                    echo 'update | ';
+                    $teacherGroup = TeacherSubjectGroup::find($create);
+                    $teacherGroup->update([
+                        'teacher_id' => $teacher
+                    ]);
+                }
+            }
+
+        }
+
+        return redirect()->route('group.show', $group)->with(
+            ['notify' => 'success', 'title' => __('Group updated!')],
+        );
     }
 
     /**
@@ -123,10 +190,10 @@ class GroupController extends Controller
      * @param  \App\Models\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function edit(Group $group)
+    /* public function edit(Group $group)
     {
         //
-    }
+    } */
 
     /**
      * Update the specified resource in storage.
@@ -135,10 +202,10 @@ class GroupController extends Controller
      * @param  \App\Models\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Group $group)
+    /* public function update(Request $request, Group $group)
     {
         //
-    }
+    } */
 
 
     /* Aditionals */

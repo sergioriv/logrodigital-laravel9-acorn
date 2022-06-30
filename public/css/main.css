@@ -132,3 +132,19 @@ input[type="file"] {
 .border-pink{
     border-color: var(--bs-pink) !important;
 }
+.card-color-background {
+    background-color: var(--background);
+    box-shadow: none !important;
+}
+.checked-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+    background-color: var(--muted);
+    border-color: var(--muted) !important;
+    margin-top: 0.2em;
+    margin-left: -1.75em;
+    border-radius: var(--border-radius-sm);
+    width: 16px;
+    height: 16px;
+    float: left;
+    pointer-events: none;
+}

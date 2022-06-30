@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -26,15 +25,9 @@ class StudyYear extends CastCreateModel
         return $this->hasMany(Group::class);
     }
 
-
-    /**
-     * Mutadores y Accesores
-     */
-
-    protected function name(): Attribute
+    public function studyYearSubject()
     {
-        return Attribute::make(
-            get: fn ($value) => ucfirst(strtolower($value)),
-        );
+        return $this->hasMany(StudyYearSubject::class);
     }
+
 }

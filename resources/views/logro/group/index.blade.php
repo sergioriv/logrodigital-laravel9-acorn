@@ -54,9 +54,9 @@ $title = 'Groups';
                 <!-- Controls Start -->
                 <section class="row">
                     <!-- Search Headquarters Start -->
-                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
+                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-3 mb-1">
                         <div class="w-100">
-                            <select data-placeholder="{{ __(" Headquarters") }}" id="select2Headquarters">
+                            <select data-placeholder="{{ __("Headquarters") }}" id="select2Headquarters">
                                 <option label="&nbsp;"></option>
                                 @foreach ($headquarters as $hq)
                                 <option value="{{ $hq->id }}">{{ $hq->name }}</option>
@@ -66,9 +66,9 @@ $title = 'Groups';
                     </div>
                     <!-- Search Headquarters End -->
                     <!-- Search Study Time Start -->
-                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
+                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-3 mb-1">
                         <div class="w-100">
-                            <select data-placeholder="{{ __(" Study Time") }}" id="select2StudyTime">
+                            <select data-placeholder="{{ __("Study Time") }}" id="select2StudyTime">
                                 <option label="&nbsp;"></option>
                                 @foreach ($studyTimes as $st)
                                 <option value="{{ $st->id }}">{{ $st->name }}</option>
@@ -78,9 +78,9 @@ $title = 'Groups';
                     </div>
                     <!-- Search Study Time End -->
                     <!-- Search Study Year Start -->
-                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
+                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-3 mb-1">
                         <div class="w-100">
-                            <select data-placeholder="{{ __(" Study Year") }}" id="select2StudyYear">
+                            <select data-placeholder="{{ __("Study Year") }}" id="select2StudyYear">
                                 <option label="&nbsp;"></option>
                                 @foreach ($studyYears as $sy)
                                 <option value="{{ $sy->id }}">{{ $sy->name }}</option>
@@ -90,7 +90,7 @@ $title = 'Groups';
                     </div>
                     <!-- Search Study Year End -->
                     <!-- Search Name Start -->
-                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
+                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-3 mb-1">
                         <div
                             class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
                             <input class="form-control" id="searchName" placeholder="Search" />
@@ -109,10 +109,12 @@ $title = 'Groups';
                     <div class="col small-gutter-col">
                         <div class="card h-100">
                             <div class="card-body text-center d-flex flex-column">
-                                <h5 class="text-primary font-weight-bold">{{ $group->name }}</h5>
-                                <span>{{ $group->headquarters->name }}</span>
-                                <span>{{ $group->studyTime->name }}</span>
-                                <span>{{ $group->studyYear->name }}</span>
+                                <a href="{{ route('group.show', $group) }}">
+                                    <h5 class="text-primary font-weight-bold">{{ $group->name }}</h5>
+                                </a>
+                                <small>{{ $group->headquarters->name }}</small>
+                                <small>{{ $group->studyTime->name }}</small>
+                                <small>{{ $group->studyYear->name }}</small>
                                 <span class="btn-icon-start">
                                     <i data-acorn-icon="badge" class="icon text-primary" data-acorn-size="15"></i>
                                     {{ $group->teacher->getFullName() }}

@@ -165,6 +165,18 @@
                     <span class="label">{{ __('Groups') }}</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('studyTime.index') }}">
+                    <i data-acorn-icon="clock" class="icon" data-acorn-size="18"></i>
+                    <span class="label">{{ __('Study times') }}</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('studyYear.index') }}">
+                    <i class="icon icon-18 bi-card-checklist"></i>
+                    <span class="label">{{ __('Study years') }}</span>
+                </a>
+            </li>
 
 
             <div class="separator-light"></div>
@@ -197,21 +209,6 @@
 
 
             <!-- Support Nav Start -->
-            <li>
-                <a href="{{ route('studyTime.index') }}">
-                    <i data-acorn-icon="clock" class="icon" data-acorn-size="18"></i>
-                    <span class="label">{{ __('Study times') }}</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('studyYear.index') }}">
-                    <i class="icon icon-18 bi-card-checklist"></i>
-                    <span class="label">{{ __('Study years') }}</span>
-                </a>
-            </li>
-
-
-            <div class="separator-light"></div>
 
 
             <li>

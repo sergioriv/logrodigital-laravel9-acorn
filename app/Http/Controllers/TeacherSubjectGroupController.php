@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SchoolYear;
+use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
 
@@ -22,9 +24,9 @@ class TeacherSubjectGroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Teacher $teacher)
     {
-        //
+        return view('logro.teacher-subject.create')->with('teacher', $teacher);
     }
 
     /**
@@ -72,14 +74,11 @@ class TeacherSubjectGroupController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\TeacherSubjectGroup  $teacherSubjectGroup
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(TeacherSubjectGroup $teacherSubjectGroup)
+
+
+    /* Aditionals */
+    private function current_year()
     {
-        //
+        return SchoolYear::select('id','name')->where('available',TRUE)->first();
     }
 }

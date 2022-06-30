@@ -30,7 +30,7 @@ $title = 'Dashboard';
 
     <!-- Content Start -->
     <div class="card mb-2">
-        <div class="card-body h-100">Bienvenido a Uchuva</div>
+        <div class="card-body h-100">Bienvenido a {{ config('app.name') }}</div>
     </div>
     <!-- Content End -->
 </div>

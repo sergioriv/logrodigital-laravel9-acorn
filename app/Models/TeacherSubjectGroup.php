@@ -10,6 +10,7 @@ class TeacherSubjectGroup extends CastCreateModel
     use HasFactory;
 
     protected $fillable = [
+        'school_year_id',
         'teacher_id',
         'subject_id',
         'group_id',
@@ -19,14 +20,19 @@ class TeacherSubjectGroup extends CastCreateModel
     /*
     * PARENTS
     */
+    public function schoolYear()
+    {
+        return $this->belongsTo(SchoolYear::class);
+    }
+
     public function teacher()
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(Teacher::class)->select('id','first_name','father_last_name');
     }
 
     public function subject()
     {
-        return $this->belongsTo(Subject::class);
+        return $this->belongsTo(Subject::class); //->with('resourceArea', 'resourceSubject');
     }
 
     public function group()

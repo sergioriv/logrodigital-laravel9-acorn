@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Exports\TeachersExport;
 use App\Http\Controllers\support\UserController;
 use App\Imports\TeachersImport;
+use App\Models\SchoolYear;
+use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
@@ -80,7 +83,14 @@ class TeacherController extends Controller
      */
     public function show(Teacher $teacher)
     {
-        //
+        $schoolYear = SchoolYear::whereHas('teacherSubjectGroups', function ($subject) use ($teacher) {
+            $subject->where('teacher_id',$teacher->id);
+        })->orderByDesc('id')->get();
+
+        return view('logro.teacher.show')->with([
+            'teacher' => $teacher,
+            'schoolYear' => $schoolYear
+        ]);
     }
 
     /**

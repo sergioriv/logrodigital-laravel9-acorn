@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('father_last_name');
             $table->string('mother_last_name')->nullable();
             $table->string('document', 20)->nullable();
+            $table->string('telephone', 20)->nullable();
             $table->enum('bonding_type', [
                 'PROPIEDAD',
                 'PERIODO DE PRUEBA',
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->string('personal_email')->nullable();
             $table->date('birthdate')->nullable();
             $table->boolean('whatsapp')->nullable();
+            $table->boolean('active')->nullable();
         });
     }
 

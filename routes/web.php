@@ -13,6 +13,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TeacherSubjectGroupController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,7 +63,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('study_times.json', [StudyTimeController::class, 'data']);
 
     /* Route StudyTime */
-    Route::resource('study_years', StudyYearController::class)->except('destroy')->names('studyYear');
+    Route::resource('study_years', StudyYearController::class)->only('index')->names('studyYear');
+    Route::get('study_years/{study_year}/subjects', [StudyYearController::class, 'subjects']);
+    Route::post('study_years/{study_year}/subjects', [StudyYearController::class, 'subjects_store'])->name('studyYear.subject.store');
     Route::get('study_years.json', [StudyYearController::class, 'data']);
 
     /* Route Resource areas */
@@ -75,7 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route Areas & subjects */
     Route::resource('areas_subjects', SubjectController::class)->except('destroy','show')->names('subject');
-    Route::get('areas_subjects.json', [SubjectController::class, 'data']);
+    // Route::get('areas_subjects.json', [SubjectController::class, 'data']);
 
     /* Route Teachers */
     Route::controller(TeacherController::class)->group( function () {
@@ -87,10 +90,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('teachers', TeacherController::class)->except('destroy')->names('teacher');
 
     /* Route Groups */
-    Route::resource('groups', GroupController::class)->except('destroy')->names('group');
+    Route::resource('groups', GroupController::class)->except('destroy','edit','update')->names('group');
     Route::get('groups.filter', [GroupController::class, 'filter']);
+    Route::get('groups/{group}/teachers', [GroupController::class, 'teacher_edit'])->name('group.teachers.edit');
+    Route::put('groups/{group}/teachers', [GroupController::class, 'teacher_update'])->name('group.teachers.update');
 
-
+    /* Route TeacherSubjectGroups */
+    Route::resource('teachers/{teacher}/subjects', TeacherSubjectGroupController::class)->names('teacher.subjects');
 
 });
 

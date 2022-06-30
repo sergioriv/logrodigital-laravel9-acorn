@@ -33,4 +33,9 @@ class SchoolYear extends CastCreateModel
         return $this->hasMany(Group::class);
     }
 
+    public function teacherSubjectGroups()
+    {
+        return $this->hasMany(TeacherSubjectGroup::class);
+    }
+
 }

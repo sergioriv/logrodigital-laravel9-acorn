@@ -36,7 +36,6 @@ return new class extends Migration
 
         Schema::create('teachers', function (Blueprint $table) {/* [User] */
             $table->unsignedBigInteger('id');
-            $table->string('telephone', 20)->nullable();
             $table->timestamps();
 
             $table->primary('id');
@@ -196,13 +195,20 @@ return new class extends Migration
                     ->onDelete('restrict');
         });
 
-        Schema::create('teacher_subject_groups', function (Blueprint $table) {/* teachers, subjects, groups */
+        Schema::create('teacher_subject_groups', function (Blueprint $table) {/* school_years, teachers, subjects, groups */
             $table->id();
+            $table->unsignedBigInteger('school_year_id');
             $table->unsignedBigInteger('teacher_id');
             $table->unsignedBigInteger('subject_id');
             $table->unsignedBigInteger('group_id');
             $table->unsignedTinyInteger('work_schedule')->nullable();
             $table->timestamps();
+
+            $table->foreign('school_year_id')
+                    ->references('id')
+                    ->on('school_years')
+                    ->onUpdate('restrict')
+                    ->onDelete('restrict');
 
             $table->foreign('teacher_id')
                     ->references('id')
@@ -240,6 +246,31 @@ return new class extends Migration
                     ->on('students')
                     ->onUpdate('restrict')
                     ->onDelete('restrict');
+        });
+
+        Schema::create('study_year_subjects', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('school_year_id');
+            $table->unsignedBigInteger('study_year_id');
+            $table->unsignedBigInteger('subject_id');
+
+            $table->foreign('school_year_id')
+                    ->references('id')
+                    ->on('school_years')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+
+            $table->foreign('study_year_id')
+                    ->references('id')
+                    ->on('study_years')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+
+            $table->foreign('subject_id')
+                    ->references('id')
+                    ->on('subjects')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
         });
 
         Schema::create('periods', function (Blueprint $table) {/* school_years, headquarters, study_times, period_types */
@@ -335,6 +366,7 @@ return new class extends Migration
 
         Schema::dropIfExists('grades');
         Schema::dropIfExists('periods');
+        Schema::dropIfExists('study_year_subjects');
         Schema::dropIfExists('group_students');
         Schema::dropIfExists('teacher_subject_groups');
         Schema::dropIfExists('groups');
