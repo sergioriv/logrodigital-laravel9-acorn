@@ -62,7 +62,7 @@ $title = $group->name;
                                         <a href="{{ route('studyYear.subject.show', $group->studyYear) }}"
                                             class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
                                             <i data-acorn-icon="edit-square"></i>
-                                            <span>{{ __("Assign") .' '. __("Subjects") }}</span>
+                                            <span>{{ __("Assign") .' '. __("Subjects") .' '. $group->studyYear->name }}</span>
                                         </a>
                                         <!-- Assing Teachers Button End -->
                                     @endif

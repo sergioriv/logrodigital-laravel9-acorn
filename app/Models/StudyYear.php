@@ -12,8 +12,7 @@ class StudyYear extends CastCreateModel
     public $timestamps = false;
 
     protected $fillable = [
-        'name',
-        'available'
+        'name'
     ];
 
 

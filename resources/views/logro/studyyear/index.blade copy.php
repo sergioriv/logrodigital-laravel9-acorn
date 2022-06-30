@@ -27,7 +27,7 @@ $title = 'Study years list';
                 <div class="row">
                     <!-- Title Start -->
                     <div class="col-12 col-md-7">
-                        <h1 class="mb-0 pb-0 display-4" id="title">{{ $title .' | '. $year }}</h1>
+                        <h1 class="mb-0 pb-0 display-4" id="title">{{ $title }}</h1>
                     </div>
                     <!-- Title End -->
                 </div>
@@ -62,38 +62,10 @@ $title = 'Study years list';
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
-                                <th class="text-muted text-small text-uppercase text-center">{{ __('Subjects') }}</th>
-                                <th class="text-muted text-small text-uppercase text-center">{{ __('Groups') }}</th>
-                                <th class="text-muted text-small text-uppercase text-center">{{ __('Students') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('Groups') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('Subjects') }}</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($studyYears as $studyYear)
-                            @php
-                                $studyYear_groups_count = 0;
-                                $studyYear_students_count = 0;
-                            @endphp
-                            @foreach ($groups as $group)
-                                @if ($studyYear->id === $group->study_year_id)
-                                    @php
-                                        $studyYear_groups_count++;
-                                        $studyYear_students_count += $group->group_students_count;
-                                    @endphp
-                                @endif
-                            @endforeach
-                            <tr>
-                                <td>
-                                    <a href="{{ route("studyYear.subject.show", $studyYear->id) }}"
-                                        class="list-item-heading body">
-                                        {{ $studyYear->name }}
-                                    </a>
-                                </td>
-                                <td class="text-center">{{ $studyYear->study_year_subject_count }}</td>
-                                <td class="text-center">{{ $studyYear_groups_count }}</td>
-                                <td class="text-center">{{ $studyYear_students_count }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
                     </table>
                 </div>
                 <!-- Table End -->

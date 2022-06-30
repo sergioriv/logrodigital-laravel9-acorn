@@ -32,14 +32,9 @@
         const _this = this;
         this._datatable = jQuery("#datatable_study_years").DataTable({
             scrollX: true,
-            ajax: "/study_years.json",
             sDom: '<"row"<"col-sm-12"<"table-container"t>r>><"row"<"col-12"p>>', // Hiding all other dom elements except table and pagination
             pageLength: 10,
             order: false,
-            columns: [
-                { data: "name" },
-                { data: "available" }
-            ],
             language: {
                 url: '/json/datatable.spanish.json',
             },
@@ -52,17 +47,6 @@
             preDrawCallback: function (settings) {
                 _this._preDrawCallback($(this), settings);
             },
-            columnDefs: [
-                // Adding Name content as an anchor with a target #
-                {
-                    targets: 0,
-                    render: function (data, type, row, meta) {
-                        return (
-                            '<a class="list-item-heading body" href="study_years/' + row.id + '/subjects">' + data + "</a>"
-                        );
-                    },
-                }
-            ],
         });
     }
 

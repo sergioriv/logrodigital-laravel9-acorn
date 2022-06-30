@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use App\Models\ResourceArea;
 use App\Models\SchoolYear;
 use App\Models\StudyYear;
@@ -22,12 +23,23 @@ class StudyYearController extends Controller
      */
     public function index()
     {
-        return view('logro.studyyear.index');
+
+        $studyYears = StudyYear::withCount('studyYearSubject')->get();
+
+        $groups = Group::where('school_year_id', $this->current_year()->id)->withCount('groupStudents')->get();
+
+        return view('logro.studyyear.index')->with([
+            'year' => $this->current_year()->name,
+            'studyYears' => $studyYears,
+            'groups' => $groups
+        ]);
     }
 
     public function data()
     {
-        return ['data' => StudyYear::get()];
+        $studyYear = StudyYear::withCount('groups')->withCount('studyYearSubject')->get();
+
+        return ['data' => $studyYear];
     }
 
     /**
