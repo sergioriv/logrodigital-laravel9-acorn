@@ -70,9 +70,17 @@ $title = 'Study years list';
                         <tbody>
                             @foreach ($studyYears as $studyYear)
                             @php
+                                $studyYear_subjects_count = 0;
                                 $studyYear_groups_count = 0;
                                 $studyYear_students_count = 0;
                             @endphp
+                            @foreach ($subjects as $subject)
+                                @if ($studyYear->id === $subject->study_year_id)
+                                    @php
+                                        $studyYear_subjects_count++;
+                                    @endphp
+                                @endif
+                            @endforeach
                             @foreach ($groups as $group)
                                 @if ($studyYear->id === $group->study_year_id)
                                     @php
@@ -88,9 +96,15 @@ $title = 'Study years list';
                                         {{ $studyYear->name }}
                                     </a>
                                 </td>
-                                <td class="text-center">{{ $studyYear->study_year_subject_count }}</td>
-                                <td class="text-center">{{ $studyYear_groups_count }}</td>
-                                <td class="text-center">{{ $studyYear_students_count }}</td>
+                                <td class="text-center">
+                                    {{ $studyYear_subjects_count !== 0 ? $studyYear_subjects_count : '' }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $studyYear_groups_count !== 0 ? $studyYear_groups_count : '' }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $studyYear_students_count !== 0 ? $studyYear_students_count : '' }}
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

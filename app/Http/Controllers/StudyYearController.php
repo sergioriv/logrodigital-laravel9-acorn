@@ -23,24 +23,26 @@ class StudyYearController extends Controller
      */
     public function index()
     {
+        $studyYears = StudyYear::get();
 
-        $studyYears = StudyYear::withCount('studyYearSubject')->get();
+        $subjects = StudyYearSubject::where('school_year_id', $this->current_year()->id)->get();
 
         $groups = Group::where('school_year_id', $this->current_year()->id)->withCount('groupStudents')->get();
 
         return view('logro.studyyear.index')->with([
             'year' => $this->current_year()->name,
             'studyYears' => $studyYears,
+            'subjects' => $subjects,
             'groups' => $groups
         ]);
     }
 
-    public function data()
+    /* public function data()
     {
         $studyYear = StudyYear::withCount('groups')->withCount('studyYearSubject')->get();
 
         return ['data' => $studyYear];
-    }
+    } */
 
     /**
      * Show the form for creating a new resource.
