@@ -1,4 +1,27 @@
 {
+    "names": "Nombres",
+    "last names": "apellidos",
+    "email": "correo electrónico",
+
+    "headquarters": "sede",
+    "study time": "jornada",
+    "study year": "año de estudio",
+
+    "Students": "Estudiantes",
+    "pre-registration": "pre-inscrito",
+    "Student": "Estudiante",
+    "Student created": "Estudiante creado",
+    "Student updated": "Estudiante actualizado",
+
+    "first name": "primer nombre",
+    "second name": "segundo nombre",
+    "father's last name": "apellido del padre",
+    "mother's last name": "apellido de la madre",
+    "institutional email": "Correo electrónico institucional",
+
+    "created at": "fecha creación",
+
+    "Continue": "Continuar",
     "Wolcome": "Bienvenido",
     "let's get started!": "Vamos a empezar!",
     "Forgot": "Olvidó",

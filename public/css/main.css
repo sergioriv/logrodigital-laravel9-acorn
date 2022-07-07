@@ -80,6 +80,9 @@ html[data-color=] .logo-default.img-uchuva {
     }
 }
 
+/*
+ * Class Logro
+ */
 .load {
     width: 36px;
     height: 36px;
@@ -91,8 +94,10 @@ html[data-color=] .logo-default.img-uchuva {
     animation: rotate 1s cubic-bezier(0.46, 0.03, 0.52, 0.96) infinite;
     -webkit-animation: rotate 1s cubic-bezier(0.46, 0.03, 0.52, 0.96) infinite;
 }
+.logro-label { text-transform: lowercase; }
+.logro-label::first-letter { text-transform: uppercase; }
 /*
- * Loading End
+ * Class Logro End
  */
 
 /*

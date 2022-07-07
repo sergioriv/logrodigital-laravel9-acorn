@@ -49,7 +49,6 @@ return new class extends Migration
 
         Schema::create('students', function (Blueprint $table) {/* [User] */
             $table->unsignedBigInteger('id');
-            $table->string('telephone', 20)->nullable();
             $table->timestamps();
 
             $table->primary('id');

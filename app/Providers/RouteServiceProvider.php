@@ -20,6 +20,15 @@ class RouteServiceProvider extends ServiceProvider
     public const HOME = '/dashboard';
 
     /**
+     * The path to the "profile" route for your application.
+     *
+     * This is used by Laravel authentication to redirect users after login.
+     *
+     * @var string
+     */
+    public const PROFILE = '/profile/edit';
+
+    /**
      * Define your route model bindings, pattern filters, etc.
      *
      * @return void

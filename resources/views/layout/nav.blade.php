@@ -37,7 +37,7 @@
                 <div class="ps-1 pe-1">
                     <ul class="list-unstyled">
                         <li>
-                            <a href="{{ route('user.profile') }}">
+                            <a href="{{ route('user.profile.edit') }}">
                                 <i data-acorn-icon="user" class="me-2" data-acorn-size="17"></i>
                                 <span class="align-middle">{{ __('Profile') }}</span>
                             </a>
@@ -136,43 +136,71 @@
     <div class="menu-container flex-grow-1">
         <ul id="menu" class="menu">
             <li>
-                <a href="/dashboard">
+                <a href="/dashboard" data-href="/dashboards">
                     <i data-acorn-icon="home" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Dashboard') }}</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('headquarters.index') }}">
+                <a href="#students" data-href="/students">
+                    <i class="icon icon-18 bi-people"></i>
+                    <span class="label">{{ __("Students") }}</span>
+                </a>
+                <ul id="students">
+                    <li>
+                        <a href="{{ route("students.preregistration") }}">
+                            <span class="label">{{ __("Pre-registration") }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="label">{{ __("Registration") }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="label">{{ __("Pre-enrolled") }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="label">{{ __("Enrolled") }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="{{ route('headquarters.index') }}" data-href="/headquarters">
                     <i data-acorn-icon="building-large" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Headquarters') }}</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('subject.index') }}">
+                <a href="{{ route('subject.index') }}" data-href="/areas_subjects">
                     <i class="icon icon-18 bi-journals"></i>
                     <span class="label">{{ __('Areas & Subjects') }}</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('teacher.index') }}">
+                <a href="{{ route('teacher.index') }}" data-href="/teachers">
                     <i data-acorn-icon="question-hexagon" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Teachers') }}</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('group.index') }}">
+                <a href="{{ route('group.index') }}" data-href="/groups">
                     <i class="icon icon-18 bi-bookmarks"></i>
                     <span class="label">{{ __('Groups') }}</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('studyTime.index') }}">
+                <a href="{{ route('studyTime.index') }}" data-href="/study_times">
                     <i data-acorn-icon="clock" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Study times') }}</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('studyYear.index') }}">
+                <a href="{{ route('studyYear.index') }}" data-href="/study_years">
                     <i class="icon icon-18 bi-card-checklist"></i>
                     <span class="label">{{ __('Study years') }}</span>
                 </a>
@@ -183,9 +211,9 @@
 
 
             <!-- User Nav Start -->
-            {{-- @can('user.profile') --}}
+            {{-- @can('user.profile.edit') --}}
             <li>
-                <a href="{{ route('user.profile') }}">
+                <a href="{{ route('user.profile.edit') }}" data-href="/profile">
                     <i data-acorn-icon="user" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Profile') }}</span>
                 </a>
@@ -212,13 +240,13 @@
 
 
             <li>
-                <a href="{{ route('support.users.index') }}">
+                <a href="{{ route('support.users.index') }}" data-href="/users">
                     <i class="bi-people-fill icon icon-18"></i>
                     <span class="label">{{ __('Users') }}</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('support.roles.index') }}">
+                <a href="{{ route('support.roles.index') }}" data-href="/roles">
                     <i class="bi-person-badge icon icon-18"></i>
                     <span class="label">{{ __('Roles') }}</span>
                 </a>

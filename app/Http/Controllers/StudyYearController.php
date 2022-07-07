@@ -23,17 +23,26 @@ class StudyYearController extends Controller
      */
     public function index()
     {
-        $studyYears = StudyYear::get();
+        $studyYears = StudyYear::withCount(['studyYearSubject' => function ($subjects) {
+                $subjects->where('school_year_id', $this->current_year()->id);
+            }])
+            ->withCount(['groups' => function ($groups) {
+                $groups->where('school_year_id', $this->current_year()->id);
+            }])
+            ->with(['groups' => function ($groups) {
+                $groups->where('school_year_id', $this->current_year()->id)->withCount('groupStudents');
+            }])
+            ->get();
 
-        $subjects = StudyYearSubject::where('school_year_id', $this->current_year()->id)->get();
+        // $subjects = StudyYearSubject::where('school_year_id', $this->current_year()->id)->get();
 
-        $groups = Group::where('school_year_id', $this->current_year()->id)->withCount('groupStudents')->get();
+        // return $groups = Group::where('school_year_id', $this->current_year()->id)->withCount('groupStudents')->get();
 
         return view('logro.studyyear.index')->with([
             'year' => $this->current_year()->name,
-            'studyYears' => $studyYears,
-            'subjects' => $subjects,
-            'groups' => $groups
+            'studyYears' => $studyYears
+            // 'subjects' => $subjects,
+            // 'groups' => $groups
         ]);
     }
 
@@ -129,9 +138,9 @@ class StudyYearController extends Controller
             /*
              * Create Study Year Subjects
              */
-            $areas = ResourceArea::with('subjects')->whereHas('subjects', function ($sj) {
-                $sj->where('school_year_id', $this->current_year()->id);
-            })->get();
+            $areas = ResourceArea::with(['subjects' => function ($subjects) {
+                $subjects->where('school_year_id', $this->current_year()->id);
+            }])->get();
 
             return view('logro.studyyear.subjects')->with([
                 'studyYear' => $studyYear,

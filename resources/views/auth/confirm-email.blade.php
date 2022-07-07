@@ -27,7 +27,7 @@ $description = '';
         </div>
         <div class="mb-5">
 
-            @if ($status == 'success')
+            @if ($status == 'password')
             <p class="h6 mb-4">{{ __('Account verified successfully') }}</p>
 
             <form method="POST" action="{{ route('support.users.password') }}">
@@ -49,6 +49,9 @@ $description = '';
                 <x-button type="submit" class="btn-primary">{{ __('Confirm') }}</x-button>
             </form>
 
+            @elseif ($status == 'provider')
+            <p class="h6 mb-4">{{ __('Account verified successfully') }}</p>
+            <a href="{{ route('dashboard') }}" class="btn btn-primary">{{ __('Continue') }}</a>
             @else
             <p class="h6 mb-4">{{ __('Your account has already been verified') }}</p>
             <a href="/" class="btn btn-primary">{{ __('Go to Login') }}</a>

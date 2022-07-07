@@ -1,5 +1,5 @@
 @php
-$title = 'Study years list';
+$title = __('Students') .' '. __('pre-registration');
 @endphp
 @extends('layout',['title'=>$title])
 
@@ -27,9 +27,21 @@ $title = 'Study years list';
                 <div class="row">
                     <!-- Title Start -->
                     <div class="col-12 col-md-7">
-                        <h1 class="mb-0 pb-0 display-4" id="title">{{ $title .' | '. $year }}</h1>
+                        <h1 class="mb-0 pb-0 display-4" id="title">{{ $title }}</h1>
                     </div>
                     <!-- Title End -->
+
+                    <!-- Top Buttons Start -->
+                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                        <!-- Add New Button Start -->
+                        <a href="{{ route('students.create') }}"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                            <i data-acorn-icon="plus"></i>
+                            <span>{{ __('Add New') }}</span>
+                        </a>
+                        <!-- Add New Button End -->
+                    </div>
+                    <!-- Top Buttons End -->
                 </div>
             </div>
             <!-- Title and Top Buttons End -->
@@ -43,7 +55,7 @@ $title = 'Study years list';
                         <div
                             class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
                             <input class="form-control datatable-search" placeholder="Search"
-                                data-datatable="#datatable_study_years" />
+                                data-datatable="#datatable_students" />
                             <span class="search-magnifier-icon">
                                 <i data-acorn-icon="search"></i>
                             </span>
@@ -58,41 +70,32 @@ $title = 'Study years list';
 
                 <!-- Table Start -->
                 <div class="data-table-responsive-wrapper">
-                    <table id="datatable_study_years" class="data-table nowrap w-100" logro="datatable">
+                    <table id="datatable_students" class="data-table nowrap w-100" logro="datatable">
                         <thead>
                             <tr>
-                                <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
-                                <th class="text-muted text-small text-uppercase text-center">{{ __('Subjects') }}</th>
-                                <th class="text-muted text-small text-uppercase text-center">{{ __('Groups') }}</th>
-                                <th class="text-muted text-small text-uppercase text-center">{{ __('Students') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('last names') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('email') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('headquarters') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('study time') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('study year') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('created at') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($studyYears as $studyYear)
-                            @php
-                                $studyYear_students_count = 0;
-                            @endphp
-                            @foreach ($studyYear->groups as $group)
-                                @php
-                                    $studyYear_students_count += $group->group_students_count;
-                                @endphp
-                            @endforeach
+                            @foreach ($students as $student)
                             <tr>
                                 <td>
-                                    <a href="{{ route("studyYear.subject.show", $studyYear->id) }}"
-                                        class="list-item-heading body">
-                                        {{ $studyYear->name }}
+                                    <a href="{{ route('students.preregistratione.edit', $student) }}" class="list-item-heading body">
+                                        {{ $student->getNames() }}
                                     </a>
                                 </td>
-                                <td class="text-center">
-                                    {{ $studyYear->study_year_subject_count !== 0 ? $studyYear->study_year_subject_count : '' }}
-                                </td>
-                                <td class="text-center">
-                                    {{ $studyYear->groups_count !== 0 ? $studyYear->groups_count : '' }}
-                                </td>
-                                <td class="text-center">
-                                    {{ $studyYear_students_count !== 0 ? $studyYear_students_count : '' }}
-                                </td>
+                                <td>{{ $student->getLastNames() }}</td>
+                                <td>{{ $student->institutional_email }}</td>
+                                <td>{{ $student->headquarters->name }}</td>
+                                <td>{{ $student->studyTime->name }}</td>
+                                <td>{{ $student->studyYear->name }}</td>
+                                <td class="text-small">{{ $student->created_at }}</td>
                             </tr>
                             @endforeach
                         </tbody>

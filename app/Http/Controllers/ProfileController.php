@@ -2,19 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\branch\WaiterController;
-use App\Http\Controllers\restaurant\BranchController;
-use App\Http\Controllers\support\RestaurantController;
+
 use App\Http\Controllers\support\UserController;
-use App\Models\Branch;
-use App\Models\Restaurant;
+use App\Models\Student;
 use App\Models\User;
-use App\Models\Waiter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Illuminate\Validation\Rule;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProfileController extends Controller
 {
@@ -27,21 +20,21 @@ class ProfileController extends Controller
     public function show()
     {
         switch (UserController::role_auth()) {
-             case 'Support':
+             /* case 'Support':
                 $support = User::findOrFail(Auth::user()->id);
                 return view('profile.support-edit')->with('support', $support);
-                break;
+                break; */
+
+            /* case 'Student':
+                $student = User::findOrFail(Auth::user()->id);
+                return view('profile.estudent-edit')->with('student', $student);
+                break; */
 /*
             case 'Branch':
                 $branch = Branch::with('user')->findOrFail(Auth::user()->id);
                 $deps = json_decode(file_get_contents('json/colombia.min.json'), true);
 
                 return view('profile.branch-edit')->with(['branch' => $branch, 'deps' => $deps]);
-                break;
-
-            case 'Waiter':
-                $waiter = Waiter::with('user')->findOrFail(Auth::user()->id);
-                return view('profile.waiter-edit')->with('waiter', $waiter);
                 break; */
 
             default:
@@ -53,14 +46,20 @@ class ProfileController extends Controller
     public function edit()
     {
         switch (UserController::role_auth()) {
+
+            case 'Support':
+                $support = User::findOrFail(Auth::user()->id);
+                return view('profile.support-edit')->with('support', $support);
+                break;
+
+            case 'Student':
+                $student = Student::findOrFail(Auth::user()->id);
+                return view('profile.student-edit')->with('student', $student);
+                break;
+
             /* case 'Restaurant':
                 $restaurant = Restaurant::with('user')->findOrFail(Auth::user()->id);
                 return view('profile.restaurant-edit')->with('restaurant', $restaurant);
-                break;
-
-            case 'Branch':
-                $branch = Branch::with('user')->findOrFail(Auth::user()->id);
-                return view('profile.branch-edit')->with('branch', $branch);
                 break; */
 
             default:
@@ -84,19 +83,15 @@ class ProfileController extends Controller
                 UserController::profile_update($request, $support);
                 break;
 
+            case 'Student':
+                $student = Student::findOrFail(Auth::user()->id);
+                $update = new StudentController();
+                $update->update($request, $student);
+                break;
+
             /* case 'Restaurant':
                 $restaurant = Restaurant::findOrFail(Auth::user()->id);
                 RestaurantController::profile_update($request, $restaurant);
-                break;
-
-            case 'Branch':
-                $branch = Branch::findOrFail(Auth::user()->id);
-                BranchController::profile_update($request, $branch);
-                break;
-
-            case 'Waiter':
-                $waiter = Waiter::findOrFail(Auth::user()->id);
-                WaiterController::profile_update($request, $waiter);
                 break; */
 
             default:
@@ -104,7 +99,7 @@ class ProfileController extends Controller
                 break;
         }
 
-        return redirect()->route('user.profile')->with(
+        return redirect()->route('user.profile.edit')->with(
             ['notify' => 'success', 'title' => __('Updated!')],
         );
     }

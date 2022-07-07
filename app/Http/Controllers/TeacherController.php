@@ -50,15 +50,15 @@ class TeacherController extends Controller
     {
         $request->validate([
             'firstName' => ['required', 'string'],
-            'secondName' => ['string'],
+            // 'secondName' => ['string'],
             'fatherLastName' => ['required','string'],
-            'motherLastName' => ['string'],
-            'phone' => ['numeric'],
+            // 'motherLastName' => ['string'],
+            // 'phone' => ['numeric'],
             'email' => ['required', 'email', Rule::unique('users')]
         ]);
 
-        $teacher_name = $request->firstName . ' ' . $request->fatherLastName;
-        $user = UserController::_create($teacher_name, $request->email, 6);
+        $user_name = $request->firstName . ' ' . $request->fatherLastName;
+        $user = UserController::_create($user_name, $request->email, 6);
 
         Teacher::create([
             'id' => $user->id,

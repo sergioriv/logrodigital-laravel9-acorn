@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\support;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ProviderUser;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -12,6 +13,17 @@ use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
+    private $providers = [
+        'hotmail.com'   => 'microsoft',
+        'hotmail.es'    => 'microsoft',
+        'outlook.com'   => 'microsoft',
+        'outlook.es'    => 'microsoft',
+        'live.com'      => 'microsoft',
+        'live.es'       => 'microsoft',
+        'gmail.com'     => 'google',
+        'logro.digital' => 'institutional',
+    ];
+
     public function __construct()
     {
         $this->middleware('can:support.users');
@@ -27,12 +39,29 @@ class UserController extends Controller
         return ['data' => User::with('roles')->orderBy('created_at','DESC')->get()];
     }
 
+    /* public function create($name, $email, $role)
+    {
+
+        return $this->_create($name, $email, $role);
+
+    } */
+
     public static function _create($name, $email, $role)
     {
+
+        $provider = ProviderUser::provider_validate($email);
+
         $user = User::create([
+            'provider' => $provider,
             'name' => $name,
             'email' => $email,
         ])->assignRole($role);
+
+        if ( $role === 7 )
+            $user->forceFill(['email_verified_at' => now()])->save();
+        else
+            $user->sendEmailVerificationNotification();
+
 
         event(new Registered($user));
 
@@ -87,7 +116,7 @@ class UserController extends Controller
         ]);
     }
 
-    public static function _update($user_id, $name, $email, $avatar)
+    public static function _update($user_id, $name, $email=NULL, $avatar=NULL)
     {
         $user = User::findOrFail($user_id);
         $user->update([

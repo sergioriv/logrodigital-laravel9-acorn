@@ -7,7 +7,7 @@
  *
  */
 
- class DatatableStudyYears {
+ class DatatableStandard {
     constructor() {
         if (!jQuery().DataTable) {
             console.log("DataTable is null!");
@@ -30,7 +30,7 @@
     // Creating datatable instance. Table data is provided by json/products.json file and loaded via ajax
     _createInstance() {
         const _this = this;
-        this._datatable = jQuery("#datatable_study_years").DataTable({
+        this._datatable = jQuery("[logro='datatable']").DataTable({
             scrollX: true,
             sDom: '<"row"<"col-sm-12"<"table-container"t>r>><"row"<"col-12"p>>', // Hiding all other dom elements except table and pagination
             pageLength: 10,

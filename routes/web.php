@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceAreaController;
 use App\Http\Controllers\ResourceSubjectController;
 use App\Http\Controllers\SchoolYearController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudyTimeController;
 use App\Http\Controllers\StudyYearController;
 use App\Http\Controllers\SubjectController;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
@@ -97,6 +99,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /* Route TeacherSubjectGroups */
     Route::resource('teachers/{teacher}/subjects', TeacherSubjectGroupController::class)->names('teacher.subjects');
 
+    /* Route Students */
+    Route::controller(StudentController::class)->group( function () {
+        Route::get('students/preregistration', 'preregistration')->name('students.preregistration');
+        Route::get('students/preregistration/{student}/edit', 'preregistration_edit')->name('students.preregistratione.edit');
+        Route::put('students/preregistration/{student}/edit', 'preregistration_update')->name('students.preregistratione.update');
+        Route::get('students/create', 'preregistration_create')->name('students.create');
+        Route::post('students', 'preregistration_store')->name('students.store');
+        Route::put('students/{student}', 'update')->name('students.update');
+    });
 });
 
 

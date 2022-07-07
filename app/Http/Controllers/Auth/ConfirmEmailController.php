@@ -16,6 +16,7 @@ use Illuminate\Validation\Rules;
 
 class ConfirmEmailController extends Controller
 {
+    private $providers = ['microsoft', 'google', 'logro.digital'];
     /**
      * Show the confirm password view.
      *
@@ -27,9 +28,16 @@ class ConfirmEmailController extends Controller
 
         $diff = Carbon::create($auth->email_verified_at)->diffInMinutes(Carbon::now());
 
-        if ($diff <= 2 || empty($auth->password)) {
-            return view('auth.confirm-email')->with('status', 'success');
-        } else {
+        if ( in_array($auth->provider, $this->providers ) && $diff <= 2 )
+        {
+            return view('auth.confirm-email')->with('status', 'provider');
+        }
+        elseif ( NULL === $auth->password && NULL === $auth->provider )
+        {
+            return view('auth.confirm-email')->with('status', 'password');
+        }
+        else
+        {
             Auth::logout();
             return view('auth.confirm-email')->with('status', 'fail');
         }

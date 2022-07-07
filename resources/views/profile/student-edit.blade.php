@@ -1,5 +1,5 @@
 @php
-$title = $support->name;
+$title = $student->user->name;
 @endphp
 @extends('layout',['title'=>$title])
 
@@ -42,7 +42,7 @@ $title = $support->name;
 
                                     <!-- Avatar -->
                                     <div class="mb-3 d-flex align-items-center flex-column">
-                                        <x-avatar-profile-edit :avatar="$support->avatar" />
+                                        <x-avatar-profile-edit :avatar="$student->user->avatar" />
                                     </div>
 
                                 </div>
@@ -51,15 +51,28 @@ $title = $support->name;
                                     <!-- Name -->
                                     <div class="mb-3">
                                         <x-label>{{ __('Name') }}</x-label>
-                                        <x-input id="name" name="name" value="{{ $support->name }}" required
+                                        <x-input id="name" name="name" value="" required
                                             autofocus />
                                     </div>
 
                                     <!-- Email -->
                                     <div class="mb-3">
                                         <x-label>{{ __('Email') }}</x-label>
-                                        <x-input value="{{ $support->email }}"
+                                        <x-input value=""
                                             required disabled />
+                                    </div>
+
+                                    <!-- Nit -->
+                                    <div class="mb-3">
+                                        <x-label>{{ __('Nit') }}</x-label>
+                                        <x-input id="nit" name="nit" value="" required />
+                                    </div>
+
+                                    <!-- Telephone -->
+                                    <div class="mb-3">
+                                        <x-label>{{ __('Telephone') }}</x-label>
+                                        <x-input id="telephone" name="telephone" value=""
+                                            required />
                                     </div>
 
                                 </div>

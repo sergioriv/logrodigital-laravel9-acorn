@@ -69,6 +69,9 @@ class Scripts {
       if ("undefined" !== typeof GenericForms) {
         new GenericForms;
       }
+      if (typeof SingleImageUpload !== 'undefined' && document.getElementById('imageProfile')) {
+        const singleImageUpload = new SingleImageUpload(document.getElementById('imageProfile'));
+      }
     }
 
     // Plugin pages initialization
@@ -82,9 +85,6 @@ class Scripts {
         }
         if ("undefined" !== typeof DatatableStudyTimes) {
             new DatatableStudyTimes;
-        }
-        if ("undefined" !== typeof DatatableStudyYears) {
-            new DatatableStudyYears;
         }
         if ("undefined" !== typeof DatatableSchoolYears) {
             new DatatableSchoolYears;
@@ -103,6 +103,9 @@ class Scripts {
         }
         if ("undefined" !== typeof DatatableTeacherSubjects) {
             new DatatableTeacherSubjects;
+        }
+        if ("undefined" !== typeof DatatableStandard) {
+            new DatatableStandard;
         }
 
     }
