@@ -7,6 +7,7 @@ use App\Http\Controllers\support\UserController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -62,16 +63,24 @@ class AuthenticatedSessionController extends Controller
 
     public function microsoft_callback()
     {
-        $user = Socialite::driver('azure')->user();
+        $microsoft = Socialite::driver('azure')->user();
 
-        $microsoft = User::where('provider', 'microsoft')->where('email', $user->email)->first();
+        $user = User::where('provider', 'microsoft')->where('email', $microsoft->email)->first();
 
-        if ( $microsoft )
+        if ( $user )
         {
-            $microsoft->password = null;
-            $this->store($microsoft);
-            // Auth::login($microsoft);
-            // return $this->login_redirect();
+            if (! $user->hasVerifiedEmail()) {
+                $user->markEmailAsVerified();
+
+                event(new Verified($user));
+            }
+
+            $user->forceFill([
+                'remember_token' => $microsoft->token
+            ])->save();
+
+            Auth::login($user);
+            return $this->login_redirect();
         }
         else
         {
