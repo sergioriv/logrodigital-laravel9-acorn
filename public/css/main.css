@@ -1,49 +1,49 @@
 /* This file is reserved for overriding and extending the template styles. */
 
 /*
- * Logo Nav Uchuva
+ * Logo Nav Logro
 */
-/* html[data-color^="light-"][data-navcolor="light"] .logo .img-uchuva {
-    background-image: url("../img/logo/logo-uchuva-light.svg") !important;
+html[data-color^="light-"][data-navcolor="light"] .logo .img-logro {
+    background-image: url("../img/logo/logo-logro-light.svg") !important;
 }
-html[data-color^="dark-"][data-navcolor="dark"] .logo .img-uchuva {
-    background-image: url("../img/logo/logo-uchuva-dark.svg") !important;
+html[data-color^="dark-"][data-navcolor="dark"] .logo .img-logro {
+    background-image: url("../img/logo/logo-logro-dark.svg") !important;
 }
-html[data-color^="light-"][data-navcolor="dark"] .logo .img-uchuva {
-    background-image: url("../img/logo/logo-uchuva-dark.svg") !important;
+html[data-color^="light-"][data-navcolor="dark"] .logo .img-logro {
+    background-image: url("../img/logo/logo-logro-dark.svg") !important;
 }
-html[data-color^="dark-"][data-navcolor="light"] .logo .img-uchuva {
-    background-image: url("../img/logo/logo-uchuva-light.svg") !important;
+html[data-color^="dark-"][data-navcolor="light"] .logo .img-logro {
+    background-image: url("../img/logo/logo-logro-light.svg") !important;
 }
-html[data-color^="light-"][data-navcolor="default"] .logo .img-uchuva {
-    background-image: url("../img/logo/uchuva-light.svg") !important;
+html[data-color^="light-"][data-navcolor="default"] .logo .img-logro {
+    background-image: url("../img/logo/logro-light.svg") !important;
 }
-html[data-color^="dark-"][data-navcolor="default"] .logo .img-uchuva {
-    background-image: url("../img/logo/uchuva-light.svg") !important;
+html[data-color^="dark-"][data-navcolor="default"] .logo .img-logro {
+    background-image: url("../img/logo/logro-light.svg") !important;
 }
-html[data-color^="light-"] .logo .img-uchuva {
-    background-image: url("../img/logo/uchuva-light.svg") !important;
+html[data-color^="light-"] .logo .img-logro {
+    background-image: url("../img/logo/logro-light.svg") !important;
 }
-html[data-color^="dark-"] .logo .img-uchuva {
-    background-image: url("../img/logo/uchuva-light.svg") !important;
-} */
+html[data-color^="dark-"] .logo .img-logro {
+    background-image: url("../img/logo/logro-light.svg") !important;
+}
 
 /*
- * Logo Lobby Uchuva
+ * Logo Lobby Logro
  */
-/* html[data-color^="light-"] .logo-default.img-uchuva {
-    background-image: url("../img/logo/logo-uchuva-lobby-light.svg") !important;
+html[data-color^="light-"] .logo-default.img-logro {
+    background-image: url("../img/logo/logo-logro-lobby-light.svg") !important;
 }
-html[data-color^="dark-"] .logo-default.img-uchuva {
-    background-image: url("../img/logo/logo-uchuva-lobby-dark.svg") !important;
+html[data-color^="dark-"] .logo-default.img-logro {
+    background-image: url("../img/logo/logo-logro-lobby-dark.svg") !important;
 }
-html[data-color=] .logo-default.img-uchuva {
-    background-image: url("../img/logo/logo-uchuva-lobby-light.svg") !important;
+html[data-color=] .logo-default.img-logro {
+    background-image: url("../img/logo/logo-logro-lobby-light.svg") !important;
 }
-.logo-default.img-uchuva {
-    width: 93px;
+.logo-default.img-logro {
+    width: 64px;
     min-height: 104px;
-} */
+}
 
 /*
  * Full Page Start

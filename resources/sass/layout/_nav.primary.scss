@@ -211,8 +211,8 @@ html[data-placement='vertical'] {
     .logo {
       img,
       .img {
-        width: 100px;
-        min-height: 35px;
+        width: 115px;
+        min-height: 31px;
         object-position: left;
         object-fit: cover;
         transition: width var(--transition-time), height var(--transition-time);
@@ -530,7 +530,7 @@ html[data-placement='vertical'] .nav-container.mobile-side-ready {
       a {
         overflow: hidden;
         display: inline-block;
-        width: 100px;
+        width: 115px;
       }
     }
 

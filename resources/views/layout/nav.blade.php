@@ -5,7 +5,7 @@
             <!-- Logo can be added directly -->
             <!-- <img src="/img/logo/logo-white.svg" alt="logo" /> -->
             {{-- <x-application-logo class="w-200 h-200 fill-current text-white" /> --}}
-            <div class="img"></div>
+            <div class="img img-logro"></div>
             <!-- Or added via css to provide different ones for different color themes -->
             {{-- <div class="img"></div> --}}
         </a>
