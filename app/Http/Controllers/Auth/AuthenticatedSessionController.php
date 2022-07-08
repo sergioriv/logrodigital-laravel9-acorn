@@ -84,7 +84,7 @@ class AuthenticatedSessionController extends Controller
         }
         else
         {
-            return redirect()->route('login')->withErrors( $microsoft->email .' no registrado con una cuenta Microsoft' );
+            return redirect()->route('login')->withErrors( $microsoft->email .' '. __("unregistered on our platform"));
         }
     }
 
