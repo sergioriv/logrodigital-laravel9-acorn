@@ -84,7 +84,7 @@ class AuthenticatedSessionController extends Controller
         }
         else
         {
-            return redirect()->route('login')->withErrors( $user->email .' no registrado con una cuenta Microsoft' );
+            return redirect()->route('login')->withErrors( $microsoft->email .' no registrado con una cuenta Microsoft' );
         }
     }
 
@@ -100,9 +100,5 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->intended(RouteServiceProvider::HOME);
                 break;
         endswitch;
-        /* if ( UserController::role_auth() === 'Student' )
-            return redirect()->intended(RouteServiceProvider::PROFILE);
-
-        return redirect()->intended(RouteServiceProvider::HOME); */
     }
 }
