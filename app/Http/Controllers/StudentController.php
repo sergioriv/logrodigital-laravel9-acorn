@@ -3,7 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\UserController;
+use App\Models\City;
+use App\Models\DocumentType;
+use App\Models\EthnicGroup;
+use App\Models\Gender;
 use App\Models\Headquarters;
+use App\Models\HealthManager;
+use App\Models\OriginSchool;
+use App\Models\Rh;
+use App\Models\Sisben;
 use App\Models\Student;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
@@ -144,7 +152,25 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        $documentType = DocumentType::all();
+        $cities = City::all();
+        $genders = Gender::all();
+        $rhs = Rh::all();
+        $healthManager = HealthManager::all();
+        $sisbenes = Sisben::all();
+        $ethnicGroups = EthnicGroup::all();
+        $originSchools = OriginSchool::all();
+        return view('logro.student.profile')->with([
+            'student' => $student,
+            'documentType' => $documentType,
+            'cities' => $cities,
+            'genders' => $genders,
+            'rhs' => $rhs,
+            'healthManager' => $healthManager,
+            'sisbenes' => $sisbenes,
+            'ethnicGroups' => $ethnicGroups,
+            'originSchools' => $originSchools
+        ]);
     }
 
     /**
@@ -167,7 +193,82 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        return "update";
+        $request->validate([
+            'firstName' => ['required', 'string'],
+            'secondName' => ['nullable','string'],
+            'fatherLastName' => ['required', 'string'],
+            'motherLastName' => ['nullable','string'],
+            'telephone' => ['nullable','numeric'],
+            'document_type' => ['required', Rule::exists('document_types','code')],
+            'document' => ['required', Rule::unique('students','document')->ignore($student->id)],
+            'expedition_city' => ['nullable',Rule::exists('cities','id')],
+            'number_siblings' => ['nullable','numeric'],
+            'birth_city' => ['nullable',Rule::exists('cities','id')],
+            'birthdate' => ['nullable','date'],
+            'gender' => ['nullable',Rule::exists('genders','id')],
+            'rh' => ['nullable',Rule::exists('rhs','id')],
+            'zone' => ['nullable','string'],
+            'residence_city' => ['nullable',Rule::exists('cities','id')],
+            'address' => ['nullable','string'],
+            'social_stratum' => ['nullable'],
+            'health_manager' => ['nullable',Rule::exists('health_managers','id')],
+            'school_insurance' => ['nullable','string'],
+            'sisben' => ['nullable',Rule::exists('sisben','id')],
+            'disability' => ['nullable','string'],
+            'ethnic_group' => ['nullable',Rule::exists('ethnic_groups','id')],
+            'conflict_victim' => ['nullable','boolean'],
+            'lunch' => ['nullable','boolean'],
+            'refreshment' => ['nullable','boolean'],
+            'transport' => ['nullable','boolean'],
+            'origin_school_id' => ['nullable',Rule::exists('origin_schools','id')]
+
+        ]);
+
+        $user_name = $request->firstName . ' ' . $request->fatherLastName;
+        UserController::_update($student->id, $user_name);
+
+        $student->update([
+            'first_name' => $request->firstName,
+            'second_name' => $request->secondName,
+            'father_last_name' => $request->fatherLastName,
+            'mother_last_name' => $request->motherLastName,
+            'document_type_code' => $request->document_type,
+            'document' => $request->document,
+            'telephone' => $request->telephone,
+            'expedition_city_id' => $request->expedition_city,
+            'birth_city_id' => $request->birth_city,
+            'birthdate' => $request->birthdate,
+            'gender_id' => $request->gender,
+            'rh_id' => $request->rh,
+            'number_siblings' => $request->number_siblings,
+
+            /* lugar de domicilio */
+            'zone' => $request->zone,
+            'address' => $request->address,
+            'residence_city_id' => $request->residence_city,
+            'social_stratum' => $request->social_stratum,
+
+            /* seguridad social */
+            'health_manager_id' => $request->health_manager,
+            'sisben_id' => $request->sisben,
+            'disability' => $request->disability,
+            'school_insurance' => $request->school_insurance,
+
+            /* informacion complementaria */
+            'ethnic_group_id' => $request->ethnic_group,
+            'conflict_victim' => $request->conflict_victim,
+            'lunch' => $request->lunch,
+            'refreshment' => $request->refreshment,
+            'transport' => $request->transportm,
+            'origin_school_id' => $request->origin_school_id
+
+        ]);
+
+        return redirect()->back()->with(
+            ['notify' => 'success', 'title' => __('Student updated!')],
+        );
     }
+
+
 
 }

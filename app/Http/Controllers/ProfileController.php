@@ -53,8 +53,8 @@ class ProfileController extends Controller
                 break;
 
             case 'Student':
-                $student = Student::findOrFail(Auth::user()->id);
-                return view('profile.student-edit')->with('student', $student);
+                $student = new StudentController();
+                return $student->show( Student::find(Auth::user()->id) );
                 break;
 
             /* case 'Restaurant':

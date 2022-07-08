@@ -35,10 +35,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if ( UserController::role_auth() === 'Student' )
-            return redirect()->intended(RouteServiceProvider::PROFILE);
-
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return $this->login_redirect();
     }
 
     /**
@@ -67,16 +64,34 @@ class AuthenticatedSessionController extends Controller
     {
         $user = Socialite::driver('azure')->user();
 
-        $user_logro = User::where('email', $user->email)->first();
+        $user_logro = User::where('provider', 'microsoft')->where('email', $user->email)->first();
 
         if ( $user_logro )
         {
             Auth::login($user);
-            return 'LOGIN' .$user_logro->name;
+            return $this->login_redirect();
         }
         else
         {
-            return redirect()->route('login')->withErrors( $user->email .' no registrado' );
+            return redirect()->route('login')->withErrors( $user->email .' no registrado con una cuenta Microsoft' );
         }
+    }
+
+
+    private function login_redirect()
+    {
+        switch ( UserController::role_auth() ) :
+            case 'Student':
+                return redirect()->intended(RouteServiceProvider::PROFILE);
+                break;
+
+            default:
+                return redirect()->intended(RouteServiceProvider::HOME);
+                break;
+        endswitch;
+        /* if ( UserController::role_auth() === 'Student' )
+            return redirect()->intended(RouteServiceProvider::PROFILE);
+
+        return redirect()->intended(RouteServiceProvider::HOME); */
     }
 }

@@ -49,6 +49,16 @@ return new class extends Migration
             $table->string('name', 5);
         });
 
+        Schema::create('sisben', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 10);
+        });
+
+        Schema::create('ethnic_groups', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100);
+        });
+
         Schema::create('origin_schools', function (Blueprint $table) {
             $table->id();
             $table->string('name', 5);
@@ -64,7 +74,7 @@ return new class extends Migration
         });
 
 
-        Schema::table('students', function (Blueprint $table) { /* document_types, cities, genders, rhs, health_managers, origin_schools, headquarters, study_times, study_years */
+        Schema::table('students', function (Blueprint $table) { /* document_types, cities, genders, rhs, sisben, ethnic_groups health_managers, origin_schools, headquarters, study_times, study_years */
             $table->string('first_name');
             $table->string('second_name')->nullable();
             $table->string('father_last_name');
@@ -90,12 +100,12 @@ return new class extends Migration
             $table->unsignedBigInteger('rh_id')->nullable();
             $table->boolean('conflict_victim')->nullable();
             $table->unsignedTinyInteger('number_siblings')->nullable();
-            $table->unsignedTinyInteger('sisben')->nullable();
+            $table->unsignedBigInteger('sisben_id')->nullable();
             $table->unsignedTinyInteger('social_stratum')->nullable();
             $table->boolean('lunch')->nullable();
             $table->boolean('refreshment')->nullable();
             $table->boolean('transport')->nullable();
-            $table->boolean('ethnic_group')->nullable();
+            $table->boolean('ethnic_group_id')->nullable();
             $table->string('disability', 50);
             $table->unsignedBigInteger('origin_school_id')->nullable();
             $table->string('school_insurance', 100)->nullable();
@@ -156,6 +166,18 @@ return new class extends Migration
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
 
+            $table->foreign('sisben_id')
+                    ->references('id')
+                    ->on('sisben')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+
+            $table->foreign('ethnic_group_id')
+                    ->references('id')
+                    ->on('ethnic_groups')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+
             $table->foreign('residence_city_id')
                     ->references('id')
                     ->on('cities')
@@ -196,41 +218,53 @@ return new class extends Migration
     public function down()
     {
         Schema::table('students', function (Blueprint $table) {
-            $table->dropColumn('first_name');
-            $table->dropColumn('second_name');
-            $table->dropColumn('father_last_name');
-            $table->dropColumn('mother_last_name');
-            $table->dropColumn('document_type_code');
-            $table->dropColumn('document');
-            $table->dropColumn('telephone');
-            $table->dropColumn('institutional_email');
-            $table->dropColumn('enrollment_date');
-            $table->dropColumn('zone');
-            $table->dropColumn('address');
-            $table->dropColumn('health_manager_id');
-            $table->dropColumn('residence_city_id');
-            $table->dropColumn('expedition_city_id');
-            $table->dropColumn('birth_city_id');
-            $table->dropColumn('birthdate');
-            $table->dropColumn('gender_id');
-            $table->dropColumn('rh_id');
-            $table->dropColumn('conflict_victim');
-            $table->dropColumn('number_siblings');
-            $table->dropColumn('sisben');
-            $table->dropColumn('social_stratum');
-            $table->dropColumn('lunch');
-            $table->dropColumn('refreshment');
-            $table->dropColumn('transport');
-            $table->dropColumn('ethnic_group');
-            $table->dropColumn('disability');
-            $table->dropColumn('origin_school_id');
-            $table->dropColumn('school_insurance');
+            /* informacion basica */
+            // $table->dropColumn('first_name');
+            // $table->dropColumn('second_name');
+            // $table->dropColumn('father_last_name');
+            // $table->dropColumn('mother_last_name');
+            // $table->dropColumn('document_type_code');
+            // $table->dropColumn('document');
+            // $table->dropColumn('telephone');
+            // $table->dropColumn('institutional_email');
+            // $table->dropColumn('expedition_city_id');
+            // $table->dropColumn('birth_city_id');
+            // $table->dropColumn('birthdate');
+            // $table->dropColumn('gender_id');
+            // $table->dropColumn('rh_id');
+            // $table->dropColumn('number_siblings');
+
+            /* lugar de domicilio */
+            // $table->dropColumn('zone');
+            // $table->dropColumn('address');
+            // $table->dropColumn('residence_city_id');
+            // $table->dropColumn('social_stratum');
+
+            /* seguridad social */
+            // $table->dropColumn('health_manager_id');
+            // $table->dropColumn('sisben_id');
+            // $table->dropColumn('disability');
+            // $table->dropColumn('school_insurance');
+
+            /* informacion complementaria */
+            // $table->dropColumn('ethnic_group_id');
+            // $table->dropColumn('conflict_victim');
+            // $table->dropColumn('lunch');
+            // $table->dropColumn('refreshment');
+            // $table->dropColumn('transport');
+            // $table->dropColumn('origin_school_id');
+
+            /* informacion pre-matricula */
             $table->dropColumn('headquarters_id');
             $table->dropColumn('study_time_id');
             $table->dropColumn('study_year_id');
-            $table->dropColumn('enrollment_status');
-            $table->dropColumn('status');
+
+            /* Inclusivo */
             $table->dropColumn('inclusive');
+
+            $table->dropColumn('enrolled_date');
+            $table->dropColumn('enrolled_status');
+            $table->dropColumn('status');
         });
 
         Schema::dropIfExists('document_types');

@@ -30,12 +30,12 @@ class Student extends CastCreateModel
         'rh_id',
         'conflict_victim',
         'number_siblings',
-        'sisben',
+        'sisben_id',
         'social_stratum',
         'lunch',
         'refreshment',
         'transport',
-        'ethnic_group',
+        'ethnic_group_id',
         'disability',
         'origin_school_id',
         'school_insurance',
@@ -67,6 +67,27 @@ class Student extends CastCreateModel
     {
         return $this->belongsTo(StudyYear::class);
     }
+    public function documentTypeCode()
+    {
+        return $this->belongsTo(DocumentType::class, 'code');
+    }
+    public function healthManager()
+    {
+        return $this->belongsTo(HealthManager::class);
+    }
+    public function sisben()
+    {
+        return $this->belongsTo(Sisben::class);
+    }
+    public function ethnicGroup()
+    {
+        return $this->belongsTo(EthnicGroup::class);
+    }
+    public function originSchool()
+    {
+        return $this->belongsTo(OriginSchool::class);
+    }
+
 
 
 

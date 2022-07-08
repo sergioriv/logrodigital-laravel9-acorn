@@ -135,6 +135,8 @@
     <!-- Menu Start -->
     <div class="menu-container flex-grow-1">
         <ul id="menu" class="menu">
+
+            @can('support.users')
             <li>
                 <a href="/dashboard" data-href="/dashboards">
                     <i data-acorn-icon="home" class="icon" data-acorn-size="18"></i>
@@ -201,17 +203,18 @@
             </li>
             <li>
                 <a href="{{ route('studyYear.index') }}" data-href="/study_years">
-                    <i class="icon icon-18 bi-card-checklist"></i>
+                    <i data-acorn-icon="calendar" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Study years') }}</span>
                 </a>
             </li>
 
 
             <div class="separator-light"></div>
+            @endcan
 
 
             <!-- User Nav Start -->
-            {{-- @can('user.profile.edit') --}}
+            @can('support.roles')
             <li>
                 <a href="{{ route('user.profile.edit') }}" data-href="/profile">
                     <i data-acorn-icon="user" class="icon" data-acorn-size="18"></i>
@@ -229,15 +232,15 @@
                     </a>
                 </form>
             </li>
-            {{-- @endcan --}}
+            @endcan
             <!-- User Nav End -->
 
 
+            @can('support')
             <div class="separator-light"></div>
 
 
             <!-- Support Nav Start -->
-
 
             <li>
                 <a href="{{ route('support.users.index') }}" data-href="/users">
@@ -252,6 +255,7 @@
                 </a>
             </li>
             <!-- Support Nav End -->
+            @endcan
         </ul>
     </div>
     <!-- Menu End -->

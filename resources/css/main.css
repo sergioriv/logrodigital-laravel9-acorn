@@ -153,3 +153,18 @@ input[type="file"] {
     float: left;
     pointer-events: none;
 }
+.logro-toggle { position: relative;}
+.logro-toggle:before {
+    position: absolute;
+    top: calc(50% - 2px);
+    border-top: 1px solid var(--alternate);
+    border-right: 1px solid var(--alternate);
+    margin-top: 0;
+    right: 12px;
+    content: "";
+    width: 5px;
+    height: 5px;
+    transform: rotate(45deg);
+    order: 3;
+    margin-left: 5px;
+}

@@ -36,7 +36,7 @@ $title = $teacher->getFullName();
             <section class="scroll-section">
                 <div class="row gx-4 gy-5">
                     <!-- Left Side Start -->
-                    <div class="col-12 col-xl-4 col-xxl-3">
+                    <div class="col-12 col-xl-3">
                         <!-- Biography Start -->
                         <div class="card">
                             <div class="card-body mb-n5">
@@ -79,7 +79,7 @@ $title = $teacher->getFullName();
                     <!-- Left Side End -->
 
                     <!-- Right Side Start -->
-                    <div class="col-12 col-xl-8 col-xxl-9">
+                    <div class="col-12 col-xl-9">
                         <!-- Title Tabs Start -->
                         <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" role="tablist">
                             <li class="nav-item" role="presentation">

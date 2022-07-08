@@ -18,11 +18,8 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        // $vertival       = Permission::create([ 'name' => 'vertical' ]);
-        // $horizontal     = Permission::create([ 'name' => 'horizontal' ]);
-        // $register       = Permission::create([ 'name' => 'register' ]);
-        // $support_users  = Permission::create([ 'name' => 'support.users' ]);
-        // $support_roles  = Permission::create([ 'name' => 'support.roles' ]);
+        // Permission::create([ 'name' => 'headquarters.index' ]);
+        // Permission::create([ 'name' => 'profile.edit' ]);
 
         // $role_admin = Role::create([ 'name' => 'SUPPORT' ])->syncPermissions([$support_users, $support_roles]); // 1
         // Role::create([ 'name' => 'RECTOR' ]); // 2

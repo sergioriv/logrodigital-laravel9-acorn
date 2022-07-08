@@ -16,7 +16,7 @@ use Illuminate\Validation\Rules;
 
 class ConfirmEmailController extends Controller
 {
-    private $providers = ['microsoft', 'google', 'logro.digital'];
+    private $providers = ['microsoft', 'google'];
     /**
      * Show the confirm password view.
      *

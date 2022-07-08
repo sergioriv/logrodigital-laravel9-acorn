@@ -7,13 +7,13 @@ $title = 'Create Teacher';
 @endsection
 
 @section('js_vendor')
-{{-- <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script> --}}
-{{-- <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script> --}}
-{{-- <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script> --}}
+<script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
+<script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
+<script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
 @endsection
 
 @section('js_page')
-{{-- <script src="/js/forms/genericforms.js"></script> --}}
+<script src="/js/forms/genericforms.js"></script>
 @endsection
 
 @section('content')
@@ -30,7 +30,7 @@ $title = 'Create Teacher';
 
             <!-- Content Start -->
             <section class="scroll-section">
-                <form method="post" action="{{ route('teacher.store') }}" class="tooltip-end-bottom" id="teacherForm">
+                <form method="post" action="{{ route('teacher.store') }}" class="tooltip-label-end" id="teacherForm" novalidate>
                     @csrf
 
                     <!-- Validation Errors -->
@@ -40,13 +40,13 @@ $title = 'Create Teacher';
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <div class="mb-3">
+                                    <div class="mb-3 position-relative form-group">
                                         <x-label>{{ __("First name") }}</x-label>
                                         <x-input :value="old('firstName')" name="firstName" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="mb-3">
+                                    <div class="mb-3 position-relative form-group">
                                         <x-label>{{ __("Second name") }}</x-label>
                                         <x-input :value="old('secondName')" name="secondName" />
                                     </div>
@@ -54,13 +54,13 @@ $title = 'Create Teacher';
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <div class="mb-3">
+                                    <div class="mb-3 position-relative form-group">
                                         <x-label>{{ __("Father's last name") }}</x-label>
                                         <x-input :value="old('fatherLastName')" name="fatherLastName" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="mb-3">
+                                    <div class="mb-3 position-relative form-group">
                                         <x-label>{{ __("Mother's last name") }}</x-label>
                                         <x-input :value="old('motherLastName')" name="motherLastName" />
                                     </div>
@@ -68,13 +68,13 @@ $title = 'Create Teacher';
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <div class="mb-3">
+                                    <div class="mb-3 position-relative form-group">
                                         <x-label>{{ __("Phone number") }}</x-label>
                                         <x-input :value="old('phone')" name="phone" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="mb-3">
+                                    <div class="mb-3 position-relative form-group">
                                         <x-label>{{ __("Email") }}</x-label>
                                         <x-input :value="old('email')" name="email" required />
                                     </div>
