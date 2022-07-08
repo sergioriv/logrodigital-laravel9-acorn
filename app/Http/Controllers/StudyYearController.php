@@ -152,12 +152,19 @@ class StudyYearController extends Controller
             /*
              * Show Study Year Subjects
              */
-            $areas = ResourceArea::with('subjects')->whereHas('subjects', function ($sj) use ($studyYear) {
+            $areas = ResourceArea::with(['subjects' => function ($subjects) use ($studyYear) {
+                $subjects->where('school_year_id', $this->current_year()->id)
+                    ->whereHas('studyYearSubject', function ($sy) use ($studyYear) {
+                        $sy->where('study_year_id', $studyYear->id);
+                    });
+            }])
+            ->whereHas('subjects', function ($sj) use ($studyYear) {
                 $sj->where('school_year_id', $this->current_year()->id)
                         ->whereHas('studyYearSubject', function ($sy) use ($studyYear) {
                             $sy->where('study_year_id', $studyYear->id);
                         });
-            })->get();
+            })
+            ->get();
 
             return view('logro.studyyear.subjects_show')->with([
                 'studyYear' => $studyYear,

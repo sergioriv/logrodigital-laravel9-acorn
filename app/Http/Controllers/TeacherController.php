@@ -50,10 +50,10 @@ class TeacherController extends Controller
     {
         $request->validate([
             'firstName' => ['required', 'string'],
-            // 'secondName' => ['string'],
+            'secondName' => ['nullable','string'],
             'fatherLastName' => ['required','string'],
-            // 'motherLastName' => ['string'],
-            // 'phone' => ['numeric'],
+            'motherLastName' => ['nullable','string'],
+            'phone' => ['nullable','numeric'],
             'email' => ['required', 'email', Rule::unique('users')]
         ]);
 

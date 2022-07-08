@@ -46,9 +46,9 @@ class StudentController extends Controller
     {
         $request->validate([
             'firstName' => ['required', 'string'],
-            // 'secondName' => ['string'],
+            'secondName' => ['nullable','string'],
             'fatherLastName' => ['required', 'string'],
-            // 'motherLastName' => ['string'],
+            'motherLastName' => ['nullable','string'],
             'institutional_email' => ['required', 'email', Rule::unique('users','email')],
             'headquarters' => ['required', Rule::exists('headquarters','id')],
             'studyTime' => ['required', Rule::exists('study_times','id')],
@@ -92,9 +92,9 @@ class StudentController extends Controller
     {
         $request->validate([
             'firstName' => ['required', 'string'],
-            'secondName' => ['string'],
+            'secondName' => ['nullable','string'],
             'fatherLastName' => ['required', 'string'],
-            'motherLastName' => ['string'],
+            'motherLastName' => ['nullable','string'],
             'institutional_email' => ['required', 'email', Rule::unique('users','email')->ignore($student->id)],
             'headquarters' => ['required', Rule::exists('headquarters','id')],
             'studyTime' => ['required', Rule::exists('study_times','id')],
