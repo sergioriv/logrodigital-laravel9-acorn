@@ -219,48 +219,48 @@ return new class extends Migration
     {
         Schema::table('students', function (Blueprint $table) {
             /* informacion basica */
-            // $table->dropColumn('first_name');
-            // $table->dropColumn('second_name');
-            // $table->dropColumn('father_last_name');
-            // $table->dropColumn('mother_last_name');
-            // $table->dropColumn('document_type_code');
-            // $table->dropColumn('document');
-            // $table->dropColumn('telephone');
-            // $table->dropColumn('institutional_email');
-            // $table->dropColumn('expedition_city_id');
-            // $table->dropColumn('birth_city_id');
-            // $table->dropColumn('birthdate');
-            // $table->dropColumn('gender_id');
-            // $table->dropColumn('rh_id');
-            // $table->dropColumn('number_siblings');
+            $table->dropColumn('first_name');
+            $table->dropColumn('second_name');
+            $table->dropColumn('father_last_name');
+            $table->dropColumn('mother_last_name');
+            $table->dropColumn('document_type_code');
+            $table->dropColumn('document');
+            $table->dropColumn('telephone');
+            $table->dropColumn('institutional_email');
+            $table->dropColumn('expedition_city_id');
+            $table->dropColumn('birth_city_id');
+            $table->dropColumn('birthdate');
+            $table->dropColumn('gender_id');
+            $table->dropColumn('rh_id');
+            $table->dropColumn('number_siblings');
 
             /* lugar de domicilio */
-            // $table->dropColumn('zone');
-            // $table->dropColumn('address');
-            // $table->dropColumn('residence_city_id');
-            // $table->dropColumn('social_stratum');
+            $table->dropColumn('zone');
+            $table->dropColumn('address');
+            $table->dropColumn('residence_city_id');
+            $table->dropColumn('social_stratum');
 
             /* seguridad social */
-            // $table->dropColumn('health_manager_id');
-            // $table->dropColumn('sisben_id');
-            // $table->dropColumn('disability');
-            // $table->dropColumn('school_insurance');
+            $table->dropColumn('health_manager_id');
+            $table->dropColumn('sisben_id');
+            $table->dropColumn('disability');
+            $table->dropColumn('school_insurance');
 
             /* informacion complementaria */
-            // $table->dropColumn('ethnic_group_id');
-            // $table->dropColumn('conflict_victim');
-            // $table->dropColumn('lunch');
-            // $table->dropColumn('refreshment');
-            // $table->dropColumn('transport');
-            // $table->dropColumn('origin_school_id');
+            $table->dropColumn('ethnic_group_id');
+            $table->dropColumn('conflict_victim');
+            $table->dropColumn('lunch');
+            $table->dropColumn('refreshment');
+            $table->dropColumn('transport');
+            $table->dropColumn('origin_school_id');
 
             /* informacion pre-matricula */
-            $table->dropColumn('headquarters_id');
-            $table->dropColumn('study_time_id');
-            $table->dropColumn('study_year_id');
+            // $table->dropColumn('headquarters_id');
+            // $table->dropColumn('study_time_id');
+            // $table->dropColumn('study_year_id');
 
             /* Inclusivo */
-            $table->dropColumn('inclusive');
+            // $table->dropColumn('inclusive');
 
             $table->dropColumn('enrolled_date');
             $table->dropColumn('enrolled_status');

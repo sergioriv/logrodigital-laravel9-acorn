@@ -9,6 +9,7 @@ use App\Models\EthnicGroup;
 use App\Models\Gender;
 use App\Models\Headquarters;
 use App\Models\HealthManager;
+use App\Models\Kinship;
 use App\Models\OriginSchool;
 use App\Models\Rh;
 use App\Models\Sisben;
@@ -160,6 +161,7 @@ class StudentController extends Controller
         $sisbenes = Sisben::all();
         $ethnicGroups = EthnicGroup::all();
         $originSchools = OriginSchool::all();
+        $kinships = Kinship::all();
         return view('logro.student.profile')->with([
             'student' => $student,
             'documentType' => $documentType,
@@ -169,7 +171,8 @@ class StudentController extends Controller
             'healthManager' => $healthManager,
             'sisbenes' => $sisbenes,
             'ethnicGroups' => $ethnicGroups,
-            'originSchools' => $originSchools
+            'originSchools' => $originSchools,
+            'kinships' => $kinships
         ]);
     }
 
@@ -259,7 +262,7 @@ class StudentController extends Controller
             'conflict_victim' => $request->conflict_victim,
             'lunch' => $request->lunch,
             'refreshment' => $request->refreshment,
-            'transport' => $request->transportm,
+            'transport' => $request->transport,
             'origin_school_id' => $request->origin_school_id
 
         ]);

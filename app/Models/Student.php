@@ -44,7 +44,9 @@ class Student extends CastCreateModel
         'study_year_id',
         'enrolled_date',
         'enrolled_status',
-        'status'
+        'status',
+        'inclusive',
+        'person_charge'
     ];
 
     public function user()
@@ -102,6 +104,19 @@ class Student extends CastCreateModel
     public function grades()
     {
         return $this->hasMany(Grade::class);
+    }
+
+    public function mother()
+    {
+        return $this->hasOne(PersonCharge::class,'student_id')->where('kinship_id', 1);
+    }
+    public function father()
+    {
+        return $this->hasOne(PersonCharge::class,'student_id')->where('kinship_id', 2);
+    }
+    public function tutor()
+    {
+        return $this->hasOne(PersonCharge::class,'student_id')->where('kinship_id', '>', 2);
     }
 
 

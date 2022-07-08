@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
+use App\Http\Controllers\PersonChargeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceAreaController;
 use App\Http\Controllers\ResourceSubjectController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
+use App\Models\PersonCharge;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -108,6 +110,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('students', 'preregistration_store')->name('students.store');
         Route::put('students/{student}', 'update')->name('students.update');
     });
+
+    Route::put('persons_charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');
 });
 
 

@@ -91,7 +91,10 @@ $title = $student->user->name;
                                     <a class="nav-link active logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab" href="#informationTab" role="tab">
                                         <span class="align-middle">{{ __("Information") }}</span>
                                     </a>
-                                    <a class="nav-link logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab" href="#documentsTab" role="tab">
+                                    <a class="nav-link  logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab" href="#personsChargeTab" role="tab">
+                                        <span class="align-middle">{{ __("Persons in Charge") }}</span>
+                                    </a>
+                                    <a class="nav-link  logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab" href="#documentsTab" role="tab">
                                         <span class="align-middle">{{ __("Documents") }}</span>
                                     </a>
                                 </div>
@@ -492,11 +495,258 @@ $title = $student->user->name;
                             </div>
                             <!-- Information Tab End -->
 
-                            <!-- Branches Tab Start -->
-                            <div class="tab-pane fade" id="documentsTab" role="tabpanel">
-                                documentos
+                            <!-- Persons In Charge Tab Start -->
+                            <div class="tab-pane fade " id="personsChargeTab" role="tabpanel">
+
+                                <form method="POST" action="{{ route('personsCharge', $student) }}" class="tooltip-label-end" novalidate>
+                                    @csrf
+                                    @method('PUT')
+
+                                <!-- Mother Section Start -->
+                                <h2 class="small-title">{{ __("Mother Information") }}</h2>
+                                <input type="hidden" name="mother" value="{{ $student->mother->id ?? null }}">
+                                <section class="card mb-5">
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="mb-3 w-100 position-relative form-group">
+                                                    <x-label>{{ __("name") }} <span class="text-danger">*</span></x-label>
+                                                    <x-input value="{{ $student->mother->name ?? null }}" name="mother_name" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 w-100 position-relative form-group">
+                                                    <x-label>{{ __("email") }} <span class="text-danger">*</span></x-label>
+                                                    @if (NULL === $student->mother)
+                                                        <x-input value="{{ $student->mother->email ?? null }}" name="mother_email" required />
+                                                    @else
+                                                        <span class="form-control text-muted">
+                                                            {{ $student->mother->email }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="mb-3 w-100 position-relative form-group">
+                                                    <x-label>{{ __("document") }}</x-label>
+                                                    <x-input value="{{ $student->mother->document ?? null }}" name="mother_document" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 w-100 position-relative form-group">
+                                                    <x-label>{{ __("expedition city") }}</x-label>
+                                                    <select name="mother_expedition_city" logro="select2">
+                                                        <option label="&nbsp;"></option>
+                                                        @foreach ($cities as $city)
+                                                        <option value="{{ $city->id }}"
+                                                            @if ($student->mother->expedition_city_id ?? null !== NULL)
+                                                            @selected($student->mother->expedition_city_id === $city->id)
+                                                            @endif >
+                                                            {{ $city->department->name .' | '. $city->name }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="mb-3 w-100 position-relative form-group">
+                                                    <x-label>{{ __("residence city") }}</x-label>
+                                                    <select name="mother_residence_city" logro="select2">
+                                                        <option label="&nbsp;"></option>
+                                                        @foreach ($cities as $city)
+                                                        <option value="{{ $city->id }}"
+                                                            @if ($student->mother->residence_city_id ?? null !== NULL)
+                                                            @selected($student->mother->residence_city_id === $city->id)
+                                                            @endif >
+                                                            {{ $city->department->name .' | '. $city->name }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 position-relative form-group">
+                                                    <x-label>{{ __("address") }}</x-label>
+                                                    <x-input value="{{ $student->mother->address ?? null }}" name="mother_address" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="mb-3 position-relative form-group">
+                                                    <x-label>{{ __("telephone") }}</x-label>
+                                                    <x-input value="{{ $student->mother->telephone ?? null }}" name="mother_telephone" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 position-relative form-group">
+                                                    <x-label>{{ __("cellphone") }} <span class="text-danger">*</span></x-label>
+                                                    <x-input value="{{ $student->mother->cellphone ?? null }}" name="mother_cellphone" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="mb-3 position-relative form-group">
+                                                    <x-label>{{ __("birthdate") }}</x-label>
+                                                    <x-input value="{{ $student->mother->birthdate ?? null }}" logro="datePicker" name="mother_birthdate" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 position-relative form-group">
+                                                    <x-label>{{ __("occupation") }}</x-label>
+                                                    <x-input value="{{ $student->mother->occupation ?? null }}" name="mother_occupation" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                                <!-- Mother Section End -->
+
+                                <!-- Father Section Start -->
+                                <h2 class="small-title">{{ __("Father Information") }}</h2>
+                                <input type="hidden" name="father" value="{{ $student->father->id ?? null }}">
+                                <section class="card mb-5">
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="mb-3 w-100 position-relative form-group">
+                                                    <x-label>{{ __("name") }} <span class="text-danger">*</span></x-label>
+                                                    <x-input value="{{ $student->father->name ?? null }}" name="father_name" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 w-100 position-relative form-group">
+                                                    <x-label>{{ __("email") }} <span class="text-danger">*</span></x-label>
+                                                    @if (NULL === $student->father)
+                                                        <x-input value="{{ $student->father->email ?? null }}" name="father_email" required />
+                                                    @else
+                                                        <span class="form-control text-muted">
+                                                            {{ $student->father->email }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="mb-3 w-100 position-relative form-group">
+                                                    <x-label>{{ __("document") }}</x-label>
+                                                    <x-input value="{{ $student->father->document ?? null }}" name="father_document" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 w-100 position-relative form-group">
+                                                    <x-label>{{ __("expedition city") }}</x-label>
+                                                    <select name="father_expedition_city" logro="select2">
+                                                        <option label="&nbsp;"></option>
+                                                        @foreach ($cities as $city)
+                                                        <option value="{{ $city->id }}"
+                                                            @if ($student->father->expedition_city_id ?? null !== NULL)
+                                                            @selected($student->father->expedition_city_id === $city->id)
+                                                            @endif >
+                                                            {{ $city->department->name .' | '. $city->name }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="mb-3 w-100 position-relative form-group">
+                                                    <x-label>{{ __("residence city") }}</x-label>
+                                                    <select name="father_residence_city" logro="select2">
+                                                        <option label="&nbsp;"></option>
+                                                        @foreach ($cities as $city)
+                                                        <option value="{{ $city->id }}"
+                                                            @if ($student->father->residence_city_id ?? null !== NULL)
+                                                            @selected($student->father->residence_city_id === $city->id)
+                                                            @endif >
+                                                            {{ $city->department->name .' | '. $city->name }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 position-relative form-group">
+                                                    <x-label>{{ __("address") }}</x-label>
+                                                    <x-input value="{{ $student->father->address ?? null }}" name="father_address" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="mb-3 position-relative form-group">
+                                                    <x-label>{{ __("telephone") }}</x-label>
+                                                    <x-input value="{{ $student->father->telephone ?? null }}" name="father_telephone" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 position-relative form-group">
+                                                    <x-label>{{ __("cellphone") }} <span class="text-danger">*</span></x-label>
+                                                    <x-input value="{{ $student->father->cellphone ?? null }}" name="father_cellphone" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="mb-3 position-relative form-group">
+                                                    <x-label>{{ __("birthdate") }}</x-label>
+                                                    <x-input value="{{ $student->father->birthdate ?? null }}" logro="datePicker" name="father_birthdate" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 position-relative form-group">
+                                                    <x-label>{{ __("occupation") }}</x-label>
+                                                    <x-input value="{{ $student->father->occupation ?? null }}" name="father_occupation" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                                <!-- Father Section End -->
+
+                                <!-- Tutor Section Start -->
+                                <h2 class="small-title">{{ __("Tutor") }} <span class="text-danger">*</span></h2>
+                                <section class="card mb-5">
+                                    <div class="card-body w-100">
+                                        <div class="mb-3 w-100 position-relative form-group">
+                                            <select name="person_charge" logro="select2" required >
+                                                <option label="&nbsp;"></option>
+                                                @foreach ($kinships as $kinship)
+                                                <option value="{{ $kinship->id }}"
+                                                    @if ($student->person_charge ?? null !== NULL)
+                                                    @selected($student->person_charge === $kinship->id)
+                                                    @endif >
+                                                    {{ __($kinship->name) }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </section>
+                                <!-- Tutor Section End -->
+
+                                <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                                    <x-button class="btn-primary" type="submit">{{ __("Save") }}</x-button>
+                                </div>
+
+                                </form>
+
                             </div>
-                            <!-- Branches Tab End -->
+                            <!-- Persons In Charge Tab End -->
+
+                            <!-- Documents Tab Start -->
+                            <div class="tab-pane fade " id="documentsTab" role="tabpanel">
+                                <h2 class="small-title">{{ __("Documents") }}</h2>
+                            </div>
+                            <!-- Documents Tab End -->
 
 
                     </div>
