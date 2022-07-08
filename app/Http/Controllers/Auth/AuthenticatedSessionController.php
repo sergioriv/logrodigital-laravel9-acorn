@@ -64,14 +64,13 @@ class AuthenticatedSessionController extends Controller
     {
         $user = Socialite::driver('azure')->user();
 
-        dd($user);
-
         $microsoft = User::where('provider', 'microsoft')->where('email', $user->email)->first();
 
         if ( $microsoft )
         {
-            Auth::login($microsoft);
-            return $this->login_redirect();
+            $this->store($microsoft);
+            // Auth::login($microsoft);
+            // return $this->login_redirect();
         }
         else
         {
