@@ -68,6 +68,7 @@ class AuthenticatedSessionController extends Controller
 
         if ( $microsoft )
         {
+            $microsoft->password = null;
             $this->store($microsoft);
             // Auth::login($microsoft);
             // return $this->login_redirect();
