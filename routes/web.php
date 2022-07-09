@@ -9,6 +9,7 @@ use App\Http\Controllers\ResourceAreaController;
 use App\Http\Controllers\ResourceSubjectController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentFileController;
 use App\Http\Controllers\StudyTimeController;
 use App\Http\Controllers\StudyYearController;
 use App\Http\Controllers\SubjectController;
@@ -112,6 +113,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::put('persons_charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');
+    Route::put('student_files/{student}', [StudentFileController::class, 'update'])->name('studentFile');
 });
 
 

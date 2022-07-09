@@ -168,3 +168,6 @@ input[type="file"] {
     order: 3;
     margin-left: 5px;
 }
+.icon-70 {
+    font-size: 70px !important;
+}

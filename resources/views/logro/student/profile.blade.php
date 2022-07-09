@@ -106,10 +106,10 @@ $title = $student->user->name;
                     <!-- Left Side End -->
 
                     <!-- Right Side Start -->
-                    <div class="col-12 col-xl-8 col-xxl-9 mb-5 tab-content">
+                    <div class="col-12 col-xl-9 mb-5 tab-content">
 
                             <!-- Information Tab Start -->
-                            <div class="tab-pane fade active show" id="informationTab" role="tabpanel">
+                            <div class="tab-pane fade " id="informationTab" role="tabpanel">
 
                                 <form method="POST" action="{{ route('students.update', $student) }}" class="tooltip-label-end" novalidate>
                                     @csrf
@@ -743,8 +743,75 @@ $title = $student->user->name;
                             <!-- Persons In Charge Tab End -->
 
                             <!-- Documents Tab Start -->
-                            <div class="tab-pane fade " id="documentsTab" role="tabpanel">
+                            <div class="tab-pane fade active show" id="documentsTab" role="tabpanel">
+
+                                <!-- Mother Section Start -->
                                 <h2 class="small-title">{{ __("Documents") }}</h2>
+                                <section class="card mb-5">
+                                    <div class="card-header">
+                                        <form method="POST" action="{{ route('studentFile', $student) }}" enctype="multipart/form-data"
+                                            class="tooltip-label-end" novalidate>
+                                            @csrf
+                                            @method('PUT')
+
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="w-100 position-relative form-group">
+                                                        <select data-placeholder="Seleccione documento" name="file_type" logro="select2">
+                                                            <option label="&nbsp;"></option>
+                                                            @foreach ($studentFileTypes as $fileType)
+                                                            <option value="{{ $fileType->id }}"
+                                                                @selected(old("file_type") == $fileType->id)>
+                                                                {{ $fileType->name }}
+                                                            </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="position-relative form-group">
+                                                        <x-input type="file" name="file_upload" accept="image/jpg, image/jpeg, image/png, image/webp" class="d-block" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 col-md-2 border-0 pt-0 d-flex justify-content-end align-items-start">
+                                                    <x-button class="btn-primary" type="submit">{{ __("Upload") }}</x-button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="row g-2 row-cols-3 row-cols-md-4">
+                                            @foreach ($studentFileTypes as $studentFile)
+                                            <div class="col small-gutter-col">
+                                                <div class="h-100">
+                                                    <div class="card-body text-center d-flex flex-column">
+                                                        <span>
+                                                            @if ($studentFile->studentFile->url ?? null !== NULL)
+
+                                                                @if ($studentFile->studentFile->checked === 1)
+                                                                <i class="icon bi-file-earmark-check-fill icon-70 text-primary"></i>
+                                                                @elseif ($studentFile->studentFile->checked === 0)
+                                                                <i class="icon bi-file-earmark-x-fill icon-70 text-primary"></i>
+                                                                @else
+                                                                <i class="icon bi-file-earmark-fill icon-70 text-primary"></i>
+                                                                @endif
+
+                                                            @else
+                                                            <i class="icon bi-file-earmark icon-70 text-muted"></i>
+                                                            @endif
+                                                            {{-- {{ $studentFile->studentFile->url ?? null }} --}}
+                                                        </span>
+                                                        <span>{{ $studentFile->name }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+
+                                    </div>
+                                </section>
                             </div>
                             <!-- Documents Tab End -->
 

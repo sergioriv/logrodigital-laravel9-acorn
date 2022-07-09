@@ -13,17 +13,6 @@ use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
-    private $providers = [
-        'hotmail.com'   => 'microsoft',
-        'hotmail.es'    => 'microsoft',
-        'outlook.com'   => 'microsoft',
-        'outlook.es'    => 'microsoft',
-        'live.com'      => 'microsoft',
-        'live.es'       => 'microsoft',
-        'gmail.com'     => 'google',
-        'logro.digital' => 'institutional',
-    ];
-
     public function __construct()
     {
         $this->middleware('can:support.users');
@@ -142,6 +131,7 @@ class UserController extends Controller
         {
             $path = $request->file('avatar')->store('avatar','public');
             return config('filesystems.disks.public.url') .'/' . $path;
+            // return config('app.url') .'/'. config('filesystems.disks.public.url') .'/' . $path;
         }
         else return null;
     }

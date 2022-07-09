@@ -14,6 +14,7 @@ use App\Models\OriginSchool;
 use App\Models\Rh;
 use App\Models\Sisben;
 use App\Models\Student;
+use App\Models\StudentFileType;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
@@ -162,6 +163,9 @@ class StudentController extends Controller
         $ethnicGroups = EthnicGroup::all();
         $originSchools = OriginSchool::all();
         $kinships = Kinship::all();
+        $studentFileTypes = StudentFileType::get();
+
+        // return StudentFileType::find(1)->studentFile;
         return view('logro.student.profile')->with([
             'student' => $student,
             'documentType' => $documentType,
@@ -172,7 +176,8 @@ class StudentController extends Controller
             'sisbenes' => $sisbenes,
             'ethnicGroups' => $ethnicGroups,
             'originSchools' => $originSchools,
-            'kinships' => $kinships
+            'kinships' => $kinships,
+            'studentFileTypes' => $studentFileTypes
         ]);
     }
 

@@ -7,7 +7,7 @@ class ProviderUser
 
     private static $providers = [
 
-        'logro.digital' => 'microsoft', // correo institucional
+        // 'logro.digital' => 'microsoft', // correo institucional
 
         'hotmail.com'   => 'microsoft',
         'hotmail.es'    => 'microsoft',
@@ -15,7 +15,7 @@ class ProviderUser
         'outlook.es'    => 'microsoft',
         'live.com'      => 'microsoft',
         'live.es'       => 'microsoft',
-        'gmail.com'     => 'google',
+        // 'gmail.com'     => 'google',
     ];
 
     public static function provider_validate($email)

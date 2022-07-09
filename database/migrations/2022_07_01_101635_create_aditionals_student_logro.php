@@ -126,6 +126,7 @@ return new class extends Migration
                 'repeat'
             ])->nullable();
             $table->boolean('inclusive')->nullable();
+            $table->boolean('person_charge')->nullable();
 
 
 
@@ -265,6 +266,8 @@ return new class extends Migration
             $table->dropColumn('enrolled_date');
             $table->dropColumn('enrolled_status');
             $table->dropColumn('status');
+            $table->dropColumn('inclusive');
+            $table->dropColumn('person_charge');
         });
 
         Schema::dropIfExists('document_types');
