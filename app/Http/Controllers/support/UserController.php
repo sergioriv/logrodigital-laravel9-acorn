@@ -125,6 +125,18 @@ class UserController extends Controller
         }
     }
 
+    public static function _update_avatar(Request $request, User $user)
+    {
+        $path = self::upload_avatar($request);
+
+        if ( $request->hasFile('avatar') )
+            File::delete(public_path($user->avatar));
+
+        $user->update([
+            'avatar' => $path
+        ]);
+    }
+
     public static function upload_avatar($request)
     {
         if ( $request->hasFile('avatar') )

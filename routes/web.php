@@ -53,6 +53,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('profile', [ProfileController::class, 'show'])->name('user.profile');
     Route::get('profile/edit', [ProfileController::class, 'edit'])->name('user.profile.edit');
     Route::put('profile', [ProfileController::class, 'update'])->name('user.profile.update');
+    Route::put('profile/{user}/avatar', [ProfileController::class, 'update_avatar'])->name('user.profile.avatar');
 
 
     /* Route School Year */
@@ -110,10 +111,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('students/create', 'preregistration_create')->name('students.create');
         Route::post('students', 'preregistration_store')->name('students.store');
         Route::put('students/{student}', 'update')->name('students.update');
+
+        Route::get('students/pregistration', 'registration')->name('students.registration');
+        Route::get('students/{student}/edit', 'show')->name('students.show');
+
+        Route::get('students/export/instructive', 'export_instructive')->name('students.instructive');
+        Route::get('students/import', 'import')->name('students.import');
+        Route::post('students/import', 'import_store')->name('students.import');
     });
 
     Route::put('persons_charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');
-    Route::put('student_files/{student}', [StudentFileController::class, 'update'])->name('studentFile');
+    Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
+    Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
 });
 
 

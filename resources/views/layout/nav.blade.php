@@ -42,18 +42,18 @@
                                 <span class="align-middle">{{ __('Profile') }}</span>
                             </a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a href="#">
                                 <i data-acorn-icon="help" class="me-2" data-acorn-size="17"></i>
                                 <span class="align-middle">{{ __('Help') }}</span>
                             </a>
-                        </li>
-                        <li>
+                        </li> --}}
+                        {{-- <li>
                             <a href="#">
                                 <i data-acorn-icon="file-text" class="me-2" data-acorn-size="17"></i>
                                 <span class="align-middle">{{ __('Docs') }}</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -151,22 +151,22 @@
                 <ul id="students">
                     <li>
                         <a href="{{ route("students.preregistration") }}">
-                            <span class="label">{{ __("Pre-registration") }}</span>
+                            <span class="label text-capitalize">{{ __("pre-registration") }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route("students.registration") }}">
+                            <span class="label text-capitalize">{{ __("registration") }}</span>
                         </a>
                     </li>
                     <li>
                         <a href="#">
-                            <span class="label">{{ __("Registration") }}</span>
+                            <span class="label text-capitalize">{{ __("pre-enrolled") }}</span>
                         </a>
                     </li>
                     <li>
                         <a href="#">
-                            <span class="label">{{ __("Pre-enrolled") }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="label">{{ __("Enrolled") }}</span>
+                            <span class="label text-capitalize">{{ __("enrolled") }}</span>
                         </a>
                     </li>
                 </ul>

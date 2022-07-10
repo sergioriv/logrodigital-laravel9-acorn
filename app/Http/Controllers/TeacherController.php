@@ -118,9 +118,7 @@ class TeacherController extends Controller
 
 
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
+
     public function export()
     {
         return Excel::download(new TeachersExport, __('teachers').'.xlsx');
@@ -131,9 +129,6 @@ class TeacherController extends Controller
         return view('logro.teacher.import');
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
     public function import_store(Request $request)
     {
 

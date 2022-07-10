@@ -34,7 +34,7 @@ $title = $group->name;
                         <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active" data-bs-toggle="tab" href="#subjectsTab" role="tab"
-                                    aria-selected="true">{{ __('Subjects & Teachers') }}</a>
+                                    aria-selected="true">{{ __('Subjects') .' & '. __('Teachers') }}</a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" data-bs-toggle="tab" href="#otherTab" role="tab"

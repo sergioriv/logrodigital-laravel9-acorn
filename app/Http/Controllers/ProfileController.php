@@ -104,6 +104,19 @@ class ProfileController extends Controller
         );
     }
 
+    public function update_avatar(Request $request, User $user)
+    {
+        $request->validate([
+            'avatar' => ['required','file','mimes:jpg,jpeg,png,webp']
+        ]);
+
+        UserController::_update_avatar($request, $user);
+
+        return redirect()->back()->with(
+            ['notify' => 'success', 'title' => __('Avatar Updated!')],
+        );
+    }
+
     private function not_found()
     {
         return redirect()->route('dashboard')->with(

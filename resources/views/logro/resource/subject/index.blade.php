@@ -1,5 +1,5 @@
 @php
-$title = 'Subjects list';
+$title = __('Subjects list');
 @endphp
 @extends('layout',['title'=>$title])
 

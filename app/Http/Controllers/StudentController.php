@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\StudentsInstructuveExport;
 use App\Http\Controllers\support\UserController;
+use App\Imports\StudentsImport;
 use App\Models\City;
 use App\Models\DocumentType;
 use App\Models\EthnicGroup;
@@ -19,6 +21,7 @@ use App\Models\StudyTime;
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
@@ -68,7 +71,8 @@ class StudentController extends Controller
             'institutional_email' => $request->institutional_email,
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->studyTime,
-            'study_year_id' => $request->studyYear
+            'study_year_id' => $request->studyYear,
+            'status' => 'new'
         ]);
 
         return redirect()->route('students.preregistration')->with(
@@ -129,20 +133,32 @@ class StudentController extends Controller
 
     public function registration()
     {
-        return $students = Student::where('enrolled_status','registrated')->get();
-        return view('logro.student.registration');
+        $students = Student::where('enrolled_status','registrated')
+                    ->orderBy('father_last_name')
+                    ->orderBy('mother_last_name')
+                    ->get();
+
+        return view('logro.student.registration')->with('students', $students);
     }
 
     public function preenrolled()
     {
-        return $students = Student::where('enrolled_status','pre-enrolled')->get();
-        return view('logro.student.preenrolled');
+        return $students = Student::where('enrolled_status','pre-enrolled')
+                    ->orderBy('father_last_name')
+                    ->orderBy('mother_last_name')
+                    ->get();
+
+        return view('logro.student.preenrolled')->with('students', $students);
     }
 
     public function enrolled()
     {
-        return $students = Student::where('enrolled_status','enrolled')->get();
-        return view('logro.student.index');
+        return $students = Student::where('enrolled_status','enrolled')
+                    ->orderBy('father_last_name')
+                    ->orderBy('mother_last_name')
+                    ->get();
+
+        return view('logro.student.index')->with('students', $students);
     }
 
 
@@ -165,7 +181,6 @@ class StudentController extends Controller
         $kinships = Kinship::all();
         $studentFileTypes = StudentFileType::get();
 
-        // return StudentFileType::find(1)->studentFile;
         return view('logro.student.profile')->with([
             'student' => $student,
             'documentType' => $documentType,
@@ -235,6 +250,8 @@ class StudentController extends Controller
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
         UserController::_update($student->id, $user_name);
 
+        $enrolled_status = $student->enrolled_status === NULL ? 'registrated' : $student->enrolled_status ;
+
         $student->update([
             'first_name' => $request->firstName,
             'second_name' => $request->secondName,
@@ -268,9 +285,13 @@ class StudentController extends Controller
             'lunch' => $request->lunch,
             'refreshment' => $request->refreshment,
             'transport' => $request->transport,
-            'origin_school_id' => $request->origin_school_id
+            'origin_school_id' => $request->origin_school_id,
+
+            /* estados */
+            'enrolled_status' => $enrolled_status
 
         ]);
+
 
         return redirect()->back()->with(
             ['notify' => 'success', 'title' => __('Student updated!')],
@@ -279,4 +300,28 @@ class StudentController extends Controller
 
 
 
+
+    public function export_instructive()
+    {
+        return Excel::download(new StudentsInstructuveExport, __('instructive').'.xlsx');
+    }
+
+    public function import()
+    {
+        return view('logro.student.import');
+    }
+
+    public function import_store(Request $request)
+    {
+
+        $request->validate([
+            'file' => ['required','file','max:5000','mimes:xls,xlsx']
+        ]);
+
+        Excel::import(new StudentsImport,$request->file('file'));
+
+        return redirect()->back()->with(
+            ['notify' => 'success', 'title' => __('Loaded Excel!')],
+        );
+    }
 }

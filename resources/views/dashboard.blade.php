@@ -1,5 +1,5 @@
 @php
-$title = 'Dashboard';
+$title = __('Dashboard');
 @endphp
 @extends('layout',['title'=>$title])
 

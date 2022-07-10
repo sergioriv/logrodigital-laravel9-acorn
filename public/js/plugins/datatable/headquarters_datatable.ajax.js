@@ -38,7 +38,6 @@
             order: false,
             columns: [
                 { data: "name" },
-                { data: "available" },
                 { data: "created_at" }
             ],
             language: {
@@ -65,7 +64,7 @@
                 },
                 // Adding DateTime content class text-small
                 {
-                    targets: 2,
+                    targets: 1,
                     render: function(data) {
                         return (
                             '<h4 class="text-small">' + data + '</h4>'

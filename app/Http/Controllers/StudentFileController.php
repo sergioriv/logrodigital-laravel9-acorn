@@ -32,6 +32,7 @@ class StudentFileController extends Controller
                 'student_file_type_id' => $request->file_type,
                 'url' => config('app.url') .'/'. $path_file,
                 'url_absolute' => $path_file,
+                'checked' => NULL,
                 'creation_user_id' => Auth::user()->id
             ]);
 
@@ -49,6 +50,7 @@ class StudentFileController extends Controller
                 'url' => config('app.url') .'/'. $path_file,
                 'url_absolute' => $path_file,
                 'renewed' => $renewed,
+                'checked' => NULL,
                 'creation_user_id' => Auth::user()->id
 
             ]);
@@ -67,5 +69,32 @@ class StudentFileController extends Controller
             return config('filesystems.disks.public.url') .'/' . $path;
         }
         else return null;
+    }
+
+    public function checked(Request $request, Student $student)
+    {
+        $files = StudentFile::where('student_id', $student->id)->get();
+
+        foreach ($files as $file) :
+            if ( in_array( $file->id, $request->student_files ) )
+            {
+                StudentFile::find($file->id)->update([
+                    'checked' => TRUE,
+                    'approval_user_id' => Auth::user()->id,
+                    'approval_date' => now()
+                ]);
+            } else
+            {
+                StudentFile::find($file->id)->update([
+                    'checked' => FALSE,
+                    'approval_user_id' => NULL,
+                    'approval_date' => NULL
+                ]);
+            }
+        endforeach;
+
+        return redirect()->back()->with(
+            ['notify' => 'success', 'title' => __('Files updated!')],
+        );
     }
 }

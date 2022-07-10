@@ -1,5 +1,5 @@
 @php
-$title = 'Areas & Subjects';
+$title = __('Areas & Subjects');
 @endphp
 @extends('layout',['title'=>$title])
 
@@ -93,7 +93,7 @@ $title = 'Areas & Subjects';
                                             id="areaGroupNull" data-area="null">
                                             @foreach ($resourceSubjects as $subject)
                                             <span
-                                                class="badge bg-outline-primary hover-bg-primary text-uppercase input_subject"
+                                                class="logro-tag badge bg-outline-primary hover-bg-primary text-uppercase input_subject"
                                                 data-id="{{ $subject->id }}">
                                                 {{ $subject->name }}
                                                 <input type="hidden" name="subjects[]" value="null~{{ $subject->id }}">
@@ -113,7 +113,7 @@ $title = 'Areas & Subjects';
                                         <div id="areaGroup{{ $area->id }}" data-area="{{ $area->id }}" class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm">
                                             @foreach ($subjects as $subject_area)
                                             @if ($subject_area->resource_area_id == $area->id)
-                                            <span class="badge bg-muted text-uppercase disabled"
+                                            <span class="logro-tag badge bg-muted text-uppercase disabled"
                                                 data-id="{{ $subject_area->resourceSubject->id }}">
                                                 {{ $subject_area->resourceSubject->name }}
                                             </span>
@@ -128,7 +128,7 @@ $title = 'Areas & Subjects';
                     </section>
                     <!-- Moving End -->
 
-                    <x-button type="submit" class="btn-primary">{{ __('Save Areas & Subjects') }}</x-button>
+                    <x-button type="submit" class="btn-primary">{{ __('Save') .' '. __('Areas & Subjects') }}</x-button>
 
                 </form>
                 <!-- Advanced End -->

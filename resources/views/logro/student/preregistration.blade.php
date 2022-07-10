@@ -86,9 +86,14 @@ $title = __('Students') .' '. __('pre-registration');
                             @foreach ($students as $student)
                             <tr>
                                 <td>
-                                    <a href="{{ route('students.preregistratione.edit', $student) }}" class="list-item-heading body">
+                                    <a href="{{ route('students.preregistratione.edit', $student) }}"
+                                        class="list-item-heading body">
                                         {{ $student->getNames() }}
                                     </a>
+                                    <span
+                                        class="badge @if ('new' === $student->status) bg-outline-primary @elseif ('repeat' === $student->status) bg-outline-danger @endif">
+                                        {{ $student->status }}
+                                    </span>
                                 </td>
                                 <td>{{ $student->getLastNames() }}</td>
                                 <td>{{ $student->institutional_email }}</td>

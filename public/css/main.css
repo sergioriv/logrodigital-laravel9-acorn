@@ -80,9 +80,17 @@ html[data-color=] .logo-default.img-logro {
     }
 }
 
+
+
 /*
- * Class Logro
+ * New class
  */
+div[data-notify="container"] .btn-close {
+    top: 10px !important;
+}
+input[type="file"] {
+    display: none;
+}
 .load {
     width: 36px;
     height: 36px;
@@ -96,37 +104,6 @@ html[data-color=] .logo-default.img-logro {
 }
 .logro-label { text-transform: lowercase; }
 .logro-label::first-letter { text-transform: uppercase; }
-/*
- * Class Logro End
- */
-
-/*
- * DataTables Start
- */
-.dataTables_scrollBody {
-    height: fit-content !important;
-}
-.dataTables_scrollHeadInner {
-    width: 100% !important;
-}
-.table>:not(caption)>*>* {
-    padding: .5rem .5rem !important;
-}
-/*
- * DataTables End
- */
-
-
-
-/*
- * New class
- */
-div[data-notify="container"] .btn-close {
-    top: 10px !important;
-}
-input[type="file"] {
-    display: none;
-}
 .hover-bg-primary:hover {
     background-color: var(--primary);
     color: var(--light-text) !important
@@ -171,3 +148,34 @@ input[type="file"] {
 .icon-70 {
     font-size: 70px !important;
 }
+.text-success {
+    color: var(--bs-success) !important;
+}
+.text-danger {
+    color: var(--bs-danger) !important;
+}
+.text-info {
+    color: var(--bs-info) !important;
+}
+.logro-tag {
+    padding: 0.45rem 0.9rem;
+}
+
+
+
+
+/*
+ * DataTables Start
+ */
+ .dataTables_scrollBody {
+    height: fit-content !important;
+}
+.dataTables_scrollHeadInner {
+    width: 100% !important;
+}
+.table>:not(caption)>*>* {
+    padding: .5rem .5rem !important;
+}
+/*
+ * DataTables End
+ */

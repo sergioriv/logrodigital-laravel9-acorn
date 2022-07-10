@@ -1,5 +1,5 @@
 @php
-$title = 'Import teachers';
+$title = __('Import') .' '. __('teachers');
 @endphp
 @extends('layout',['title'=>$title])
 

@@ -15,5 +15,5 @@
     <button class="btn btn-sm btn-icon btn-icon-only btn-separator-light rounded-xl position-absolute e-0 b-0" type="button">
         <i data-acorn-icon="upload"></i>
     </button>
-    <input name="avatar" class="file-upload d-none" type="file" accept="image/jpg, image/jpeg, image/png, image/webp" />
+    <input name="avatar" id="avatar" class="file-upload d-none" type="file" accept="image/jpg, image/jpeg, image/png, image/webp" />
 </div>

@@ -1,5 +1,5 @@
 @php
-$title = 'Groups';
+$title = __('Groups');
 @endphp
 @extends('layout',['title'=>$title])
 

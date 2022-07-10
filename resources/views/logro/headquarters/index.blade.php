@@ -1,5 +1,5 @@
 @php
-$title = 'Headquarters list';
+$title = __('Headquarters list');
 @endphp
 @extends('layout',['title'=>$title])
 
@@ -74,7 +74,6 @@ $title = 'Headquarters list';
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
-                                <th class="text-muted text-small text-uppercase">{{ __('Available') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('Created at') }}</th>
                             </tr>
                         </thead>

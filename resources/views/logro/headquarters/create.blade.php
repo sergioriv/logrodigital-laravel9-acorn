@@ -1,5 +1,5 @@
 @php
-$title = 'Create Headquarters';
+$title = __('Create Headquarters');
 @endphp
 @extends('layout',['title'=>$title])
 

@@ -1,5 +1,5 @@
 @php
-$title = 'Create Study Time';
+$title = __('Create Study Time');
 @endphp
 @extends('layout',['title'=>$title])
 

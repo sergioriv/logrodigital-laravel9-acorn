@@ -1,5 +1,5 @@
 @php
-$title = 'Create area';
+$title = __('Create area');
 @endphp
 @extends('layout',['title'=>$title])
 

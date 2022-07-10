@@ -1,5 +1,5 @@
 @php
-$title = 'Create subject';
+$title = __('Create subject');
 @endphp
 @extends('layout',['title'=>$title])
 

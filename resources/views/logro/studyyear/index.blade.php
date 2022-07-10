@@ -1,5 +1,5 @@
 @php
-$title = 'Study years list';
+$title = __('Study years list');
 @endphp
 @extends('layout',['title'=>$title])
 

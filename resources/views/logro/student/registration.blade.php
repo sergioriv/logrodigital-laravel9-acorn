@@ -1,5 +1,5 @@
 @php
-$title = __('Teacher list');
+$title = __('Students') .' '. __('registration');
 @endphp
 @extends('layout',['title'=>$title])
 
@@ -15,7 +15,7 @@ $title = __('Teacher list');
 
 @section('js_page')
 <script src="/js/cs/datatable.extend.js"></script>
-<script src="/js/plugins/datatable/teachers_datatable.ajax.js"></script>
+<script src="/js/plugins/datatable/datatable_standard.ajax.js"></script>
 @endsection
 
 @section('content')
@@ -33,9 +33,8 @@ $title = __('Teacher list');
 
                     <!-- Top Buttons Start -->
                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-
                         <!-- Add New Button Start -->
-                        <a href="{{ route('teacher.create') }}"
+                        <a href="{{ route('students.create') }}"
                             class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
                             <i data-acorn-icon="plus"></i>
                             <span>{{ __('Add New') }}</span>
@@ -50,18 +49,17 @@ $title = __('Teacher list');
                                 <i data-acorn-icon="more-horizontal"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('teacher.export') }}">
+                                {{-- <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('students.export') }}">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __("Download") }} Excel</span>
-                                </a>
-                                <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('teacher.import') }}">
+                                </a> --}}
+                                <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('students.import') }}">
                                     <i data-acorn-icon="upload"></i>
                                     <span>{{ __("Import") }} Excel</span>
                                 </a>
                             </div>
                         </div>
                         <!-- Dropdown Button End -->
-
                     </div>
                     <!-- Top Buttons End -->
                 </div>
@@ -77,7 +75,7 @@ $title = __('Teacher list');
                         <div
                             class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
                             <input class="form-control datatable-search" placeholder="Search"
-                                data-datatable="#datatable_teachers" />
+                                data-datatable="#datatable_students" />
                             <span class="search-magnifier-icon">
                                 <i data-acorn-icon="search"></i>
                             </span>
@@ -92,15 +90,39 @@ $title = __('Teacher list');
 
                 <!-- Table Start -->
                 <div class="data-table-responsive-wrapper">
-                    <table id="datatable_teachers" class="data-table nowrap w-100">
+                    <table id="datatable_students" class="data-table nowrap w-100" logro="datatable">
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('last names') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('email') }}</th>
-                                <th class="text-muted text-small text-uppercase">{{ __('telephone') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('headquarters') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('study time') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('study year') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('created at') }}</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            @foreach ($students as $student)
+                            <tr>
+                                <td>
+                                    <a href="{{ route('students.show', $student) }}" class="list-item-heading body">
+                                        {{ $student->getNames() }}
+                                    </a>
+                                    <span
+                                        class="badge @if ('new' === $student->status) bg-outline-primary @elseif ('repeat' === $student->status) bg-outline-danger @endif">
+                                        {{ $student->status }}
+                                    </span>
+                                </td>
+                                <td>{{ $student->getLastNames() }}</td>
+                                <td>{{ $student->institutional_email }}</td>
+                                <td>{{ $student->headquarters->name }}</td>
+                                <td>{{ $student->studyTime->name }}</td>
+                                <td>{{ $student->studyYear->name }}</td>
+                                <td class="text-small">{{ $student->created_at }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
                 <!-- Table End -->

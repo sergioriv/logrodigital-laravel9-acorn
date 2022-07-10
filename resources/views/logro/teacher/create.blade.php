@@ -1,5 +1,5 @@
 @php
-$title = 'Create Teacher';
+$title = __('Create Teacher');
 @endphp
 @extends('layout',['title'=>$title])
 
@@ -41,13 +41,13 @@ $title = 'Create Teacher';
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative form-group">
-                                        <x-label>{{ __("First name") }}</x-label>
+                                        <x-label>{{ __("first name") }}</x-label>
                                         <x-input :value="old('firstName')" name="firstName" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative form-group">
-                                        <x-label>{{ __("Second name") }}</x-label>
+                                        <x-label>{{ __("second name") }}</x-label>
                                         <x-input :value="old('secondName')" name="secondName" />
                                     </div>
                                 </div>
@@ -55,13 +55,13 @@ $title = 'Create Teacher';
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative form-group">
-                                        <x-label>{{ __("Father's last name") }}</x-label>
+                                        <x-label>{{ __("father's last name") }}</x-label>
                                         <x-input :value="old('fatherLastName')" name="fatherLastName" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative form-group">
-                                        <x-label>{{ __("Mother's last name") }}</x-label>
+                                        <x-label>{{ __("mother's last name") }}</x-label>
                                         <x-input :value="old('motherLastName')" name="motherLastName" />
                                     </div>
                                 </div>
@@ -69,13 +69,13 @@ $title = 'Create Teacher';
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative form-group">
-                                        <x-label>{{ __("Phone number") }}</x-label>
+                                        <x-label>{{ __("telephone") }}</x-label>
                                         <x-input :value="old('phone')" name="phone" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative form-group">
-                                        <x-label>{{ __("Email") }}</x-label>
+                                        <x-label>{{ __("email") }}</x-label>
                                         <x-input :value="old('email')" name="email" required />
                                     </div>
                                 </div>
