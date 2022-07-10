@@ -179,7 +179,11 @@ class StudentController extends Controller
         $ethnicGroups = EthnicGroup::all();
         $originSchools = OriginSchool::all();
         $kinships = Kinship::all();
-        $studentFileTypes = StudentFileType::get();
+        return $studentFileTypes = StudentFileType::with([
+            'studentFile' => function ($files) use ($student) {
+                $files->where('student_id', $student->id);
+            }
+        ])->get();
 
         return view('logro.student.profile')->with([
             'student' => $student,
