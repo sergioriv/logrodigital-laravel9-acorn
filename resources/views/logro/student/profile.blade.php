@@ -107,10 +107,10 @@ $title = $student->user->name;
                                         data-bs-toggle="tab" href="#documentsTab" role="tab">
                                         <span class="align-middle">{{ __("Documents") }}</span>
                                     </a>
-                                    <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
+                                    {{-- <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
                                         data-bs-toggle="tab" href="#documentsTab" role="tab">
                                         <span class="align-middle">{{ __("Study Year") }}</span>
-                                    </a>
+                                    </a> --}}
                                 </div>
 
                             </div>
