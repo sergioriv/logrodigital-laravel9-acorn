@@ -179,7 +179,7 @@ class StudentController extends Controller
         $ethnicGroups = EthnicGroup::all();
         $originSchools = OriginSchool::all();
         $kinships = Kinship::all();
-        return $studentFileTypes = StudentFileType::with([
+        $studentFileTypes = StudentFileType::with([
             'studentFile' => function ($files) use ($student) {
                 $files->where('student_id', $student->id);
             }
