@@ -115,6 +115,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('students/pregistration', 'registration')->name('students.registration');
         Route::get('students/{student}/edit', 'show')->name('students.show');
 
+        Route::get('students/data/instructive', 'data_instructive')->name('students.data.instructive');
         Route::get('students/export/instructive', 'export_instructive')->name('students.instructive');
         Route::get('students/import', 'import')->name('students.import');
         Route::post('students/import', 'import_store')->name('students.import');

@@ -807,10 +807,19 @@ $title = $student->user->name;
                                                         logro="select2">
                                                         <option label="&nbsp;"></option>
                                                         @foreach ($studentFileTypes as $fileType)
+                                                        @if ($fileType->studentFile === NULL)
                                                         <option value="{{ $fileType->id }}"
                                                             @selected(old("file_type")==$fileType->id)>
                                                             {{ $fileType->name }}
                                                         </option>
+                                                        @else
+                                                            @if ($fileType->studentFile->checked !== 1)
+                                                            <option value="{{ $fileType->id }}"
+                                                                @selected(old("file_type")==$fileType->id)>
+                                                                {{ $fileType->name }}
+                                                            </option>
+                                                            @endif
+                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -849,7 +858,7 @@ $title = $student->user->name;
 
                                                         @if ($studentFile->studentFile->checked === 1)
                                                         <i
-                                                            class="icon bi-file-earmark-check-fill icon-70 text-success"></i>
+                                                            class="icon bi-file-earmark-check-fill icon-70 text-muted"></i>
                                                         @elseif ($studentFile->studentFile->checked === 0)
                                                         <i class="icon bi-file-earmark-x-fill icon-70 text-danger"></i>
                                                         @else
@@ -865,17 +874,13 @@ $title = $student->user->name;
 
                                                     @can('support.users')
                                                     @if ($studentFile->studentFile ?? null !== NULL)
+                                                    @if ($studentFile->studentFile->checked !== 1)
                                                     <div class="form-switch">
-                                                        @if ($studentFile->studentFile->checked === 1)
-                                                        <input class="form-check-input" name="student_files[]"
-                                                            value="{{ $studentFile->studentFile->id }}" type="checkbox"
-                                                            checked />
-                                                        @else
                                                         <input class="form-check-input" name="student_files[]"
                                                             value="{{ $studentFile->studentFile->id }}"
                                                             type="checkbox" />
-                                                        @endif
                                                     </div>
+                                                    @endif
                                                     @endif
                                                     @endcan
 

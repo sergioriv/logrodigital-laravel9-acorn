@@ -73,25 +73,36 @@ class StudentFileController extends Controller
 
     public function checked(Request $request, Student $student)
     {
-        $files = StudentFile::where('student_id', $student->id)->get();
+        if ( !empty($request->student_files) )
+        {
+            $files = StudentFile::where('student_id', $student->id)
+                    ->where('checked', null)
+                    ->orWhere('checked', 0)->get();
 
-        foreach ($files as $file) :
-            if ( in_array( $file->id, $request->student_files ) )
-            {
-                StudentFile::find($file->id)->update([
-                    'checked' => TRUE,
-                    'approval_user_id' => Auth::user()->id,
-                    'approval_date' => now()
-                ]);
-            } else
-            {
-                StudentFile::find($file->id)->update([
-                    'checked' => FALSE,
-                    'approval_user_id' => NULL,
-                    'approval_date' => NULL
-                ]);
-            }
-        endforeach;
+            foreach ($files as $file) :
+                if ( in_array( $file->id, $request->student_files ) )
+                {
+                    StudentFile::find($file->id)->update([
+                        'checked' => TRUE,
+                        'approval_user_id' => Auth::user()->id,
+                        'approval_date' => now()
+                    ]);
+                } else
+                {
+                    StudentFile::find($file->id)->update([
+                        'checked' => FALSE,
+                        'approval_user_id' => NULL,
+                        'approval_date' => NULL
+                    ]);
+                }
+            endforeach;
+
+        } else
+        {
+            $files = StudentFile::where('student_id', $student->id)
+                    ->where('checked', null)
+                    ->orWhere('checked', 0)->update(['checked' => FALSE]);
+        }
 
         return redirect()->back()->with(
             ['notify' => 'success', 'title' => __('Files updated!')],

@@ -304,6 +304,10 @@ class StudentController extends Controller
 
 
 
+    public function data_instructive()
+    {
+        return view('logro.student.data-instructive');
+    }
 
     public function export_instructive()
     {
