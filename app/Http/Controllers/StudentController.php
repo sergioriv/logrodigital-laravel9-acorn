@@ -306,7 +306,33 @@ class StudentController extends Controller
 
     public function data_instructive()
     {
-        return view('logro.student.data-instructive');
+        $headquarters = Headquarters::all();
+        $studyTime = StudyTime::all();
+        $studyYear = StudyYear::all();
+
+        $documentType = DocumentType::all();
+        $cities = City::all();
+        $genders = Gender::all();
+        $rhs = Rh::all();
+        $healthManager = HealthManager::all();
+        $sisbenes = Sisben::all();
+        $ethnicGroups = EthnicGroup::all();
+        $originSchools = OriginSchool::all();
+
+        return view('logro.student.data-instructive')->with([
+            'headquarters' => $headquarters,
+            'studyTime' => $studyTime,
+            'studyYear' => $studyYear,
+
+            'documentType' => $documentType,
+            // 'cities' => $cities,
+            // 'genders' => $genders,
+            // 'rhs' => $rhs,
+            // 'healthManager' => $healthManager,
+            // 'sisbenes' => $sisbenes,
+            // 'ethnicGroups' => $ethnicGroups,
+            // 'originSchools' => $originSchools
+        ]);
     }
 
     public function export_instructive()

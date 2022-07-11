@@ -118,12 +118,26 @@ class GroupController extends Controller
     {
         $sy = $group->study_year_id;
 
-        $areas = ResourceArea::with('subjects')->whereHas('subjects', function ($sj) use ($sy) {
+        /* $areas = ResourceArea::with('subjects')->whereHas('subjects', function ($sj) use ($sy) {
             $sj->where('school_year_id', $this->current_year()->id)
                     ->whereHas('studyYearSubject', function ($sys) use ($sy) {
                         $sys->where('study_year_id', $sy);
                     });
-        })->get();
+        })->get(); */
+
+        $areas = ResourceArea::with(['subjects' => function ($sj) use ($sy) {
+            $sj->where('school_year_id', $this->current_year()->id)
+                ->whereHas('studyYearSubject', function ($sys) use ($sy) {
+                    $sys->where('study_year_id', $sy);
+                });
+        }])
+        ->whereHas('subjects', function ($sj) use ($sy) {
+            $sj->where('school_year_id', $this->current_year()->id)
+                    ->whereHas('studyYearSubject', function ($sys) use ($sy) {
+                        $sys->where('study_year_id', $sy);
+                    });
+        })
+        ->get();
 
         return view('logro.group.show')->with([
             'group' => $group,
@@ -137,12 +151,19 @@ class GroupController extends Controller
 
         $teachers = Teacher::where('active', TRUE)->get();
 
-        $areas = ResourceArea::with('subjects')->whereHas('subjects', function ($sj) use ($sy) {
+        $areas = ResourceArea::with(['subjects' => function ($sj) use ($sy) {
+            $sj->where('school_year_id', $this->current_year()->id)
+                ->whereHas('studyYearSubject', function ($sys) use ($sy) {
+                    $sys->where('study_year_id', $sy);
+                });
+        }])
+        ->whereHas('subjects', function ($sj) use ($sy) {
             $sj->where('school_year_id', $this->current_year()->id)
                     ->whereHas('studyYearSubject', function ($sys) use ($sy) {
                         $sys->where('study_year_id', $sy);
                     });
-        })->get();
+        })
+        ->get();
 
         return view('logro.group.teachers_edit')->with([
             'group' => $group,

@@ -46,7 +46,7 @@ $title = __('Import') .' '. __('students');
                                 </li>
                                 <li>Las cabeceras del documento no deben ser modificadas ni excluidas del documento a cargar</li>
                                 <li><a href="{{ route("students.instructive") }}">{{ __("Download") .' '. __("instructive") }}</a></li>
-                                <li>Recuerda copiar y pegar los datos del instructivo <a target="_blank" href="{{ route("students.data.instructive") }}">{{ __("Data") .' '. __("instructive") }}</a> en las columnas correspondientes para no sufrir errores en la importación del excel</li>
+                                <li>Recuerda copiar y pegar los datos del instructivo <a target="_blank" href="{{ route("students.data.instructive") }}">{{ __("Data instructive") }}</a> en las columnas correspondientes para no sufrir errores en la importación del excel</li>
                             </ul>
                         </p>
                     </div>

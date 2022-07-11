@@ -3,7 +3,10 @@
 namespace App\Imports;
 
 use App\Http\Controllers\ProviderUser;
+use App\Models\Headquarters;
 use App\Models\Student;
+use App\Models\StudyTime;
+use App\Models\StudyYear;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
@@ -148,7 +151,9 @@ class StudentsImport implements ToCollection, WithHeadingRow
 
 
             /* Formating data */
-            $row['birthdate'] = Date::excelToDateTimeObject($row['birthdate'])->format('Y-m-d');
+            if($row['birthdate']) {
+                $row['birthdate'] = Date::excelToDateTimeObject($row['birthdate'])->format('Y-m-d');
+            }
 
 
             /*
@@ -159,6 +164,16 @@ class StudentsImport implements ToCollection, WithHeadingRow
             if ($user) {
                 throw ValidationException::withMessages(['data' => 'El correo (' . $row['institutional_email'] . ') ya se encuentra registrado!']);
             }
+
+            $document = Student::where('document', $row['document'])->first();
+
+            if ($document) {
+                throw ValidationException::withMessages(['data' => 'El documento (' . $row['document'] . ') ya se encuentra registrado!']);
+            }
+
+            $row['headquarters']    = Headquarters::where('name',$row['headquarters'])->first()->id;
+            $row['study_time']      = StudyTime::where('name',$row['study_time'])->first()->id;
+            $row['study_year']      = StudyYear::where('name',$row['study_year'])->first()->id;
 
 
             /*
