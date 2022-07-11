@@ -54,14 +54,14 @@
             },
             columnDefs: [
                 // Adding Name content as an anchor with a target #
-                {
-                    targets: 0,
-                    render: function (data, type, row, meta) {
-                        return (
-                            '<a class="list-item-heading body" href="subjects/' + row.id + '/edit">' + data + "</a>"
-                        );
-                    },
-                },
+                // {
+                //     targets: 0,
+                //     render: function (data, type, row, meta) {
+                //         return (
+                //             '<a class="list-item-heading body" href="subjects/' + row.id + '/edit">' + data + "</a>"
+                //         );
+                //     },
+                // },
                 // Adding DateTime content class text-small
                 {
                     targets: 1,

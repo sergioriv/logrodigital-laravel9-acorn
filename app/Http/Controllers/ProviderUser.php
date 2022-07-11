@@ -15,7 +15,6 @@ class ProviderUser
         'outlook.es'    => 'microsoft',
         'live.com'      => 'microsoft',
         'live.es'       => 'microsoft',
-        // 'gmail.com'     => 'google',
     ];
 
     public static function provider_validate($email)
