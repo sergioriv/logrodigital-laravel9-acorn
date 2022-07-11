@@ -35,10 +35,10 @@ class StudyTime extends CastCreateModel
      * Mutadores y Accesores
      */
 
-    protected function name(): Attribute
+    /* protected function name(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => ucwords(strtolower($value)),
         );
-    }
+    } */
 }
