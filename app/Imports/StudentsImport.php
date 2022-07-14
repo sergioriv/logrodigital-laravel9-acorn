@@ -139,6 +139,12 @@ class StudentsImport implements ToCollection, WithHeadingRow
             if (empty(trim($row['institutional_email']))) {
                 throw ValidationException::withMessages(['data' => 'El correo institucional no puede estar vacio']);
             } else
+            if (empty(trim($row['document_type']))) {
+                throw ValidationException::withMessages(['data' => 'El tipo de documento no puede estar vacio']);
+            } else
+            if (empty(trim($row['document']))) {
+                throw ValidationException::withMessages(['data' => 'El documento no puede estar vacio']);
+            } else
             if (empty(trim($row['headquarters']))) {
                 throw ValidationException::withMessages(['data' => 'La sede no puede estar vacio']);
             } else
@@ -165,6 +171,9 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 throw ValidationException::withMessages(['data' => 'El correo (' . $row['institutional_email'] . ') ya se encuentra registrado!']);
             }
 
+            /*
+             * Validating that the document is unique.
+             */
             $document = Student::where('document', $row['document'])->first();
 
             if ($document) {
@@ -219,8 +228,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 'school_insurance'      => $row['school_insurance'],
                 'headquarters_id'       => $row['headquarters'],
                 'study_time_id'         => $row['study_time'],
-                'study_year_id'         => $row['study_year'],
-                'enrolled_status'       => 'registrated'
+                'study_year_id'         => $row['study_year']
             ]);
         }
     }

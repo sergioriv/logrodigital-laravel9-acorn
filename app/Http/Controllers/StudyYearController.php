@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Group;
+
 use App\Models\ResourceArea;
 use App\Models\SchoolYear;
 use App\Models\StudyYear;
@@ -23,45 +23,34 @@ class StudyYearController extends Controller
      */
     public function index()
     {
-        $studyYears = StudyYear::withCount(['studyYearSubject' => function ($subjects) {
-                $subjects->where('school_year_id', $this->current_year()->id);
+        $Y = SchoolYearController::current_year();
+
+        $studyYears = StudyYear::withCount(['studyYearSubject' => function ($subjects) use ($Y) {
+                $subjects->where('school_year_id', $Y->id);
             }])
-            ->withCount(['groups' => function ($groups) {
-                $groups->where('school_year_id', $this->current_year()->id);
+            ->withCount(['groups' => function ($groups) use ($Y) {
+                $groups->where('school_year_id', $Y->id);
             }])
-            ->with(['groups' => function ($groups) {
-                $groups->where('school_year_id', $this->current_year()->id)->withCount('groupStudents');
-            }])
+            ->withSum(['groups' => function ($groups) use ($Y) {
+                $groups->where('school_year_id', $Y->id);
+            }], 'student_quantity')
             ->get();
 
-        // $subjects = StudyYearSubject::where('school_year_id', $this->current_year()->id)->get();
-
-        // return $groups = Group::where('school_year_id', $this->current_year()->id)->withCount('groupStudents')->get();
-
         return view('logro.studyyear.index')->with([
-            'year' => $this->current_year()->name,
+            'Y' => $Y->name,
             'studyYears' => $studyYears
-            // 'subjects' => $subjects,
-            // 'groups' => $groups
         ]);
     }
-
-    /* public function data()
-    {
-        $studyYear = StudyYear::withCount('groups')->withCount('studyYearSubject')->get();
-
-        return ['data' => $studyYear];
-    } */
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    /* public function create()
     {
         return view('support.studyyear.create');
-    }
+    } */
 
     /**
      * Store a newly created resource in storage.
@@ -69,7 +58,7 @@ class StudyYearController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    /* public function store(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', Rule::unique('study_years')]
@@ -83,7 +72,7 @@ class StudyYearController extends Controller
         return redirect()->route('studyYear.index')->with(
             ['notify' => 'success', 'title' => __('Study year created!')],
         );
-    }
+    } */
 
     /**
      * Display the specified resource.
@@ -91,10 +80,10 @@ class StudyYearController extends Controller
      * @param  \App\Models\StudyYear  $studyYear
      * @return \Illuminate\Http\Response
      */
-    public function show(StudyYear $studyYear)
+    /* public function show(StudyYear $studyYear)
     {
         //
-    }
+    } */
 
     /**
      * Show the form for editing the specified resource.
@@ -102,10 +91,10 @@ class StudyYearController extends Controller
      * @param  \App\Models\StudyYear  $studyYear
      * @return \Illuminate\Http\Response
      */
-    public function edit(StudyYear $studyYear)
+    /* public function edit(StudyYear $studyYear)
     {
         return view('support.studyyear.edit')->with('studyYear', $studyYear);
-    }
+    } */
 
     /**
      * Update the specified resource in storage.
@@ -114,7 +103,7 @@ class StudyYearController extends Controller
      * @param  \App\Models\StudyYear  $studyYear
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, StudyYear $studyYear)
+    /* public function update(Request $request, StudyYear $studyYear)
     {
         $request->validate([
             'name' => ['required', 'string', Rule::unique('study_years')->ignore($studyYear->id)]
@@ -127,19 +116,21 @@ class StudyYearController extends Controller
         return redirect()->route('studyYear.index')->with(
             ['notify' => 'success', 'title' => __('Study year updated!')],
         );
-    }
+    } */
 
     public function subjects(StudyYear $studyYear)
     {
-        $subject_count = StudyYearSubject::where('school_year_id', $this->current_year()->id)->where('study_year_id', $studyYear->id)->count();
+        $Y = SchoolYearController::current_year();
 
-        if ($subject_count == 0)
+        $subject_count = StudyYearSubject::where('school_year_id', $Y->id)->where('study_year_id', $studyYear->id)->count();
+
+        if ($subject_count == 0 && NULL !== $Y->available)
         {
             /*
              * Create Study Year Subjects
              */
-            $areas = ResourceArea::with(['subjects' => function ($subjects) {
-                $subjects->where('school_year_id', $this->current_year()->id);
+            $areas = ResourceArea::with(['subjects' => function ($subjects) use ($Y) {
+                $subjects->where('school_year_id', $Y->id);
             }])->get();
 
             return view('logro.studyyear.subjects')->with([
@@ -152,14 +143,14 @@ class StudyYearController extends Controller
             /*
              * Show Study Year Subjects
              */
-            $areas = ResourceArea::with(['subjects' => function ($subjects) use ($studyYear) {
-                $subjects->where('school_year_id', $this->current_year()->id)
+            $areas = ResourceArea::with(['subjects' => function ($subjects) use ($Y, $studyYear) {
+                $subjects->where('school_year_id', $Y->id)
                     ->whereHas('studyYearSubject', function ($sy) use ($studyYear) {
                         $sy->where('study_year_id', $studyYear->id);
                     });
             }])
-            ->whereHas('subjects', function ($sj) use ($studyYear) {
-                $sj->where('school_year_id', $this->current_year()->id)
+            ->whereHas('subjects', function ($sj) use ($Y, $studyYear) {
+                $sj->where('school_year_id', $Y->id)
                         ->whereHas('studyYearSubject', function ($sy) use ($studyYear) {
                             $sy->where('study_year_id', $studyYear->id);
                         });
@@ -180,25 +171,31 @@ class StudyYearController extends Controller
             'subjects' => ['required', 'array']
         ]);
 
+        $Y = SchoolYearController::current_year();
 
-        foreach ($request->subjects as $subject) {
-            StudyYearSubject::create([
-                'school_year_id' => $this->current_year()->id,
-                'study_year_id' => $studyYear->id,
-                'subject_id' => $subject
-            ]);
+        if (NULL !== $Y->available)
+        {
+
+            foreach ($request->subjects as $subject) {
+                StudyYearSubject::create([
+                    'school_year_id' => $Y->id,
+                    'study_year_id' => $studyYear->id,
+                    'subject_id' => $subject
+                ]);
+            }
+
+            return redirect()->route('studyYear.index')->with(
+                ['notify' => 'success', 'title' => __('Study year updated!')],
+            );
+
+        } else
+        {
+            return redirect()->back()->with(
+                ['notify' => 'fail', 'title' => __('Not allowed for ') . $Y->name],
+            );
         }
 
-        return redirect()->route('studyYear.index')->with(
-            ['notify' => 'success', 'title' => __('Study year updated!')],
-        );
-
     }
 
 
-    /* Aditionals */
-    private function current_year()
-    {
-        return SchoolYear::select('id','name')->where('available',TRUE)->first();
-    }
 }

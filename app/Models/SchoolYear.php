@@ -14,6 +14,11 @@ class SchoolYear extends CastCreateModel
         'available'
     ];
 
+    /*
+     * available = NULL years unaivalable
+     * available = 0 or 1 years editable
+     * */
+
 
     /*
      * CHILDREN

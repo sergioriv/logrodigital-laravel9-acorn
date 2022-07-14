@@ -86,9 +86,6 @@ class Scripts {
         if ("undefined" !== typeof DatatableStudyTimes) {
             new DatatableStudyTimes;
         }
-        if ("undefined" !== typeof DatatableSchoolYears) {
-            new DatatableSchoolYears;
-        }
         if ("undefined" !== typeof DatatableHeadquarters) {
             new DatatableHeadquarters;
         }

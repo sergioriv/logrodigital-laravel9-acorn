@@ -114,6 +114,9 @@ input[type="file"] {
 .border-pink{
     border-color: var(--bs-pink) !important;
 }
+.bg-pink {
+    background-color: var(--bs-pink);
+}
 .card-color-background {
     background-color: var(--background);
     box-shadow: none !important;
@@ -161,6 +164,14 @@ input[type="file"] {
     padding: 0.45rem 0.9rem;
 }
 
+html[data-dimension="desktop"] .logro-badge-right-bottom {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+html[data-dimension="mobile"] .logro-badge-right-bottom {
+    display: none;
+}
 
 
 

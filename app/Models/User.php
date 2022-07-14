@@ -23,7 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'avatar',
-        'provider'
+        'provider',
+        'school_year_id'
     ];
 
     /**
@@ -50,6 +51,10 @@ class User extends Authenticatable
     /**
      * Mutadores y Accesores
      */
+    public function current_year()
+    {
+        return $this->hasOne(SchoolYear::class,'id','school_year_id');
+    }
 
     protected function name(): Attribute
     {

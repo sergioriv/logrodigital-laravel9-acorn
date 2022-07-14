@@ -5,6 +5,7 @@
     "Groups": "Grupos",
     "Study times": "Jornadas",
     "Study years": "Años de estudio",
+    "no-enrolled": "sin matrícula",
 
     "Headquarters list": "Sedes",
     "Create Headquarters": "Crear sede",
@@ -130,6 +131,15 @@
     "Created at": "Fecha creación",
     "unregistered on our platform": "no registrado en nuestra plataforma",
 
+
+    "Choose Year": "Seleccionar Año",
+    "School years": "Años escolares",
+    "selected!": "seleccionado!",
+    "It is not possible to create a group for ": "No es posible crear un grupo para el año ",
+    "Not allowed for ": "No permitido para el año ",
+
+    "years": "años",
+    "Years": "Años",
     "30 Days": "30 Días",
     "60 Days": "60 Días",
     "90 Days": "90 Días",

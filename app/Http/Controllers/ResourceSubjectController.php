@@ -64,10 +64,10 @@ class ResourceSubjectController extends Controller
      * @param  \App\Models\ResourceSubject  $resourceSubject
      * @return \Illuminate\Http\Response
      */
-    public function show(ResourceSubject $resourceSubject)
+    /* public function show(ResourceSubject $resourceSubject)
     {
         //
-    }
+    } */
 
     /**
      * Show the form for editing the specified resource.
@@ -75,10 +75,10 @@ class ResourceSubjectController extends Controller
      * @param  \App\Models\ResourceSubject  $resourceSubject
      * @return \Illuminate\Http\Response
      */
-    public function edit(ResourceSubject $subject)
+    /* public function edit(ResourceSubject $subject)
     {
         return view('logro.resource.subject.edit')->with('subject', $subject);
-    }
+    } */
 
     /**
      * Update the specified resource in storage.
@@ -87,7 +87,7 @@ class ResourceSubjectController extends Controller
      * @param  \App\Models\ResourceSubject  $resourceSubject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ResourceSubject $subject)
+    /* public function update(Request $request, ResourceSubject $subject)
     {
         $request->validate([
             'name' => ['required', 'string', Rule::unique('resource_subjects')->ignore($subject->id)]
@@ -100,5 +100,5 @@ class ResourceSubjectController extends Controller
         return redirect()->route('resourceSubject.index')->with(
             ['notify' => 'success', 'title' => __('Subject updated!')],
         );
-    }
+    } */
 }

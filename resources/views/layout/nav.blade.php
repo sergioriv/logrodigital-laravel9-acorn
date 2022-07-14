@@ -150,22 +150,12 @@
                 </a>
                 <ul id="students">
                     <li>
-                        <a href="{{ route("students.preregistration") }}">
-                            <span class="label text-capitalize">{{ __("pre-registration") }}</span>
+                        <a href="{{ route("students.no_enrolled") }}">
+                            <span class="label text-capitalize">{{ __("no-enrolled") }}</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route("students.registration") }}">
-                            <span class="label text-capitalize">{{ __("registration") }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="label text-capitalize">{{ __("pre-enrolled") }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
+                        <a href="{{ route("students.enrolled") }}">
                             <span class="label text-capitalize">{{ __("enrolled") }}</span>
                         </a>
                     </li>
@@ -205,6 +195,12 @@
                 <a href="{{ route('studyYear.index') }}" data-href="/study_years">
                     <i data-acorn-icon="calendar" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Study years') }}</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('schoolYear.index') }}" data-href="/school_years">
+                    <i class="icon icon-18 bi-clock-history"></i>
+                    <span class="label">{{ __('Years') }}</span>
                 </a>
             </li>
 

@@ -28,35 +28,47 @@ class StudentController extends Controller
     /*
      * PRE-REGISTRATION SECTION
      */
-    public function preregistration()
+    public function no_enrolled()
     {
-        $students = Student::whereNull('enrolled_status')->orderByDesc('created_at')->get();
-        return view('logro.student.preregistration')->with('students', $students);
+        $students = Student::whereNull('enrolled')
+                    ->orderBy('father_last_name')
+                    ->orderBy('mother_last_name')
+                    ->get();
+
+        return view('logro.student.noenrolled')->with('students', $students);
     }
 
-    public function preregistration_create()
+    public function create()
     {
+        $documentType = DocumentType::all();
         $headquarters = Headquarters::all();
         $studyTime = StudyTime::all();
         $studyYear = StudyYear::all();
+        $cities = City::all();
         return view("logro.student.create")->with([
             'headquarters' => $headquarters,
             'studyTime' => $studyTime,
-            'studyYear' => $studyYear
+            'studyYear' => $studyYear,
+            'cities' => $cities,
+            'documentType' => $documentType
         ]);
     }
 
-    public function preregistration_store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'firstName' => ['required', 'string'],
             'secondName' => ['nullable','string'],
             'fatherLastName' => ['required', 'string'],
             'motherLastName' => ['nullable','string'],
+            'document_type' => ['required', Rule::exists('document_types','code')],
+            'document' => ['required', Rule::unique('students','document')],
             'institutional_email' => ['required', 'email', Rule::unique('users','email')],
             'headquarters' => ['required', Rule::exists('headquarters','id')],
             'studyTime' => ['required', Rule::exists('study_times','id')],
-            'studyYear' => ['required', Rule::exists('study_years','id')]
+            'studyYear' => ['required', Rule::exists('study_years','id')],
+            'birth_city' => ['nullable',Rule::exists('cities','id')],
+            'birthdate' => ['nullable','date'],
         ]);
 
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
@@ -69,18 +81,22 @@ class StudentController extends Controller
             'father_last_name' => $request->fatherLastName,
             'mother_last_name' => $request->motherLastName,
             'institutional_email' => $request->institutional_email,
+            'document_type_code' => $request->document_type,
+            'document' => $request->document,
+            'birth_city_id' => $request->birth_city,
+            'birthdate' => $request->birthdate,
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->studyTime,
             'study_year_id' => $request->studyYear,
             'status' => 'new'
         ]);
 
-        return redirect()->route('students.preregistration')->with(
+        return redirect()->route('students.no_enrolled')->with(
             ['notify' => 'success', 'title' => __('Student created!')],
         );
     }
 
-    public function preregistration_edit(Student $student)
+    /* public function preregistration_edit(Student $student)
     {
         $headquarters = Headquarters::all();
         $studyTime = StudyTime::all();
@@ -91,9 +107,9 @@ class StudentController extends Controller
             'studyTime' => $studyTime,
             'studyYear' => $studyYear
         ]);
-    }
+    } */
 
-    public function preregistration_update(Student $student, Request $request)
+    /* public function preregistration_update(Student $student, Request $request)
     {
         $request->validate([
             'firstName' => ['required', 'string'],
@@ -120,45 +136,24 @@ class StudentController extends Controller
             'study_year_id' => $request->studyYear
         ]);
 
-        return redirect()->route('students.preregistration')->with(
+        return redirect()->route('students.no_enrolled')->with(
             ['notify' => 'success', 'title' => __('Student updated!')],
         );
-    }
+    } */
 
 
 
     /*
-     * REGISTRATION SECTION
+     * ENROLLED SECTION
      */
-
-    public function registration()
-    {
-        $students = Student::where('enrolled_status','registrated')
-                    ->orderBy('father_last_name')
-                    ->orderBy('mother_last_name')
-                    ->get();
-
-        return view('logro.student.registration')->with('students', $students);
-    }
-
-    public function preenrolled()
-    {
-        return $students = Student::where('enrolled_status','pre-enrolled')
-                    ->orderBy('father_last_name')
-                    ->orderBy('mother_last_name')
-                    ->get();
-
-        return view('logro.student.preenrolled')->with('students', $students);
-    }
-
     public function enrolled()
     {
-        return $students = Student::where('enrolled_status','enrolled')
+        $students = Student::where('enrolled',TRUE)
                     ->orderBy('father_last_name')
                     ->orderBy('mother_last_name')
                     ->get();
 
-        return view('logro.student.index')->with('students', $students);
+        return view('logro.student.enrolled')->with('students', $students);
     }
 
 
@@ -244,17 +239,15 @@ class StudentController extends Controller
             'disability' => ['nullable','string'],
             'ethnic_group' => ['nullable',Rule::exists('ethnic_groups','id')],
             'conflict_victim' => ['nullable','boolean'],
-            'lunch' => ['nullable','boolean'],
-            'refreshment' => ['nullable','boolean'],
-            'transport' => ['nullable','boolean'],
+            // 'lunch' => ['nullable','boolean'],
+            // 'refreshment' => ['nullable','boolean'],
+            // 'transport' => ['nullable','boolean'],
             'origin_school_id' => ['nullable',Rule::exists('origin_schools','id')]
 
         ]);
 
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
         UserController::_update($student->id, $user_name);
-
-        $enrolled_status = $student->enrolled_status === NULL ? 'registrated' : $student->enrolled_status ;
 
         $student->update([
             'first_name' => $request->firstName,
@@ -286,13 +279,10 @@ class StudentController extends Controller
             /* informacion complementaria */
             'ethnic_group_id' => $request->ethnic_group,
             'conflict_victim' => $request->conflict_victim,
-            'lunch' => $request->lunch,
-            'refreshment' => $request->refreshment,
-            'transport' => $request->transport,
-            'origin_school_id' => $request->origin_school_id,
-
-            /* estados */
-            'enrolled_status' => $enrolled_status
+            // 'lunch' => $request->lunch,
+            // 'refreshment' => $request->refreshment,
+            // 'transport' => $request->transport,
+            'origin_school_id' => $request->origin_school_id
 
         ]);
 

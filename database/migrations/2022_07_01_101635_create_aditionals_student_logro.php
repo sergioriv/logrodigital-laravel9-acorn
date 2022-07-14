@@ -116,11 +116,7 @@ return new class extends Migration
             $table->unsignedBigInteger('study_time_id')->nullable();
             $table->unsignedBigInteger('study_year_id')->nullable();
             $table->date('enrolled_date')->nullable();
-            $table->enum('enrolled_status', [
-                'registrated',
-                'pre-enrolled',
-                'enrolled'
-            ])->nullable(); // null is pre-registraed
+            $table->boolean('enrolled')->nullable(); // null is pre-registraed
             $table->enum('status', [
                 'new',
                 'repeat'
@@ -250,21 +246,21 @@ return new class extends Migration
             /* informacion complementaria */
             $table->dropColumn('ethnic_group_id');
             $table->dropColumn('conflict_victim');
-            $table->dropColumn('lunch');
-            $table->dropColumn('refreshment');
-            $table->dropColumn('transport');
+            // $table->dropColumn('lunch');
+            // $table->dropColumn('refreshment');
+            // $table->dropColumn('transport');
             $table->dropColumn('origin_school_id');
 
             /* informacion pre-matricula */
-            // $table->dropColumn('headquarters_id');
-            // $table->dropColumn('study_time_id');
-            // $table->dropColumn('study_year_id');
+            $table->dropColumn('headquarters_id');
+            $table->dropColumn('study_time_id');
+            $table->dropColumn('study_year_id');
 
             /* Inclusivo */
-            // $table->dropColumn('inclusive');
+            $table->dropColumn('inclusive');
 
             $table->dropColumn('enrolled_date');
-            $table->dropColumn('enrolled_status');
+            $table->dropColumn('enrolled');
             $table->dropColumn('status');
             $table->dropColumn('inclusive');
             $table->dropColumn('person_charge');

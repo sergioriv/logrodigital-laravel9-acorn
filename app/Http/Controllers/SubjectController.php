@@ -21,38 +21,31 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        $current_year = $this->current_year();
+        $Y = SchoolYearController::current_year();
 
-        $resourceAreas = ResourceArea::get();
+        if (NULL === $Y->available)
+        {
+            $resourceAreas = ResourceArea::whereHas('subjects', function ($subjects) use ($Y) {
+                $subjects->where('school_year_id', $Y->id);
+            })->get();
+        } else
+        {
+            $resourceAreas = ResourceArea::all();
+        }
 
-        $resourceSubjects = ResourceSubject::whereNot(function ($query) use ($current_year) {
-            $query->whereHas('subjects', function ($subject) use ($current_year) {
-                $subject->where('school_year_id', $current_year->id);
+        $resourceSubjects = ResourceSubject::whereNot(function ($query) use ($Y) {
+            $query->whereHas('subjects', function ($subject) use ($Y) {
+                $subject->where('school_year_id', $Y->id);
             });
         })->get();
 
-        $subjects = Subject::with('resourceSubject')->where('school_year_id', $current_year->id)->get();
+        $subjects = Subject::with('resourceSubject')->where('school_year_id', $Y->id)->get();
         return view('logro.subject.index')->with([
+            'Y' => $Y,
             'resourceAreas' => $resourceAreas,
             'resourceSubjects' => $resourceSubjects,
-            'subjects' => $subjects,
-            'year' => $current_year->name
+            'subjects' => $subjects
         ]);
-    }
-
-    /* public function data()
-    {
-        return ['data' => Subject::where('school_year_id', $this->current_year()->id)->get()];
-    } */
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('logro.subject.create');
     }
 
     /**
@@ -63,37 +56,31 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        foreach ($request->subjects as $are_subject) {
-            [$area, $subject] = explode('~',$are_subject);
-            if ('null' !== $area) {
-                Subject::create([
-                    'school_year_id' => $this->current_year()->id,
-                    'resource_area_id' => $area,
-                    'resource_subject_id' => $subject
-                ]);
+        $Y = SchoolYearController::current_year();
+
+        if (NULL !== $Y->available)
+        {
+
+            foreach ($request->subjects as $are_subject) {
+                [$area, $subject] = explode('~',$are_subject);
+                if ('null' !== $area) {
+                    Subject::create([
+                        'school_year_id' => $Y->id,
+                        'resource_area_id' => $area,
+                        'resource_subject_id' => $subject
+                    ]);
+                }
             }
+
+            return redirect()->route('subject.index')->with(
+                ['notify' => 'success', 'title' => __('Areas & Subjects updated!')],
+            );
+
+        } else
+        {
+            return redirect()->back()->with(
+                ['notify' => 'fail', 'title' => __('Not allowed for ') . $Y->name],
+            );
         }
-
-        return redirect()->route('subject.index')->with(
-            ['notify' => 'success', 'title' => __('Areas & Subjects updated!')],
-        );
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Subject  $subject
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Subject $subject)
-    {
-        //
-    }
-
-
-    /* Aditionals */
-    private function current_year()
-    {
-        return SchoolYear::select('id','name')->where('available',TRUE)->first();
     }
 }

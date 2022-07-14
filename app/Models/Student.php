@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -32,9 +33,9 @@ class Student extends CastCreateModel
         'number_siblings',
         'sisben_id',
         'social_stratum',
-        'lunch',
-        'refreshment',
-        'transport',
+        // 'lunch',
+        // 'refreshment',
+        // 'transport',
         'ethnic_group_id',
         'disability',
         'origin_school_id',
@@ -43,7 +44,7 @@ class Student extends CastCreateModel
         'study_time_id',
         'study_year_id',
         'enrolled_date',
-        'enrolled_status',
+        'enrolled',
         'status',
         'inclusive',
         'person_charge'
@@ -137,5 +138,11 @@ class Student extends CastCreateModel
     public function getLastNames()
     {
         return "{$this->father_last_name} {$this->mother_last_name}";
+    }
+
+    public function age()
+    {
+        if (NULL !== $this->birthdate)
+            return Carbon::createFromDate($this->birthdate)->diff(Carbon::now())->format('%y');
     }
 }

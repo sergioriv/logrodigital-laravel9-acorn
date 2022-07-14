@@ -1,89 +1,87 @@
 @php
-$title = 'School year list';
+$title = __('School years');
 @endphp
-@extends('layout',['title'=>$title])
+@extends('layout', ['title' => $title])
 
 @section('css')
-<link rel="stylesheet" href="/css/vendor/datatables.min.css" />
 @endsection
 
 @section('js_vendor')
-<script src="/js/vendor/bootstrap-submenu.js"></script>
-<script src="/js/vendor/datatables.min.js"></script>
-<script src="/js/vendor/mousetrap.min.js"></script>
 @endsection
 
 @section('js_page')
-<script src="/js/cs/datatable.extend.js"></script>
-<script src="/js/plugins/datatable/school_years_datatable.ajax.js"></script>
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <!-- Title and Top Buttons Start -->
-            <div class="page-title-container">
-                <div class="row">
-                    <!-- Title Start -->
-                    <div class="col-12 col-md-7">
-                        <h1 class="mb-0 pb-0 display-4" id="title">{{ $title }}</h1>
-                    </div>
-                    <!-- Title End -->
-
-                    <!-- Top Buttons Start -->
-                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-                        <!-- Add New Button Start -->
-                        <a href="{{ route('schoolYear.create') }}"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
-                            <i data-acorn-icon="plus"></i>
-                            <span>{{ __('Add New') }}</span>
-                        </a>
-                        <!-- Add New Button End -->
-                    </div>
-                    <!-- Top Buttons End -->
-                </div>
-            </div>
-            <!-- Title and Top Buttons End -->
-
-            <!-- Content Start -->
-            <div class="data-table-rows slim">
-                <!-- Controls Start -->
-                <div class="row">
-                    <!-- Search Start -->
-                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
-                        <div
-                            class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
-                            <input class="form-control datatable-search" placeholder="Search"
-                                data-datatable="#datatable_school_years" />
-                            <span class="search-magnifier-icon">
-                                <i data-acorn-icon="search"></i>
-                            </span>
-                            <span class="search-delete-icon d-none">
-                                <i data-acorn-icon="close"></i>
-                            </span>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- Title and Top Buttons Start -->
+                <div class="page-title-container">
+                    <div class="row">
+                        <!-- Title Start -->
+                        <div class="col-12 col-md-7">
+                            <h1 class="mb-0 pb-0 display-4" id="title">{{ $title }}</h1>
                         </div>
-                    </div>
-                    <!-- Search End -->
-                </div>
-                <!-- Controls End -->
+                        <!-- Title End -->
 
-                <!-- Table Start -->
-                <div class="data-table-responsive-wrapper">
-                    <table id="datatable_school_years" class="data-table nowrap w-100">
-                        <thead>
-                            <tr>
-                                <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
-                                <th class="text-muted text-small text-uppercase">{{ __('Available') }}</th>
-                                <th class="text-muted text-small text-uppercase">{{ __('Created at') }}</th>
-                            </tr>
-                        </thead>
-                    </table>
+                        <!-- Top Buttons Start -->
+                        <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                            <!-- Add New Button Start -->
+                            <a href="{{ route('schoolYear.create') }}"
+                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                <i data-acorn-icon="plus"></i>
+                                <span>{{ __('Add New') }}</span>
+                            </a>
+                            <!-- Add New Button End -->
+                        </div>
+                        <!-- Top Buttons End -->
+                    </div>
                 </div>
-                <!-- Table End -->
+                <!-- Title and Top Buttons End -->
+
+                <!-- Content Start -->
+                <form method="POST" action="{{ route('schoolYear.selected') }}" novalidate>
+                    @csrf
+                    @method('PUT')
+
+                    <section class="row g-2 mb-3 row-cols-3 row-cols-md-4 row-cols-lg-6">
+
+                    @foreach ($years as $year)
+                        <div class="col small-gutter-col">
+                            <label class="form-check custom-card w-100 position-relative p-0 m-0">
+                                <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
+                                    name="school_year" value="{{ $year->id }}"
+                                    @if (NULL !== Auth::user()->school_year_id)
+                                    {{ Auth::user()->school_year_id === $year->id ? 'checked' : '' ; }}
+                                    @elseif (1 === $year->available)
+                                    checked
+                                    @endif>
+                                <span class="card form-check-label w-100">
+                                    <span class="card-body text-center">
+                                        <span class="heading text-body text-primary d-block">{{ $year->name }}</span>
+                                        <span class="mb-2 text-extra-small fw-medium text-muted text-uppercase d-block">
+                                            {{ $year->groups_count . ' ' . __('Groups') }}</span>
+                                        @if ($year->groups_sum_student_quantity !== NULL)
+                                        <span class="text-extra-small fw-medium text-muted text-uppercase d-block">
+                                            {{ $year->groups_sum_student_quantity .' '. __('students') }}</span>
+                                        @endif
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                    @endforeach
+
+                </section>
+
+                <x-button type="submit" class="btn-primary">
+                    <i class="bi-clock-history"></i>
+                    <span>{{ __('Choose Year') }}</span>
+                </x-button>
+
+            </form>
+                <!-- Content End -->
             </div>
-            <!-- Content End -->
         </div>
     </div>
-</div>
 @endsection

@@ -1,5 +1,5 @@
 @php
-$title = __('Students') .' '. __('pre-registration');
+$title = __('Students') .' '. __('no-enrolled');
 @endphp
 @extends('layout',['title'=>$title])
 
@@ -40,6 +40,26 @@ $title = __('Students') .' '. __('pre-registration');
                             <span>{{ __('Add New') }}</span>
                         </a>
                         <!-- Add New Button End -->
+
+                        <!-- Dropdown Button Start -->
+                        <div class="ms-1">
+                            <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only"
+                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false" data-submenu>
+                                <i data-acorn-icon="more-horizontal"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                {{-- <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('students.export') }}">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>{{ __("Download") }} Excel</span>
+                                </a> --}}
+                                <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('students.import') }}">
+                                    <i data-acorn-icon="upload"></i>
+                                    <span>{{ __("Import") }} Excel</span>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Dropdown Button End -->
                     </div>
                     <!-- Top Buttons End -->
                 </div>
@@ -86,7 +106,7 @@ $title = __('Students') .' '. __('pre-registration');
                             @foreach ($students as $student)
                             <tr>
                                 <td>
-                                    <a href="{{ route('students.preregistratione.edit', $student) }}"
+                                    <a href="{{ route('students.show', $student) }}"
                                         class="list-item-heading body">
                                         {{ $student->getNames() }}
                                     </a>

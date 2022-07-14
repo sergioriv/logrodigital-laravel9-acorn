@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) { /* school_years */
             $table->id();
             $table->enum('provider', [
                 'microsoft',
@@ -26,7 +26,14 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();
+            $table->unsignedBigInteger('school_year_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('school_year_id')
+                    ->references('id')
+                    ->on('school_years')
+                    ->onUpdate('restrict')
+                    ->onDelete('restrict');
         });
     }
 

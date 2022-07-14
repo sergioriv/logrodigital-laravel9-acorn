@@ -8,18 +8,26 @@ $title = $student->user->name;
 <link rel="stylesheet" href="/css/vendor/datatables.min.css" /> --}}
 <link rel="stylesheet" href="/css/vendor/select2.min.css" />
 <link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" />
-<link rel="stylesheet" href="/css/vendor/bootstrap-datepicker3.standalone.min.css" />
+    @if (NULL === $student->birthdate)
+    <link rel="stylesheet" href="/css/vendor/bootstrap-datepicker3.standalone.min.css" />
+    @endif
 @endsection
 
 @section('js_vendor')
 <script src="/js/cs/responsivetab.js"></script>
 <script src="/js/vendor/singleimageupload.js"></script>
+<script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
+<script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
+<script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
 <script src="/js/vendor/select2.full.min.js"></script>
-<script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
-<script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
+    @if (NULL === $student->birthdate)
+    <script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
+    @endif
 @endsection
 
 @section('js_page')
+<script src="/js/forms/genericforms.js"></script>
 <script>
     jQuery("[logro='select2']").select2({minimumResultsForSearch: 30, placeholder: ''});
 
@@ -66,7 +74,10 @@ $title = $student->user->name;
                                         </form>
                                         <!-- Avatar Form End -->
 
-                                        <div class="h5 mb-2">{{ $student->user->name }}</div>
+                                        <div class="h5">{{ $student->user->name }}</div>
+                                        @if (NULL !== $student->birthdate)
+                                        <span class="mb-2 text-muted">{{ $student->age() .' '. __("years") }}</span>
+                                        @endif
 
                                         <div class="text-muted">
                                             <i data-acorn-icon="email" class="me-1" data-acorn-size="17"></i>
@@ -126,7 +137,7 @@ $title = $student->user->name;
                         <div class="tab-pane fade active show" id="informationTab" role="tabpanel">
 
                             <form method="POST" action="{{ route('students.update', $student) }}"
-                                class="tooltip-label-end" novalidate>
+                                class="tooltip-label-end" id="studentInfoForm">
                                 @csrf
                                 @method('PUT')
 
@@ -253,8 +264,12 @@ $title = $student->user->name;
                                             <div class="col-md-6">
                                                 <div class="mb-3 position-relative form-group">
                                                     <x-label>{{ __("birthdate") }}</x-label>
+                                                    @if (NULL !== $student->birthdate)
+                                                        <span class="form-control text-muted">{{ $student->birthdate }}</span>
+                                                    @else
                                                     <x-input :value="$student->birthdate" logro="datePicker"
                                                         name="birthdate" />
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -448,53 +463,15 @@ $title = $student->user->name;
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <div class="mb-3 w-100 position-relative form-group">
-                                                    <x-label>{{ __("lunch") }}</x-label>
-                                                    <select name="lunch" logro="select2">
-                                                        <option label="&nbsp;"></option>
-                                                        <option value="0" @selected(0===$student->lunch)>{{ __("No") }}
-                                                        </option>
-                                                        <option value="1" @selected(1===$student->lunch)>{{ __("Yes") }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3 w-100 position-relative form-group">
-                                                    <x-label>{{ __("refreshment") }}</x-label>
-                                                    <select name="refreshment" logro="select2">
-                                                        <option label="&nbsp;"></option>
-                                                        <option value="0" @selected(0===$student->refreshment)>{{
-                                                            __("No") }}</option>
-                                                        <option value="1" @selected(1===$student->refreshment)>{{
-                                                            __("Yes") }}</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <div class="mb-3 w-100 position-relative form-group">
-                                                    <x-label>{{ __("transport") }}</x-label>
-                                                    <select name="transport" logro="select2">
-                                                        <option label="&nbsp;"></option>
-                                                        <option value="0" @selected(0===$student->transport)>{{ __("No")
-                                                            }}</option>
-                                                        <option value="1" @selected(1===$student->transport)>{{
-                                                            __("Yes") }}</option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                             <div class="col-md-6">
                                                 <div class="mb-3 w-100 position-relative form-group">
                                                     <x-label>{{ __("origin school") }}</x-label>
                                                     <select name="origin_school_id" logro="select2">
                                                         <option label="&nbsp;"></option>
                                                         @foreach ($originSchools as $originSchool)
-                                                        <option value="{{ $originSchool->id }}" @if ($student->
-                                                            origin_school_id !== NULL)
+                                                        <option value="{{ $originSchool->id }}" @if ($student->origin_school_id !== NULL)
                                                             @selected($student->origin_school_id === $originSchool->id)
                                                             @endif >
                                                             {{ $originSchool->name }}

@@ -93,7 +93,7 @@ return new class extends Migration
         Schema::create('school_years', function (Blueprint $table) {/* Ej: 2022, 2023  */
             $table->id();
             $table->string('name');
-            $table->boolean('available');
+            $table->boolean('available')->nullable();
             $table->timestamps();
         });
 
@@ -161,6 +161,7 @@ return new class extends Migration
             $table->unsignedBigInteger('study_year_id');
             $table->unsignedBigInteger('teacher_id');
             $table->string('name');
+            $table->unsignedSmallInteger('student_quantity')->default(0);
             $table->timestamps();
 
             $table->foreign('school_year_id')

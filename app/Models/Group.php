@@ -15,7 +15,8 @@ class Group extends CastCreateModel
         'study_time_id',
         'study_year_id',
         'teacher_id',
-        'name'
+        'name',
+        'student_quantity'
     ];
 
     /*

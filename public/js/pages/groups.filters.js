@@ -27,8 +27,8 @@ function template_card_group(group)
         template += `<span>` + group.study_time.name + `</span>`
         template += `<span>` + group.study_year.name + `</span>`
         template += `<span class="btn-icon-start">`
-        template += `<i data-acorn-icon="badge" class="icon text-primary" data-acorn-size="15"></i>`
-        template += group.teacher.first_name + ` ` + group.teacher.father_last_name
+        template += `<i class="icon icon-15 bi-award text-primary"></i> `
+        template += `<span>` + group.teacher.first_name + ` ` + group.teacher.father_last_name + `</span>`
         template += `</span></div></div></div>`
     return template;
 }

@@ -11,7 +11,9 @@ $title = __('Areas & Subjects');
 <script src="/js/vendor/sortable.min.js"></script>
 @endsection
 
+
 @section('js_page')
+@if (NULL !== $Y->available)
 <script>
     if (document.getElementById('areaGroupNull')) {
       Sortable.create(document.getElementById('areaGroupNull'), {
@@ -42,6 +44,7 @@ $title = __('Areas & Subjects');
         $(this).children('input').val( $(this).parent().data('area') + '~' + $(this).data('id') );
     })
 </script>
+@endif
 @endsection
 
 @section('content')
@@ -53,7 +56,7 @@ $title = __('Areas & Subjects');
                 <div class="row">
                     <!-- Title Start -->
                     <div class="col-12 col-md-7">
-                        <h1 class="mb-0 pb-0 display-4" id="title">{{ $title .' | ' . $year }}</h1>
+                        <h1 class="mb-0 pb-0 display-4" id="title">{{ $title .' | ' . $Y->name }}</h1>
                     </div>
                     <!-- Title End -->
 
@@ -80,11 +83,13 @@ $title = __('Areas & Subjects');
             <!-- Content Start -->
             <div class="">
 
+                @if (NULL !== $Y->available)
                 <form method="POST" action="{{ route('subject.store') }}" class="tooltip-end-bottom" novalidate>
                     @csrf
-
+                @endif
                     <!-- Moving Start -->
                     <section class="scroll-section">
+                        @if (NULL !== $Y->available)
                         <div class="row">
                             <section class="col-12">
                                 <div class="card mb-5 border border-pink">
@@ -104,6 +109,7 @@ $title = __('Areas & Subjects');
                                 </div>
                             </section>
                         </div>
+                        @endif
                         <div class="row">
                             @foreach ($resourceAreas as $area)
                             <section class="col-sm-6 col-xxl-3">
@@ -128,9 +134,11 @@ $title = __('Areas & Subjects');
                     </section>
                     <!-- Moving End -->
 
+                @if (NULL !== $Y->available)
                     <x-button type="submit" class="btn-primary">{{ __('Save') .' '. __('Areas & Subjects') }}</x-button>
 
                 </form>
+                @endif
                 <!-- Advanced End -->
 
             </div>

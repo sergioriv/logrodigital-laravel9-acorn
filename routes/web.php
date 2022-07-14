@@ -17,7 +17,6 @@ use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
-use App\Models\PersonCharge;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,6 +58,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /* Route School Year */
     Route::resource('school_years', SchoolYearController::class)->except('destroy','edit','update')->names('schoolYear');
     Route::get('school_years.json', [SchoolYearController::class, 'data']);
+    Route::put('school_years/choose', [SchoolYearController::class, 'choose'])->name('schoolYear.selected');
 
     /* Route Headquarters */
     Route::resource('headquarters', HeadquartersController::class)->except('destroy')->names('headquarters');
@@ -79,7 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('areas.json', [ResourceAreaController::class, 'data']);
 
     /* Route Resource subject */
-    Route::resource('subjects', ResourceSubjectController::class)->except('destroy','update','edit','show')->names('resourceSubject');
+    Route::resource('subjects', ResourceSubjectController::class)->only('index','create','store')->names('resourceSubject');
     Route::get('subjects.json', [ResourceSubjectController::class, 'data']);
 
     /* Route Areas & subjects */
@@ -105,15 +105,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route Students */
     Route::controller(StudentController::class)->group( function () {
-        Route::get('students/preregistration', 'preregistration')->name('students.preregistration');
-        Route::get('students/preregistration/{student}/edit', 'preregistration_edit')->name('students.preregistratione.edit');
-        Route::put('students/preregistration/{student}/edit', 'preregistration_update')->name('students.preregistratione.update');
-        Route::get('students/create', 'preregistration_create')->name('students.create');
-        Route::post('students', 'preregistration_store')->name('students.store');
+
+        Route::get('students/create', 'create')->name('students.create');
+        Route::post('students/no-enrolled', 'store')->name('students.store');
+        Route::get('students/{student}/edit', 'show')->name('students.show');
         Route::put('students/{student}', 'update')->name('students.update');
 
-        Route::get('students/pregistration', 'registration')->name('students.registration');
-        Route::get('students/{student}/edit', 'show')->name('students.show');
+        Route::get('students/no-enrolled', 'no_enrolled')->name('students.no_enrolled');
+        Route::get('students', 'enrolled')->name('students.enrolled');
 
         Route::get('students/data/instructive', 'data_instructive')->name('students.data.instructive');
         Route::get('students/export/instructive', 'export_instructive')->name('students.instructive');
