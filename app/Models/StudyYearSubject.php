@@ -15,7 +15,9 @@ class StudyYearSubject extends CastCreateModel
     protected $fillable = [
         'school_year_id',
         'study_year_id',
-        'subject_id'
+        'subject_id',
+        'hours_week',
+        'course_load'
     ];
 
 

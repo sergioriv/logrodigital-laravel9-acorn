@@ -119,6 +119,11 @@
     "Upload": "Cargar",
 
     "Study Year": "Año de studio",
+    "Hours week": "Horas semana",
+    "Course load": "Carga académica",
+    "empty fields": "campos vacios",
+    "check the course load": "verifique la carga académica",
+    "academic load must not exceed 100%": "carga académica no debe superar el 100%",
 
     "Continue": "Continuar",
     "Wolcome": "Bienvenido",
@@ -130,7 +135,6 @@
     "Contact": "Contacto",
     "Created at": "Fecha creación",
     "unregistered on our platform": "no registrado en nuestra plataforma",
-
 
     "Choose Year": "Seleccionar Año",
     "School years": "Años escolares",

@@ -13,8 +13,7 @@ class TeacherSubjectGroup extends CastCreateModel
         'school_year_id',
         'teacher_id',
         'subject_id',
-        'group_id',
-        'work_schedule'
+        'group_id'
     ];
 
     /*

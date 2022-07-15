@@ -8,6 +8,7 @@ use App\Models\SchoolYear;
 use App\Models\StudyYear;
 use App\Models\StudyYearSubject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class StudyYearController extends Controller
@@ -176,17 +177,55 @@ class StudyYearController extends Controller
         if (NULL !== $Y->available)
         {
 
-            foreach ($request->subjects as $subject) {
+            DB::beginTransaction();
+
+            $areas = [];
+            $total_course_load = 0;
+
+            foreach ($request->subjects as $area_subject) {
+
+                [$area, $subject] = explode('~',$area_subject);
+                array_push($areas, $area);
+
+                $hours_week = $subject.'~hours_week';
+                $course_load = $subject.'~course_load';
+
+                if (empty($request->$hours_week) || empty($request->$course_load))
+                {
+                    DB::rollBack();
+                    return redirect()->back()->withErrors( __("empty fields") );
+                }
+
+                if ($request->$course_load > 100)
+                {
+                    DB::rollBack();
+                    return redirect()->back()->withErrors( __("academic load must not exceed 100%") );
+                }
+
+                $total_course_load += $request->$course_load;
+
                 StudyYearSubject::create([
                     'school_year_id' => $Y->id,
                     'study_year_id' => $studyYear->id,
-                    'subject_id' => $subject
+                    'subject_id' => $subject,
+                    'hours_week' => $request->$hours_week,
+                    'course_load' => $request->$course_load
                 ]);
             }
 
-            return redirect()->route('studyYear.index')->with(
-                ['notify' => 'success', 'title' => __('Study year updated!')],
-            );
+            $areas_total = count(array_unique($areas)) * 100;
+
+            if ($total_course_load === $areas_total)
+            {
+                DB::commit();
+                return redirect()->route('studyYear.subject.show', $studyYear)->with(
+                    ['notify' => 'success', 'title' => __('Updated!')],
+                );
+            } else
+            {
+                DB::rollBack();
+                return redirect()->back()->withErrors( __("check the course load") );
+            }
 
         } else
         {

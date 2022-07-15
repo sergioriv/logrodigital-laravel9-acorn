@@ -201,7 +201,6 @@ return new class extends Migration
             $table->unsignedBigInteger('teacher_id');
             $table->unsignedBigInteger('subject_id');
             $table->unsignedBigInteger('group_id');
-            $table->unsignedTinyInteger('work_schedule')->nullable();
             $table->timestamps();
 
             $table->foreign('school_year_id')
@@ -253,6 +252,8 @@ return new class extends Migration
             $table->unsignedBigInteger('school_year_id');
             $table->unsignedBigInteger('study_year_id');
             $table->unsignedBigInteger('subject_id');
+            $table->unsignedTinyInteger('hours_week');
+            $table->unsignedTinyInteger('course_load');
 
             $table->foreign('school_year_id')
                     ->references('id')
