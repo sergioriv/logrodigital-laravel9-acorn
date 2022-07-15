@@ -29,11 +29,19 @@ $title = $studyYear->name;
                 <div class="card d-flex mb-2">
                     <div class="card-body">
                         <h2 class="small-title">{{ $area->name }}</h2>
-                        <table>
+                        <table class="w-50">
                             <tbody>
                                 @foreach ($area->subjects as $subject)
                                 <tr>
-                                    <td>{{ $subject->resourceSubject->name }}</td>
+                                    <td class="w-50">{{ $subject->resourceSubject->name }}</td>
+                                    <td class="w-25">{{ $subject->studyYearSubject->hours_week }}
+                                        @if (1 === $subject->studyYearSubject->hours_week)
+                                            {{ __("hour") }}
+                                        @else
+                                            {{ __("hours") }}
+                                        @endif
+                                    </td>
+                                    <td class="w-25">{{ $subject->studyYearSubject->course_load }}%</td>
                                 </tr>
                                 @endforeach
                             </tbody>

@@ -179,13 +179,19 @@ html[data-dimension="mobile"] .logro-badge-right-bottom {
     margin: auto;
     max-width: 100%;
 }
+.logro-input-disabled {
+    background: rgba(var(--separator-rgb), 0.5) !important;
+    border-color: rgba(var(--separator-rgb), 0.5) !important;
+    color: var(--muted);
+    -webkit-text-fill-color: var(--muted) !important; /* for safari */
+}
 
 
 
 /*
  * DataTables Start
  */
- .dataTables_scrollBody {
+.dataTables_scrollBody {
     height: fit-content !important;
 }
 .dataTables_scrollHeadInner {

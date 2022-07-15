@@ -10,6 +10,7 @@ use App\Models\StudyYearSubject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use phpDocumentor\Reflection\Types\Resource_;
 
 class StudyYearController extends Controller
 {
@@ -26,15 +27,15 @@ class StudyYearController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $studyYears = StudyYear::withCount(['studyYearSubject' => function ($subjects) use ($Y) {
-                $subjects->where('school_year_id', $Y->id);
-            }])
-            ->withCount(['groups' => function ($groups) use ($Y) {
-                $groups->where('school_year_id', $Y->id);
-            }])
-            ->withSum(['groups' => function ($groups) use ($Y) {
-                $groups->where('school_year_id', $Y->id);
-            }], 'student_quantity')
+        $studyYears = StudyYear::withCount(['studyYearSubject' =>
+                fn ($subjects) => $subjects->where('school_year_id', $Y->id)
+            ])
+            ->withCount(['groups' =>
+                fn ($groups) => $groups->where('school_year_id', $Y->id)
+            ])
+            ->withSum(['groups' =>
+                fn ($groups) => $groups->where('school_year_id', $Y->id)
+            ], 'student_quantity')
             ->get();
 
         return view('logro.studyyear.index')->with([
@@ -130,9 +131,9 @@ class StudyYearController extends Controller
             /*
              * Create Study Year Subjects
              */
-            $areas = ResourceArea::with(['subjects' => function ($subjects) use ($Y) {
-                $subjects->where('school_year_id', $Y->id);
-            }])->get();
+            $areas = ResourceArea::with(['subjects' =>
+                    fn($s) => $s->where('school_year_id', $Y->id)
+                ])->get();
 
             return view('logro.studyyear.subjects')->with([
                 'studyYear' => $studyYear,
@@ -144,19 +145,18 @@ class StudyYearController extends Controller
             /*
              * Show Study Year Subjects
              */
-            $areas = ResourceArea::with(['subjects' => function ($subjects) use ($Y, $studyYear) {
-                $subjects->where('school_year_id', $Y->id)
-                    ->whereHas('studyYearSubject', function ($sy) use ($studyYear) {
-                        $sy->where('study_year_id', $studyYear->id);
-                    });
-            }])
-            ->whereHas('subjects', function ($sj) use ($Y, $studyYear) {
-                $sj->where('school_year_id', $Y->id)
-                        ->whereHas('studyYearSubject', function ($sy) use ($studyYear) {
-                            $sy->where('study_year_id', $studyYear->id);
-                        });
-            })
-            ->get();
+            $fn_study_year = fn($sy) =>
+                $sy->where('school_year_id', $Y->id)
+                ->where('study_year_id', $studyYear->id);
+
+            $fn_subjects = fn($s) =>
+                $s->where('school_year_id', $Y->id)
+                ->whereHas('studyYearSubject', $fn_study_year)
+                ->with(['studyYearSubject' => $fn_study_year]);
+
+            $areas = ResourceArea::with(['subjects' => $fn_subjects])
+                    ->whereHas('subjects', $fn_subjects)
+                    ->get();
 
             return view('logro.studyyear.subjects_show')->with([
                 'studyYear' => $studyYear,

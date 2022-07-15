@@ -50,11 +50,11 @@ $title = $studyYear->name;
                                 <div class="card d-flex mb-2">
                                     <div class="card-body">
                                         <h2 class="small-title">{{ $area->name }}</h2>
-                                        <table class="w-50">
+                                        <table class="w-75">
                                             <tbody>
                                                 @foreach ($area->subjects as $subject)
                                                     <tr>
-                                                        <td class="w-50">
+                                                        <td class="w-40">
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
                                                                     <input type="checkbox" name="subjects[]"
@@ -72,10 +72,13 @@ $title = $studyYear->name;
                                                                 name="{{ $subject->id }}~hours_week" required>
                                                         </td>
                                                         <td>
-                                                            <input type="number" disabled max="100" min="0"
+                                                            <div class="input-group">
+                                                                <span class="input-group-text logro-input-disabled">%</span>
+                                                                <input type="number" disabled max="100" min="0" step="10"
                                                                 placeholder="{{ __('Course load') }}"
                                                                 subject="{{ $subject->id }}" class="form-control"
                                                                 name="{{ $subject->id }}~course_load" required>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach

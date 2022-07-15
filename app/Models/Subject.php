@@ -44,7 +44,7 @@ class Subject extends CastCreateModel
 
     public function studyYearSubject()
     {
-        return $this->hasMany(StudyYearSubject::class);
+        return $this->hasOne(StudyYearSubject::class,'subject_id','id');
     }
 
 }
