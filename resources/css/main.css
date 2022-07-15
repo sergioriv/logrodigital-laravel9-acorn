@@ -172,6 +172,13 @@ html[data-dimension="desktop"] .logro-badge-right-bottom {
 html[data-dimension="mobile"] .logro-badge-right-bottom {
     display: none;
 }
+.modal-dialog {
+    margin: .5rem auto !important;
+}
+.logro-modal-image img {
+    margin: auto;
+    max-width: 100%;
+}
 
 
 

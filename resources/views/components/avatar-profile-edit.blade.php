@@ -6,7 +6,7 @@
     @endphp
 @else
     @php
-        $avatar = config('app.url') .'/img/profile/profile-11.webp';
+        $avatar = config('app.url') .'/img/other/profile-11.webp';
     @endphp
 @endif
 
