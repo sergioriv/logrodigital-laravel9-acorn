@@ -74,7 +74,7 @@ $title = $studyYear->name;
                                                         <td>
                                                             <div class="input-group">
                                                                 <span class="input-group-text logro-input-disabled">%</span>
-                                                                <input type="number" disabled max="100" min="0" step="10"
+                                                                <input type="number" disabled max="100" min="0"
                                                                 placeholder="{{ __('Course load') }}"
                                                                 subject="{{ $subject->id }}" class="form-control"
                                                                 name="{{ $subject->id }}~course_load" required>

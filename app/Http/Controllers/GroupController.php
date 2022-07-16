@@ -150,19 +150,7 @@ class GroupController extends Controller
 
         $sy = $group->study_year_id;
 
-        $areas = ResourceArea::with(['subjects' => function ($sj) use ($Y, $sy) {
-            $sj->where('school_year_id', $Y->id)
-                ->whereHas('studyYearSubject', function ($sys) use ($sy) {
-                    $sys->where('study_year_id', $sy);
-                });
-        }])
-        ->whereHas('subjects', function ($sj) use ($Y, $sy) {
-            $sj->where('school_year_id', $Y->id)
-                    ->whereHas('studyYearSubject', function ($sys) use ($sy) {
-                        $sys->where('study_year_id', $sy);
-                    });
-        })
-        ->get();
+        $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
 
         return view('logro.group.show')->with([
             'Y' => $Y,
@@ -182,19 +170,7 @@ class GroupController extends Controller
 
             $teachers = Teacher::where('active', TRUE)->get();
 
-            $areas = ResourceArea::with(['subjects' => function ($sj) use ($Y, $sy) {
-                $sj->where('school_year_id', $Y->id)
-                    ->whereHas('studyYearSubject', function ($sys) use ($sy) {
-                        $sys->where('study_year_id', $sy);
-                    });
-            }])
-            ->whereHas('subjects', function ($sj) use ($Y, $sy) {
-                $sj->where('school_year_id', $Y->id)
-                        ->whereHas('studyYearSubject', function ($sys) use ($sy) {
-                            $sys->where('study_year_id', $sy);
-                        });
-            })
-            ->get();
+            $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
 
             return view('logro.group.teachers_edit')->with([
                 'group' => $group,
@@ -252,6 +228,30 @@ class GroupController extends Controller
                 ['notify' => 'fail', 'title' => __('Not allowed for ') . $Y->name],
             );
         }
+    }
+
+
+    private function subjects_teacher($Y_id, $sy_id, $g_id)
+    {
+        $fn_sy = fn($sy) =>
+                $sy->where('school_year_id', $Y_id)
+                ->where('study_year_id', $sy_id);
+
+        $fn_tsg = fn($tsg) =>
+                $tsg->where('school_year_id', $Y_id)
+                ->where('group_id', $g_id);
+
+        $fn_sb = fn($s) =>
+                $s->where('school_year_id', $Y_id)
+
+                ->whereHas('studyYearSubject', $fn_sy)
+                ->with(['studyYearSubject' => $fn_sy])
+
+                ->with(['teacherSubjectGroups' => $fn_tsg]);
+
+        return ResourceArea::with(['subjects' => $fn_sb])
+                    ->whereHas('subjects', $fn_sb)
+                    ->get();
     }
 
 }

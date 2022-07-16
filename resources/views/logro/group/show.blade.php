@@ -82,16 +82,26 @@ $title = $group->name;
                                                         <tbody>
                                                             @foreach ($area->subjects as $subject)
                                                                 <tr>
-                                                                    <td scope="row" class="col-6">
+                                                                    <td scope="row" class="col-4">
+                                                                        {{ $subject->id }}~
                                                                         {{ $subject->resourceSubject->name }}
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="col-6">
                                                                         @foreach ($subject->teacherSubjectGroups as $teacher_subject)
                                                                             @if ($loop->first)
+                                                                                {{ $teacher_subject->id }}~
                                                                                 {{ $teacher_subject->teacher->getFullName() }}
                                                                             @endif
                                                                         @endforeach
                                                                     </td>
+                                                                    <td class="col-1 text-center">{{ $subject->studyYearSubject->hours_week }}
+                                                                        @if (1 === $subject->studyYearSubject->hours_week)
+                                                                            {{ __("hour") }}
+                                                                        @else
+                                                                            {{ __("hours") }}
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="col-1 text-center">{{ $subject->studyYearSubject->course_load }}%</td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>

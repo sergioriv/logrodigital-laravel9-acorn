@@ -48,9 +48,9 @@ $title = $group->name;
                                     $selected = 'null~'. $subject->id;
                                     @endphp
                                     <tr>
-                                        <td scope="row" class="col-6">{{ $subject->resourceSubject->name
+                                        <td scope="row" class="col-4">{{ $subject->resourceSubject->name
                                             }}</td>
-                                        <td>
+                                        <td class="col-6">
                                             <div class="w-100">
                                                 <select name="teachers[]" data-placeholder="{{ __(" Choose") .' '. __("Teacher") }}" class="logro-select2">
                                             <option label="&nbsp;"></option>
@@ -84,6 +84,14 @@ $title = $group->name;
                                                 </select>
                                             </div>
                                         </td>
+                                        <td class="col-1 text-center">{{ $subject->studyYearSubject->hours_week }}
+                                            @if (1 === $subject->studyYearSubject->hours_week)
+                                                {{ __("hour") }}
+                                            @else
+                                                {{ __("hours") }}
+                                            @endif
+                                        </td>
+                                        <td class="col-1 text-center">{{ $subject->studyYearSubject->course_load }}%</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

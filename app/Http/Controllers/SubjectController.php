@@ -83,4 +83,22 @@ class SubjectController extends Controller
             );
         }
     }
+
+    /* public static function year_studyYear_subjects($Y_id, $sy_id)
+    {
+        $fn_sy = fn($sy) =>
+                $sy->where('school_year_id', $Y_id)
+                ->where('study_year_id', $sy_id);
+
+        $fn_sb = fn($s) =>
+                $s->where('school_year_id', $Y_id)
+                ->whereHas('studyYearSubject', $fn_sy)
+                ->with(['studyYearSubject' => $fn_sy]);
+
+        $a_sb = ResourceArea::with(['subjects' => $fn_sb])
+                    ->whereHas('subjects', $fn_sb)
+                    ->get();
+
+        return $a_sb;
+    } */
 }
