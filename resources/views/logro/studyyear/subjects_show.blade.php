@@ -29,7 +29,7 @@ $title = $studyYear->name;
                 <div class="card d-flex mb-2">
                     <div class="card-body">
                         <h2 class="small-title">{{ $area->name }}</h2>
-                        <table class="w-50">
+                        <table class="col-12 col-xl-6">
                             <tbody>
                                 @foreach ($area->subjects as $subject)
                                 <tr>

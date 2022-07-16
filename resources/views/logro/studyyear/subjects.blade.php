@@ -50,7 +50,7 @@ $title = $studyYear->name;
                                 <div class="card d-flex mb-2">
                                     <div class="card-body">
                                         <h2 class="small-title">{{ $area->name }}</h2>
-                                        <table class="w-75">
+                                        <table class="col-12 col-xl-9">
                                             <tbody>
                                                 @foreach ($area->subjects as $subject)
                                                     <tr>
@@ -65,13 +65,13 @@ $title = $studyYear->name;
                                                                 </label>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td class="w-30">
                                                             <input type="number" disabled max="20" min="0"
                                                                 placeholder="{{ __('Hours week') }}"
                                                                 subject="{{ $subject->id }}" class="form-control"
                                                                 name="{{ $subject->id }}~hours_week" required>
                                                         </td>
-                                                        <td>
+                                                        <td class="w-30">
                                                             <div class="input-group">
                                                                 <span class="input-group-text logro-input-disabled">%</span>
                                                                 <input type="number" disabled max="100" min="0"
