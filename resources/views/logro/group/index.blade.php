@@ -53,7 +53,6 @@ $title = __('Groups');
                                 <!-- Add New Button End -->
                             @endif
 
-
                         </div>
                         <!-- Top Buttons End -->
                     </div>

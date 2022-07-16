@@ -72,6 +72,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('study_years', StudyYearController::class)->only('index')->names('studyYear');
     Route::get('study_years/{study_year}/subjects', [StudyYearController::class, 'subjects'])->name('studyYear.subject.show');
     Route::post('study_years/{study_year}/subjects', [StudyYearController::class, 'subjects_store'])->name('studyYear.subject.store');
+    Route::get('study_years/{study_year}/subjects/edit', [StudyYearController::class, 'subjects_edit'])->name('studyYear.subject.edit');
     // Route::get('study_years.json', [StudyYearController::class, 'data']);
 
     /* Route Resource areas */

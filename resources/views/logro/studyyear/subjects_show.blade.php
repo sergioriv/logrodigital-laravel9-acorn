@@ -16,13 +16,34 @@ $title = $studyYear->name;
 <div class="container">
     <div class="row">
         <div class="col">
-            <!-- Title Start -->
-            <section class="scroll-section" id="title">
-                <div class="page-title-container">
-                    <h1 class="mb-0 pb-0 display-4">{{ $title .' | '. __('Subjects') }}</h1>
+
+            <!-- Title and Top Buttons Start -->
+            <section class="page-title-container">
+                <div class="row">
+                    <!-- Title Start -->
+                    <div class="col-12 col-md-7">
+                        <h1 class="mb-0 pb-0 display-4">{{ $title .' | '. __('Subjects') }}</h1>
+                    </div>
+                    <!-- Title End -->
+
+                    <!-- Top Buttons Start -->
+                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+
+                        @if (null !== $Y->available)
+                            <!-- Add New Button Start -->
+                            <a href="{{ route('studyYear.subject.edit', $studyYear) }}"
+                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                <i data-acorn-icon="edit-square"></i>
+                                <span>{{ __('Edit') }}</span>
+                            </a>
+                            <!-- Add New Button End -->
+                        @endif
+
+                    </div>
+                    <!-- Top Buttons End -->
                 </div>
             </section>
-            <!-- Title End -->
+            <!-- Title and Top Buttons End -->
 
             <section class="scroll-section mb-5">
                 @foreach ($areas as $area)

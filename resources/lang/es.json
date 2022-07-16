@@ -133,6 +133,7 @@
     "Forgot": "Olvidó",
     "Created!" : "Creado!",
     "Updated!" : "Actualizado!",
+    "updated!": "actualizado!",
     "Add New" : "Agregar nuevo",
     "Contact": "Contacto",
     "Created at": "Fecha creación",
@@ -144,6 +145,7 @@
     "It is not possible to create a group for ": "No es posible crear un grupo para el año ",
     "Not allowed for ": "No permitido para el año ",
 
+    "Unexpected Error": "Error Inesperado",
     "years": "años",
     "Years": "Años",
     "30 Days": "30 Días",

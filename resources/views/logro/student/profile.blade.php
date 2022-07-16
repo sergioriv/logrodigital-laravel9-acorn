@@ -27,20 +27,7 @@ $title = $student->user->name;
 
 @section('js_page')
     <script src="/js/forms/genericforms.js"></script>
-    <script>
-        jQuery("[logro='select2']").select2({
-            minimumResultsForSearch: 30,
-            placeholder: ''
-        });
-
-        $('#avatar').on("change", function() {
-            $("#formAvatar").submit();
-        });
-
-        jQuery("[logro='studentDocument']").click(function() {
-            jQuery('#modalStudentDocuments img').attr('src', $(this).data('image'));
-        });
-    </script>
+    <script src="/js/pages/student-profile.js"></script>
 @endsection
 
 @section('content')
@@ -766,11 +753,11 @@ $title = $student->user->name;
                                                 <div class="col-md-6">
                                                     <div class="w-100 position-relative form-group">
                                                         <select data-placeholder="Seleccione documento" name="file_type"
-                                                            logro="select2">
+                                                            logro="select2" id="selectStudentDocument">
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($studentFileTypes as $fileType)
                                                                 @if ($fileType->studentFile === null)
-                                                                    <option value="{{ $fileType->id }}"
+                                                                    <option value="{{ $fileType->id }}" fileInfo="{{ $fileType->description }}"
                                                                         @selected(old('file_type') == $fileType->id)>
                                                                         {{ $fileType->name }}
                                                                     </option>
@@ -799,6 +786,7 @@ $title = $student->user->name;
                                                     </x-button>
                                                 </div>
                                             </div>
+                                            <div class="row mt-3 g-3 text-danger d-none" id="infoStudentDocument"></div>
 
                                         </form>
                                     </div>

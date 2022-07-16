@@ -83,13 +83,11 @@ $title = $group->name;
                                                             @foreach ($area->subjects as $subject)
                                                                 <tr>
                                                                     <td scope="row" class="col-4">
-                                                                        {{ $subject->id }}~
                                                                         {{ $subject->resourceSubject->name }}
                                                                     </td>
                                                                     <td class="col-6">
                                                                         @foreach ($subject->teacherSubjectGroups as $teacher_subject)
                                                                             @if ($loop->first)
-                                                                                {{ $teacher_subject->id }}~
                                                                                 {{ $teacher_subject->teacher->getFullName() }}
                                                                             @endif
                                                                         @endforeach
