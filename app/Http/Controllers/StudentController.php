@@ -30,11 +30,35 @@ class StudentController extends Controller
      */
     public function no_enrolled()
     {
-        $students = Student::select('id','first_name','second_name','father_last_name','mother_last_name','institutional_email')
-                    ->whereNull('enrolled')
-                    ->orderBy('father_last_name')
-                    ->orderBy('mother_last_name')
-                    ->get();
+        $Y = SchoolYearController::current_year();
+
+        $fn_g = fn($g) => $g->where('school_year_id', $Y->id);
+
+        $fn_gs = fn($gs) =>
+                $gs->with(['group' => $fn_g ])
+                ->whereHas('group', $fn_g );
+
+        $students = Student::select(
+            'id',
+            'first_name',
+            'second_name',
+            'father_last_name',
+            'mother_last_name',
+            'institutional_email',
+            'headquarters_id',
+            'study_time_id',
+            'study_year_id'
+            )
+                ->whereNot(fn($q) =>
+                    $q->whereHas('groupYear', $fn_gs)
+                        ->with(['groupYear' => $fn_gs])
+                )
+                ->with('headquarters','studyTime','studyYear')
+                ->orderBy('father_last_name')
+                ->orderBy('mother_last_name')
+                ->get();
+
+        // return $students;
 
         return view('logro.student.noenrolled')->with('students', $students);
     }
@@ -157,7 +181,14 @@ class StudentController extends Controller
                 $gs->with(['group' => $fn_g ])
                 ->whereHas('group', $fn_g );
 
-        $students = Student::select('id','first_name','second_name','father_last_name','mother_last_name','institutional_email')
+        $students = Student::select(
+            'id',
+            'first_name',
+            'second_name',
+            'father_last_name',
+            'mother_last_name',
+            'institutional_email'
+            )
                 ->whereHas('groupYear', $fn_gs)
                 ->with(['groupYear' => $fn_gs])
                 ->orderBy('father_last_name')
