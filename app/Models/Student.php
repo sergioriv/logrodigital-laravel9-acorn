@@ -97,6 +97,11 @@ class Student extends CastCreateModel
     /*
      * CHILDREN
      */
+    public function groupYear()
+    {
+        return $this->hasOne(GroupStudent::class,'student_id','id');
+    }
+
     public function groupStudents()
     {
         return $this->hasMany(GroupStudent::class);

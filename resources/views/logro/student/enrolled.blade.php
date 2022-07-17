@@ -79,7 +79,7 @@ $title = __('Students') .' '. __('enrolled');
                                 <th class="text-muted text-small text-uppercase">{{ __('headquarters') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study time') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study year') }}</th>
-                                <th class="text-muted text-small text-uppercase">{{ __('created at') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('Group') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,10 +97,10 @@ $title = __('Students') .' '. __('enrolled');
                                 </td>
                                 <td>{{ $student->getLastNames() }}</td>
                                 <td>{{ $student->institutional_email }}</td>
-                                <td>{{ $student->headquarters->name }}</td>
-                                <td>{{ $student->studyTime->name }}</td>
-                                <td>{{ $student->studyYear->name }}</td>
-                                <td class="text-small">{{ $student->created_at }}</td>
+                                <td>{{ $student->groupYear->group->headquarters->name ?? null }}</td>
+                                <td>{{ $student->groupYear->group->studyTime->name ?? null }}</td>
+                                <td>{{ $student->groupYear->group->studyYear->name ?? null }}</td>
+                                <td>{{ $student->groupYear->group->name ?? null }}</td>
                             </tr>
                             @endforeach
                         </tbody>
