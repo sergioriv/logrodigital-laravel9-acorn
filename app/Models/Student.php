@@ -16,39 +16,115 @@ class Student extends CastCreateModel
         'second_name',
         'father_last_name',
         'mother_last_name',
+        'institutional_email',
+        'telephone',
         'document_type_code',
         'document',
-        'telephone',
-        'institutional_email',
-        'zone',
-        'address',
-        'health_manager_id',
-        'residence_city_id',
         'expedition_city_id',
+        'number_siblings',
+        'country_id', // *
         'birth_city_id',
         'birthdate',
         'gender_id',
         'rh_id',
-        'conflict_victim',
-        'number_siblings',
-        'sisben_id',
+
+
+        'zone',
+        'residence_city_id',
+        'address',
         'social_stratum',
-        // 'lunch',
-        // 'refreshment',
-        // 'transport',
-        'ethnic_group_id',
-        'disability',
-        'origin_school_id',
+        'dwelling_type_id', //* (Propia, Familiar, En arriendo, Usufructo, Posecion sin título)
+        'neighborhood', //*
+            'electrical_energy', //*
+            'natural_gas', //*
+            'sewage_system', //*
+            'aqueduct', //*
+            'internet', //*
+            'lives_with_father', //*
+            'lives_with_mother', //*
+            'lives_with_siblings', //*
+            'lives_with_other_relatives', //*
+
+        'health_manager_id',
         'school_insurance',
+        'sisben_id',
+        'disability_id', //cambiar por lista de seleccion
+
+        'ethnic_group_id',
+        'conflict_victim',
+        'origin_school_id',
+        'ICBF_protection_measure_id', //* (Ninguna, Hogar sustituto, Medio abierto, Menor infractor)
+        'foundation_beneficiary', //* (Si, No)
+        'linked_to_process_id', //* (Ninguna, ICBF, Comisaria de familia, Fiscalia, Inspeccion de policia)
+        'religion_id', //*
+        'economic_dependence_id', //* (recuersos familiares, recursos propios, ...)
+
+        'plays_sports', //* (Si, No)
+        'freetime_activity', //*
+        'allergies', //*
+        'medicines', //*
+        'favorite_subjects',
+        'most_difficult_subjects',
+        'insomnia',
+        'colic',
+        'biting_nails',
+        'sleep_talk',
+        'nightmares',
+        'seizures',
+        'physical_abuse',
+        'pee_at_night',
+        'hear_voices',
+        'fever',
+        'fears_phobias',
+        'drug_consumption',
+        'head_blows',
+        'desire_to_die',
+        'see_strange_things',
+        'learning_problems',
+        'dizziness_fainting',
+        'school_repetition',
+        'accidents',
+        'asthma',
+        'suicide_attempts',
+        'constipation',
+        'stammering',
+        'hands_sweating',
+        'sleepwalking',
+        'nervous_tics',
+
+
+        'inclusive',
+
         'headquarters_id',
         'study_time_id',
         'study_year_id',
         'enrolled_date',
         'enrolled',
         'status',
-        'inclusive',
         'person_charge'
+,
     ];
+
+    /*
+    * nacionalidad
+    * medida de proteccion ICBF (No, Hogar sustituto, Medio abierto, Menor infractor)
+    * beneficiario de fundacion
+    * vinculacion de procesos (Ninguna, ICBF, Comisaria de familia, Fiscalia, Inspeccion de policia)
+    * Tipo de vivienda (Propia, Familiar, En arriendo, Usufructo, Posecion sin título)
+    * servicios de la vivienda (Energía eléctrica, Gas natural, Alcantarillado, Acueducto, Internet)
+    * Barrio
+    * religion
+    * religion de la familia
+    * dependencia económica (recuersos familiares, recursos propios, ...)
+    * deporte que practica
+    * actividad en tiempo libre
+    * con quien vive en su casa (...)
+    * ha sido victima de: (Abuso sexual, Maltrato, Violencia intrafamiliar, Bullyng, ...)
+    *
+    * alergias
+    *
+    * antecedentes psicosociales (...)
+    */
 
     public function user()
     {

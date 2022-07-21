@@ -6,13 +6,19 @@ use App\Exports\StudentsInstructuveExport;
 use App\Http\Controllers\support\UserController;
 use App\Imports\StudentsImport;
 use App\Models\City;
+use App\Models\Disability;
 use App\Models\DocumentType;
+use App\Models\DwellingType;
+use App\Models\EconomicDependence;
 use App\Models\EthnicGroup;
 use App\Models\Gender;
 use App\Models\Headquarters;
 use App\Models\HealthManager;
+use App\Models\IcbfProtectionMeasure;
 use App\Models\Kinship;
+use App\Models\LinkageProcess;
 use App\Models\OriginSchool;
+use App\Models\Religion;
 use App\Models\Rh;
 use App\Models\Sisben;
 use App\Models\Student;
@@ -216,6 +222,13 @@ class StudentController extends Controller
         $sisbenes = Sisben::all();
         $ethnicGroups = EthnicGroup::all();
         $originSchools = OriginSchool::all();
+        $dwellingTypes = DwellingType::all();
+        $disabilities = Disability::all();
+        $icbfProtections = IcbfProtectionMeasure::all();
+        $linkageProcesses = LinkageProcess::all();
+        $religions = Religion::all();
+        $economicDependences = EconomicDependence::all();
+
         $kinships = Kinship::all();
         $studentFileTypes = StudentFileType::with([
             'studentFile' => function ($files) use ($student) {
@@ -233,6 +246,12 @@ class StudentController extends Controller
             'sisbenes' => $sisbenes,
             'ethnicGroups' => $ethnicGroups,
             'originSchools' => $originSchools,
+            'dwellingTypes' => $dwellingTypes,
+            'disabilities' => $disabilities,
+            'icbfProtections' => $icbfProtections,
+            'linkageProcesses' => $linkageProcesses,
+            'religions' => $religions,
+            'economicDependences' => $economicDependences,
             'kinships' => $kinships,
             'studentFileTypes' => $studentFileTypes
         ]);
@@ -259,33 +278,78 @@ class StudentController extends Controller
     public function update(Request $request, Student $student)
     {
         $request->validate([
-            'firstName' => ['required', 'string'],
-            'secondName' => ['nullable','string'],
-            'fatherLastName' => ['required', 'string'],
-            'motherLastName' => ['nullable','string'],
-            'telephone' => ['nullable','numeric'],
+            'firstName' => ['required', 'string', 'max:191'],
+            'secondName' => ['nullable','string', 'max:191'],
+            'fatherLastName' => ['required', 'string', 'max:191'],
+            'motherLastName' => ['nullable','string', 'max:191'],
+            'telephone' => ['nullable','string', 'max:20'],
             'document_type' => ['required', Rule::exists('document_types','code')],
-            'document' => ['required', Rule::unique('students','document')->ignore($student->id)],
+            'document' => ['required', 'max:20', Rule::unique('students','document')->ignore($student->id)],
             'expedition_city' => ['nullable',Rule::exists('cities','id')],
-            'number_siblings' => ['nullable','numeric'],
+            'number_siblings' => ['nullable','numeric', 'max:200'],
             'birth_city' => ['nullable',Rule::exists('cities','id')],
             'birthdate' => ['nullable','date'],
             'gender' => ['nullable',Rule::exists('genders','id')],
             'rh' => ['nullable',Rule::exists('rhs','id')],
-            'zone' => ['nullable','string'],
+            'zone' => ['nullable','string', 'max:6'],
             'residence_city' => ['nullable',Rule::exists('cities','id')],
-            'address' => ['nullable','string'],
-            'social_stratum' => ['nullable'],
+            'address' => ['nullable','string', 'max:100'],
+            'social_stratum' => ['nullable', 'max:10'],
+            'dwelling_type' => ['nullable',Rule::exists('dwelling_types','id')],
+            'neighborhood' => ['nullable', 'string', 'max:100'],
+            'electrical_energy' => ['nullable', 'boolean'],
+            'natural_gas' => ['nullable', 'boolean'],
+            'sewage_system' => ['nullable', 'boolean'],
+            'aqueduct' => ['nullable', 'boolean'],
+            'internet' => ['nullable', 'boolean'],
+            'lives_with_father' => ['nullable', 'boolean'],
+            'lives_with_mother' => ['nullable', 'boolean'],
+            'lives_with_siblings' => ['nullable', 'boolean'],
+            'lives_with_other_relatives' => ['nullable', 'boolean'],
             'health_manager' => ['nullable',Rule::exists('health_managers','id')],
-            'school_insurance' => ['nullable','string'],
+            'school_insurance' => ['nullable','string', 'max:100'],
             'sisben' => ['nullable',Rule::exists('sisben','id')],
-            'disability' => ['nullable','string'],
+            'disability' => ['nullable',Rule::exists('disabilities','id')],
             'ethnic_group' => ['nullable',Rule::exists('ethnic_groups','id')],
             'conflict_victim' => ['nullable','boolean'],
-            // 'lunch' => ['nullable','boolean'],
-            // 'refreshment' => ['nullable','boolean'],
-            // 'transport' => ['nullable','boolean'],
-            'origin_school_id' => ['nullable',Rule::exists('origin_schools','id')]
+            'origin_school_id' => ['nullable',Rule::exists('origin_schools','id')],
+            'icbf_protection' => ['nullable',Rule::exists('icbf_protection_measures','id')],
+            'foundation_beneficiary' => ['nullable','boolean'],
+            'linked_process' => ['nullable',Rule::exists('linkage_processes','id')],
+            'religion' => ['nullable',Rule::exists('religions','id')],
+            'economic_dependence' => ['nullable',Rule::exists('economic_dependences','id')],
+            'plays_sports' => ['nullable','boolean'],
+            'freetime_activity' => ['nullable','string', 'max:191'],
+            'allergies' => ['nullable','string', 'max:191'],
+            'medicines' => ['nullable','string', 'max:191'],
+            'favorite_subjects' => ['nullable','string', 'max:191'],
+            'most_difficult_subjects' => ['nullable','string', 'max:191'],
+            'insomnia' => ['nullable', 'boolean'],
+            'colic' => ['nullable', 'boolean'],
+            'biting_nails' => ['nullable', 'boolean'],
+            'sleep_talk' => ['nullable', 'boolean'],
+            'nightmares' => ['nullable', 'boolean'],
+            'seizures' => ['nullable', 'boolean'],
+            'physical_abuse' => ['nullable', 'boolean'],
+            'pee_at_night' => ['nullable', 'boolean'],
+            'hear_voices' => ['nullable', 'boolean'],
+            'fever' => ['nullable', 'boolean'],
+            'fears_phobias' => ['nullable', 'boolean'],
+            'drug_consumption' => ['nullable', 'boolean'],
+            'head_blows' => ['nullable', 'boolean'],
+            'desire_to_die' => ['nullable', 'boolean'],
+            'see_strange_things' => ['nullable', 'boolean'],
+            'learning_problems' => ['nullable', 'boolean'],
+            'dizziness_fainting' => ['nullable', 'boolean'],
+            'school_repetition' => ['nullable', 'boolean'],
+            'accidents' => ['nullable', 'boolean'],
+            'asthma' => ['nullable', 'boolean'],
+            'suicide_attempts' => ['nullable', 'boolean'],
+            'constipation' => ['nullable', 'boolean'],
+            'stammering' => ['nullable', 'boolean'],
+            'hands_sweating' => ['nullable', 'boolean'],
+            'sleepwalking' => ['nullable', 'boolean'],
+            'nervous_tics' => ['nullable', 'boolean'],
 
         ]);
 
@@ -312,20 +376,67 @@ class StudentController extends Controller
             'address' => $request->address,
             'residence_city_id' => $request->residence_city,
             'social_stratum' => $request->social_stratum,
+            'dwelling_type_id' => $request->dwelling_type,
+            'neighborhood' => $request->neighborhood,
+            'electrical_energy' => $request->electrical_energy,
+            'natural_gas' => $request->natural_gas,
+            'sewage_system' => $request->sewage_system,
+            'aqueduct' => $request->aqueduct,
+            'internet' => $request->internet,
+            'lives_with_father' => $request->lives_with_father,
+            'lives_with_mother' => $request->lives_with_mother,
+            'lives_with_siblings' => $request->lives_with_siblings,
+            'lives_with_other_relatives' => $request->lives_with_other_relatives,
 
             /* seguridad social */
             'health_manager_id' => $request->health_manager,
             'sisben_id' => $request->sisben,
-            'disability' => $request->disability,
+            'disability_id' => $request->disability,
             'school_insurance' => $request->school_insurance,
 
             /* informacion complementaria */
             'ethnic_group_id' => $request->ethnic_group,
             'conflict_victim' => $request->conflict_victim,
-            // 'lunch' => $request->lunch,
-            // 'refreshment' => $request->refreshment,
-            // 'transport' => $request->transport,
-            'origin_school_id' => $request->origin_school_id
+            'origin_school_id' => $request->origin_school_id,
+            'ICBF_protection_measure_id' => $request->icbf_protection,
+            'foundation_beneficiary' => $request->foundation_beneficiary,
+            'linked_to_process_id' => $request->linked_process,
+            'religion_id' => $request->religion,
+            'economic_dependence_id' => $request->economic_dependence,
+
+            /* informacion psicosocial */
+            'plays_sports' => $request->plays_sports,
+            'freetime_activity' => $request->freetime_activity,
+            'allergies' => $request->allergies,
+            'medicines' => $request->medicines,
+            'favorite_subjects' => $request->favorite_subjects,
+            'most_difficult_subjects' => $request->most_difficult_subjects,
+            'insomnia' => $request->insomnia,
+            'colic' => $request->colic,
+            'biting_nails' => $request->biting_nails,
+            'sleep_talk' => $request->sleep_talk,
+            'nightmares' => $request->nightmares,
+            'seizures' => $request->seizures,
+            'physical_abuse' => $request->physical_abuse,
+            'pee_at_night' => $request->pee_at_night,
+            'hear_voices' => $request->hear_voices,
+            'fever' => $request->fever,
+            'fears_phobias' => $request->fears_phobias,
+            'drug_consumption' => $request->drug_consumption,
+            'head_blows' => $request->head_blows,
+            'desire_to_die' => $request->desire_to_die,
+            'see_strange_things' => $request->see_strange_things,
+            'learning_problems' => $request->learning_problems,
+            'dizziness_fainting' => $request->dizziness_fainting,
+            'school_repetition' => $request->school_repetition,
+            'accidents' => $request->accidents,
+            'asthma' => $request->asthma,
+            'suicide_attempts' => $request->suicide_attempts,
+            'constipation' => $request->constipation,
+            'stammering' => $request->stammering,
+            'hands_sweating' => $request->hands_sweating,
+            'sleepwalking' => $request->sleepwalking,
+            'nervous_tics' => $request->nervous_tics,
 
         ]);
 
