@@ -24,7 +24,11 @@ class GroupController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $groups = Group::with('headquarters', 'studyTime', 'studyYear', 'teacher')->where('school_year_id', $Y->id)->get();
+        $groups = Group::with('headquarters', 'studyTime', 'studyYear', 'teacher')->where('school_year_id', $Y->id)
+            ->orderBy('headquarters_id')
+            ->orderBy('study_time_id')
+            ->orderBy('study_year_id')
+            ->get();
 
         $headquarters = Headquarters::all();
         $studyTimes = StudyTime::all();
@@ -60,6 +64,10 @@ class GroupController extends Controller
 
         if(NULL !== $name)
             $groups->where('name', 'like', '%' . $name . '%');
+
+        $groups->orderBy('headquarters_id')
+            ->orderBy('study_time_id')
+            ->orderBy('study_year_id');
 
         return $groups->get();
     }

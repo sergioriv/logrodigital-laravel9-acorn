@@ -119,6 +119,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('students/export/instructive', 'export_instructive')->name('students.instructive');
         Route::get('students/import', 'import')->name('students.import');
         Route::post('students/import', 'import_store')->name('students.import');
+
+        Route::put('students/{student}/piar', 'piar_update')->name('students.piar');
     });
 
     Route::put('persons_charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');

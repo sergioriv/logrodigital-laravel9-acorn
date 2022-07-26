@@ -151,6 +151,9 @@ input[type="file"] {
 .icon-70 {
     font-size: 70px !important;
 }
+.icon-12 {
+    font-size: 12px;
+}
 .text-success {
     color: var(--bs-success) !important;
 }
@@ -163,7 +166,15 @@ input[type="file"] {
 .logro-tag {
     padding: 0.45rem 0.9rem;
 }
-
+.logro-inclusive-bg {
+    background-color: var(--bs-yellow);
+}
+.logro-inclusive-color {
+    color: var(--bs-yellow);
+}
+.border-separator-yellow {
+    border-color: var(--bs-yellow) !important;
+}
 html[data-dimension="desktop"] .logro-badge-right-bottom {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;

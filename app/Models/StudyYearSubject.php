@@ -36,7 +36,7 @@ class StudyYearSubject extends CastCreateModel
 
     public function studyYear()
     {
-        return $this->belongsTo(ModelsStudyYear::class);
+        return $this->belongsTo(StudyYear::class);
     }
 
 

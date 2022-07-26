@@ -12,20 +12,28 @@ use App\Models\DwellingType;
 use App\Models\EconomicDependence;
 use App\Models\EthnicGroup;
 use App\Models\Gender;
+use App\Models\Group;
+use App\Models\GroupStudent;
 use App\Models\Headquarters;
 use App\Models\HealthManager;
 use App\Models\IcbfProtectionMeasure;
 use App\Models\Kinship;
 use App\Models\LinkageProcess;
 use App\Models\OriginSchool;
+use App\Models\Piar;
 use App\Models\Religion;
+use App\Models\ResourceSubject;
 use App\Models\Rh;
+use App\Models\SchoolYear;
 use App\Models\Sisben;
 use App\Models\Student;
 use App\Models\StudentFileType;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
+use App\Models\Subject;
+use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -51,6 +59,8 @@ class StudentController extends Controller
             'father_last_name',
             'mother_last_name',
             'institutional_email',
+            'status',
+            'inclusive',
             'headquarters_id',
             'study_time_id',
             'study_year_id'
@@ -127,53 +137,6 @@ class StudentController extends Controller
         );
     }
 
-    /* public function preregistration_edit(Student $student)
-    {
-        $headquarters = Headquarters::all();
-        $studyTime = StudyTime::all();
-        $studyYear = StudyYear::all();
-        return view('logro.student.preregistration-edit')->with([
-            'student' => $student,
-            'headquarters' => $headquarters,
-            'studyTime' => $studyTime,
-            'studyYear' => $studyYear
-        ]);
-    } */
-
-    /* public function preregistration_update(Student $student, Request $request)
-    {
-        $request->validate([
-            'firstName' => ['required', 'string'],
-            'secondName' => ['nullable','string'],
-            'fatherLastName' => ['required', 'string'],
-            'motherLastName' => ['nullable','string'],
-            'institutional_email' => ['required', 'email', Rule::unique('users','email')->ignore($student->id)],
-            'headquarters' => ['required', Rule::exists('headquarters','id')],
-            'studyTime' => ['required', Rule::exists('study_times','id')],
-            'studyYear' => ['required', Rule::exists('study_years','id')]
-        ]);
-
-        $user_name = $request->firstName . ' ' . $request->fatherLastName;
-        UserController::_update($student->id, $user_name, $request->institutional_email);
-
-        $student->update([
-            'first_name' => $request->firstName,
-            'second_name' => $request->secondName,
-            'father_last_name' => $request->fatherLastName,
-            'mother_last_name' => $request->motherLastName,
-            'institutional_email' => $request->institutional_email,
-            'headquarters_id' => $request->headquarters,
-            'study_time_id' => $request->studyTime,
-            'study_year_id' => $request->studyYear
-        ]);
-
-        return redirect()->route('students.no_enrolled')->with(
-            ['notify' => 'success', 'title' => __('Student updated!')],
-        );
-    } */
-
-
-
     /*
      * ENROLLED SECTION
      */
@@ -193,7 +156,9 @@ class StudentController extends Controller
             'second_name',
             'father_last_name',
             'mother_last_name',
-            'institutional_email'
+            'institutional_email',
+            'status',
+            'inclusive'
             )
                 ->whereHas('groupYear', $fn_gs)
                 ->with(['groupYear' => $fn_gs])
@@ -214,6 +179,29 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
+        $Y = SchoolYearController::available_year();
+
+        /* Group x Subjects [teacher, piar] START */
+        if (1 === $student->inclusive)
+        {
+            $groupsStudent = Group::whereHas('groupStudents',
+                fn($groupStudents) => $groupStudents->where('student_id', $student->id)
+            )->with(['studyYear' =>
+                fn($groupSY) => $groupSY->with(['studyYearSubject' =>
+                    fn($groupSYS) => $groupSYS->with(['subject' =>
+                        fn($groupSJ) => $groupSJ->with('teacherSubjectGroups')->with(['piarOne' =>
+                            fn($studentPiar) => $studentPiar->where('student_id', $student->id)
+                        ])
+                    ])
+                ])
+            ])->orderByDesc('id')->get();
+        } else
+        {
+            $groupsStudent = [];
+        }
+
+        /* Group x Subjects [teacher, piar] END */
+
         $documentType = DocumentType::all();
         $cities = City::all();
         $genders = Gender::all();
@@ -237,6 +225,7 @@ class StudentController extends Controller
         ])->get();
 
         return view('logro.student.profile')->with([
+            'Y' => $Y->id,
             'student' => $student,
             'documentType' => $documentType,
             'cities' => $cities,
@@ -253,7 +242,8 @@ class StudentController extends Controller
             'religions' => $religions,
             'economicDependences' => $economicDependences,
             'kinships' => $kinships,
-            'studentFileTypes' => $studentFileTypes
+            'studentFileTypes' => $studentFileTypes,
+            'groupsStudent' => $groupsStudent
         ]);
     }
 
@@ -309,47 +299,7 @@ class StudentController extends Controller
             'health_manager' => ['nullable',Rule::exists('health_managers','id')],
             'school_insurance' => ['nullable','string', 'max:100'],
             'sisben' => ['nullable',Rule::exists('sisben','id')],
-            'disability' => ['nullable',Rule::exists('disabilities','id')],
-            'ethnic_group' => ['nullable',Rule::exists('ethnic_groups','id')],
-            'conflict_victim' => ['nullable','boolean'],
-            'origin_school_id' => ['nullable',Rule::exists('origin_schools','id')],
-            'icbf_protection' => ['nullable',Rule::exists('icbf_protection_measures','id')],
-            'foundation_beneficiary' => ['nullable','boolean'],
-            'linked_process' => ['nullable',Rule::exists('linkage_processes','id')],
-            'religion' => ['nullable',Rule::exists('religions','id')],
-            'economic_dependence' => ['nullable',Rule::exists('economic_dependences','id')],
-            'plays_sports' => ['nullable','boolean'],
-            'freetime_activity' => ['nullable','string', 'max:191'],
-            'allergies' => ['nullable','string', 'max:191'],
-            'medicines' => ['nullable','string', 'max:191'],
-            'favorite_subjects' => ['nullable','string', 'max:191'],
-            'most_difficult_subjects' => ['nullable','string', 'max:191'],
-            'insomnia' => ['nullable', 'boolean'],
-            'colic' => ['nullable', 'boolean'],
-            'biting_nails' => ['nullable', 'boolean'],
-            'sleep_talk' => ['nullable', 'boolean'],
-            'nightmares' => ['nullable', 'boolean'],
-            'seizures' => ['nullable', 'boolean'],
-            'physical_abuse' => ['nullable', 'boolean'],
-            'pee_at_night' => ['nullable', 'boolean'],
-            'hear_voices' => ['nullable', 'boolean'],
-            'fever' => ['nullable', 'boolean'],
-            'fears_phobias' => ['nullable', 'boolean'],
-            'drug_consumption' => ['nullable', 'boolean'],
-            'head_blows' => ['nullable', 'boolean'],
-            'desire_to_die' => ['nullable', 'boolean'],
-            'see_strange_things' => ['nullable', 'boolean'],
-            'learning_problems' => ['nullable', 'boolean'],
-            'dizziness_fainting' => ['nullable', 'boolean'],
-            'school_repetition' => ['nullable', 'boolean'],
-            'accidents' => ['nullable', 'boolean'],
-            'asthma' => ['nullable', 'boolean'],
-            'suicide_attempts' => ['nullable', 'boolean'],
-            'constipation' => ['nullable', 'boolean'],
-            'stammering' => ['nullable', 'boolean'],
-            'hands_sweating' => ['nullable', 'boolean'],
-            'sleepwalking' => ['nullable', 'boolean'],
-            'nervous_tics' => ['nullable', 'boolean'],
+            'disability' => ['nullable',Rule::exists('disabilities','id')]
 
         ]);
 
@@ -392,53 +342,116 @@ class StudentController extends Controller
             'health_manager_id' => $request->health_manager,
             'sisben_id' => $request->sisben,
             'disability_id' => $request->disability,
-            'school_insurance' => $request->school_insurance,
-
-            /* informacion complementaria */
-            'ethnic_group_id' => $request->ethnic_group,
-            'conflict_victim' => $request->conflict_victim,
-            'origin_school_id' => $request->origin_school_id,
-            'ICBF_protection_measure_id' => $request->icbf_protection,
-            'foundation_beneficiary' => $request->foundation_beneficiary,
-            'linked_to_process_id' => $request->linked_process,
-            'religion_id' => $request->religion,
-            'economic_dependence_id' => $request->economic_dependence,
-
-            /* informacion psicosocial */
-            'plays_sports' => $request->plays_sports,
-            'freetime_activity' => $request->freetime_activity,
-            'allergies' => $request->allergies,
-            'medicines' => $request->medicines,
-            'favorite_subjects' => $request->favorite_subjects,
-            'most_difficult_subjects' => $request->most_difficult_subjects,
-            'insomnia' => $request->insomnia,
-            'colic' => $request->colic,
-            'biting_nails' => $request->biting_nails,
-            'sleep_talk' => $request->sleep_talk,
-            'nightmares' => $request->nightmares,
-            'seizures' => $request->seizures,
-            'physical_abuse' => $request->physical_abuse,
-            'pee_at_night' => $request->pee_at_night,
-            'hear_voices' => $request->hear_voices,
-            'fever' => $request->fever,
-            'fears_phobias' => $request->fears_phobias,
-            'drug_consumption' => $request->drug_consumption,
-            'head_blows' => $request->head_blows,
-            'desire_to_die' => $request->desire_to_die,
-            'see_strange_things' => $request->see_strange_things,
-            'learning_problems' => $request->learning_problems,
-            'dizziness_fainting' => $request->dizziness_fainting,
-            'school_repetition' => $request->school_repetition,
-            'accidents' => $request->accidents,
-            'asthma' => $request->asthma,
-            'suicide_attempts' => $request->suicide_attempts,
-            'constipation' => $request->constipation,
-            'stammering' => $request->stammering,
-            'hands_sweating' => $request->hands_sweating,
-            'sleepwalking' => $request->sleepwalking,
-            'nervous_tics' => $request->nervous_tics,
+            'school_insurance' => $request->school_insurance
 
         ]);
+
+        $role = UserController::role_auth();
+        if ('Student'!==$role)
+        {
+
+            $request->validate([
+                'ethnic_group' => ['nullable',Rule::exists('ethnic_groups','id')],
+                'conflict_victim' => ['nullable','boolean'],
+                'origin_school_id' => ['nullable',Rule::exists('origin_schools','id')],
+                'icbf_protection' => ['nullable',Rule::exists('icbf_protection_measures','id')],
+                'foundation_beneficiary' => ['nullable','boolean'],
+                'linked_process' => ['nullable',Rule::exists('linkage_processes','id')],
+                'religion' => ['nullable',Rule::exists('religions','id')],
+                'economic_dependence' => ['nullable',Rule::exists('economic_dependences','id')],
+                'plays_sports' => ['nullable','boolean'],
+                'freetime_activity' => ['nullable','string', 'max:191'],
+                'allergies' => ['nullable','string', 'max:191'],
+                'medicines' => ['nullable','string', 'max:191'],
+                'favorite_subjects' => ['nullable','string', 'max:191'],
+                'most_difficult_subjects' => ['nullable','string', 'max:191'],
+                'insomnia' => ['nullable', 'boolean'],
+                'colic' => ['nullable', 'boolean'],
+                'biting_nails' => ['nullable', 'boolean'],
+                'sleep_talk' => ['nullable', 'boolean'],
+                'nightmares' => ['nullable', 'boolean'],
+                'seizures' => ['nullable', 'boolean'],
+                'physical_abuse' => ['nullable', 'boolean'],
+                'pee_at_night' => ['nullable', 'boolean'],
+                'hear_voices' => ['nullable', 'boolean'],
+                'fever' => ['nullable', 'boolean'],
+                'fears_phobias' => ['nullable', 'boolean'],
+                'drug_consumption' => ['nullable', 'boolean'],
+                'head_blows' => ['nullable', 'boolean'],
+                'desire_to_die' => ['nullable', 'boolean'],
+                'see_strange_things' => ['nullable', 'boolean'],
+                'learning_problems' => ['nullable', 'boolean'],
+                'dizziness_fainting' => ['nullable', 'boolean'],
+                'school_repetition' => ['nullable', 'boolean'],
+                'accidents' => ['nullable', 'boolean'],
+                'asthma' => ['nullable', 'boolean'],
+                'suicide_attempts' => ['nullable', 'boolean'],
+                'constipation' => ['nullable', 'boolean'],
+                'stammering' => ['nullable', 'boolean'],
+                'hands_sweating' => ['nullable', 'boolean'],
+                'sleepwalking' => ['nullable', 'boolean'],
+                'nervous_tics' => ['nullable', 'boolean'],
+                'simat' => ['nullable', 'boolean'],
+                'inclusive' => ['nullable', 'boolean'],
+                'psyc_evaluation' => ['nullable', 'string'],
+                'psyc_recommendations' => ['nullable', 'string'],
+                'psyc_student_family' => ['nullable', 'string']
+            ]);
+
+            $student->update([
+                /* informacion complementaria */
+                'ethnic_group_id' => $request->ethnic_group,
+                'conflict_victim' => $request->conflict_victim,
+                'origin_school_id' => $request->origin_school_id,
+                'ICBF_protection_measure_id' => $request->icbf_protection,
+                'foundation_beneficiary' => $request->foundation_beneficiary,
+                'linked_to_process_id' => $request->linked_process,
+                'religion_id' => $request->religion,
+                'economic_dependence_id' => $request->economic_dependence,
+
+                /* informacion psicosocial */
+                'plays_sports' => $request->plays_sports,
+                'freetime_activity' => $request->freetime_activity,
+                'allergies' => $request->allergies,
+                'medicines' => $request->medicines,
+                'favorite_subjects' => $request->favorite_subjects,
+                'most_difficult_subjects' => $request->most_difficult_subjects,
+                'insomnia' => $request->insomnia,
+                'colic' => $request->colic,
+                'biting_nails' => $request->biting_nails,
+                'sleep_talk' => $request->sleep_talk,
+                'nightmares' => $request->nightmares,
+                'seizures' => $request->seizures,
+                'physical_abuse' => $request->physical_abuse,
+                'pee_at_night' => $request->pee_at_night,
+                'hear_voices' => $request->hear_voices,
+                'fever' => $request->fever,
+                'fears_phobias' => $request->fears_phobias,
+                'drug_consumption' => $request->drug_consumption,
+                'head_blows' => $request->head_blows,
+                'desire_to_die' => $request->desire_to_die,
+                'see_strange_things' => $request->see_strange_things,
+                'learning_problems' => $request->learning_problems,
+                'dizziness_fainting' => $request->dizziness_fainting,
+                'school_repetition' => $request->school_repetition,
+                'accidents' => $request->accidents,
+                'asthma' => $request->asthma,
+                'suicide_attempts' => $request->suicide_attempts,
+                'constipation' => $request->constipation,
+                'stammering' => $request->stammering,
+                'hands_sweating' => $request->hands_sweating,
+                'sleepwalking' => $request->sleepwalking,
+                'nervous_tics' => $request->nervous_tics,
+
+                /* evaluación psicosocial */
+                'simat' => $request->simat,
+                'inclusive' => $request->inclusive,
+                'psyc_evaluation' => $request->psyc_evaluation,
+                'psyc_recommendations' => $request->psyc_recommendations,
+                'psyc_student_family' => $request->psyc_student_family
+            ]);
+
+        }
 
 
         return redirect()->back()->with(
@@ -446,8 +459,43 @@ class StudentController extends Controller
         );
     }
 
+    public function piar_update(Request $request, Student $student)
+    {
+        $groupSubjects = rtrim($request->groupSubjects,'~');
+        $groupSubjects = explode('~', $groupSubjects);
+
+        foreach($groupSubjects as $gs)
+        {
+            $piarStudent = Piar::where('student_id', $student->id)->where('subject_id', $gs)->first();
+            if (NULL !==$piarStudent)
+            {
+                // update
+                $request_annotation = $piarStudent->id .'~'. $gs .'~annotation';
+                $piarStudent->update([
+                    'annotation' => $request->$request_annotation
+                ]);
+            } else
+            {
+                // create
+                $request_annotation = 'null~'. $gs .'~annotation';
+                Piar::create([
+                    'student_id' => $student->id,
+                    'subject_id' => $gs,
+                    'annotation' => $request->$request_annotation,
+                    'user_id' => Auth::user()->id
+                ]);
+            }
+        }
+
+        return redirect()->back()->with(
+            ['notify' => 'success', 'title' => __('PIAR updated!')],
+        );
 
 
+    }
+
+
+    /* INSTRUCTIVE */
     public function data_instructive()
     {
         $headquarters = Headquarters::all();

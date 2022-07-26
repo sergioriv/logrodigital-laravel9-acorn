@@ -83,7 +83,7 @@ class SchoolYearController extends Controller
             'school_year' => ['required', Rule::exists('school_years','id')]
         ]);
 
-        $sy = $this->available_year()->id == $request->school_year ? null : $request->school_year;
+        $sy = self::available_year()->id == $request->school_year ? null : $request->school_year;
 
         User::find(Auth::user()->id)->update([
             'school_year_id' => $sy
@@ -96,7 +96,7 @@ class SchoolYearController extends Controller
         );
     }
 
-    private function available_year()
+    public static function available_year()
     {
         return SchoolYear::select('id','name')->where('available',TRUE)->first();
     }

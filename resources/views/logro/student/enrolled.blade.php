@@ -90,6 +90,9 @@ $title = __('Students') .' '. __('enrolled');
                                         class="list-item-heading body">
                                         {{ $student->getNames() }}
                                     </a>
+                                    @if (1 === $student->inclusive)
+                                    <i class="icon icon-12 bi-circle-fill logro-inclusive-color"></i>
+                                    @endif
                                     <span
                                         class="badge @if ('new' === $student->status) bg-outline-primary @elseif ('repeat' === $student->status) bg-outline-danger @endif">
                                         {{ $student->status }}

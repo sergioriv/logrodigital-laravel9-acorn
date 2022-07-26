@@ -92,8 +92,11 @@ class Student extends CastCreateModel
         'sleepwalking',
         'nervous_tics',
 
-
-        'inclusive',
+        'simat', // (Si, No)
+        'inclusive', // (Si, No)
+        'psyc_evaluation',
+        'psyc_recommendations',
+        'psyc_student_family',
 
         'headquarters_id',
         'study_time_id',

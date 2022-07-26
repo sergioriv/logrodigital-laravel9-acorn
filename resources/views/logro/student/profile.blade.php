@@ -66,7 +66,7 @@ $title = $student->user->name;
                                                 @csrf
                                                 @method('PUT')
 
-                                                <x-avatar-profile-edit :avatar="$student->user->avatar" class="mb-3" />
+                                                <x-avatar-profile-edit :avatar="$student->user->avatar" :inclusive="$student->inclusive" class="mb-3" />
                                             </form>
                                             <!-- Avatar Form End -->
 
@@ -115,10 +115,12 @@ $title = $student->user->name;
                                             data-bs-toggle="tab" href="#documentsTab" role="tab">
                                             <span class="align-middle">{{ __('Documents') }}</span>
                                         </a>
-                                        {{-- <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
-                                            data-bs-toggle="tab" href="#psychosocialInfoTab" role="tab">
-                                            <span class="align-middle">{{ __("Psychosocial Information") }}</span>
-                                        </a> --}}
+                                        @if (1 === $student->inclusive)
+                                        <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
+                                            data-bs-toggle="tab" href="#piarTab" role="tab">
+                                            <span class="align-middle">PIAR</span>
+                                        </a>
+                                        @endif
                                     </div>
 
                                 </div>
@@ -145,8 +147,7 @@ $title = $student->user->name;
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('first name') }} <span
-                                                                class="text-danger">*</span>
+                                                        <x-label>{{ __('first name') }} <span class="text-danger">*</span>
                                                         </x-label>
                                                         <x-input :value="$student->first_name" name="firstName" required />
                                                     </div>
@@ -257,6 +258,7 @@ $title = $student->user->name;
                                                         @if (null !== $student->birthdate)
                                                             <span
                                                                 class="form-control text-muted">{{ $student->birthdate }}</span>
+                                                            <x-input type="hidden" :value="$student->birthdate" name="birthdate" />
                                                         @else
                                                             <x-input :value="$student->birthdate" logro="datePicker"
                                                                 name="birthdate" />
@@ -527,406 +529,470 @@ $title = $student->user->name;
                                     </section>
                                     <!-- Social Safety Section End -->
 
-                                    <!-- Additional Information Section Start -->
-                                    <h2 class="small-title">{{ __('Additional Information') }}</h2>
-                                    <section class="card mb-5">
-                                        <div class="card-body">
-                                            <div class="row g-3">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('ethnic group') }}</x-label>
-                                                        <select name="ethnic_group" logro="select2">
-                                                            <option label="&nbsp;"></option>
-                                                            @foreach ($ethnicGroups as $ethnicGroup)
-                                                                <option value="{{ $ethnicGroup->id }}"
-                                                                    @if ($student->ethnic_group_id !== null) @selected($student->ethnic_group_id === $ethnicGroup->id) @endif>
-                                                                    {{ __($ethnicGroup->name) }}
+                                    @can('support.users')
+                                        <!-- Additional Information Section Start -->
+                                        <h2 class="small-title">{{ __('Additional Information') }}</h2>
+                                        <section class="card mb-5">
+                                            <div class="card-body">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label>{{ __('ethnic group') }}</x-label>
+                                                            <select name="ethnic_group" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                @foreach ($ethnicGroups as $ethnicGroup)
+                                                                    <option value="{{ $ethnicGroup->id }}"
+                                                                        @if ($student->ethnic_group_id !== null) @selected($student->ethnic_group_id === $ethnicGroup->id) @endif>
+                                                                        {{ __($ethnicGroup->name) }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label>{{ __('conflict victim') }}</x-label>
+                                                            <select name="conflict_victim" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                <option value="0" @selected(0 === $student->conflict_victim)>
+                                                                    {{ __('No') }}
                                                                 </option>
-                                                            @endforeach
-                                                        </select>
+                                                                <option value="1" @selected(1 === $student->conflict_victim)>
+                                                                    {{ __('Yes') }}
+                                                                </option>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('conflict victim') }}</x-label>
-                                                        <select name="conflict_victim" logro="select2">
-                                                            <option label="&nbsp;"></option>
-                                                            <option value="0" @selected(0 === $student->conflict_victim)>
-                                                                {{ __('No') }}
-                                                            </option>
-                                                            <option value="1" @selected(1 === $student->conflict_victim)>
-                                                                {{ __('Yes') }}
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="row g-3">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('origin school') }}</x-label>
-                                                        <select name="origin_school_id" logro="select2">
-                                                            <option label="&nbsp;"></option>
-                                                            @foreach ($originSchools as $originSchool)
-                                                                <option value="{{ $originSchool->id }}"
-                                                                    @if ($student->origin_school_id !== null) @selected($student->origin_school_id === $originSchool->id) @endif>
-                                                                    {{ $originSchool->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label>{{ __('origin school') }}</x-label>
+                                                            <select name="origin_school_id" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                @foreach ($originSchools as $originSchool)
+                                                                    <option value="{{ $originSchool->id }}"
+                                                                        @if ($student->origin_school_id !== null) @selected($student->origin_school_id === $originSchool->id) @endif>
+                                                                        {{ $originSchool->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label>{{ __('ICBF protection measure') }}</x-label>
+                                                            <select name="icbf_protection" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                @foreach ($icbfProtections as $icbfProtection)
+                                                                    <option value="{{ $icbfProtection->id }}"
+                                                                        @if ($student->ICBF_protection_measure_id !== null) @selected($student->ICBF_protection_measure_id === $icbfProtection->id) @endif>
+                                                                        {{ __($icbfProtection->name) }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('ICBF protection measure') }}</x-label>
-                                                        <select name="icbf_protection" logro="select2">
-                                                            <option label="&nbsp;"></option>
-                                                            @foreach ($icbfProtections as $icbfProtection)
-                                                                <option value="{{ $icbfProtection->id }}"
-                                                                    @if ($student->ICBF_protection_measure_id !== null) @selected($student->ICBF_protection_measure_id === $icbfProtection->id) @endif>
-                                                                    {{ __($icbfProtection->name) }}
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label>{{ __('foundation beneficiary') }}</x-label>
+                                                            <select name="foundation_beneficiary" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                <option value="0" @selected(0 === $student->foundation_beneficiary)>
+                                                                    {{ __('No') }}
                                                                 </option>
-                                                            @endforeach
-                                                        </select>
+                                                                <option value="1" @selected(1 === $student->foundation_beneficiary)>
+                                                                    {{ __('Yes') }}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label>{{ __('linked to a process') }}</x-label>
+                                                            <select name="linked_process" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                @foreach ($linkageProcesses as $linkageProcess)
+                                                                    <option value="{{ $linkageProcess->id }}"
+                                                                        @if ($student->linked_to_process_id !== null) @selected($student->linked_to_process_id === $linkageProcess->id) @endif>
+                                                                        {{ __($linkageProcess->name) }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label>{{ __('religion') }}</x-label>
+                                                            <select name="religion" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                @foreach ($religions as $religion)
+                                                                    <option value="{{ $religion->id }}"
+                                                                        @if ($student->religion_id !== null) @selected($student->religion_id === $religion->id) @endif>
+                                                                        {{ __($religion->name) }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label>{{ __('economic dependence') }}</x-label>
+                                                            <select name="economic_dependence" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                @foreach ($economicDependences as $economicDependence)
+                                                                    <option value="{{ $economicDependence->id }}"
+                                                                        @if ($student->economic_dependence_id !== null) @selected($student->economic_dependence_id === $economicDependence->id) @endif>
+                                                                        {{ __($economicDependence->name) }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row g-3">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('foundation beneficiary') }}</x-label>
-                                                        <select name="foundation_beneficiary" logro="select2">
-                                                            <option label="&nbsp;"></option>
-                                                            <option value="0" @selected(0 === $student->foundation_beneficiary)>
-                                                                {{ __('No') }}
-                                                            </option>
-                                                            <option value="1" @selected(1 === $student->foundation_beneficiary)>
-                                                                {{ __('Yes') }}
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('linked to a process') }}</x-label>
-                                                        <select name="linked_process" logro="select2">
-                                                            <option label="&nbsp;"></option>
-                                                            @foreach ($linkageProcesses as $linkageProcess)
-                                                                <option value="{{ $linkageProcess->id }}"
-                                                                    @if ($student->linked_to_process_id !== null) @selected($student->linked_to_process_id === $linkageProcess->id) @endif>
-                                                                    {{ __($linkageProcess->name) }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row g-3">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('religion') }}</x-label>
-                                                        <select name="religion" logro="select2">
-                                                            <option label="&nbsp;"></option>
-                                                            @foreach ($religions as $religion)
-                                                                <option value="{{ $religion->id }}"
-                                                                    @if ($student->religion_id !== null) @selected($student->religion_id === $religion->id) @endif>
-                                                                    {{ __($religion->name) }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('economic dependence') }}</x-label>
-                                                        <select name="economic_dependence" logro="select2">
-                                                            <option label="&nbsp;"></option>
-                                                            @foreach ($economicDependences as $economicDependence)
-                                                                <option value="{{ $economicDependence->id }}"
-                                                                    @if ($student->economic_dependence_id !== null) @selected($student->economic_dependence_id === $economicDependence->id) @endif>
-                                                                    {{ __($economicDependence->name) }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                    <!-- Additional Information Section End -->
+                                        </section>
+                                        <!-- Additional Information Section End -->
 
-                                    <!-- Psychosocial Information Section Start -->
-                                    <h2 class="small-title">{{ __('Additional Information') }}</h2>
-                                    <section class="card mb-5">
-                                        <div class="card-body">
-                                            <div class="row g-3">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('plays sports') }}</x-label>
-                                                        <select name="plays_sports" logro="select2">
-                                                            <option label="&nbsp;"></option>
-                                                            <option value="0" @selected(0 === $student->plays_sports)>
-                                                                {{ __('No') }}
-                                                            </option>
-                                                            <option value="1" @selected(1 === $student->plays_sports)>
-                                                                {{ __('Yes') }}
-                                                            </option>
-                                                        </select>
+                                        <!-- Psychosocial Information Section Start -->
+                                        <h2 class="small-title">{{ __('Psychosocial Information') }}</h2>
+                                        <section class="card mb-5">
+                                            <div class="card-body">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label>{{ __('plays sports') }}</x-label>
+                                                            <select name="plays_sports" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                <option value="0" @selected(0 === $student->plays_sports)>
+                                                                    {{ __('No') }}
+                                                                </option>
+                                                                <option value="1" @selected(1 === $student->plays_sports)>
+                                                                    {{ __('Yes') }}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 position-relative form-group">
+                                                            <x-label>{{ __('freetime activity') }}</x-label>
+                                                            <x-input :value="$student->freetime_activity" name="freetime_activity" />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 position-relative form-group">
+                                                            <x-label>{{ __('allergies that you suffer from') }}</x-label>
+                                                            <x-input :value="$student->allergies" name="allergies" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 position-relative form-group">
+                                                            <x-label>{{ __('medications you take') }}</x-label>
+                                                            <x-input :value="$student->medicines" name="medicines" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 position-relative form-group">
+                                                            <x-label>{{ __('favourite subjects?') }}</x-label>
+                                                            <x-input :value="$student->favorite_subjects" name="favorite_subjects" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 position-relative form-group">
+                                                            <x-label>{{ __('which subjects do you find most difficult?') }}
+                                                            </x-label>
+                                                            <x-input :value="$student->most_difficult_subjects" name="most_difficult_subjects" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('freetime activity') }}</x-label>
-                                                        <x-input :value="$student->freetime_activity" name="freetime_activity" />
+                                                        {{-- <x-label class="d-block">{{ __('insomnia') }}</x-label> --}}
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="insomnia" value="1"
+                                                                    @checked($student->insomnia)>
+                                                                {{ __('insomnia') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="colic" value="1"
+                                                                    @checked($student->colic)>
+                                                                {{ __('colic') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="biting_nails" value="1"
+                                                                    @checked($student->biting_nails)>
+                                                                {{ __('biting nails') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="sleep_talk" value="1"
+                                                                    @checked($student->sleep_talk)>
+                                                                {{ __('sleep talk') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="nightmares" value="1"
+                                                                    @checked($student->nightmares)>
+                                                                {{ __('nightmares') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="seizures" value="1"
+                                                                    @checked($student->seizures)>
+                                                                {{ __('seizures') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="physical_abuse" value="1"
+                                                                    @checked($student->physical_abuse)>
+                                                                {{ __('physical abuse') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="pee_at_night" value="1"
+                                                                    @checked($student->pee_at_night)>
+                                                                {{ __('pee at night') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="hear_voices" value="1"
+                                                                    @checked($student->hear_voices)>
+                                                                {{ __('hear voices') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="fever" value="1"
+                                                                    @checked($student->fever)>
+                                                                {{ __('fever') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="fears_phobias" value="1"
+                                                                    @checked($student->fears_phobias)>
+                                                                {{ __('fears or phobias') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="drug_consumption" value="1"
+                                                                    @checked($student->drug_consumption)>
+                                                                {{ __('drug consumption') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="head_blows" value="1"
+                                                                    @checked($student->head_blows)>
+                                                                {{ __('head blows') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="desire_to_die" value="1"
+                                                                    @checked($student->desire_to_die)>
+                                                                {{ __('desire to die') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="see_strange_things" value="1"
+                                                                    @checked($student->see_strange_things)>
+                                                                {{ __('see strange things') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="learning_problems" value="1"
+                                                                    @checked($student->learning_problems)>
+                                                                {{ __('learning problems') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="dizziness_fainting" value="1"
+                                                                    @checked($student->dizziness_fainting)>
+                                                                {{ __('dizziness or fainting') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="school_repetition" value="1"
+                                                                    @checked($student->school_repetition)>
+                                                                {{ __('school repetition') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="accidents" value="1"
+                                                                    @checked($student->accidents)>
+                                                                {{ __('accidents') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="asthma" value="1"
+                                                                    @checked($student->asthma)>
+                                                                {{ __('asthma') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="suicide_attempts" value="1"
+                                                                    @checked($student->suicide_attempts)>
+                                                                {{ __('suicide attempts') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="constipation" value="1"
+                                                                    @checked($student->constipation)>
+                                                                {{ __('constipation') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="stammering" value="1"
+                                                                    @checked($student->stammering)>
+                                                                {{ __('stammering') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="hands_sweating" value="1"
+                                                                    @checked($student->hands_sweating)>
+                                                                {{ __('hands sweating') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-50">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="sleepwalking" value="1"
+                                                                    @checked($student->sleepwalking)>
+                                                                {{ __('sleepwalking') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block w-40">
+                                                            <label class="form-check-label logro-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="nervous_tics" value="1"
+                                                                    @checked($student->nervous_tics)>
+                                                                {{ __('nervous tics') }}
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row g-3">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('allergies that you suffer from') }}</x-label>
-                                                        <x-input :value="$student->allergies" name="allergies" />
+                                        </section>
+                                        <!-- Psychosocial Information Section End -->
+
+                                        <!--  Psychosocial Assessment Section Start -->
+                                        <h2 class="small-title">{{ __('Psychosocial Evaluation') }}</h2>
+                                        <section class="card mb-5">
+                                            <div class="card-body">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label class="text-uppercase">SIMAT</x-label>
+                                                            <select name="simat" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                <option value="0" @selected(0 === $student->simat)>
+                                                                    {{ __('No') }}
+                                                                </option>
+                                                                <option value="1" @selected(1 === $student->simat)>
+                                                                    {{ __('Yes') }}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 w-100 position-relative form-group">
+                                                            <x-label>{{ __('student inclusive') }}</x-label>
+                                                            <select name="inclusive" logro="select2">
+                                                                <option label="&nbsp;"></option>
+                                                                <option value="0" @selected(0 === $student->inclusive)>
+                                                                    {{ __('No') }}
+                                                                </option>
+                                                                <option value="1" @selected(1 === $student->inclusive)>
+                                                                    {{ __('Yes') }}
+                                                                </option>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('medications you take') }}</x-label>
-                                                        <x-input :value="$student->medicines" name="medicines" />
+                                                <div class="row g-3">
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3 position-relative form-group">
+                                                            <x-label>{{ __('Psychosocial Evaluation') }}</x-label>
+                                                            <textarea name="psyc_evaluation" rows="10" class="form-control">{{ $student->psyc_evaluation }}</textarea>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row g-3">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('favourite subjects?') }}</x-label>
-                                                        <x-input :value="$student->favorite_subjects" name="favorite_subjects" />
+                                                <div class="row g-3">
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3 position-relative form-group">
+                                                            <x-label>{{ __('recommendations') }}</x-label>
+                                                            <textarea name="psyc_recommendations" rows="3" class="form-control">{{ $student->psyc_recommendations }}</textarea>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('which subjects do you find most difficult?') }}
-                                                        </x-label>
-                                                        <x-input :value="$student->most_difficult_subjects" name="most_difficult_subjects" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row g-3">
-                                                <div class="mb-3 position-relative form-group">
-                                                    {{-- <x-label class="d-block">{{ __('insomnia') }}</x-label> --}}
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="insomnia" value="1"
-                                                                @checked($student->insomnia)>
-                                                            {{ __('insomnia') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="colic" value="1"
-                                                                @checked($student->colic)>
-                                                            {{ __('colic') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="biting_nails" value="1"
-                                                                @checked($student->biting_nails)>
-                                                            {{ __('biting nails') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="sleep_talk" value="1"
-                                                                @checked($student->sleep_talk)>
-                                                            {{ __('sleep talk') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="nightmares" value="1"
-                                                                @checked($student->nightmares)>
-                                                            {{ __('nightmares') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="seizures" value="1"
-                                                                @checked($student->seizures)>
-                                                            {{ __('seizures') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="physical_abuse" value="1"
-                                                                @checked($student->physical_abuse)>
-                                                            {{ __('physical abuse') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="pee_at_night" value="1"
-                                                                @checked($student->pee_at_night)>
-                                                            {{ __('pee at night') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="hear_voices" value="1"
-                                                                @checked($student->hear_voices)>
-                                                            {{ __('hear voices') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="fever" value="1"
-                                                                @checked($student->fever)>
-                                                            {{ __('fever') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="fears_phobias" value="1"
-                                                                @checked($student->fears_phobias)>
-                                                            {{ __('fears or phobias') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="drug_consumption" value="1"
-                                                                @checked($student->drug_consumption)>
-                                                            {{ __('drug consumption') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="head_blows" value="1"
-                                                                @checked($student->head_blows)>
-                                                            {{ __('head blows') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="desire_to_die" value="1"
-                                                                @checked($student->desire_to_die)>
-                                                            {{ __('desire to die') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="see_strange_things" value="1"
-                                                                @checked($student->see_strange_things)>
-                                                            {{ __('see strange things') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="learning_problems" value="1"
-                                                                @checked($student->learning_problems)>
-                                                            {{ __('learning problems') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="dizziness_fainting" value="1"
-                                                                @checked($student->dizziness_fainting)>
-                                                            {{ __('dizziness or fainting') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="school_repetition" value="1"
-                                                                @checked($student->school_repetition)>
-                                                            {{ __('school repetition') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="accidents" value="1"
-                                                                @checked($student->accidents)>
-                                                            {{ __('accidents') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="asthma" value="1"
-                                                                @checked($student->asthma)>
-                                                            {{ __('asthma') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="suicide_attempts" value="1"
-                                                                @checked($student->suicide_attempts)>
-                                                            {{ __('suicide attempts') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="constipation" value="1"
-                                                                @checked($student->constipation)>
-                                                            {{ __('constipation') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="stammering" value="1"
-                                                                @checked($student->stammering)>
-                                                            {{ __('stammering') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="hands_sweating" value="1"
-                                                                @checked($student->hands_sweating)>
-                                                            {{ __('hands sweating') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="sleepwalking" value="1"
-                                                                @checked($student->sleepwalking)>
-                                                            {{ __('sleepwalking') }}
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check d-inline-block w-40">
-                                                        <label class="form-check-label logro-label">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="nervous_tics" value="1"
-                                                                @checked($student->nervous_tics)>
-                                                            {{ __('nervous tics') }}
-                                                        </label>
+                                                <div class="row g-3">
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3 position-relative form-group">
+                                                            <x-label>{{ __('student and family action plan') }}</x-label>
+                                                            <textarea name="psyc_student_family" rows="3" class="form-control">{{ $student->psyc_student_family }}</textarea>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </section>
-                                    <!-- Psychosocial Information Section End -->
+                                        </section>
+                                        <!--  Psychosocial Assessment Section End -->
+                                    @endcan
 
 
                                     <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
@@ -1031,8 +1097,7 @@ $title = $student->user->name;
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('cellphone') }} <span
-                                                                class="text-danger">*</span>
+                                                        <x-label>{{ __('cellphone') }} <span class="text-danger">*</span>
                                                         </x-label>
                                                         <x-input value="{{ $student->mother->cellphone ?? null }}"
                                                             name="mother_cellphone" required />
@@ -1145,8 +1210,7 @@ $title = $student->user->name;
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('cellphone') }} <span
-                                                                class="text-danger">*</span>
+                                                        <x-label>{{ __('cellphone') }} <span class="text-danger">*</span>
                                                         </x-label>
                                                         <x-input value="{{ $student->father->cellphone ?? null }}"
                                                             name="father_cellphone" required />
@@ -1227,6 +1291,7 @@ $title = $student->user->name;
                                                                 @else
                                                                     @if ($fileType->studentFile->checked !== 1)
                                                                         <option value="{{ $fileType->id }}"
+                                                                            fileInfo="{{ $fileType->description }}"
                                                                             @selected(old('file_type') == $fileType->id)>
                                                                             {{ $fileType->name }}
                                                                         </option>
@@ -1255,10 +1320,12 @@ $title = $student->user->name;
                                     </div>
                                     <div class="card-body">
 
+                                        @can('support.users')
                                         <form method="POST" action="{{ route('studentFile.checked', $student) }}"
                                             class="tooltip-label-end" novalidate>
                                             @csrf
                                             @method('PUT')
+                                        @endcan
 
                                             <div class="row g-2 row-cols-4 row-cols-md-5">
                                                 @foreach ($studentFileTypes as $studentFile)
@@ -1314,24 +1381,98 @@ $title = $student->user->name;
                                                 @endforeach
                                             </div>
 
-                                            @can('support.users')
+                                        @can('support.users')
                                                 <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
                                                     <x-button class="btn-primary" type="submit">{{ __('Save') }}
                                                     </x-button>
                                                 </div>
-                                            @endcan
+                                        </form>
+                                        @endcan
                                     </div>
                                 </section>
                             </div>
                             <!-- Documents Tab End -->
 
-                            <!-- Information Psychosocial Information Tab Start -->
-                            {{-- <div class="tab-pane fade " id="psychosocialInfoTab" role="tabpanel">
-                                <h2 class="small-title">{{ __('Psychosocial Information') }}</h2>
-                                <section class="card mb-5">
+                            <!-- PIAR Tab Start -->
+                            @if (1 === $student->inclusive)
+                            <div class="tab-pane fade " id="piarTab" role="tabpanel">
+                                <section class="scroll-section">
+                                    <h2 class="small-title">PIAR</h2>
+                                    <div class="mb-n2" id="accordionCardsSubjects">
+                                        @foreach ($groupsStudent as $groupS)
+                                            <div class="card d-flex mb-2 card-color-background">
+                                                <div class="d-flex flex-grow-1" role="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#year-{{ $groupS->schoolYear->name }}" aria-expanded="true"
+                                                    aria-controls="year-{{ $groupS->schoolYear->name }}">
+                                                    <div class="card-body py-3 border-bottom">
+                                                        <div class="btn btn-link list-item-heading p-0">
+                                                            {{ $groupS->schoolYear->name }} -
+                                                            {{ '('. $groupS->studyYear->name .' - '. $groupS->name .')' }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="year-{{ $groupS->schoolYear->name }}"
+                                                    class="collapse @if ($loop->first) show @endif"
+                                                    data-bs-parent="#accordionCardsSubjects">
+                                                    <div class="card mt-3 accordion-content">
+                                                        <div class="card-body pb-3">
+
+                                                        @if ($Y === $groupS->school_year_id)
+                                                            <form method="POST"action="{{ route('students.piar', $student) }}" novalidate>
+                                                            @csrf
+                                                            @method('PUT')
+
+                                                        @endif
+                                                            @php $groupSubjects = '' @endphp
+
+                                                            @foreach ($groupS->studyYear->studyYearSubject as $studyYearSubject)
+                                                            @if ($groupS->school_year_id === $studyYearSubject->school_year_id)
+                                                            <div class="mb-3">
+                                                                <h2 class="small-title">
+                                                                    {{ $studyYearSubject->subject->resourceSubject->name }} -
+
+                                                                        @foreach ($studyYearSubject->subject->teacherSubjectGroups as $groupTSG)
+                                                                            @if ($groupS->id === $groupTSG->group_id
+                                                                                && $groupS->school_year_id === $groupTSG->school_year_id)
+                                                                                {{ '('. $groupTSG->teacher->getFullName() .')' }}
+                                                                            @endif
+                                                                        @endforeach
+
+                                                                </h2>
+                                                                <div class="w-100 position-relative form-group">
+                                                                    @if ($Y === $studyYearSubject->subject->school_year_id)
+                                                                    <textarea name="{{ $studyYearSubject->subject->piarOne->id ?? 'null' }}~{{ $studyYearSubject->subject->id }}~annotation" class="form-control" cols="2">{{ $studyYearSubject->subject->piarOne->annotation ?? null }}</textarea>
+                                                                    @else
+                                                                    <span class="form-control">{{ $studyYearSubject->subject->piarOne->annotation ?? null }}</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            @php
+                                                                $groupSubjects .= $studyYearSubject->subject->id .'~'
+                                                            @endphp
+                                                            @endif
+                                                            @endforeach
+
+                                                        @if ($Y === $groupS->school_year_id)
+                                                            <input type="hidden" name="groupSubjects" value="{{ $groupSubjects }}">
+                                                            <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                                                                <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                                                            </div>
+                                                            </form>
+                                                        @endif
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </section>
-                            </div> --}}
-                            <!-- Information Psychosocial Information Tab End -->
+
+                            </div>
+                            @endif
+                            <!-- PIAR Tab End -->
 
                         </div>
                         <!-- Right Side End -->
