@@ -115,6 +115,7 @@ return new class extends Migration
             $table->unsignedBigInteger('headquarters_id')->nullable();
             $table->unsignedBigInteger('study_time_id')->nullable();
             $table->unsignedBigInteger('study_year_id')->nullable();
+            $table->unsignedBigInteger('group_id')->nullable();
             $table->date('enrolled_date')->nullable();
             $table->boolean('enrolled')->nullable(); // null is pre-registraed
             $table->enum('status', [
@@ -202,6 +203,12 @@ return new class extends Migration
             $table->foreign('study_year_id')
                     ->references('id')
                     ->on('study_years')
+                    ->onUpdate('restrict')
+                    ->onDelete('restrict');
+
+            $table->foreign('group_id')
+                    ->references('id')
+                    ->on('groups')
                     ->onUpdate('restrict')
                     ->onDelete('restrict');
         });

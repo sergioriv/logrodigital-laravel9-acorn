@@ -101,6 +101,7 @@ class Student extends CastCreateModel
         'headquarters_id',
         'study_time_id',
         'study_year_id',
+        'group_id',
         'enrolled_date',
         'enrolled',
         'status',
@@ -148,6 +149,10 @@ class Student extends CastCreateModel
     public function studyYear()
     {
         return $this->belongsTo(StudyYear::class);
+    }
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
     }
     public function documentTypeCode()
     {

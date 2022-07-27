@@ -53,6 +53,7 @@
 
     "teachers": "docentes",
     "students": "estudiantes",
+    "student": "estudiante",
 
     "first name": "primer nombre",
     "second name": "segundo nombre",
@@ -124,8 +125,14 @@
     "favourite subjects?": "¿asignaturas preferidas?",
     "Psychosocial Evaluation": "Evaluación Psicosocial",
     "student inclusive": "estudiante inclusivo",
+    "inclusive": "inclusivo",
     "recommendations": "recomendaciones",
     "student and family action plan": "plan de acción del estudiante y la familia",
+    "Matriculate": "Matricular",
+    "Student matriculate!": "Estudiante matriculado!",
+    "Change group": "Cambiar grupo",
+    "Unchanged!": "Sin cambios!",
+    "Changed group!": "Cambiado de grupo!",
 
     "None": "Ninguno",
     "Indigenous peoples and communities": "Pueblos y comunidades indígenas",
@@ -181,6 +188,8 @@
     "It is not possible to create a group for ": "No es posible crear un grupo para el año ",
     "Not allowed for ": "No permitido para el año ",
 
+    "new": "nuevo",
+    "repeat": "repitente",
     "Unexpected Error": "Error Inesperado",
     "years": "años",
     "Years": "Años",

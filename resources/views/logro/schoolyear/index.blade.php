@@ -47,39 +47,37 @@ $title = __('School years');
 
                     <section class="row g-2 mb-3 row-cols-3 row-cols-md-4 row-cols-lg-6">
 
-                    @foreach ($years as $year)
-                        <div class="col small-gutter-col">
-                            <label class="form-check custom-card w-100 position-relative p-0 m-0">
-                                <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
-                                    name="school_year" value="{{ $year->id }}"
-                                    @if (NULL !== Auth::user()->school_year_id)
-                                    {{ Auth::user()->school_year_id === $year->id ? 'checked' : '' ; }}
+                        @foreach ($years as $year)
+                            <div class="col small-gutter-col">
+                                <label class="form-check custom-card w-100 position-relative p-0 m-0">
+                                    <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
+                                        name="school_year" value="{{ $year->id }}"
+                                        @if (null !== Auth::user()->school_year_id) {{ Auth::user()->school_year_id === $year->id ? 'checked' : '' }}
                                     @elseif (1 === $year->available)
-                                    checked
-                                    @endif>
-                                <span class="card form-check-label w-100">
-                                    <span class="card-body text-center">
-                                        <span class="heading text-body text-primary d-block">{{ $year->name }}</span>
-                                        <span class="mb-2 text-extra-small fw-medium text-muted text-uppercase d-block">
-                                            {{ $year->groups_count . ' ' . __('Groups') }}</span>
-                                        @if ($year->groups_sum_student_quantity !== NULL)
-                                        <span class="text-extra-small fw-medium text-muted text-uppercase d-block">
-                                            {{ $year->groups_sum_student_quantity .' '. __('students') }}</span>
-                                        @endif
+                                    checked @endif>
+                                    <span class="card form-check-label w-100">
+                                        <span class="card-body text-center">
+                                            <span class="heading text-body text-primary d-block">{{ $year->name }}</span>
+                                            <span class="mb-2 text-extra-small fw-medium text-muted text-uppercase d-block">
+                                                {{ $year->groups_count . ' ' . __('Groups') }}</span>
+                                            @if ($year->groups_sum_student_quantity !== null)
+                                                <span class="text-extra-small fw-medium text-muted text-uppercase d-block">
+                                                    {{ $year->groups_sum_student_quantity . ' ' . __('students') }}</span>
+                                            @endif
+                                        </span>
                                     </span>
-                                </span>
-                            </label>
-                        </div>
-                    @endforeach
+                                </label>
+                            </div>
+                        @endforeach
 
-                </section>
+                    </section>
 
-                <x-button type="submit" class="btn-primary">
-                    <i class="bi-clock-history"></i>
-                    <span>{{ __('Choose Year') }}</span>
-                </x-button>
+                    <x-button type="submit" class="btn-primary">
+                        <i class="bi-clock-history"></i>
+                        <span>{{ __('Choose Year') }}</span>
+                    </x-button>
 
-            </form>
+                </form>
                 <!-- Content End -->
             </div>
         </div>

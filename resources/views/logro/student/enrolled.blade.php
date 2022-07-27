@@ -93,10 +93,11 @@ $title = __('Students') .' '. __('enrolled');
                                     @if (1 === $student->inclusive)
                                     <i class="icon icon-12 bi-circle-fill logro-inclusive-color"></i>
                                     @endif
-                                    <span
-                                        class="badge @if ('new' === $student->status) bg-outline-primary @elseif ('repeat' === $student->status) bg-outline-danger @endif">
-                                        {{ $student->status }}
-                                    </span>
+                                    @if ('new' === $student->status)
+                                        <span class="badge bg-outline-primary">{{ __($student->status) }}</span>
+                                    @elseif ('repeat' === $student->status)
+                                        <span class="badge bg-outline-danger">{{ __($student->status) }}</span>
+                                    @endif
                                 </td>
                                 <td>{{ $student->getLastNames() }}</td>
                                 <td>{{ $student->institutional_email }}</td>

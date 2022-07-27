@@ -170,6 +170,114 @@ class StudentController extends Controller
         return view('logro.student.enrolled')->with('students', $students);
     }
 
+    public function matriculate($student_id)
+    {
+        $Y = SchoolYearController::current_year();
+
+        $student = Student::select(
+            'id','first_name',
+            'second_name',
+            'father_last_name',
+            'mother_last_name',
+            'headquarters_id',
+            'study_time_id',
+            'study_year_id',
+            'group_id',
+            'status',
+            'inclusive'
+        )->findOrFail($student_id);
+
+        $groups = Group::where('school_year_id', $Y->id)
+            ->where('headquarters_id', $student->headquarters_id)
+            ->where('study_time_id', $student->study_time_id)
+            ->where('study_year_id', $student->study_year_id)
+            ->withCount(['groupStudents' => fn($GS) => $GS->where('student_id', $student->id)])
+        ->get();
+
+        return view('logro.student.matriculate')->with([
+            'student' => $student,
+            'groups' => $groups
+        ]);
+    }
+
+    public function matriculate_update(Request $request, Student $student)
+    {
+        $request->validate([
+            'group' => ['required', Rule::exists('groups','id')]
+        ]);
+
+        $group = Group::find($request->group);
+
+        if ( $group->headquarters_id === $student->headquarters_id
+            && $group->study_time_id === $student->study_time_id
+            && $group->study_year_id === $student->study_year_id)
+        {
+
+            if ($student->group_id != $request->group)
+            {
+
+                $groupStudentExist = GroupStudent::where('group_id', $student->group_id)->where('student_id', $student->id)->first();
+
+                if (NULL === $groupStudentExist)
+                {
+                    GroupStudent::create([
+                        'group_id' => $request->group,
+                        'student_id' => $student->id
+                    ]);
+
+                    $group->update([
+                        'student_quantity' => ++$group->student_quantity
+                    ]);
+
+                    $student->update([
+                        'group_id' => $group->id,
+                        'enrolled_date' => now(),
+                        'enrolled' => TRUE
+                    ]);
+
+                    return redirect()->route('students.show', $student)->with(
+                        ['notify' => 'success', 'title' => __('Student matriculate!')],
+                    );
+
+                } else
+                {
+                    $groupStudentExist->update([
+                        'group_id' => $request->group
+                    ]);
+
+                    $leaveGroup = Group::find($student->group_id);
+                    $leaveGroup->update([
+                        'student_quantity' => --$leaveGroup->student_quantity
+                    ]);
+
+                    $newGroup = Group::find($request->group);
+                    $newGroup->update([
+                        'student_quantity' => ++$newGroup->student_quantity
+                    ]);
+
+                    $student->update([
+                        'group_id' => $group->id,
+                        'enrolled_date' => now(),
+                        'enrolled' => TRUE
+                    ]);
+
+                    return redirect()->route('students.show', $student)->with(
+                        ['notify' => 'success', 'title' => __('Changed group!')],
+                    );
+                }
+
+                return redirect()->route('students.enrolled');
+            } else
+            {
+                return redirect()->route('students.show', $student)->with(
+                    ['notify' => 'info', 'title' => __('Unchanged!')],
+                );
+            }
+        } else
+        {
+            return redirect()->back()->withErrors( __("Unexpected Error") );
+        }
+    }
 
     /**
      * Display the specified resource.
@@ -199,7 +307,6 @@ class StudentController extends Controller
         {
             $groupsStudent = [];
         }
-
         /* Group x Subjects [teacher, piar] END */
 
         $documentType = DocumentType::all();
