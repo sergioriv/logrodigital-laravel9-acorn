@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\StudentsInstructuveExport;
 use App\Http\Controllers\support\UserController;
+use App\Http\Middleware\YearCurrentMiddleware;
 use App\Imports\StudentsImport;
 use App\Models\City;
 use App\Models\Disability;
@@ -22,16 +23,12 @@ use App\Models\LinkageProcess;
 use App\Models\OriginSchool;
 use App\Models\Piar;
 use App\Models\Religion;
-use App\Models\ResourceSubject;
 use App\Models\Rh;
-use App\Models\SchoolYear;
 use App\Models\Sisben;
 use App\Models\Student;
 use App\Models\StudentFileType;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
-use App\Models\Subject;
-use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -39,6 +36,16 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware(YearCurrentMiddleware::class)->only('matriculate','matriculate_update');
+    }
+
     /*
      * PRE-REGISTRATION SECTION
      */
@@ -64,19 +71,24 @@ class StudentController extends Controller
             'headquarters_id',
             'study_time_id',
             'study_year_id'
-            )
+            )->with('headquarters','studyTime','studyYear')
                 ->whereNot(fn($q) =>
                     $q->whereHas('groupYear', $fn_gs)
                         ->with(['groupYear' => $fn_gs])
-                )
-                ->with('headquarters','studyTime','studyYear')
-                ->orderBy('father_last_name')
-                ->orderBy('mother_last_name')
-                ->get();
+        );
+
+        if ( 0 === $Y->available )
+        {
+            $students->whereNull('enrolled');
+        }
+
+
+        $students->orderBy('father_last_name')
+                ->orderBy('mother_last_name');
 
         // return $students;
 
-        return view('logro.student.noenrolled')->with('students', $students);
+        return view('logro.student.noenrolled')->with('students', $students->get());
     }
 
     public function create()
@@ -194,6 +206,11 @@ class StudentController extends Controller
             ->withCount(['groupStudents' => fn($GS) => $GS->where('student_id', $student->id)])
         ->get();
 
+        if ( 0 === count($groups) )
+            return redirect()->back()->with(
+                ['notify' => 'fail', 'title' => __('No groups')],
+            );
+
         return view('logro.student.matriculate')->with([
             'student' => $student,
             'groups' => $groups
@@ -287,7 +304,8 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        $Y = SchoolYearController::available_year();
+        $Y = SchoolYearController::current_year();
+        $YAvailable = SchoolYearController::available_year();
 
         /* Group x Subjects [teacher, piar] START */
         if (1 === $student->inclusive)
@@ -332,7 +350,8 @@ class StudentController extends Controller
         ])->get();
 
         return view('logro.student.profile')->with([
-            'Y' => $Y->id,
+            'Y' => $Y,
+            'YAvailable' => $YAvailable->id,
             'student' => $student,
             'documentType' => $documentType,
             'cities' => $cities,

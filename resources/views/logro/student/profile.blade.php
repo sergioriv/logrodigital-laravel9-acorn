@@ -42,6 +42,7 @@ $title = $student->user->name;
                 </div>
                 <!-- Title End -->
 
+                @if (NULL !== $Y->available)
                 <!-- Top Buttons Start -->
                 <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
                     <!-- Matriculate Button Start -->
@@ -77,6 +78,8 @@ $title = $student->user->name;
                     <!-- Dropdown Button End -->
                 </div>
                 <!-- Top Buttons End -->
+                @endif
+
             </div>
         </section>
         <!-- Title and Top Buttons End -->
@@ -1422,7 +1425,7 @@ $title = $student->user->name;
                                             <div class="card mt-3 accordion-content">
                                                 <div class="card-body pb-3">
 
-                                                    @if ($Y === $groupS->school_year_id)
+                                                    @if ($YAvailable === $groupS->school_year_id)
                                                         <form
                                                             method="POST"action="{{ route('students.piar', $student) }}"
                                                             novalidate>
@@ -1446,7 +1449,7 @@ $title = $student->user->name;
 
                                                                 </h2>
                                                                 <div class="w-100 position-relative form-group">
-                                                                    @if ($Y === $studyYearSubject->subject->school_year_id)
+                                                                    @if ($YAvailable === $studyYearSubject->subject->school_year_id)
                                                                         <textarea
                                                                             name="{{ $studyYearSubject->subject->piarOne->id ?? 'null' }}~{{ $studyYearSubject->subject->id }}~annotation"
                                                                             class="form-control" cols="2">{{ $studyYearSubject->subject->piarOne->annotation ?? null }}</textarea>
@@ -1462,7 +1465,7 @@ $title = $student->user->name;
                                                         @endif
                                                     @endforeach
 
-                                                    @if ($Y === $groupS->school_year_id)
+                                                    @if ($YAvailable === $groupS->school_year_id)
                                                         <input type="hidden" name="groupSubjects"
                                                             value="{{ $groupSubjects }}">
                                                         <div

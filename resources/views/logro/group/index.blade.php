@@ -125,10 +125,10 @@ $title = __('Groups');
                                         <small>{{ $group->headquarters->name }}</small>
                                         <small>{{ $group->studyTime->name }}</small>
                                         <small>{{ $group->studyYear->name }}</small>
-                                        <span class="btn-icon-start">
+                                        <small class="btn-icon-start">
                                             <i class="icon icon-15 bi-award text-primary"></i>
                                             <span>{{ $group->teacher->getFullName() }}</span>
-                                        </span>
+                                        </small>
                                     </div>
                                 </div>
                             </div>

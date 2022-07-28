@@ -133,7 +133,7 @@
     <!-- Icons Menu End -->
 
     <!-- Menu Start -->
-    <div class="menu-container flex-grow-1">
+    <div class="menu-container flex-grow-1 mt-0">
         <ul id="menu" class="menu">
 
             @can('support.users')
