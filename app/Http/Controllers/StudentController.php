@@ -93,17 +93,21 @@ class StudentController extends Controller
 
     public function create()
     {
+        $Y = SchoolYearController::current_year();
+
         $documentType = DocumentType::all();
         $headquarters = Headquarters::all();
         $studyTime = StudyTime::all();
         $studyYear = StudyYear::all();
+        $countGroups = Group::where('school_year_id', $Y->id)->count();
         $cities = City::all();
         return view("logro.student.create")->with([
             'headquarters' => $headquarters,
             'studyTime' => $studyTime,
             'studyYear' => $studyYear,
             'cities' => $cities,
-            'documentType' => $documentType
+            'documentType' => $documentType,
+            'countGroups' => $countGroups
         ]);
     }
 
@@ -117,6 +121,7 @@ class StudentController extends Controller
             'document_type' => ['required', Rule::exists('document_types','code')],
             'document' => ['required', Rule::unique('students','document')],
             'institutional_email' => ['required', 'email', Rule::unique('users','email')],
+            'telephone' => ['nullable','string', 'max:20'],
             'headquarters' => ['required', Rule::exists('headquarters','id')],
             'studyTime' => ['required', Rule::exists('study_times','id')],
             'studyYear' => ['required', Rule::exists('study_years','id')],
@@ -127,6 +132,7 @@ class StudentController extends Controller
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
         $user = UserController::_create($user_name, $request->institutional_email, 7);
 
+
         Student::create([
             'id' => $user->id,
             'first_name' => $request->firstName,
@@ -134,6 +140,7 @@ class StudentController extends Controller
             'father_last_name' => $request->fatherLastName,
             'mother_last_name' => $request->motherLastName,
             'institutional_email' => $request->institutional_email,
+            'telephone' => $request->telephone,
             'document_type_code' => $request->document_type,
             'document' => $request->document,
             'birth_city_id' => $request->birth_city,
@@ -143,6 +150,13 @@ class StudentController extends Controller
             'study_year_id' => $request->studyYear,
             'status' => 'new'
         ]);
+
+        if (1 == $request->matriculate)
+        {
+            return redirect()->route('students.matriculate', $user->id)->with(
+                ['notify' => 'success', 'title' => __('Student created!')],
+            );
+        }
 
         return redirect()->route('students.no_enrolled')->with(
             ['notify' => 'success', 'title' => __('Student created!')],
@@ -199,22 +213,26 @@ class StudentController extends Controller
             'inclusive'
         )->findOrFail($student_id);
 
-        $groups = Group::where('school_year_id', $Y->id)
-            ->where('headquarters_id', $student->headquarters_id)
-            ->where('study_time_id', $student->study_time_id)
-            ->where('study_year_id', $student->study_year_id)
-            ->withCount(['groupStudents' => fn($GS) => $GS->where('student_id', $student->id)])
-        ->get();
+        /*
+         * VALIDACION PARA ESTUDIANTES MATRICULADOS EN AÑOS ANTERIORES
+         *  */
 
-        if ( 0 === count($groups) )
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('No groups')],
-            );
+            $groups = Group::where('school_year_id', $Y->id)
+                ->where('headquarters_id', $student->headquarters_id)
+                ->where('study_time_id', $student->study_time_id)
+                ->where('study_year_id', $student->study_year_id)
+                ->withCount(['groupStudents' => fn($GS) => $GS->where('student_id', $student->id)])
+            ->get();
 
-        return view('logro.student.matriculate')->with([
-            'student' => $student,
-            'groups' => $groups
-        ]);
+            if ( 0 === count($groups) )
+                return redirect()->back()->with(
+                    ['notify' => 'fail', 'title' => __('No groups')],
+                );
+
+            return view('logro.student.matriculate')->with([
+                'student' => $student,
+                'groups' => $groups
+            ]);
     }
 
     public function matriculate_update(Request $request, Student $student)
@@ -296,12 +314,6 @@ class StudentController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
     public function show(Student $student)
     {
         $Y = SchoolYearController::current_year();
@@ -373,24 +385,11 @@ class StudentController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Student $student)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Student $student)
     {
         $request->validate([
@@ -618,6 +617,28 @@ class StudentController extends Controller
         );
 
 
+    }
+
+    public function create_parents_filter(Request $request)
+    {
+        $Y = SchoolYearController::current_year();
+
+        $hq = $request->headquarters;
+        $st = $request->studyTime;
+        $sy = $request->studyYear;
+
+        $c = Group::where('school_year_id', $Y->id);
+
+        if (NULL !== $hq)
+            $c->where('headquarters_id', $hq);
+
+        if (NULL !== $st)
+            $c->where('study_time_id', $st);
+
+        if (NULL !== $sy)
+            $c->where('study_year_id', $sy);
+
+        return $c->count();
     }
 
 
