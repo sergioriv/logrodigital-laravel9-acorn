@@ -112,6 +112,7 @@ return new class extends Migration
 
 
             /* estados y hubicacion matrícula */
+            $table->unsignedBigInteger('school_year_create')->nullable();
             $table->unsignedBigInteger('headquarters_id')->nullable();
             $table->unsignedBigInteger('study_time_id')->nullable();
             $table->unsignedBigInteger('study_year_id')->nullable();
@@ -187,6 +188,12 @@ return new class extends Migration
                     ->on('origin_schools')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
+
+            $table->foreign('school_year_create')
+                    ->references('id')
+                    ->on('school_years')
+                    ->onUpdate('restrict')
+                    ->onDelete('restrict');
 
             $table->foreign('headquarters_id')
                     ->references('id')

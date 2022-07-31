@@ -118,18 +118,19 @@ $title = __('Groups');
                         @foreach ($groups as $group)
                             <div class="col small-gutter-col">
                                 <div class="card h-100">
+
+                                    <a href="{{ route('group.show', $group) }}">
                                     <div class="card-body text-center d-flex flex-column">
-                                        <a href="{{ route('group.show', $group) }}">
                                             <h5 class="text-primary font-weight-bold">{{ $group->name }}</h5>
-                                        </a>
-                                        <small>{{ $group->headquarters->name }}</small>
-                                        <small>{{ $group->studyTime->name }}</small>
-                                        <small>{{ $group->studyYear->name }}</small>
-                                        <small class="btn-icon-start">
-                                            <i class="icon icon-15 bi-award text-primary"></i>
-                                            <span>{{ $group->teacher->getFullName() }}</span>
-                                        </small>
-                                    </div>
+                                            <small class="text-muted">{{ $group->headquarters->name }}</small>
+                                            <small class="text-muted">{{ $group->studyTime->name }}</small>
+                                            <small class="text-muted">{{ $group->studyYear->name }}</small>
+                                            <small class="btn-icon-start text-muted">
+                                                <i class="icon icon-15 bi-award text-muted"></i>
+                                                <span>{{ $group->teacher->getFullName() }}</span>
+                                            </small>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                         @endforeach

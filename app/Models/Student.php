@@ -98,6 +98,7 @@ class Student extends CastCreateModel
         'psyc_recommendations',
         'psyc_student_family',
 
+        'school_year_create',
         'headquarters_id',
         'study_time_id',
         'study_year_id',
@@ -138,6 +139,10 @@ class Student extends CastCreateModel
     /*
      * PARENTS
      */
+    public function schoolYearCreate()
+    {
+        return $this->belongsTo(SchoolYear::class,'school_year_create');
+    }
     public function headquarters()
     {
         return $this->belongsTo(Headquarters::class);

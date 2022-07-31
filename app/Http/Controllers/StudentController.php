@@ -72,6 +72,7 @@ class StudentController extends Controller
             'study_time_id',
             'study_year_id'
             )->with('headquarters','studyTime','studyYear')
+                ->where('school_year_create', '<=', $Y->id)
                 ->whereNot(fn($q) =>
                     $q->whereHas('groupYear', $fn_gs)
                         ->with(['groupYear' => $fn_gs])
@@ -85,8 +86,6 @@ class StudentController extends Controller
 
         $students->orderBy('father_last_name')
                 ->orderBy('mother_last_name');
-
-        // return $students;
 
         return view('logro.student.noenrolled')->with('students', $students->get());
     }
@@ -132,6 +131,7 @@ class StudentController extends Controller
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
         $user = UserController::_create($user_name, $request->institutional_email, 7);
 
+        $Y = SchoolYearController::current_year();
 
         Student::create([
             'id' => $user->id,
@@ -145,6 +145,7 @@ class StudentController extends Controller
             'document' => $request->document,
             'birth_city_id' => $request->birth_city,
             'birthdate' => $request->birthdate,
+            'school_year_create' => $Y->id,
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->studyTime,
             'study_year_id' => $request->studyYear,

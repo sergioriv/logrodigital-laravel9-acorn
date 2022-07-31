@@ -102,7 +102,6 @@ $title = __('Create') . ' ' . __('Student');
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 w-100 position-relative form-group">
@@ -170,7 +169,7 @@ $title = __('Create') . ' ' . __('Student');
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('study time') }} <span class="text-danger">*</span></x-label>
                                             <select name="studyTime" id="studyTime" class="filter" logro="select2">
                                                 <option label="&nbsp;"></option>
@@ -183,7 +182,7 @@ $title = __('Create') . ' ' . __('Student');
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('study year') }} <span class="text-danger">*</span></x-label>
                                             <select name="studyYear" id="studyYear" class="filter" logro="select2">
                                                 <option label="&nbsp;"></option>
