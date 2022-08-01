@@ -20,7 +20,29 @@ $title = $group->name;
                 <!-- Title Start -->
                 <section class="scroll-section" id="title">
                     <div class="page-title-container">
-                        <h1 class="mb-0 pb-0 display-4">{{ __('Group') . ' | ' . $title }}</h1>
+                        <h1 class="mb-1 pb-0 display-4">{{ __('Group') . ' | ' . $title }}</h1>
+                        <div aria-label="breadcrumb">
+                            <div class="breadcrumb">
+                                <span class="breadcrumb-item text-muted">
+                                    <div class="text-muted d-inline-block">
+                                        <i data-acorn-icon="building-large" class="me-1" data-acorn-size="12"></i>
+                                        <span class="align-middle">{{ $group->headquarters->name }}</span>
+                                    </div>
+                                </span>
+                                <span class="breadcrumb-item text-muted">
+                                    <div class="text-muted d-inline-block">
+                                        <i data-acorn-icon="clock" class="me-1" data-acorn-size="12"></i>
+                                        <span class="align-middle">{{ $group->studyTime->name }}</span>
+                                    </div>
+                                </span>
+                                <span class="breadcrumb-item text-muted">
+                                    <div class="text-muted d-inline-block">
+                                        <i data-acorn-icon="calendar" class="me-1" data-acorn-size="12"></i>
+                                        <span class="align-middle">{{ $group->studyYear->name }}</span>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </section>
                 <!-- Title End -->
@@ -51,28 +73,59 @@ $title = $group->name;
 
                                 <!-- Students Tab Start -->
                                 <div class="tab-pane fade active show" id="studentsTab" role="tabpanel">
-                                    <table class="table table-striped">
-                                        <tbody>
-                                            @foreach ($group->groupStudents as $gStudent)
-                                                <tr>
-                                                    <td scope="row" class="col-4">
-                                                        <a href="{{ route('students.show', $gStudent->student) }}"
-                                                            class="list-item-heading body">
-                                                            {{  $gStudent->student->getLastNames() .' '. $gStudent->student->getNames() }}
-                                                        </a>
-                                                        @if (1 === $gStudent->student->inclusive)
-                                                            <span class="badge bg-outline-warning">{{ __('inclusive') }}</span>
-                                                        @endif
-                                                        @if ('new' === $gStudent->student->status)
-                                                            <span class="badge bg-outline-primary">{{ __($gStudent->student->status) }}</span>
-                                                        @elseif ('repeat' === $gStudent->student->status)
-                                                            <span class="badge bg-outline-danger">{{ __($gStudent->student->status) }}</span>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+
+                                    <div class="page-title-container">
+                                        <div class="row">
+                                            <!-- Title Start -->
+                                            <div class="col-12 col-md-7">
+                                                <h3>{{ $group->student_quantity }}</h3>
+                                            </div>
+                                            <!-- Title End -->
+
+                                            @if (null !== $Y->available)
+                                                <!-- Groups Buttons Start -->
+                                                <div class="col-12 col-md-5 mb-2 d-flex align-items-start justify-content-end">
+                                                    <!-- Matriculate Students Button Start -->
+                                                    <a href="{{ route('group.matriculate', $group) }}"
+                                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>{{ __('Matriculate students') }}</span>
+                                                    </a>
+                                                    <!-- Matriculate Students Button End -->
+                                                </div>
+                                                <!-- Groups Buttons End -->
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <!-- Students Content Tab Start -->
+                                    <section class="scroll-section">
+                                        <table class="table table-striped">
+                                            <tbody>
+                                                @foreach ($studentsGroup as $studentG)
+                                                    <tr>
+                                                        <td scope="row">
+                                                            <a href="{{ route('students.show', $studentG) }}"
+                                                                class="list-item-heading body">
+                                                                {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
+                                                            </a>
+                                                            @if (1 === $studentG->inclusive)
+                                                                <span
+                                                                    class="badge bg-outline-warning">{{ __('inclusive') }}</span>
+                                                            @endif
+                                                            @if ('new' === $studentG->status)
+                                                                <span
+                                                                    class="badge bg-outline-primary">{{ __($studentG->status) }}</span>
+                                                            @elseif ('repeat' === $studentG->status)
+                                                                <span
+                                                                    class="badge bg-outline-danger">{{ __($studentG->status) }}</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <!-- Students Content Tab End -->
                                 </div>
                                 <!-- Students Tab End -->
 
@@ -124,14 +177,16 @@ $title = $group->name;
                                                                             @endif
                                                                         @endforeach
                                                                     </td>
-                                                                    <td class="col-1 text-center">{{ $subject->studyYearSubject->hours_week }}
+                                                                    <td class="col-1 text-center">
+                                                                        {{ $subject->studyYearSubject->hours_week }}
                                                                         @if (1 === $subject->studyYearSubject->hours_week)
-                                                                            {{ __("hour") }}
+                                                                            {{ __('hour') }}
                                                                         @else
-                                                                            {{ __("hours") }}
+                                                                            {{ __('hours') }}
                                                                         @endif
                                                                     </td>
-                                                                    <td class="col-1 text-center">{{ $subject->studyYearSubject->course_load }}%</td>
+                                                                    <td class="col-1 text-center">
+                                                                        {{ $subject->studyYearSubject->course_load }}%</td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>

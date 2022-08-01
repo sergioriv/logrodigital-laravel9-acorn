@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\GroupStudent;
 use App\Models\Headquarters;
 use App\Models\ResourceArea;
 use App\Models\SchoolYear;
+use App\Models\Student;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
 use App\Models\Teacher;
@@ -72,11 +74,6 @@ class GroupController extends Controller
         return $groups->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $Y = SchoolYearController::current_year();
@@ -104,12 +101,6 @@ class GroupController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -146,25 +137,102 @@ class GroupController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Group  $group
-     * @return \Illuminate\Http\Response
-     */
     public function show(Group $group)
     {
         $Y = SchoolYearController::current_year();
 
         $sy = $group->study_year_id;
 
+        $studentsGroup = Student::where('group_id', $group->id)
+            ->orderBy('father_last_name')
+            ->orderBy('mother_last_name');
         $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
 
         return view('logro.group.show')->with([
             'Y' => $Y,
             'group' => $group,
+            'studentsGroup' => $studentsGroup->get(),
             'areas' => $areas
         ]);
+    }
+
+    public function matriculate(Group $group)
+    {
+        $Y = SchoolYearController::current_year();
+
+        /* $fn_g = fn($g) => $g->where('school_year_id', $Y->id);
+
+        $fn_gs = fn($gs) =>
+                $gs->with(['group' => $fn_g ])
+                ->whereHas('group', $fn_g ); */
+
+        $studentsNoEnrolled = Student::select(
+            'id',
+            'first_name',
+            'second_name',
+            'father_last_name',
+            'mother_last_name',
+            'inclusive','status'
+            )->with('headquarters','studyTime','studyYear')
+            ->where('school_year_create', '<=', $Y->id)
+            ->where('headquarters_id', $group->headquarters_id)
+            ->where('study_time_id', $group->study_time_id)
+            ->where('study_year_id', $group->study_year_id)
+            ->whereNull('enrolled')
+            ->orderBy('father_last_name')
+            ->orderBy('mother_last_name');
+            /* ->whereNot(fn($q) =>
+                $q->whereHas('groupYear', $fn_gs)
+                    ->with(['groupYear' => $fn_gs]) */
+            // );
+
+
+        return view('logro.group.matriculate')->with([
+            'group' => $group,
+            'studentsNoEnrolled' => $studentsNoEnrolled->get()
+        ]);
+    }
+
+    public function matriculate_update(Group $group, Request $request)
+    {
+        $request->validate([
+            'students' => ['required','array']
+        ]);
+
+        foreach ($request->students as $student)
+        {
+            $studentNoNull = Student::where('id', $student)
+                ->where('headquarters_id', $group->headquarters_id)
+                ->where('study_time_id', $group->study_time_id)
+                ->where('study_year_id', $group->study_year_id)
+                ->whereNull('enrolled')->first();
+
+            if ( NULL !== $studentNoNull )
+            {
+                GroupStudent::create([
+                    'group_id' => $group->id,
+                    'student_id' => $student
+                ]);
+
+                $group->update([
+                    'student_quantity' => ++$group->student_quantity
+                ]);
+
+                $studentNoNull->update([
+                    'group_id' => $group->id,
+                    'enrolled_date' => now(),
+                    'enrolled' => TRUE
+                ]);
+
+            } else
+            {
+                return redirect()->back()->withErrors( __("Unexpected Error") );
+            }
+        }
+
+        return redirect()->route('group.show', $group)->with(
+            ['notify' => 'success', 'title' => __('Students matriculate!')],
+        );
     }
 
     public function teacher_edit(Group $group)
@@ -237,7 +305,6 @@ class GroupController extends Controller
             );
         }
     }
-
 
     private function subjects_teacher($Y_id, $sy_id, $g_id)
     {

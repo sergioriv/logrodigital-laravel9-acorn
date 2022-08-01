@@ -27,7 +27,7 @@ $title = __('Study years list');
                     <div class="row">
                         <!-- Title Start -->
                         <div class="col-12 col-md-7">
-                            <h1 class="mb-0 pb-0 display-4" id="title">{{ $title . ' | ' . $Y }}</h1>
+                            <h1 class="mb-1 pb-0 display-4" id="title">{{ $title . ' | ' . $Y }}</h1>
                         </div>
                         <!-- Title End -->
                     </div>

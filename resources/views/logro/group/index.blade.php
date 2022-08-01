@@ -36,7 +36,7 @@ $title = __('Groups');
                     <div class="row">
                         <!-- Title Start -->
                         <div class="col-12 col-md-7">
-                            <h1 class="mb-0 pb-0 display-4" id="title">{{ $title }}</h1>
+                            <h1 class="mb-1 pb-0 display-4" id="title">{{ $title }}</h1>
                         </div>
                         <!-- Title End -->
 
@@ -129,6 +129,7 @@ $title = __('Groups');
                                                 <i class="icon icon-15 bi-award text-muted"></i>
                                                 <span>{{ $group->teacher->getFullName() }}</span>
                                             </small>
+                                            <small class="mt-2 text-muted">{{ $group->student_quantity .' '. __("students") }}</small>
                                         </div>
                                     </a>
                                 </div>

@@ -101,6 +101,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('groups.filter', [GroupController::class, 'filter']);
     Route::get('groups/{group}/teachers', [GroupController::class, 'teacher_edit'])->name('group.teachers.edit');
     Route::put('groups/{group}/teachers', [GroupController::class, 'teacher_update'])->name('group.teachers.update');
+    Route::get('groups/{group}/matriculate', [GroupController::class, 'matriculate'])->name('group.matriculate');
+    Route::put('groups/{group}/matriculate', [GroupController::class, 'matriculate_update'])->name('group.matriculate.update');
 
     /* Route TeacherSubjectGroups */
     Route::resource('teachers/{teacher}/subjects', TeacherSubjectGroupController::class)->names('teacher.subjects');

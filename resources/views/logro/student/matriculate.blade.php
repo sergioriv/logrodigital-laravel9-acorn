@@ -32,7 +32,7 @@ $title = __('Change group');
                 <!-- Title Start -->
                 <section class="scroll-section" id="title">
                     <div class="page-title-container">
-                        <h1 class="mb-0 pb-0 display-4">
+                        <h1 class="mb-1 pb-0 display-4">
                             {{ $title . ' | ' . $student->getNames() . ' ' . $student->getLastNames() }}
                             @if (1 === $student->inclusive)
                                 <span class="badge bg-outline-warning">{{ __('inclusive') }}</span>

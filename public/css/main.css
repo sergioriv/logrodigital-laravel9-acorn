@@ -202,6 +202,7 @@ html[data-dimension="mobile"] .logro-badge-right-bottom {
     padding-right: 0 !important;
 }
 .pointer-events-none{pointer-events:none}
+.color-hover-default:hover{color:initial !important}
 
 
 /*

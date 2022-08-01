@@ -28,7 +28,7 @@ $title = __('Data instructive');
             <!-- Title Start -->
             <section class="scroll-section" id="title">
                 <div class="page-title-container">
-                    <h1 class="mb-0 pb-0 display-4">{{ $title }}</h1>
+                    <h1 class="mb-1 pb-0 display-4">{{ $title }}</h1>
                 </div>
             </section>
             <!-- Title End -->
