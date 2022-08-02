@@ -68,13 +68,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /* Route StudyTime */
     Route::resource('study_times', StudyTimeController::class)->except('destroy')->names('studyTime');
     Route::get('study_times.json', [StudyTimeController::class, 'data']);
+    Route::put('study_times/{study_time}/periods', [StudyTimeController::class, 'periods_update'])->name('periods.update');
 
     /* Route StudyYear */
     Route::resource('study_years', StudyYearController::class)->only('index')->names('studyYear');
     Route::get('study_years/{study_year}/subjects', [StudyYearController::class, 'subjects'])->name('studyYear.subject.show');
     Route::post('study_years/{study_year}/subjects', [StudyYearController::class, 'subjects_store'])->name('studyYear.subject.store');
     Route::get('study_years/{study_year}/subjects/edit', [StudyYearController::class, 'subjects_edit'])->name('studyYear.subject.edit');
-    // Route::get('study_years.json', [StudyYearController::class, 'data']);
 
     /* Route Resource areas */
     Route::resource('areas', ResourceAreaController::class)->except('destroy')->names('resourceArea');

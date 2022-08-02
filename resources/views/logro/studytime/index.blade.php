@@ -74,6 +74,7 @@ $title = __('Study times list');
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('Periods') }}</th>
                             </tr>
                         </thead>
                     </table>

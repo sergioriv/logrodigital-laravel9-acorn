@@ -274,26 +274,21 @@ return new class extends Migration
                     ->onDelete('cascade');
         });
 
-        Schema::create('periods', function (Blueprint $table) {/* school_years, headquarters, study_times, period_types */
+        Schema::create('periods', function (Blueprint $table) {/* school_years, study_times, period_types */
             $table->id();
             $table->unsignedBigInteger('school_year_id');
-            $table->unsignedBigInteger('headquarters_id');
             $table->unsignedBigInteger('study_time_id');
             $table->unsignedBigInteger('period_type_id');
+            $table->unsignedTinyInteger('ordering');
             $table->string('name');
             $table->date('start');
             $table->date('end');
+            $table->unsignedTinyInteger('days');
             $table->timestamps();
 
             $table->foreign('school_year_id')
                     ->references('id')
                     ->on('school_years')
-                    ->onUpdate('restrict')
-                    ->onDelete('restrict');
-
-            $table->foreign('headquarters_id')
-                    ->references('id')
-                    ->on('headquarters')
                     ->onUpdate('restrict')
                     ->onDelete('restrict');
 

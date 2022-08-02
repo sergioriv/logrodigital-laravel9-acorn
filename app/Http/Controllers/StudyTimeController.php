@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Period;
+use App\Models\SchoolYear;
 use App\Models\StudyTime;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -19,12 +21,12 @@ class StudyTimeController extends Controller
      */
     public function index()
     {
-        return view('support.studytime.index');
+        return view('logro.studytime.index');
     }
 
     public function data()
     {
-        return ['data' => StudyTime::get()];
+        return ['data' => StudyTime::withCount('periods')->get()];
     }
 
     /**
@@ -34,7 +36,7 @@ class StudyTimeController extends Controller
      */
     public function create()
     {
-        return view('support.studytime.create');
+        return view('logro.studytime.create');
     }
 
     /**
@@ -66,7 +68,14 @@ class StudyTimeController extends Controller
      */
     public function show(StudyTime $studyTime)
     {
-        //
+        $Y = SchoolYearController::current_year();
+
+        $periods = Period::where('school_year_id', $Y->id)->where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
+        return view('logro.studytime.show')->with([
+            'Y' => $Y,
+            'studyTime' => $studyTime,
+            'periods' => $periods
+        ]);
     }
 
     /**
@@ -77,7 +86,7 @@ class StudyTimeController extends Controller
      */
     public function edit(StudyTime $studyTime)
     {
-        return view('support.studytime.edit')->with('studyTime', $studyTime);
+        return view('logro.studytime.edit')->with('studyTime', $studyTime);
     }
 
     /**
@@ -97,8 +106,21 @@ class StudyTimeController extends Controller
             'name' => $request->name
         ]);
 
-        return redirect()->route('studyTime.index')->with(
+        return redirect()->route('studyTime.show', $studyTime)->with(
             ['notify' => 'success', 'title' => __('Study time updated!')],
         );
+    }
+
+    public function periods_update(Request $request, StudyTime $studyTime)
+    {
+
+        $request->validate([
+            'period' => ['required', 'array'],
+            'period.*.*' => ['required'],
+            'period.*.start' => ['date'],
+            'period.*.end' => ['date'],
+            'period.*.days' => ['numeric']
+        ]);
+        return PeriodController::update($request, $studyTime);
     }
 }

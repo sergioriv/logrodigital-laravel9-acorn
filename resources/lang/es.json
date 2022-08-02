@@ -7,6 +7,17 @@
     "Study years": "Años de estudio",
     "no-enrolled": "sin matrícula",
 
+    "Study time created!": "Jordana creada!",
+    "Study time updated!": "Jordana actualizada!",
+    "Start date must be less than the end date of each period": "La fecha de inicio debe ser anterior a la fecha de finalización de cada período",
+    "Deadline days": "Días de plazo",
+    "Start": "Inicio",
+    "End": "Fin",
+
+    "Periods": "Periodos",
+    "Period": "Periodo",
+    "Number of periods": "Número de periodos",
+
     "Headquarters list": "Sedes",
     "Create Headquarters": "Crear sede",
     "Save headquarters": "Guardar sede",

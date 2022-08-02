@@ -37,7 +37,8 @@
             pageLength: 10,
             order: false,
             columns: [
-                { data: "name" }
+                { data: "name" },
+                { data: "periods_count" }
             ],
             language: {
                 url: '/json/datatable.spanish.json',
@@ -57,7 +58,7 @@
                     targets: 0,
                     render: function (data, type, row, meta) {
                         return (
-                            '<a class="list-item-heading body" href="study_times/' + row.id + '/edit">' + data + "</a>"
+                            '<a class="list-item-heading body" href="study_times/' + row.id + '/">' + data + "</a>"
                         );
                     },
                 }

@@ -11,12 +11,13 @@ class Period extends CastCreateModel
 
     protected $fillable = [
         'school_year_id',
-        'headquarters_id',
         'study_time_id',
         'period_type_id',
+        'ordering',
         'name',
         'start',
-        'end'
+        'end',
+        'days'
     ];
 
     /*
@@ -25,11 +26,6 @@ class Period extends CastCreateModel
     public function schoolYear()
     {
         return $this->belongsTo(SchoolYear::class);
-    }
-
-    public function headquarters()
-    {
-        return $this->belongsTo(Headquarters::class);
     }
 
     public function studyTime()
