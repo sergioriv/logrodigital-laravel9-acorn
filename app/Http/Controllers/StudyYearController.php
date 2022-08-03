@@ -16,7 +16,9 @@ class StudyYearController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('can:studyYear');
+        $this->middleware('can:studyYear.index');
+        $this->middleware('can:studyYear.create')->only('create','store','edit','update');
+        $this->middleware('can:studyYear.subjects')->only('subjects','subjects_store','subjects_edit');
     }
     /**
      * Display a listing of the resource.
