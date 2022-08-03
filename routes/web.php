@@ -58,8 +58,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route School Year */
     Route::resource('school_years', SchoolYearController::class)->except('destroy','edit','update')->names('schoolYear');
-    Route::get('school_years.json', [SchoolYearController::class, 'data']);
-    Route::put('school_years/choose', [SchoolYearController::class, 'choose'])->name('schoolYear.selected');
+    // Route::get('school_years.json', [SchoolYearController::class, 'data']);
+    Route::put('school_years', [SchoolYearController::class, 'choose'])->name('schoolYear.selected');
 
     /* Route Headquarters */
     Route::resource('headquarters', HeadquartersController::class)->except('destroy')->names('headquarters');

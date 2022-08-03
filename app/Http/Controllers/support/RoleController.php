@@ -11,7 +11,7 @@ class RoleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:support.roles');
+        $this->middleware('can:support.access');
     }
 
     /**

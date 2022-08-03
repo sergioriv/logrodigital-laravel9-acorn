@@ -105,7 +105,7 @@ return new class extends Migration
             $table->boolean('lunch')->nullable();
             $table->boolean('refreshment')->nullable();
             $table->boolean('transport')->nullable();
-            $table->boolean('ethnic_group_id')->nullable();
+            $table->unsignedBigInteger('ethnic_group_id')->nullable();
             $table->string('disability', 50);
             $table->unsignedBigInteger('origin_school_id')->nullable();
             $table->string('school_insurance', 100)->nullable();

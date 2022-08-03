@@ -108,7 +108,7 @@ $title = $student->user->name;
                                 </form>
                                 <!-- Avatar Form End -->
 
-                                <div class="h5">{{ $student->user->name }}</div>
+                                <div class="h5">{{ $student->getFullName() }}</div>
                                 @if (null !== $student->birthdate)
                                     <span class="mb-2 text-muted">{{ $student->age() . ' ' . __('years') }}</span>
                                 @endif

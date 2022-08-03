@@ -15,7 +15,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:support.users');
+        $this->middleware('can:support.access');
     }
 
     public function index()

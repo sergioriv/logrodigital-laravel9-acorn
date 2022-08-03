@@ -56,12 +56,12 @@ class User extends Authenticatable
         return $this->hasOne(SchoolYear::class,'id','school_year_id');
     }
 
-    protected function name(): Attribute
+    /* protected function name(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => ucwords(strtolower($value)),
         );
-    }
+    } */
 
     protected function emailVerifiedAt(): Attribute
     {

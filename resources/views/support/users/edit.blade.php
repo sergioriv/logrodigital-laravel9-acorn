@@ -60,7 +60,7 @@ $title = 'Edit user';
                                     <label class="form-check-label">
                                         {{ $role->name }}
                                         <input name="role" class="form-check-input" type="radio" value="{{ $role->id }}"
-                                        {{ $user->getRoleNames()[0] === $role->name ? 'checked' : '' }} />
+                                        {{ $user->getRoleNames() === $role->name ? 'checked' : '' }} />
                                     </label>
                                 </div>
                                 @endforeach

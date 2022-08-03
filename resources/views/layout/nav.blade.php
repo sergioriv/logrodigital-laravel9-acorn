@@ -21,7 +21,7 @@
             <a href="#" class="dropdown-item">ES</a>
         </div>
     </div>
-    <!-- Language Switch End -->
+    Language Switch End -->
 
     <!-- User Menu Start -->
     <div class="user-container d-flex">
@@ -136,13 +136,13 @@
     <div class="menu-container flex-grow-1 mt-0">
         <ul id="menu" class="menu">
 
-            @can('support.users')
             <li>
                 <a href="/dashboard" data-href="/dashboards">
                     <i data-acorn-icon="home" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Dashboard') }}</span>
                 </a>
             </li>
+            @can('students.index')
             <li>
                 <a href="#students" data-href="/students">
                     <i class="icon icon-18 bi-people"></i>
@@ -161,56 +161,69 @@
                     </li>
                 </ul>
             </li>
+            @endcan
+            @can('headquarters.index')
             <li>
                 <a href="{{ route('headquarters.index') }}" data-href="/headquarters">
                     <i data-acorn-icon="building-large" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Headquarters') }}</span>
                 </a>
             </li>
+            @endcan
+            @can('subjects.index')
             <li>
                 <a href="{{ route('subject.index') }}" data-href="/areas_subjects">
                     <i class="icon icon-18 bi-journals"></i>
                     <span class="label">{{ __('Areas & Subjects') }}</span>
                 </a>
             </li>
+            @endcan
+            @can('teachers.index')
             <li>
                 <a href="{{ route('teacher.index') }}" data-href="/teachers">
                     <i data-acorn-icon="question-hexagon" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Teachers') }}</span>
                 </a>
             </li>
+            @endcan
+            @can('groups.index')
             <li>
                 <a href="{{ route('group.index') }}" data-href="/groups">
                     <i class="icon icon-18 bi-bookmarks"></i>
                     <span class="label">{{ __('Groups') }}</span>
                 </a>
             </li>
+            @endcan
+            @can('studyTime.index')
             <li>
                 <a href="{{ route('studyTime.index') }}" data-href="/study_times">
                     <i data-acorn-icon="clock" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Study times') }}</span>
                 </a>
             </li>
+            @endcan
+            @can('studyYear.index')
             <li>
                 <a href="{{ route('studyYear.index') }}" data-href="/study_years">
                     <i data-acorn-icon="calendar" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Study years') }}</span>
                 </a>
             </li>
+            @endcan
+            @can('schoolYear.select')
             <li>
                 <a href="{{ route('schoolYear.index') }}" data-href="/school_years">
                     <i class="icon icon-18 bi-clock-history"></i>
                     <span class="label">{{ __('Years') }}</span>
                 </a>
             </li>
-
-
-            <div class="separator-light"></div>
             @endcan
 
 
+            <div class="separator-light"></div>
+
+
             <!-- User Nav Start -->
-            @can('support.roles')
             <li>
                 <a href="{{ route('user.profile.edit') }}" data-href="/profile">
                     <i data-acorn-icon="user" class="icon" data-acorn-size="18"></i>
@@ -228,11 +241,10 @@
                     </a>
                 </form>
             </li>
-            @endcan
             <!-- User Nav End -->
 
 
-            @can('support')
+            @can('support.access')
             <div class="separator-light"></div>
 
 

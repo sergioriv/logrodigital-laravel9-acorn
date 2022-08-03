@@ -13,7 +13,8 @@ class SchoolYearController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('can:schoolYear');
+        $this->middleware('can:schoolYear.select');
+        $this->middleware('can:schoolYear.create')->only('create','store');
     }
     /**
      * Display a listing of the resource.
@@ -26,10 +27,10 @@ class SchoolYearController extends Controller
         return view('logro.schoolyear.index')->with('years', $years);
     }
 
-    public function data()
+    /* public function data()
     {
         return ['data' => SchoolYear::orderBy('id','DESC')->get()];
-    }
+    } */
 
     /**
      * Show the form for creating a new resource.

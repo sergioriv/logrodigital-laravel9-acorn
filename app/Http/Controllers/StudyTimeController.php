@@ -12,7 +12,7 @@ class StudyTimeController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('can:studyTime');
+        $this->middleware('can:studyTime.index')->only('create','store');
     }
     /**
      * Display a listing of the resource.
