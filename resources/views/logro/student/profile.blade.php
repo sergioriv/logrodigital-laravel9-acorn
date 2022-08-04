@@ -42,6 +42,7 @@ $title = $student->user->name;
                 </div>
                 <!-- Title End -->
 
+                @can('support.users')
                 @if (NULL !== $Y->available)
                 <!-- Top Buttons Start -->
                 <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
@@ -79,6 +80,7 @@ $title = $student->user->name;
                 </div>
                 <!-- Top Buttons End -->
                 @endif
+                @endcan
 
             </div>
         </section>
