@@ -10,13 +10,10 @@ class ResourceAreaController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('can:resourceArea');
+        $this->middleware('can:resourceAreas.index');
+        $this->middleware('can:resourceAreas.edit')->only('create','store','edit','update');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('logro.resource.area.index');
@@ -27,22 +24,11 @@ class ResourceAreaController extends Controller
         return ['data' => ResourceArea::orderBy('name')->get()];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('logro.resource.area.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -58,35 +44,16 @@ class ResourceAreaController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ResourceArea  $resourceArea
-     * @return \Illuminate\Http\Response
-     */
     public function show(ResourceArea $resourceArea)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ResourceArea  $resourceArea
-     * @return \Illuminate\Http\Response
-     */
     public function edit(ResourceArea $area)
     {
         return view('logro.resource.area.edit')->with('area', $area);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ResourceArea  $resourceArea
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, ResourceArea $area)
     {
         $request->validate([

@@ -12,7 +12,8 @@ class SubjectController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('can:subject');
+        $this->middleware('can:subjects.index');
+        $this->middleware('can:subjects.edit')->only('store');
     }
     /**
      * Display a listing of the resource.

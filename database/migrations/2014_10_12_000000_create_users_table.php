@@ -17,8 +17,7 @@ return new class extends Migration
             $table->id();
             $table->enum('provider', [
                 'microsoft',
-                'google',
-                'logro.digital', // dominio insitucional
+                'google'
             ])->nullable();
             $table->string('name');
             $table->string('email')->unique();

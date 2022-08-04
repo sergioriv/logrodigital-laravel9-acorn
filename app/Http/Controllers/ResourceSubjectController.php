@@ -10,7 +10,8 @@ class ResourceSubjectController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('can:resourceSubject');
+        $this->middleware('can:resourceSubjects.index');
+        $this->middleware('can:resourceSubjects.edit')->only('create','store');
     }
     /**
      * Display a listing of the resource.
@@ -27,22 +28,11 @@ class ResourceSubjectController extends Controller
         return ['data' => ResourceSubject::orderBy('name')->get()];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('logro.resource.subject.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([

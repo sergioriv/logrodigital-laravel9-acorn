@@ -11,6 +11,14 @@ use Illuminate\Validation\Rule;
 
 class StudentFileController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware('can:students.documents');
+        $this->middleware('can:students.documents.edit')->only('checked');
+
+    }
+
     public function update(Student $student, Request $request)
     {
 

@@ -12,13 +12,12 @@ class StudyTimeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:studyTime.index')->only('create','store');
+        $this->middleware('can:studyTime.index');
+        $this->middleware('can:studyTime.create')->only('create','store');
+        $this->middleware('can:studyTime.edit')->only('show','edit','update');
+        $this->middleware('can:studyTime.periods.edit')->only('periods_update');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('logro.studytime.index');
@@ -29,22 +28,11 @@ class StudyTimeController extends Controller
         return ['data' => StudyTime::withCount('periods')->get()];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('logro.studytime.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -60,12 +48,6 @@ class StudyTimeController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\StudyTime  $studyTime
-     * @return \Illuminate\Http\Response
-     */
     public function show(StudyTime $studyTime)
     {
         $Y = SchoolYearController::current_year();
@@ -78,24 +60,11 @@ class StudyTimeController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\StudyTime  $studyTime
-     * @return \Illuminate\Http\Response
-     */
     public function edit(StudyTime $studyTime)
     {
         return view('logro.studytime.edit')->with('studyTime', $studyTime);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\StudyTime  $studyTime
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, StudyTime $studyTime)
     {
         $request->validate([

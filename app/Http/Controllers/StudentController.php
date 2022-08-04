@@ -43,6 +43,12 @@ class StudentController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('can:students.index');
+        $this->middleware('can:students.import')->only('data_instructive','export_instructive','import','import_store');
+        $this->middleware('can:students.create')->only('create');
+        $this->middleware('can:students.matriculate')->only('matriculate','matriculate_update','create_parents_filter');
+        $this->middleware('can:students.info')->only('show','update');
+        $this->middleware('can:students.psychosocial')->only('piar_update');
         $this->middleware(YearCurrentMiddleware::class)->only('matriculate','matriculate_update');
     }
 
@@ -384,11 +390,6 @@ class StudentController extends Controller
             'studentFileTypes' => $studentFileTypes,
             'groupsStudent' => $groupsStudent
         ]);
-    }
-
-    public function edit(Student $student)
-    {
-        //
     }
 
     public function update(Request $request, Student $student)

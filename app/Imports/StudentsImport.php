@@ -130,7 +130,8 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 'provider' => $provider,
                 'name'     => $row['first_name'] . ' ' . $row['father_last_name'],
                 'email'    => $row['institutional_email'],
-            ]);
+            ])->assignRole(7);
+            $newUser->forceFill(['email_verified_at' => now()])->save();
 
             Student::create([
                 'id'                    => $newUser->id,

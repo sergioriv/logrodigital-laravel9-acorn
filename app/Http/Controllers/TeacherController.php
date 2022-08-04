@@ -15,11 +15,14 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class TeacherController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    function __construct()
+    {
+        $this->middleware('can:teachers.index');
+        $this->middleware('can:teachers.create');
+        $this->middleware('can:teachers.edit');
+        $this->middleware('can:teachers.import')->only('export','import','import_store');
+    }
+
     public function index()
     {
         return view('logro.teacher.index');
@@ -30,22 +33,11 @@ class TeacherController extends Controller
         return ['data' => Teacher::orderBy('first_name')->orderBy('father_last_name')->get()];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('logro.teacher.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -75,12 +67,6 @@ class TeacherController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Teacher  $teacher
-     * @return \Illuminate\Http\Response
-     */
     public function show(Teacher $teacher)
     {
         $schoolYear = SchoolYear::whereHas('teacherSubjectGroups', function ($subject) use ($teacher) {
@@ -93,24 +79,11 @@ class TeacherController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Teacher  $teacher
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Teacher $teacher)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Teacher  $teacher
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Teacher $teacher)
     {
         //

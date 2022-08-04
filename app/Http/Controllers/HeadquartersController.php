@@ -10,7 +10,7 @@ class HeadquartersController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('can:headquarters');
+        $this->middleware('can:headquarters.index');
     }
     /**
      * Display a listing of the resource.

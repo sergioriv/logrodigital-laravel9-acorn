@@ -17,11 +17,16 @@ use Illuminate\Validation\Rule;
 
 class GroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    function __construct()
+    {
+        $this->middleware('can:groups.index');
+        $this->middleware('can:groups.create')->only('create','store');
+        // $this->middleware('can:groups.students');
+        $this->middleware('can:groups.students.matriculate')->only('matriculate','matriculate_update');
+        // $this->middleware('can:groups.teachers');
+        $this->middleware('can:groups.teachers.edit')->only('teacher_edit','teacher_update');
+    }
+
     public function index()
     {
         $Y = SchoolYearController::current_year();
