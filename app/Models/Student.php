@@ -52,7 +52,7 @@ class Student extends CastCreateModel
 
         'ethnic_group_id',
         'conflict_victim',
-        'origin_school_id',
+        'origin_school',
         'ICBF_protection_measure_id', //* (Ninguna, Hogar sustituto, Medio abierto, Menor infractor)
         'foundation_beneficiary', //* (Si, No)
         'linked_to_process_id', //* (Ninguna, ICBF, Comisaria de familia, Fiscalia, Inspeccion de policia)
@@ -174,10 +174,6 @@ class Student extends CastCreateModel
     public function ethnicGroup()
     {
         return $this->belongsTo(EthnicGroup::class);
-    }
-    public function originSchool()
-    {
-        return $this->belongsTo(OriginSchool::class);
     }
 
 

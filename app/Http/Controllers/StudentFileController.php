@@ -14,8 +14,8 @@ class StudentFileController extends Controller
 
     function __construct()
     {
-        $this->middleware('can:students.documents');
-        $this->middleware('can:students.documents.edit')->only('checked');
+        $this->middleware('can:students.documents.edit');
+        $this->middleware('can:students.documents.checked')->only('checked');
 
     }
 

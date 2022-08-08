@@ -18,8 +18,8 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $support_users = Permission::create([ 'name' => 'support.users', ]);
-        $support_roles = Permission::create([ 'name' => 'support.roles', ]);
+        // $support_users = Permission::create([ 'name' => 'support.users', ]);
+        // $support_roles = Permission::create([ 'name' => 'support.roles', ]);
         $support = Permission::create([ 'name' => 'support.access', ]);
         $profile = Permission::create([ 'name' => 'profile.edit', ]);
 
@@ -30,8 +30,8 @@ class RoleSeeder extends Seeder
         $s_create = Permission::create([ 'name' => 'students.create', ]);
         $s_matriculate = Permission::create([ 'name' => 'students.matriculate', ]);
         $s_info = Permission::create([ 'name' => 'students.info', ]);
-        $s_documents = Permission::create([ 'name' => 'students.documents', ]);
         $s_documents_edit = Permission::create([ 'name' => 'students.documents.edit', ]);
+        $s_documents_checked = Permission::create([ 'name' => 'students.documents.checked', ]);
         $s_psychosocial = Permission::create([ 'name' => 'students.psychosocial', ]);
 
         $sb_index = Permission::create([ 'name' => 'subjects.index', ]);
@@ -66,25 +66,23 @@ class RoleSeeder extends Seeder
         $y_create = Permission::create([ 'name' => 'schoolYear.create', ]);
 
         Role::find(1)->syncPermissions([
-            $support_users, $support_roles, $support
-        ]);
-
-        // $role_admin = Role::create([ 'name' => 'SUPPORT' ])->syncPermissions([
-        //     $support, $profile, $hq_index,
-        //     $s_index, $s_import, $s_create, $s_matriculate, $s_info, $s_documents, $s_documents_edit, $s_psychosocial,
-        //     $sb_index, $sb_edit, $sb_subjects_index, $sb_subjects_edit, $sb_areas_index, $sb_area_edit,
-        //     $t_index, $t_create, $t_edit, $t_import,
-        //     $g_index, $g_create, $g_students, $g_students_matriculate, $g_teachers, $g_teachers_edit,
-        //     $st_index, $st_create, $st_edit, $st_periods_edit,
-        //     $sy_index, $sy_create, $sy_subjects,
-        //     $y_select, $y_create
-        // ]); // 1
+            $support, $profile, $hq_index,
+            $s_index, $s_import, $s_create, $s_matriculate, $s_info, $s_documents_edit, $s_documents_checked, $s_psychosocial,
+            $sb_index, $sb_edit, $sb_subjects_index, $sb_subjects_edit, $sb_areas_index, $sb_area_edit,
+            $t_index, $t_create, $t_edit, $t_import,
+            $g_index, $g_create, $g_students, $g_students_matriculate, $g_teachers, $g_teachers_edit,
+            $st_index, $st_create, $st_edit, $st_periods_edit,
+            $sy_index, $sy_create, $sy_subjects,
+            $y_select, $y_create
+        ]); // 1
         // Role::create([ 'name' => 'RECTOR' ]); // 2
         // Role::create([ 'name' => 'COORDINATOR' ]); // 3
         // Role::create([ 'name' => 'SECRETARY' ]); // 4
         // Role::create([ 'name' => 'ORIENTATION']); // 5
         // Role::create([ 'name' => 'TEACHER' ]); // 6
-        // Role::create([ 'name' => 'STUDENT' ]); // 7
+        Role::find(7)->syncPermissions([
+            $profile, $s_info, $s_documents_edit
+        ]); // 7
         // Role::create([ 'name' => 'PARENT' ]); // 8
 
         // User::create([

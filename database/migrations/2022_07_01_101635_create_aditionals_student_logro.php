@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('document_types', function (Blueprint $table) {
             $table->string('code', 5);
             $table->string('name');
+            $table->boolean('foreigner');
 
             $table->primary('code');
         });
@@ -59,10 +60,10 @@ return new class extends Migration
             $table->string('name', 100);
         });
 
-        Schema::create('origin_schools', function (Blueprint $table) {
+        /* Schema::create('origin_schools', function (Blueprint $table) {
             $table->id();
             $table->string('name', 5);
-        });
+        }); */
 
         Schema::create('health_managers', function (Blueprint $table) {
             $table->id();
@@ -106,8 +107,7 @@ return new class extends Migration
             $table->boolean('refreshment')->nullable();
             $table->boolean('transport')->nullable();
             $table->unsignedBigInteger('ethnic_group_id')->nullable();
-            $table->string('disability', 50);
-            $table->unsignedBigInteger('origin_school_id')->nullable();
+            $table->unsignedBigInteger('origin_school')->nullable();
             $table->string('school_insurance', 100)->nullable();
 
 
@@ -183,11 +183,11 @@ return new class extends Migration
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
 
-            $table->foreign('origin_school_id')
+            /* $table->foreign('origin_school_id')
                     ->references('id')
                     ->on('origin_schools')
                     ->onUpdate('cascade')
-                    ->onDelete('cascade');
+                    ->onDelete('cascade'); */
 
             $table->foreign('school_year_create')
                     ->references('id')

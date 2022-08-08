@@ -7,6 +7,7 @@ use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Imports\StudentsImport;
 use App\Models\City;
+use App\Models\Country;
 use App\Models\Disability;
 use App\Models\DocumentType;
 use App\Models\DwellingType;
@@ -20,7 +21,6 @@ use App\Models\HealthManager;
 use App\Models\IcbfProtectionMeasure;
 use App\Models\Kinship;
 use App\Models\LinkageProcess;
-use App\Models\OriginSchool;
 use App\Models\Piar;
 use App\Models\Religion;
 use App\Models\Rh;
@@ -100,17 +100,19 @@ class StudentController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $documentType = DocumentType::all();
+        $documentType = DocumentType::orderBy('foreigner')->get();
         $headquarters = Headquarters::all();
         $studyTime = StudyTime::all();
         $studyYear = StudyYear::all();
         $countGroups = Group::where('school_year_id', $Y->id)->count();
         $cities = City::all();
+        $countries = Country::all();
         return view("logro.student.create")->with([
             'headquarters' => $headquarters,
             'studyTime' => $studyTime,
             'studyYear' => $studyYear,
             'cities' => $cities,
+            'countries' => $countries,
             'documentType' => $documentType,
             'countGroups' => $countGroups
         ]);
@@ -131,6 +133,7 @@ class StudentController extends Controller
             'studyTime' => ['required', Rule::exists('study_times','id')],
             'studyYear' => ['required', Rule::exists('study_years','id')],
             'birth_city' => ['nullable',Rule::exists('cities','id')],
+            'country' => ['nullable',Rule::exists('countries','id')],
             'birthdate' => ['nullable','date'],
         ]);
 
@@ -138,6 +141,18 @@ class StudentController extends Controller
         $user = UserController::_create($user_name, $request->institutional_email, 7);
 
         $Y = SchoolYearController::current_year();
+
+        /* DATOS PAIS DE ORIGEN */
+        $docType = DocumentType::find($request->document_type);
+        $expedition_city = NULL;
+        if ( 1 == $docType->foreigner )
+        {
+            $request->birth_city = NULL;
+            $expedition_city = 149;
+        } else
+        {
+            $request->country = NULL;
+        }
 
         Student::create([
             'id' => $user->id,
@@ -150,7 +165,9 @@ class StudentController extends Controller
             'document_type_code' => $request->document_type,
             'document' => $request->document,
             'birth_city_id' => $request->birth_city,
+            'country_id' => $request->country,
             'birthdate' => $request->birthdate,
+            'expedition_city_id' => $expedition_city,
             'school_year_create' => $Y->id,
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->studyTime,
@@ -346,14 +363,14 @@ class StudentController extends Controller
         }
         /* Group x Subjects [teacher, piar] END */
 
-        $documentType = DocumentType::all();
+        $documentType = DocumentType::orderBy('foreigner')->get();
         $cities = City::all();
+        $countries = Country::all();
         $genders = Gender::all();
         $rhs = Rh::all();
         $healthManager = HealthManager::all();
         $sisbenes = Sisben::all();
         $ethnicGroups = EthnicGroup::all();
-        $originSchools = OriginSchool::all();
         $dwellingTypes = DwellingType::all();
         $disabilities = Disability::all();
         $icbfProtections = IcbfProtectionMeasure::all();
@@ -374,12 +391,12 @@ class StudentController extends Controller
             'student' => $student,
             'documentType' => $documentType,
             'cities' => $cities,
+            'countries' => $countries,
             'genders' => $genders,
             'rhs' => $rhs,
             'healthManager' => $healthManager,
             'sisbenes' => $sisbenes,
             'ethnicGroups' => $ethnicGroups,
-            'originSchools' => $originSchools,
             'dwellingTypes' => $dwellingTypes,
             'disabilities' => $disabilities,
             'icbfProtections' => $icbfProtections,
@@ -405,6 +422,7 @@ class StudentController extends Controller
             'expedition_city' => ['nullable',Rule::exists('cities','id')],
             'number_siblings' => ['nullable','numeric', 'max:200'],
             'birth_city' => ['nullable',Rule::exists('cities','id')],
+            'country' => ['nullable',Rule::exists('countries','id')],
             'birthdate' => ['nullable','date'],
             'gender' => ['nullable',Rule::exists('genders','id')],
             'rh' => ['nullable',Rule::exists('rhs','id')],
@@ -433,6 +451,16 @@ class StudentController extends Controller
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
         UserController::_update($student->id, $user_name);
 
+        /* DATOS PAIS DE ORIGEN */
+        $docType = DocumentType::find($request->document_type);
+        if ( 1 == $docType->foreigner )
+        {
+            $request->birth_city = NULL;
+        } else
+        {
+            $request->country = NULL;
+        }
+
         $student->update([
             'first_name' => $request->firstName,
             'second_name' => $request->secondName,
@@ -443,6 +471,7 @@ class StudentController extends Controller
             'telephone' => $request->telephone,
             'expedition_city_id' => $request->expedition_city,
             'birth_city_id' => $request->birth_city,
+            'country_id' => $request->country,
             'birthdate' => $request->birthdate,
             'gender_id' => $request->gender,
             'rh_id' => $request->rh,
@@ -480,7 +509,7 @@ class StudentController extends Controller
             $request->validate([
                 'ethnic_group' => ['nullable',Rule::exists('ethnic_groups','id')],
                 'conflict_victim' => ['nullable','boolean'],
-                'origin_school_id' => ['nullable',Rule::exists('origin_schools','id')],
+                'origin_school' => ['nullable','string'],
                 'icbf_protection' => ['nullable',Rule::exists('icbf_protection_measures','id')],
                 'foundation_beneficiary' => ['nullable','boolean'],
                 'linked_process' => ['nullable',Rule::exists('linkage_processes','id')],
@@ -529,7 +558,7 @@ class StudentController extends Controller
                 /* informacion complementaria */
                 'ethnic_group_id' => $request->ethnic_group,
                 'conflict_victim' => $request->conflict_victim,
-                'origin_school_id' => $request->origin_school_id,
+                'origin_school' => $request->origin_school,
                 'ICBF_protection_measure_id' => $request->icbf_protection,
                 'foundation_beneficiary' => $request->foundation_beneficiary,
                 'linked_to_process_id' => $request->linked_process,
@@ -657,8 +686,6 @@ class StudentController extends Controller
         $rhs = Rh::all();
         $healthManager = HealthManager::all();
         $sisbenes = Sisben::all();
-        $ethnicGroups = EthnicGroup::all();
-        $originSchools = OriginSchool::all();
 
         return view('logro.student.data-instructive')->with([
             'headquarters' => $headquarters,
@@ -671,8 +698,6 @@ class StudentController extends Controller
             // 'rhs' => $rhs,
             // 'healthManager' => $healthManager,
             // 'sisbenes' => $sisbenes,
-            // 'ethnicGroups' => $ethnicGroups,
-            // 'originSchools' => $originSchools
         ]);
     }
 

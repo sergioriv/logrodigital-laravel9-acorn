@@ -28,6 +28,20 @@ $title = $student->user->name;
 @section('js_page')
     <script src="/js/forms/genericforms.js"></script>
     <script src="/js/pages/student-profile.js"></script>
+    <script>
+        jQuery("#document_type").change(function() {
+            let foreigner = $("#document_type option:selected").attr('foreigner');
+            if (1 == foreigner)
+            {
+                $("#birth_city").addClass('d-none');
+                $("#country").removeClass('d-none');
+            } else
+            {
+                $("#birth_city").removeClass('d-none');
+                $("#country").addClass('d-none');
+            }
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -42,7 +56,7 @@ $title = $student->user->name;
                 </div>
                 <!-- Title End -->
 
-                @can('support.users')
+                @can('students.matriculate')
                 @if (NULL !== $Y->available)
                 <!-- Top Buttons Start -->
                 <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
@@ -156,16 +170,20 @@ $title = $student->user->name;
                                 href="#personsChargeTab" role="tab">
                                 <span class="align-middle">{{ __('Persons in Charge') }}</span>
                             </a>
+                            @can('students.documents.edit')
                             <a class="nav-link logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
                                 href="#documentsTab" role="tab">
                                 <span class="align-middle">{{ __('Documents') }}</span>
                             </a>
+                            @endcan
+                            @can('students.psychosocial')
                             @if (1 === $student->inclusive)
-                                <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
-                                    data-bs-toggle="tab" href="#piarTab" role="tab">
-                                    <span class="align-middle">PIAR</span>
-                                </a>
+                            <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#piarTab" role="tab">
+                                <span class="align-middle">PIAR</span>
+                            </a>
                             @endif
+                        @endcan
                         </div>
 
 
@@ -241,10 +259,10 @@ $title = $student->user->name;
                                         <div class="mb-3 w-100 position-relative form-group">
                                             <x-label>{{ __('document type') }} <span class="text-danger">*</span>
                                             </x-label>
-                                            <select name="document_type" logro="select2">
+                                            <select name="document_type" id="document_type" logro="select2">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($documentType as $docType)
-                                                    <option value="{{ $docType->code }}"
+                                                    <option value="{{ $docType->code }}" foreigner="{{ $docType->foreigner }}"
                                                         @if ($student->document_type_code !== null) @selected($student->document_type_code === $docType->code) @endif>
                                                         {{ $docType->name }}
                                                     </option>
@@ -264,7 +282,7 @@ $title = $student->user->name;
                                     <div class="col-md-6">
                                         <div class="mb-3 w-100 position-relative form-group">
                                             <x-label>{{ __('expedition city') }}</x-label>
-                                            <select name="expedition_city" logro="select2">
+                                            <select name="expedition_city" id="expedition_city" logro="select2">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($cities as $city)
                                                     <option value="{{ $city->id }}"
@@ -283,7 +301,7 @@ $title = $student->user->name;
                                     </div>
                                 </div>
                                 <div class="row g-3">
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 @if ($student->country_id !== null) d-none @endif" id="birth_city">
                                         <div class="mb-3 w-100 position-relative form-group">
                                             <x-label>{{ __('birth city') }}</x-label>
                                             <select name="birth_city" logro="select2">
@@ -292,6 +310,20 @@ $title = $student->user->name;
                                                     <option value="{{ $city->id }}"
                                                         @if ($student->birth_city_id !== null) @selected($student->birth_city_id === $city->id) @endif>
                                                         {{ $city->department->name . ' | ' . $city->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 @if ($student->country_id === null) d-none @endif" id="country">
+                                        <div class="mb-3 w-100 position-relative form-group">
+                                            <x-label>{{ __('home country') }}</x-label>
+                                            <select name="country" logro="select2">
+                                                <option label="&nbsp;"></option>
+                                                @foreach ($countries as $country)
+                                                    <option value="{{ $country->id }}"
+                                                        @if ($student->country_id !== null) @selected($student->country_id === $country->id) @endif>
+                                                        {{ __($country->name) }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -568,7 +600,7 @@ $title = $student->user->name;
                         </section>
                         <!-- Social Safety Section End -->
 
-                        @can('support.users')
+                        @can('students.psychosocial')
                             <!-- Additional Information Section Start -->
                             <h2 class="small-title">{{ __('Additional Information') }}</h2>
                             <section class="card mb-5">
@@ -606,17 +638,9 @@ $title = $student->user->name;
 
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <div class="mb-3 w-100 position-relative form-group">
+                                            <div class="mb-3 position-relative form-group">
                                                 <x-label>{{ __('origin school') }}</x-label>
-                                                <select name="origin_school_id" logro="select2">
-                                                    <option label="&nbsp;"></option>
-                                                    @foreach ($originSchools as $originSchool)
-                                                        <option value="{{ $originSchool->id }}"
-                                                            @if ($student->origin_school_id !== null) @selected($student->origin_school_id === $originSchool->id) @endif>
-                                                            {{ $originSchool->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                                <x-input :value="$student->origin_school" name="origin_school" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -1282,6 +1306,7 @@ $title = $student->user->name;
                 <div class="tab-pane fade " id="documentsTab" role="tabpanel">
                     <h2 class="small-title">{{ __('Documents') }}</h2>
                     <section class="card mb-5">
+                        @can('students.documents.edit')
                         <div class="card-header">
                             <form method="POST" action="{{ route('studentFile', $student) }}"
                                 enctype="multipart/form-data" class="tooltip-label-end" novalidate>
@@ -1330,14 +1355,16 @@ $title = $student->user->name;
 
                             </form>
                         </div>
+                        @endcan
+
                         <div class="card-body">
 
-                            @can('support.users')
+                            @can('students.documents.checked')
                                 <form method="POST" action="{{ route('studentFile.checked', $student) }}"
                                     class="tooltip-label-end" novalidate>
                                     @csrf
                                     @method('PUT')
-                                @endcan
+                            @endcan
 
                                 <div class="row g-2 row-cols-4 row-cols-md-5">
                                     @foreach ($studentFileTypes as $studentFile)
@@ -1373,7 +1400,7 @@ $title = $student->user->name;
                                                     </span>
                                                     <span>{{ $studentFile->name }}</span>
 
-                                                    @can('support.users')
+                                                    @can('students.documents.checked')
                                                         @if ($studentFile->studentFile ?? null !== null)
                                                             @if ($studentFile->studentFile->checked !== 1)
                                                                 <div class="form-switch">
@@ -1391,11 +1418,10 @@ $title = $student->user->name;
                                     @endforeach
                                 </div>
 
-                                @can('support.users')
-                                    <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
-                                        <x-button class="btn-primary" type="submit">{{ __('Save') }}
-                                        </x-button>
-                                    </div>
+                            @can('students.documents.checked')
+                                <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                                    <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                                </div>
                                 </form>
                             @endcan
                         </div>
@@ -1403,6 +1429,7 @@ $title = $student->user->name;
                 </div>
                 <!-- Documents Tab End -->
 
+                @can('students.psychosocial')
                 <!-- PIAR Tab Start -->
                 @if (1 === $student->inclusive)
                     <div class="tab-pane fade " id="piarTab" role="tabpanel">
@@ -1490,6 +1517,7 @@ $title = $student->user->name;
                     </div>
                 @endif
                 <!-- PIAR Tab End -->
+                @endcan
 
             </div>
             <!-- Right Side End -->

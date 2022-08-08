@@ -24,7 +24,7 @@ class City extends Model
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ucfirst(strtolower($value)),
+            get: fn ($value) => ucfirst($value),
         );
     }
 }
