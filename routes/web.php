@@ -40,7 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('permissions-reset', function() {
         app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
         return redirect()->back();
-    });
+    })->middleware('support.access');
 
     /* Route Users */
     Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');

@@ -41,6 +41,17 @@ $title = $student->user->name;
                 $("#country").addClass('d-none');
             }
         });
+
+        jQuery("#disability").change(function() {
+            let val = $(this).val();
+            if (val > 1)
+            {
+                $("#content-disability").removeClass('d-none');
+            } else
+            {
+                $("#content-disability").addClass('d-none');
+            }
+        })
     </script>
 @endsection
 
@@ -200,7 +211,7 @@ $title = $student->user->name;
                 <div class="tab-pane fade active show" id="informationTab" role="tabpanel">
 
                     <form method="POST" action="{{ route('students.update', $student) }}" class="tooltip-label-end"
-                        id="studentInfoForm">
+                        enctype="multipart/form-data" id="studentInfoForm">
                         @csrf
                         @method('PUT')
 
@@ -343,7 +354,7 @@ $title = $student->user->name;
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('gender') }}</x-label>
                                             <select name="gender" logro="select2">
                                                 <option label="&nbsp;"></option>
@@ -357,7 +368,7 @@ $title = $student->user->name;
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label class="text-uppercase">RH</x-label>
                                             <select name="rh" logro="select2">
                                                 <option label="&nbsp;"></option>
@@ -498,7 +509,7 @@ $title = $student->user->name;
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-12">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label class="d-block">{{ __('who lives with you at home') }}
                                             </x-label>
                                             <div class="form-check form-check-inline">
@@ -568,7 +579,7 @@ $title = $student->user->name;
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>sisben</x-label>
                                             <select name="sisben" logro="select2">
                                                 <option label="&nbsp;"></option>
@@ -582,17 +593,26 @@ $title = $student->user->name;
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('disability') }}</x-label>
-                                            <select name="disability" logro="select2">
+                                            <select name="disability" id="disability" logro="select2">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($disabilities as $disability)
                                                     <option value="{{ $disability->id }}"
                                                         @if ($student->disability_id !== null) @selected($student->disability_id === $disability->id) @endif>
-                                                        {{ $disability->name }}
+                                                        {{ __($disability->name) }}
                                                     </option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3 d-none" id="content-disability">
+                                    <div class="col-md-12">
+                                        <div class="mt-3 position-relative form-group">
+                                            <x-label>{{ __("Disability certificate") }}</x-label>
+                                            <x-input type="file" class="d-block" name="disability_certificate"
+                                                accept="image/jpg, image/jpeg, image/png, image/webp"  />
                                         </div>
                                     </div>
                                 </div>
@@ -778,7 +798,7 @@ $title = $student->user->name;
                                         </div>
                                     </div>
                                     <div class="row g-3">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             {{-- <x-label class="d-block">{{ __('insomnia') }}</x-label> --}}
                                             <div class="form-check d-inline-block w-50">
                                                 <label class="form-check-label logro-label">
@@ -1012,7 +1032,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="row g-3">
                                         <div class="col-md-12">
-                                            <div class="mb-3 position-relative form-group">
+                                            <div class="position-relative form-group">
                                                 <x-label>{{ __('recommendations') }}</x-label>
                                                 <textarea name="psyc_recommendations" rows="3" class="form-control">{{ $student->psyc_recommendations }}</textarea>
                                             </div>
@@ -1020,7 +1040,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="row g-3">
                                         <div class="col-md-12">
-                                            <div class="mb-3 position-relative form-group">
+                                            <div class="position-relative form-group">
                                                 <x-label>{{ __('student and family action plan') }}</x-label>
                                                 <textarea name="psyc_student_family" rows="3" class="form-control">{{ $student->psyc_student_family }}</textarea>
                                             </div>

@@ -26,11 +26,13 @@ use App\Models\Religion;
 use App\Models\Rh;
 use App\Models\Sisben;
 use App\Models\Student;
+use App\Models\StudentFile;
 use App\Models\StudentFileType;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -383,7 +385,11 @@ class StudentController extends Controller
             'studentFile' => function ($files) use ($student) {
                 $files->where('student_id', $student->id);
             }
-        ])->get();
+        ]);
+        if (NULL === $student->disability_id || 1 === $student->disability_id)
+        {
+            $studentFileTypes->where('inclusive', 0);
+        }
 
         return view('logro.student.profile')->with([
             'Y' => $Y,
@@ -404,7 +410,7 @@ class StudentController extends Controller
             'religions' => $religions,
             'economicDependences' => $economicDependences,
             'kinships' => $kinships,
-            'studentFileTypes' => $studentFileTypes,
+            'studentFileTypes' => $studentFileTypes->get(),
             'groupsStudent' => $groupsStudent
         ]);
     }
@@ -444,8 +450,8 @@ class StudentController extends Controller
             'health_manager' => ['nullable',Rule::exists('health_managers','id')],
             'school_insurance' => ['nullable','string', 'max:100'],
             'sisben' => ['nullable',Rule::exists('sisben','id')],
-            'disability' => ['nullable',Rule::exists('disabilities','id')]
-
+            'disability' => ['nullable',Rule::exists('disabilities','id')],
+            'disability_certificate' => ['nullable','file','mimes:jpg,jpeg,png,webp','max:2048']
         ]);
 
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
@@ -459,6 +465,19 @@ class StudentController extends Controller
         } else
         {
             $request->country = NULL;
+        }
+
+        /* COMPROBACION DE DCERTIFICADO DE DISCAPACIDAD */
+        if ( $request->hasFile('disability_certificate') )
+        {
+            $disability_file = self::upload_disability_certificate($request, $student);
+            if(FALSE === $disability_file)
+            {
+                $request->disability = NULL;
+            }
+        } else
+        {
+            $request->disability = NULL;
         }
 
         $student->update([
@@ -670,6 +689,47 @@ class StudentController extends Controller
             $c->where('study_year_id', $sy);
 
         return $c->count();
+    }
+
+    private function upload_disability_certificate($request, $student)
+    {
+        $request->file_type = 13; //certificado de discapacidad
+        $path_file = StudentFileController::upload_file($request, 'disability_certificate', $student->id);
+
+        $student_file = StudentFile::where('student_id', $student->id)
+                ->where('student_file_type_id', $request->file_type)
+                ->first();
+
+        if ( $student_file === NULL )
+        {
+            StudentFile::create([
+                'student_id' => $student->id,
+                'student_file_type_id' => $request->file_type,
+                'url' => config('app.url') .'/'. $path_file,
+                'url_absolute' => $path_file,
+                'checked' => NULL,
+                'creation_user_id' => Auth::user()->id
+            ]);
+            return true;
+        } else
+        {
+
+            if ( $request->hasFile('disability_certificate') )
+                File::delete(public_path($student_file->url_absolute));
+
+            $renewed = $student_file->approval_date === NULL ? FALSE : TRUE ;
+            $student_file->update([
+                'url' => config('app.url') .'/'. $path_file,
+                'url_absolute' => $path_file,
+                'renewed' => $renewed,
+                'checked' => NULL,
+                'creation_user_id' => Auth::user()->id
+
+            ]);
+            return true;
+        }
+
+        return false;
     }
 
 

@@ -24,10 +24,10 @@ class StudentFileController extends Controller
 
         $request->validate([
             'file_type' => ['required',Rule::exists('student_file_types','id')],
-            'file_upload' => ['required','file','mimes:jpg,jpeg,png,webp']
+            'file_upload' => ['required','file','mimes:jpg,jpeg,png,webp','max:2048']
         ]);
 
-        $path_file = $this->upload_file($request, $student->id);
+        $path_file = $this->upload_file($request, 'file_upload', $student->id);
 
         $student_file = StudentFile::where('student_id', $student->id)
                 ->where('student_file_type_id', $request->file_type)
@@ -69,11 +69,11 @@ class StudentFileController extends Controller
         }
     }
 
-    public static function upload_file($request, $student_id)
+    public static function upload_file($request, $file_name, $student_id)
     {
-        if ( $request->hasFile('file_upload') )
+        if ( $request->hasFile($file_name) )
         {
-            $path = $request->file('file_upload')->store('student_files/'.$student_id, 'public');
+            $path = $request->file($file_name)->store('student_files/'.$student_id, 'public');
             return config('filesystems.disks.public.url') .'/' . $path;
         }
         else return null;

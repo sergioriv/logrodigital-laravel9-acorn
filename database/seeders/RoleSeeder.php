@@ -18,8 +18,6 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        // $support_users = Permission::create([ 'name' => 'support.users', ]);
-        // $support_roles = Permission::create([ 'name' => 'support.roles', ]);
         $support = Permission::create([ 'name' => 'support.access', ]);
         $profile = Permission::create([ 'name' => 'profile.edit', ]);
 

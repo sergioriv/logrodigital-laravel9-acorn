@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50);
             $table->string('description');
+            $table->boolean('inclusive');
         });
 
         Schema::create('student_files', function (Blueprint $table) { /* students, student_file_types, users */
