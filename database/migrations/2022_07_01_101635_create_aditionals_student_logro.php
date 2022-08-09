@@ -125,6 +125,7 @@ return new class extends Migration
             ])->nullable();
             $table->boolean('inclusive')->nullable();
             $table->boolean('person_charge')->nullable();
+            $table->boolean('data_treatment')->nullable();
 
 
 

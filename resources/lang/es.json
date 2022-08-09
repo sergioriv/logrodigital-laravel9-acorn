@@ -166,6 +166,7 @@
     "Multi-disability": "Discapacidad multipe",
 
     "Disability certificate": "Certificado de discapacidad",
+    "documents are missing to upload": "faltan documentos para cargar",
 
     "Persons in Charge": "Personas a Cargo",
     "Mother Information": "Información de la madre",
@@ -214,6 +215,10 @@
     "selected!": "seleccionado!",
     "It is not possible to create a group for ": "No es posible crear un grupo para el año ",
     "Not allowed for ": "No permitido para el año ",
+
+    "I accept the": "Acepto la",
+    "data treatment policy": "política de tratamiento de datos",
+    "The student did not accept the data treatment policy.": "El estudiante no acepta la política de tratamiento de datos.",
 
     "new": "nuevo",
     "repeat": "repitente",

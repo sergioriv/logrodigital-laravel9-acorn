@@ -40,7 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('permissions-reset', function() {
         app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
         return redirect()->back();
-    })->middleware('support.access');
+    })->middleware('can:support.access');
 
     /* Route Users */
     Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');
@@ -116,6 +116,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('students/no-enrolled', 'store')->name('students.store');
         Route::get('students/{student}/edit', 'show')->name('students.show');
         Route::put('students/{student}', 'update')->name('students.update');
+        Route::put('students/{student}/psychosocial', 'psychosocial_update')->name('students.psychosocial.update');
 
         Route::get('students/no-enrolled', 'no_enrolled')->name('students.no_enrolled');
         Route::get('students', 'enrolled')->name('students.enrolled');

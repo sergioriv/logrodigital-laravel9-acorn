@@ -1,6 +1,8 @@
 @props(['disabled' => false, 'hasError' => false])
 
-<input {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'form-control']) !!}>
+<select {!! $attributes->merge() !!}>
+{{ $slot }}
+</select>
 
 @error($hasError)
 <div class="invalid-feedback d-block logro-label">{{ $message }}</div>

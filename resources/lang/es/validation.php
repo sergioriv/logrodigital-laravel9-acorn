@@ -106,7 +106,7 @@ return [
     'prohibited_unless'    => 'El campo :attribute está prohibido a menos que :other sea :values.',
     'prohibits'            => 'El campo :attribute prohibe que :other esté presente.',
     'regex'                => 'El formato de :attribute es inválido.',
-    'required'             => 'El campo :attribute es obligatorio.',
+    'required'             => ':attribute es obligatorio.',
     'required_array_keys'  => 'El campo :attribute debe contener entradas para: :values.',
     'required_if'          => 'El campo :attribute es obligatorio cuando :other es :value.',
     'required_unless'      => 'El campo :attribute es obligatorio a menos que :other esté en :values.',
@@ -136,4 +136,47 @@ return [
             'min' => 'La :attribute debe contener más de :min caracteres',
         ],
     ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Attributes
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used to swap our attribute placeholder
+    | with something more reader friendly such as "E-Mail Address" instead
+    | of "email". This simply helps us make our message more expressive.
+    |
+    */
+
+    'attributes' => [
+        'firstName' => 'primer nombre',
+        'secondName' => 'segundo nombre',
+        'fatherLastName' => 'apellido del padre',
+        'motherLastName' => 'apellido de la madre',
+        'telephone' => 'teléfono',
+        'document_type' => 'tipo documento',
+        'document' => 'documento',
+        'expedition_city' => 'ciudad de expedición',
+        'number_siblings' => 'número de hermanos',
+        'birth_city' => 'ciudad de nacimiento',
+        'country' => 'país de origen',
+        'birthdate' => 'fecha de nacimiento',
+        'gender' => 'genero',
+        'residence_city' => 'ciudad de residencia',
+        'address' => 'dirección',
+        'social_stratum' => 'estrato social',
+        'dwelling_type' => 'tipo de vivienda',
+        'health_manager' => 'administradora de salud',
+        'school_insurance' => 'seguro escolar',
+        'disability' => 'discapacidad',
+
+        'zone' => 'zona',
+        'residence_city' => 'ciudad de residencia',
+        'address' => 'dirección',
+        'social_stratum' => 'estrato social',
+        'dwelling_type' => 'tipo de vivienda',
+        'neighborhood' => 'barrio'
+    ],
+
 ];

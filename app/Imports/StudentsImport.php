@@ -169,7 +169,12 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 'school_year_create'    => $Y->id,
                 'headquarters_id'       => $row['headquarters'],
                 'study_time_id'         => $row['study_time'],
-                'study_year_id'         => $row['study_year']
+                'study_year_id'         => $row['study_year'],
+
+                'group_id' => NULL,
+                'enrolled_date' => NULL,
+                'enrolled' => NULL,
+                'data_treatment' => TRUE
             ]);
         }
     }

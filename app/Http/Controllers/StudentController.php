@@ -45,12 +45,12 @@ class StudentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('can:students.index');
+        $this->middleware('can:students.index')->except('show','update');
         $this->middleware('can:students.import')->only('data_instructive','export_instructive','import','import_store');
         $this->middleware('can:students.create')->only('create');
         $this->middleware('can:students.matriculate')->only('matriculate','matriculate_update','create_parents_filter');
         $this->middleware('can:students.info')->only('show','update');
-        $this->middleware('can:students.psychosocial')->only('piar_update');
+        $this->middleware('can:students.psychosocial')->only('psychosocial_update','piar_update');
         $this->middleware(YearCurrentMiddleware::class)->only('matriculate','matriculate_update');
     }
 
@@ -174,7 +174,8 @@ class StudentController extends Controller
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->studyTime,
             'study_year_id' => $request->studyYear,
-            'status' => 'new'
+            'status' => 'new',
+            'data_treatment' => TRUE
         ]);
 
         if (1 == $request->matriculate)
@@ -417,27 +418,38 @@ class StudentController extends Controller
 
     public function update(Request $request, Student $student)
     {
+        $required = 'nullable';
+        $data_treatment = $student->data_treatment;
+        if ('Student' === UserController::role_auth())
+        {
+            $required = 'required';
+            $data_treatment = $request->data_treatment;
+            if ($request->docsFails > 0)
+            {
+                return redirect()->back()->withErrors( __("documents are missing to upload") );
+            }
+        }
         $request->validate([
             'firstName' => ['required', 'string', 'max:191'],
-            'secondName' => ['nullable','string', 'max:191'],
+            'secondName' => ['nullable', 'string', 'max:191'],
             'fatherLastName' => ['required', 'string', 'max:191'],
-            'motherLastName' => ['nullable','string', 'max:191'],
-            'telephone' => ['nullable','string', 'max:20'],
+            'motherLastName' => ['nullable', 'string', 'max:191'],
+            'telephone' => [$required, 'string', 'max:20'],
             'document_type' => ['required', Rule::exists('document_types','code')],
-            'document' => ['required', 'max:20', Rule::unique('students','document')->ignore($student->id)],
-            'expedition_city' => ['nullable',Rule::exists('cities','id')],
-            'number_siblings' => ['nullable','numeric', 'max:200'],
-            'birth_city' => ['nullable',Rule::exists('cities','id')],
-            'country' => ['nullable',Rule::exists('countries','id')],
-            'birthdate' => ['nullable','date'],
-            'gender' => ['nullable',Rule::exists('genders','id')],
-            'rh' => ['nullable',Rule::exists('rhs','id')],
-            'zone' => ['nullable','string', 'max:6'],
-            'residence_city' => ['nullable',Rule::exists('cities','id')],
-            'address' => ['nullable','string', 'max:100'],
-            'social_stratum' => ['nullable', 'max:10'],
-            'dwelling_type' => ['nullable',Rule::exists('dwelling_types','id')],
-            'neighborhood' => ['nullable', 'string', 'max:100'],
+            'document' => ['required', 'string', 'max:20', Rule::unique('students','document')->ignore($student->id)],
+            'expedition_city' => [$required, Rule::exists('cities','id')],
+            'number_siblings' => [$required, 'numeric', 'max:200'],
+            'birth_city' => [$required, Rule::exists('cities','id')],
+            'country' => ['nullable', Rule::exists('countries','id')],
+            'birthdate' => [$required, 'date'],
+            'gender' => [$required, Rule::exists('genders','id')],
+            'rh' => [$required, Rule::exists('rhs','id')],
+            'zone' => [$required, 'string', 'max:6'],
+            'residence_city' => [$required, Rule::exists('cities','id')],
+            'address' => [$required, 'string', 'max:100'],
+            'social_stratum' => [$required, 'max:10'],
+            'dwelling_type' => [$required, Rule::exists('dwelling_types','id')],
+            'neighborhood' => [$required, 'string', 'max:100'],
             'electrical_energy' => ['nullable', 'boolean'],
             'natural_gas' => ['nullable', 'boolean'],
             'sewage_system' => ['nullable', 'boolean'],
@@ -447,11 +459,12 @@ class StudentController extends Controller
             'lives_with_mother' => ['nullable', 'boolean'],
             'lives_with_siblings' => ['nullable', 'boolean'],
             'lives_with_other_relatives' => ['nullable', 'boolean'],
-            'health_manager' => ['nullable',Rule::exists('health_managers','id')],
-            'school_insurance' => ['nullable','string', 'max:100'],
-            'sisben' => ['nullable',Rule::exists('sisben','id')],
-            'disability' => ['nullable',Rule::exists('disabilities','id')],
-            'disability_certificate' => ['nullable','file','mimes:jpg,jpeg,png,webp','max:2048']
+            'health_manager' => [$required, Rule::exists('health_managers','id')],
+            'school_insurance' => [$required, 'string', 'max:100'],
+            'sisben' => [$required, Rule::exists('sisben','id')],
+            'disability' => [$required, Rule::exists('disabilities','id')],
+            'disability_certificate' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp','max:2048'],
+            'data_treatment' => ['nullable', 'boolean']
         ]);
 
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
@@ -468,16 +481,13 @@ class StudentController extends Controller
         }
 
         /* COMPROBACION DE DCERTIFICADO DE DISCAPACIDAD */
-        if ( $request->hasFile('disability_certificate') )
+        if ( $request->hasFile('disability_certificate') && $request->disability > 1 )
         {
             $disability_file = self::upload_disability_certificate($request, $student);
             if(FALSE === $disability_file)
             {
                 $request->disability = NULL;
             }
-        } else
-        {
-            $request->disability = NULL;
         }
 
         $student->update([
@@ -516,118 +526,120 @@ class StudentController extends Controller
             /* seguridad social */
             'health_manager_id' => $request->health_manager,
             'sisben_id' => $request->sisben,
+            'school_insurance' => $request->school_insurance,
             'disability_id' => $request->disability,
-            'school_insurance' => $request->school_insurance
 
+            /* politica de tratamiento de datos */
+            'data_treatment' => $data_treatment
         ]);
 
-        $role = UserController::role_auth();
-        if ('Student'!==$role)
-        {
+        return redirect()->back()->with(
+            ['notify' => 'success', 'title' => __('Student updated!')],
+        );
+    }
 
-            $request->validate([
-                'ethnic_group' => ['nullable',Rule::exists('ethnic_groups','id')],
-                'conflict_victim' => ['nullable','boolean'],
-                'origin_school' => ['nullable','string'],
-                'icbf_protection' => ['nullable',Rule::exists('icbf_protection_measures','id')],
-                'foundation_beneficiary' => ['nullable','boolean'],
-                'linked_process' => ['nullable',Rule::exists('linkage_processes','id')],
-                'religion' => ['nullable',Rule::exists('religions','id')],
-                'economic_dependence' => ['nullable',Rule::exists('economic_dependences','id')],
-                'plays_sports' => ['nullable','boolean'],
-                'freetime_activity' => ['nullable','string', 'max:191'],
-                'allergies' => ['nullable','string', 'max:191'],
-                'medicines' => ['nullable','string', 'max:191'],
-                'favorite_subjects' => ['nullable','string', 'max:191'],
-                'most_difficult_subjects' => ['nullable','string', 'max:191'],
-                'insomnia' => ['nullable', 'boolean'],
-                'colic' => ['nullable', 'boolean'],
-                'biting_nails' => ['nullable', 'boolean'],
-                'sleep_talk' => ['nullable', 'boolean'],
-                'nightmares' => ['nullable', 'boolean'],
-                'seizures' => ['nullable', 'boolean'],
-                'physical_abuse' => ['nullable', 'boolean'],
-                'pee_at_night' => ['nullable', 'boolean'],
-                'hear_voices' => ['nullable', 'boolean'],
-                'fever' => ['nullable', 'boolean'],
-                'fears_phobias' => ['nullable', 'boolean'],
-                'drug_consumption' => ['nullable', 'boolean'],
-                'head_blows' => ['nullable', 'boolean'],
-                'desire_to_die' => ['nullable', 'boolean'],
-                'see_strange_things' => ['nullable', 'boolean'],
-                'learning_problems' => ['nullable', 'boolean'],
-                'dizziness_fainting' => ['nullable', 'boolean'],
-                'school_repetition' => ['nullable', 'boolean'],
-                'accidents' => ['nullable', 'boolean'],
-                'asthma' => ['nullable', 'boolean'],
-                'suicide_attempts' => ['nullable', 'boolean'],
-                'constipation' => ['nullable', 'boolean'],
-                'stammering' => ['nullable', 'boolean'],
-                'hands_sweating' => ['nullable', 'boolean'],
-                'sleepwalking' => ['nullable', 'boolean'],
-                'nervous_tics' => ['nullable', 'boolean'],
-                'simat' => ['nullable', 'boolean'],
-                'inclusive' => ['nullable', 'boolean'],
-                'psyc_evaluation' => ['nullable', 'string'],
-                'psyc_recommendations' => ['nullable', 'string'],
-                'psyc_student_family' => ['nullable', 'string']
-            ]);
+    public function psychosocial_update(Request $request, Student $student)
+    {
+        $request->validate([
+            'ethnic_group' => ['nullable',Rule::exists('ethnic_groups','id')],
+            'conflict_victim' => ['nullable','boolean'],
+            'origin_school' => ['nullable','string'],
+            'icbf_protection' => ['nullable',Rule::exists('icbf_protection_measures','id')],
+            'foundation_beneficiary' => ['nullable','boolean'],
+            'linked_process' => ['nullable',Rule::exists('linkage_processes','id')],
+            'religion' => ['nullable',Rule::exists('religions','id')],
+            'economic_dependence' => ['nullable',Rule::exists('economic_dependences','id')],
+            'plays_sports' => ['nullable','boolean'],
+            'freetime_activity' => ['nullable','string', 'max:191'],
+            'allergies' => ['nullable','string', 'max:191'],
+            'medicines' => ['nullable','string', 'max:191'],
+            'favorite_subjects' => ['nullable','string', 'max:191'],
+            'most_difficult_subjects' => ['nullable','string', 'max:191'],
+            'insomnia' => ['nullable', 'boolean'],
+            'colic' => ['nullable', 'boolean'],
+            'biting_nails' => ['nullable', 'boolean'],
+            'sleep_talk' => ['nullable', 'boolean'],
+            'nightmares' => ['nullable', 'boolean'],
+            'seizures' => ['nullable', 'boolean'],
+            'physical_abuse' => ['nullable', 'boolean'],
+            'pee_at_night' => ['nullable', 'boolean'],
+            'hear_voices' => ['nullable', 'boolean'],
+            'fever' => ['nullable', 'boolean'],
+            'fears_phobias' => ['nullable', 'boolean'],
+            'drug_consumption' => ['nullable', 'boolean'],
+            'head_blows' => ['nullable', 'boolean'],
+            'desire_to_die' => ['nullable', 'boolean'],
+            'see_strange_things' => ['nullable', 'boolean'],
+            'learning_problems' => ['nullable', 'boolean'],
+            'dizziness_fainting' => ['nullable', 'boolean'],
+            'school_repetition' => ['nullable', 'boolean'],
+            'accidents' => ['nullable', 'boolean'],
+            'asthma' => ['nullable', 'boolean'],
+            'suicide_attempts' => ['nullable', 'boolean'],
+            'constipation' => ['nullable', 'boolean'],
+            'stammering' => ['nullable', 'boolean'],
+            'hands_sweating' => ['nullable', 'boolean'],
+            'sleepwalking' => ['nullable', 'boolean'],
+            'nervous_tics' => ['nullable', 'boolean'],
+            'simat' => ['nullable', 'boolean'],
+            'inclusive' => ['nullable', 'boolean'],
+            'psyc_evaluation' => ['nullable', 'string'],
+            'psyc_recommendations' => ['nullable', 'string'],
+            'psyc_student_family' => ['nullable', 'string']
+        ]);
 
-            $student->update([
-                /* informacion complementaria */
-                'ethnic_group_id' => $request->ethnic_group,
-                'conflict_victim' => $request->conflict_victim,
-                'origin_school' => $request->origin_school,
-                'ICBF_protection_measure_id' => $request->icbf_protection,
-                'foundation_beneficiary' => $request->foundation_beneficiary,
-                'linked_to_process_id' => $request->linked_process,
-                'religion_id' => $request->religion,
-                'economic_dependence_id' => $request->economic_dependence,
+        $student->update([
+            /* informacion complementaria */
+            'ethnic_group_id' => $request->ethnic_group,
+            'conflict_victim' => $request->conflict_victim,
+            'origin_school' => $request->origin_school,
+            'ICBF_protection_measure_id' => $request->icbf_protection,
+            'foundation_beneficiary' => $request->foundation_beneficiary,
+            'linked_to_process_id' => $request->linked_process,
+            'religion_id' => $request->religion,
+            'economic_dependence_id' => $request->economic_dependence,
 
-                /* informacion psicosocial */
-                'plays_sports' => $request->plays_sports,
-                'freetime_activity' => $request->freetime_activity,
-                'allergies' => $request->allergies,
-                'medicines' => $request->medicines,
-                'favorite_subjects' => $request->favorite_subjects,
-                'most_difficult_subjects' => $request->most_difficult_subjects,
-                'insomnia' => $request->insomnia,
-                'colic' => $request->colic,
-                'biting_nails' => $request->biting_nails,
-                'sleep_talk' => $request->sleep_talk,
-                'nightmares' => $request->nightmares,
-                'seizures' => $request->seizures,
-                'physical_abuse' => $request->physical_abuse,
-                'pee_at_night' => $request->pee_at_night,
-                'hear_voices' => $request->hear_voices,
-                'fever' => $request->fever,
-                'fears_phobias' => $request->fears_phobias,
-                'drug_consumption' => $request->drug_consumption,
-                'head_blows' => $request->head_blows,
-                'desire_to_die' => $request->desire_to_die,
-                'see_strange_things' => $request->see_strange_things,
-                'learning_problems' => $request->learning_problems,
-                'dizziness_fainting' => $request->dizziness_fainting,
-                'school_repetition' => $request->school_repetition,
-                'accidents' => $request->accidents,
-                'asthma' => $request->asthma,
-                'suicide_attempts' => $request->suicide_attempts,
-                'constipation' => $request->constipation,
-                'stammering' => $request->stammering,
-                'hands_sweating' => $request->hands_sweating,
-                'sleepwalking' => $request->sleepwalking,
-                'nervous_tics' => $request->nervous_tics,
+            /* informacion psicosocial */
+            'plays_sports' => $request->plays_sports,
+            'freetime_activity' => $request->freetime_activity,
+            'allergies' => $request->allergies,
+            'medicines' => $request->medicines,
+            'favorite_subjects' => $request->favorite_subjects,
+            'most_difficult_subjects' => $request->most_difficult_subjects,
+            'insomnia' => $request->insomnia,
+            'colic' => $request->colic,
+            'biting_nails' => $request->biting_nails,
+            'sleep_talk' => $request->sleep_talk,
+            'nightmares' => $request->nightmares,
+            'seizures' => $request->seizures,
+            'physical_abuse' => $request->physical_abuse,
+            'pee_at_night' => $request->pee_at_night,
+            'hear_voices' => $request->hear_voices,
+            'fever' => $request->fever,
+            'fears_phobias' => $request->fears_phobias,
+            'drug_consumption' => $request->drug_consumption,
+            'head_blows' => $request->head_blows,
+            'desire_to_die' => $request->desire_to_die,
+            'see_strange_things' => $request->see_strange_things,
+            'learning_problems' => $request->learning_problems,
+            'dizziness_fainting' => $request->dizziness_fainting,
+            'school_repetition' => $request->school_repetition,
+            'accidents' => $request->accidents,
+            'asthma' => $request->asthma,
+            'suicide_attempts' => $request->suicide_attempts,
+            'constipation' => $request->constipation,
+            'stammering' => $request->stammering,
+            'hands_sweating' => $request->hands_sweating,
+            'sleepwalking' => $request->sleepwalking,
+            'nervous_tics' => $request->nervous_tics,
 
-                /* evaluación psicosocial */
-                'simat' => $request->simat,
-                'inclusive' => $request->inclusive,
-                'psyc_evaluation' => $request->psyc_evaluation,
-                'psyc_recommendations' => $request->psyc_recommendations,
-                'psyc_student_family' => $request->psyc_student_family
-            ]);
-
-        }
-
+            /* evaluación psicosocial */
+            'simat' => $request->simat,
+            'inclusive' => $request->inclusive,
+            'psyc_evaluation' => $request->psyc_evaluation,
+            'psyc_recommendations' => $request->psyc_recommendations,
+            'psyc_student_family' => $request->psyc_student_family
+        ]);
 
         return redirect()->back()->with(
             ['notify' => 'success', 'title' => __('Student updated!')],

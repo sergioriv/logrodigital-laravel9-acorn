@@ -106,7 +106,8 @@ class Student extends CastCreateModel
         'enrolled_date',
         'enrolled',
         'status',
-        'person_charge'
+        'person_charge',
+        'data_treatment'
 ,
     ];
 
