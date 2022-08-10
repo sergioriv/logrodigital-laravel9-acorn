@@ -226,6 +226,11 @@
     "Save checked documents": "Guardar documentos revisados",
     "Save psychosocial information": "Guardar información psicosocial",
 
+    "signature tutor": "firma del acudiente",
+    "signature student": "firma del estudiante",
+    "Clear signature": "Limpiar firma",
+    "Unsigned": "No firmado",
+
     "full name": "nombre completo",
     "new": "nuevo",
     "repeat": "repitente",

@@ -126,6 +126,8 @@ return new class extends Migration
             $table->boolean('inclusive')->nullable();
             $table->boolean('person_charge')->nullable();
             $table->boolean('data_treatment')->nullable();
+            $table->string('signature_tutor')->nullable();
+            $table->string('signature_student')->nullable();
 
 
 

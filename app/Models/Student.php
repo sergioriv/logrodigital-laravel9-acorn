@@ -111,6 +111,11 @@ class Student extends CastCreateModel
 ,
     ];
 
+    protected $hidden = [
+        'signature_tutor',
+        'signature_student'
+    ];
+
     /*
     * nacionalidad
     * medida de proteccion ICBF (No, Hogar sustituto, Medio abierto, Menor infractor)

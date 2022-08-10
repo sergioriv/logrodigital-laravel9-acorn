@@ -33,6 +33,8 @@ use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -428,6 +430,8 @@ class StudentController extends Controller
             {
                 return redirect()->back()->withErrors(["custom" => __("documents are missing to upload")]);
             }
+
+            self::signatures($student, $request->signature_tutor, $request->signature_student);
         }
         $request->validate([
             'firstName' => ['required', 'string', 'max:191'],
@@ -795,5 +799,42 @@ class StudentController extends Controller
         return redirect()->back()->with(
             ['notify' => 'success', 'title' => __('Loaded Excel!')],
         );
+    }
+
+
+    /* tratamiento de firmas */
+    private function signatures(Student $student, $sigTutor, $sigStudent)
+    {
+        if (NULL !== $sigTutor)
+        {
+            $sigPath = self::signature_upload($sigTutor);
+            $student->forceFill([
+                'signature_tutor' => $sigPath
+            ])->save();
+        }
+
+        if (NULL !== $sigStudent)
+        {
+            $sigPath = self::signature_upload($sigStudent);
+            $student->forceFill([
+                'signature_student' => $sigPath
+            ])->save();
+        }
+    }
+
+    private function signature_upload($sig)
+    {
+        $path = "app/signatures/";
+
+        $sig = str_replace('data:image/png;base64,', '', $sig);
+        $sig = str_replace(' ', '+', $sig);
+
+        $sigUrl = $path . Str::random(50).'.'.'png';
+        if(!File::isDirectory( public_path($path) ))
+        {
+            File::makeDirectory( public_path($path) );
+        }
+        File::put( public_path($sigUrl), base64_decode($sig));
+        return $sigUrl;
     }
 }

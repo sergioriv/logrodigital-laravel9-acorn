@@ -7729,7 +7729,8 @@ button {
 */
 .form-control,
 .form-select,
-.custom-select {
+.custom-select,
+.form-signature {
   font-size: 1em;
   height: auto;
   min-height: var(--input-height);
@@ -7743,20 +7744,23 @@ button {
 }
 .form-control.borderless,
 .form-select.borderless,
-.custom-select.borderless {
+.custom-select.borderless,
+.form-signature.borderless {
   border: initial;
   box-shadow: initial;
 }
 .form-control:focus,
 .form-select:focus,
-.custom-select:focus {
+.custom-select:focus,
+.form-signature:focus {
   background-color: var(--foreground);
   color: var(--body);
   border-color: rgba(var(--primary-rgb), 1);
 }
 .form-control.shadow,
 .form-select.shadow,
-.custom-select.shadow {
+.custom-select.shadow,
+.form-signature.shadow {
   border: initial;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03) !important;
 }

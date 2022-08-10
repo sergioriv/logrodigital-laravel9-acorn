@@ -207,6 +207,11 @@ html[data-dimension="mobile"] .logro-badge-right-bottom {
     padding-right: calc(var(--bs-gutter-x) / 2);
     padding-left: calc(var(--bs-gutter-x) / 2);
 }
+.sig-canvas {
+    cursor: crosshair;
+    border: 1px solid var(--separator);
+}
+
 
 /*
  * DataTables Start

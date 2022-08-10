@@ -81,6 +81,9 @@ class Scripts {
       if ("undefined" !== typeof StudentPersonChargeForm) {
         new StudentPersonChargeForm;
       }
+      if ("undefined" !== typeof SignaturesInput) {
+        new SignaturesInput;
+      }
     }
 
     // Plugin pages initialization

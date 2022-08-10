@@ -25,6 +25,7 @@ $title = $student->user->name;
     <script src="/js/forms/change-avatar.js"></script>
     <script src="/js/forms/student-profile.js"></script>
     <script src="/js/forms/person-charge.js"></script>
+    <script src="/js/forms/signature.js"></script>
     @endcan
 @endsection
 
@@ -645,6 +646,31 @@ $title = $student->user->name;
                             </div>
                         </section>
                         @endif
+
+                        <!-- Signatures View Start -->
+                        <section class="card mb-5">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <x-label>{{ __('signature tutor') }}</x-label>
+                                        @if (NULL === $student->signature_tutor)
+                                            <p><b>{{ __("Unsigned") }}</b></p>
+                                        @else
+                                            <img src="{{ env('APP_URL') .'/'. $student->signature_tutor }}" alt="signature">
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6">
+                                        <x-label>{{ __('signature student') }}</x-label>
+                                        @if (NULL === $student->signature_student)
+                                            <p><b>{{ __("Unsigned") }}</b></p>
+                                        @else
+                                            <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" alt="signature">
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Signatures View End -->
                         @endunlessrole
 
                         @hasrole('Student')
@@ -692,6 +718,41 @@ $title = $student->user->name;
                             </div>
                         </section>
                         <!-- Data Treatment Policy Section End -->
+
+                        <!-- Signatures Start -->
+                        <section class="card mb-5">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <x-label>{{ __('signature tutor') }}</x-label>
+                                        @if (NULL === $student->signature_tutor)
+                                            <div>
+                                                <canvas id="sig-canvas-tutor" class="sig-canvas form-signature">
+                                                </canvas>
+                                            </div>
+                                            <input type="hidden" id="sig-dataUrl-tutor" name="signature_tutor" class="form-control">
+                                            <span class="btn btn-outline-danger" id="sig-clearBtn-tutor">{{ __("Clear signature") }}</span>
+                                        @else
+                                            <img src="{{ env('APP_URL') .'/'. $student->signature_tutor }}" alt="signature">
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6">
+                                        <x-label>{{ __('signature student') }}</x-label>
+                                        @if (NULL === $student->signature_student)
+                                            <div>
+                                                <canvas id="sig-canvas-student" class="sig-canvas form-signature">
+                                                </canvas>
+                                            </div>
+                                            <input type="hidden" id="sig-dataUrl-student" name="signature_student" class="form-control">
+                                            <span class="btn btn-outline-danger" id="sig-clearBtn-student">{{ __("Clear signature") }}</span>
+                                        @else
+                                            <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" alt="signature">
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Signatures End -->
 
                         <!-- Documents Required Start -->
                         <section>
