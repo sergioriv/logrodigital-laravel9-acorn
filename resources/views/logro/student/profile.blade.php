@@ -709,7 +709,7 @@ $title = $student->user->name;
 
 
                         <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
-                            <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                            <x-button class="btn-primary" type="submit">{{ __('Save information') }}</x-button>
                         </div>
 
                     </form>
@@ -1091,7 +1091,7 @@ $title = $student->user->name;
                         <!-- Tutor Section End -->
 
                         <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
-                            <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                            <x-button class="btn-primary" type="submit">{{ __('Save persons in charge') }}</x-button>
                         </div>
 
                     </form>
@@ -1224,7 +1224,7 @@ $title = $student->user->name;
 
                             @can('students.documents.checked')
                                 <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
-                                    <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                                    <x-button class="btn-primary" type="submit">{{ __('Save checked documents') }}</x-button>
                                 </div>
                                 </form>
                             @endcan
@@ -1671,7 +1671,7 @@ $title = $student->user->name;
                         <!--  Psychosocial Assessment Section End -->
 
                         <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
-                            <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                            <x-button class="btn-primary" type="submit">{{ __('Save psychosocial information') }}</x-button>
                         </div>
                     </form>
                 </div>
@@ -1747,7 +1747,7 @@ $title = $student->user->name;
                                                         <div
                                                             class="border-0 pt-0 d-flex justify-content-end align-items-center">
                                                             <x-button class="btn-primary" type="submit">
-                                                                {{ __('Save') }}</x-button>
+                                                                {{ __('Save') }} PIAR</x-button>
                                                         </div>
                                                         </form>
                                                     @endif
