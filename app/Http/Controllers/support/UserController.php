@@ -153,17 +153,34 @@ class UserController extends Controller
         return User::find(Auth::user()->id)->getRoleNames()[0];
     }
 
-    public static function profile_update(Request $request, User $support)
+    public static function profile_update(Request $request, User $user)
     {
 
         $avatar = UserController::upload_avatar($request);
 
-        if ( $request->hasFile('avatar') )
-            File::delete(public_path($support->avatar));
+        if ( $request->hasFile('avatar') && NULL !== $user->avatar )
+            File::delete(public_path($user->avatar));
 
-        $support->update([
+        $user->update([
             'avatar' => $avatar
         ]);
 
+    }
+
+    public static function delete_user($user_id)
+    {
+        $user = User::find($user_id);
+        if (NULL !== $user)
+        {
+
+            if (NULL !== $user->avatar)
+                File::delete(public_path($user->avatar));
+
+            $user->delete();
+
+        } else
+        {
+            return redirect()->back()->withErrors("custom", __("Unexpected Error"));
+        }
     }
 }

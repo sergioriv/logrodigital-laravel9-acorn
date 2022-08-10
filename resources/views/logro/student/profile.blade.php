@@ -4,12 +4,9 @@ $title = $student->user->name;
 @extends('layout', ['title' => $title])
 
 @section('css')
-    {{-- <link rel="stylesheet" href="/css/vendor/datatables.min.css" /> --}}
     <link rel="stylesheet" href="/css/vendor/select2.min.css" />
     <link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" />
-    @if (null === $student->birthdate)
-        <link rel="stylesheet" href="/css/vendor/bootstrap-datepicker3.standalone.min.css" />
-    @endif
+    <link rel="stylesheet" href="/css/vendor/bootstrap-datepicker3.standalone.min.css" />
 @endsection
 
 @section('js_vendor')
@@ -19,15 +16,16 @@ $title = $student->user->name;
     <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
     <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
     <script src="/js/vendor/select2.full.min.js"></script>
-    @if (null === $student->birthdate)
-        <script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
-        <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
-    @endif
+    <script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
 @endsection
 
 @section('js_page')
-    {{-- <script src="/js/forms/genericforms.js"></script> --}}
+    @can('students.info')
+    <script src="/js/forms/change-avatar.js"></script>
     <script src="/js/forms/student-profile.js"></script>
+    <script src="/js/forms/person-charge.js"></script>
+    @endcan
 @endsection
 
 @section('content')
@@ -87,7 +85,7 @@ $title = $student->user->name;
         <!-- Title and Top Buttons End -->
 
         <!-- Validation Errors -->
-        @error('documents_fail')
+        @error('custom')
             <x-validation-errors class="mb-4" :errors="$errors" />
         @else
             @error('disability_certificate')
@@ -157,6 +155,7 @@ $title = $student->user->name;
                         </div>
 
                         <div class="nav flex-column" role="tablist">
+                            @can('students.info')
                             <a class="nav-link active logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#informationTab" role="tab">
                                 <span class="align-middle">{{ __('Information') }}</span>
@@ -165,6 +164,7 @@ $title = $student->user->name;
                                 href="#personsChargeTab" role="tab">
                                 <span class="align-middle">{{ __('Persons in Charge') }}</span>
                             </a>
+                            @endcan
                             @can('students.documents.edit')
                             <a class="nav-link logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
                                 href="#documentsTab" role="tab">
@@ -195,6 +195,7 @@ $title = $student->user->name;
             <!-- Right Side Start -->
             <div class="col-12 col-xl-9 mb-5 tab-content">
 
+                @can('students.info')
                 <!-- Information Tab Start -->
                 <div class="tab-pane fade active show" id="informationTab" role="tabpanel">
 
@@ -307,7 +308,7 @@ $title = $student->user->name;
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('number siblings') }}</x-label>
                                             <x-input-error type="number" :value="$student->number_siblings" name="number_siblings"
-                                                :hasError="'number_siblings'"/>
+                                                max="200" min="0" :hasError="'number_siblings'"/>
                                         </div>
                                     </div>
                                 </div>
@@ -718,8 +719,8 @@ $title = $student->user->name;
                 <!-- Persons In Charge Tab Start -->
                 <div class="tab-pane fade " id="personsChargeTab" role="tabpanel">
 
-                    <form method="POST" action="{{ route('personsCharge', $student) }}" class="tooltip-label-end"
-                        novalidate>
+                    <form method="POST" action="{{ route('personsCharge', $student) }}"
+                        id="studentPersonChargeForm">
                         @csrf
                         @method('PUT')
 
@@ -730,19 +731,20 @@ $title = $student->user->name;
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('name') }} <span class="text-danger">*</span>
+                                        <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                            <x-label>{{ __('names') }}
                                             </x-label>
-                                            <x-input value="{{ $student->mother->name ?? null }}" name="mother_name" />
+                                            <x-input-error value="{{ $student->mother->name ?? null }}" name="mother_name"
+                                                :hasError="'mother_name'"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('email') }} <span class="text-danger">*</span>
+                                        <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                            <x-label>{{ __('email') }}
                                             </x-label>
                                             @if (null === $student->mother)
-                                                <x-input value="{{ $student->mother->email ?? null }}"
-                                                    name="mother_email" />
+                                                <x-input-error value="{{ $student->mother->email ?? null }}"
+                                                    name="mother_email" :hasError="'mother_email'"/>
                                             @else
                                                 <span class="form-control text-muted">
                                                     {{ $student->mother->email }}
@@ -753,16 +755,17 @@ $title = $student->user->name;
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('document') }}</x-label>
-                                            <x-input value="{{ $student->mother->document ?? null }}"
-                                                name="mother_document" />
+                                            <x-input-error value="{{ $student->mother->document ?? null }}"
+                                                name="mother_document" :hasError="'mother_document'"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('expedition city') }}</x-label>
-                                            <select name="mother_expedition_city" logro="select2">
+                                            <x-select name="mother_expedition_city" logro="select2"
+                                                :hasError="'mother_expedition_city'">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($cities as $city)
                                                     <option value="{{ $city->id }}"
@@ -771,15 +774,16 @@ $title = $student->user->name;
                                                         {{ $city->department->name . ' | ' . $city->name }}
                                                     </option>
                                                 @endforeach
-                                            </select>
+                                            </x-select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('residence city') }}</x-label>
-                                            <select name="mother_residence_city" logro="select2">
+                                            <x-select name="mother_residence_city" logro="select2"
+                                                :hasError="'mother_residence_city'">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($cities as $city)
                                                     <option value="{{ $city->id }}"
@@ -787,47 +791,47 @@ $title = $student->user->name;
                                                         {{ $city->department->name . ' | ' . $city->name }}
                                                     </option>
                                                 @endforeach
-                                            </select>
+                                            </x-select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="mb-3 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('address') }}</x-label>
-                                            <x-input value="{{ $student->mother->address ?? null }}"
-                                                name="mother_address" />
+                                            <x-input-error value="{{ $student->mother->address ?? null }}"
+                                                name="mother_address" :hasError="'mother_address'" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="mb-3 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('telephone') }}</x-label>
-                                            <x-input value="{{ $student->mother->telephone ?? null }}"
-                                                name="mother_telephone" />
+                                            <x-input-error value="{{ $student->mother->telephone ?? null }}"
+                                                name="mother_telephone" :hasError="'mother_telephone'" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __('cellphone') }} <span class="text-danger">*</span>
+                                        <div class="mb-3 tooltip-label-end position-relative form-group">
+                                            <x-label>{{ __('cellphone') }}
                                             </x-label>
-                                            <x-input value="{{ $student->mother->cellphone ?? null }}"
-                                                name="mother_cellphone" required />
+                                            <x-input-error value="{{ $student->mother->cellphone ?? null }}"
+                                                name="mother_cellphone" :hasError="'mother_cellphone'" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="mb-3 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('birthdate') }}</x-label>
-                                            <x-input value="{{ $student->mother->birthdate ?? null }}"
-                                                logro="datePicker" name="mother_birthdate" />
+                                            <x-input-error value="{{ $student->mother->birthdate ?? null }}"
+                                                logro="datePicker" name="mother_birthdate" :hasError="'mother_birthdate'" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="mb-3 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('occupation') }}</x-label>
-                                            <x-input value="{{ $student->mother->occupation ?? null }}"
-                                                name="mother_occupation" />
+                                            <x-input-error value="{{ $student->mother->occupation ?? null }}"
+                                                name="mother_occupation" :hasError="'mother_occupation'" />
                                         </div>
                                     </div>
                                 </div>
@@ -842,20 +846,20 @@ $title = $student->user->name;
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('name') }} <span class="text-danger">*</span>
+                                        <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                            <x-label>{{ __('names') }}
                                             </x-label>
                                             <x-input value="{{ $student->father->name ?? null }}" name="father_name"
-                                                required />
+                                                :hasError="true"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('email') }} <span class="text-danger">*</span>
+                                        <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                            <x-label>{{ __('email') }}
                                             </x-label>
                                             @if (null === $student->father)
                                                 <x-input value="{{ $student->father->email ?? null }}"
-                                                    name="father_email" required />
+                                                    name="father_email" :hasError="true"/>
                                             @else
                                                 <span class="form-control text-muted">
                                                     {{ $student->father->email }}
@@ -866,16 +870,17 @@ $title = $student->user->name;
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('document') }}</x-label>
                                             <x-input value="{{ $student->father->document ?? null }}"
-                                                name="father_document" />
+                                                name="father_document" :hasError="true"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('expedition city') }}</x-label>
-                                            <select name="father_expedition_city" logro="select2">
+                                            <x-select name="father_expedition_city" logro="select2"
+                                                :hasError="'father_expedition_city'">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($cities as $city)
                                                     <option value="{{ $city->id }}"
@@ -884,15 +889,16 @@ $title = $student->user->name;
                                                         {{ $city->department->name . ' | ' . $city->name }}
                                                     </option>
                                                 @endforeach
-                                            </select>
+                                            </x-select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('residence city') }}</x-label>
-                                            <select name="father_residence_city" logro="select2">
+                                            <x-select name="father_residence_city" logro="select2"
+                                                :hasError="'father_residence_city'">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($cities as $city)
                                                     <option value="{{ $city->id }}"
@@ -900,47 +906,47 @@ $title = $student->user->name;
                                                         {{ $city->department->name . ' | ' . $city->name }}
                                                     </option>
                                                 @endforeach
-                                            </select>
+                                            </x-select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="mb-3 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('address') }}</x-label>
                                             <x-input value="{{ $student->father->address ?? null }}"
-                                                name="father_address" />
+                                                name="father_address" :hasError="true" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="mb-3 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('telephone') }}</x-label>
                                             <x-input value="{{ $student->father->telephone ?? null }}"
-                                                name="father_telephone" />
+                                                name="father_telephone" :hasError="true" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __('cellphone') }} <span class="text-danger">*</span>
+                                        <div class="mb-3 tooltip-label-end position-relative form-group">
+                                            <x-label>{{ __('cellphone') }}
                                             </x-label>
                                             <x-input value="{{ $student->father->cellphone ?? null }}"
-                                                name="father_cellphone" required />
+                                                name="father_cellphone" :hasError="true" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="mb-3 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('birthdate') }}</x-label>
                                             <x-input value="{{ $student->father->birthdate ?? null }}"
-                                                logro="datePicker" name="father_birthdate" />
+                                                logro="datePicker" name="father_birthdate" :hasError="true" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="mb-3 tooltip-label-end position-relative form-group">
                                             <x-label>{{ __('occupation') }}</x-label>
                                             <x-input value="{{ $student->father->occupation ?? null }}"
-                                                name="father_occupation" />
+                                                name="father_occupation" :hasError="true" />
                                         </div>
                                     </div>
                                 </div>
@@ -948,12 +954,12 @@ $title = $student->user->name;
                         </section>
                         <!-- Father Section End -->
 
-                        <!-- Tutor Section Start -->
-                        <h2 class="small-title">{{ __('Tutor') }} <span class="text-danger">*</span></h2>
-                        <section class="card mb-5">
-                            <div class="card-body w-100">
-                                <div class="w-100 position-relative form-group">
-                                    <select name="person_charge" logro="select2" required>
+                        <!-- Tutor Student Section Start -->
+                        <div class="w-100 tooltip-start-top position-relative">
+                            <h2 class="small-title">{{ __('Tutor') }} <span class="text-danger">*</span></h2>
+                            <section class="card mb-5">
+                                <div class="card-body w-100">
+                                    <select name="person_charge" logro="select2" id="person_charge" required>
                                         <option label="&nbsp;"></option>
                                         @foreach ($kinships as $kinship)
                                             <option value="{{ $kinship->id }}"
@@ -963,8 +969,125 @@ $title = $student->user->name;
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                        </section>
+                            </section>
+                        </div>
+                        <!-- Tutor Student Section End -->
+
+                        <!-- Tutor Section Start -->
+                        <div class="@if (NULL === $student->tutor) d-none @endif" id="section-tutor">
+                            <h2 class="small-title">{{ __('Tutor Information') }}</h2>
+                            <input type="hidden" name="tutor" value="{{ $student->tutor->id ?? null }}">
+                            <section class="card mb-5">
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                                <x-label>{{ __('names') }}
+                                                </x-label>
+                                                <x-input value="{{ $student->tutor->name ?? null }}" name="tutor_name"
+                                                    :hasError="true"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                                <x-label>{{ __('email') }}
+                                                </x-label>
+                                                @if (null === $student->tutor)
+                                                    <x-input value="{{ $student->tutor->email ?? null }}"
+                                                        name="tutor_email" :hasError="true"/>
+                                                @else
+                                                    <span class="form-control text-muted">
+                                                        {{ $student->tutor->email }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                                <x-label>{{ __('document') }}</x-label>
+                                                <x-input value="{{ $student->tutor->document ?? null }}"
+                                                    name="tutor_document" :hasError="true"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                                <x-label>{{ __('expedition city') }}</x-label>
+                                                <x-select name="tutor_expedition_city" logro="select2"
+                                                    :hasError="'tutor_expedition_city'">
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($cities as $city)
+                                                        <option value="{{ $city->id }}"
+                                                            @if ($student->tutor->expedition_city_id ?? null !== null) @selected($student->tutor->expedition_city_id ===
+                                                                $city->id) @endif>
+                                                            {{ $city->department->name . ' | ' . $city->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </x-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                                <x-label>{{ __('residence city') }}</x-label>
+                                                <x-select name="tutor_residence_city" logro="select2"
+                                                    :hasError="'tutor_residence_city'">
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($cities as $city)
+                                                        <option value="{{ $city->id }}"
+                                                            @if ($student->tutor->residence_city_id ?? null !== null) @selected($student->tutor->residence_city_id === $city->id) @endif>
+                                                            {{ $city->department->name . ' | ' . $city->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </x-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 tooltip-label-end position-relative form-group">
+                                                <x-label>{{ __('address') }}</x-label>
+                                                <x-input value="{{ $student->tutor->address ?? null }}"
+                                                    name="tutor_address" :hasError="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 tooltip-label-end position-relative form-group">
+                                                <x-label>{{ __('telephone') }}</x-label>
+                                                <x-input value="{{ $student->tutor->telephone ?? null }}"
+                                                    name="tutor_telephone" :hasError="true" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 tooltip-label-end position-relative form-group">
+                                                <x-label>{{ __('cellphone') }}
+                                                </x-label>
+                                                <x-input value="{{ $student->tutor->cellphone ?? null }}"
+                                                    name="tutor_cellphone" :hasError="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 tooltip-label-end position-relative form-group">
+                                                <x-label>{{ __('birthdate') }}</x-label>
+                                                <x-input value="{{ $student->tutor->birthdate ?? null }}"
+                                                    logro="datePicker" name="tutor_birthdate" :hasError="true" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 tooltip-label-end position-relative form-group">
+                                                <x-label>{{ __('occupation') }}</x-label>
+                                                <x-input value="{{ $student->tutor->occupation ?? null }}"
+                                                    name="tutor_occupation" :hasError="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
                         <!-- Tutor Section End -->
 
                         <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
@@ -975,6 +1098,7 @@ $title = $student->user->name;
 
                 </div>
                 <!-- Persons In Charge Tab End -->
+                @endcan
 
                 @can('students.documents.edit')
                 <!-- Documents Tab Start -->
@@ -1077,7 +1201,7 @@ $title = $student->user->name;
                                                     </span>
                                                     <span>
                                                         {{ $studentFile->name }}
-                                                        @if (1 === $studentFile->required) <span class="text-danger">*</span> @endif
+                                                        @if (1 === $studentFile->required) @endif
                                                     </span>
 
                                                     @can('students.documents.checked')

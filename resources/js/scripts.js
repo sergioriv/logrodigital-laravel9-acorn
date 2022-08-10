@@ -72,8 +72,14 @@ class Scripts {
       if (typeof SingleImageUpload !== 'undefined' && document.getElementById('imageProfile')) {
         const singleImageUpload = new SingleImageUpload(document.getElementById('imageProfile'));
       }
-      if ("undefined" !== typeof StudentProfileInfo) {
-        new StudentProfileInfo;
+      if ("undefined" !== typeof ChangeAvatarForm) {
+        new ChangeAvatarForm;
+      }
+      if ("undefined" !== typeof StudentProfileInfoForm) {
+        new StudentProfileInfoForm;
+      }
+      if ("undefined" !== typeof StudentPersonChargeForm) {
+        new StudentPersonChargeForm;
       }
     }
 

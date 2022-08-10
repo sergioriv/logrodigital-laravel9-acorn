@@ -1,7 +1,7 @@
 /**
  * Student page
  */
-class StudentProfileInfo {
+class StudentProfileInfoForm {
     constructor() {
       // Initialization of the page plugins
       this._initStudentInfoForm();
@@ -9,7 +9,6 @@ class StudentProfileInfo {
       this._initSelect2();
       this._initChangeDocumentType();
       this._initDisability();
-      this._initChangeAvatar();
       this._initViewDocument();
       this._initDescriptionDocument();
     }
@@ -46,7 +45,12 @@ class StudentProfileInfo {
                 },
                 birthdate: {
                     date: true
-                }
+                },
+                number_siblings: {
+                    number: true,
+                    max: 200,
+                    min: 0,
+                },
             },
 
         });
@@ -90,6 +94,7 @@ class StudentProfileInfo {
                     required: true,
                     number: true,
                     max: 200,
+                    min: 0,
                 },
                 birthdate: {
                     required: true,
@@ -172,12 +177,6 @@ class StudentProfileInfo {
                 $("#content-disability").addClass('d-none');
             }
         })
-    }
-
-    _initChangeAvatar() {
-        $('#avatar').on("change", function() {
-            $("#formAvatar").submit();
-        });
     }
 
     _initViewDocument() {

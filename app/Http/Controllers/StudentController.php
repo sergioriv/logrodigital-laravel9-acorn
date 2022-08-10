@@ -123,13 +123,13 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'firstName' => ['required', 'string'],
-            'secondName' => ['nullable','string'],
-            'fatherLastName' => ['required', 'string'],
-            'motherLastName' => ['nullable','string'],
+            'firstName' => ['required', 'string', 'max:191'],
+            'secondName' => ['nullable','string', 'max:191'],
+            'fatherLastName' => ['required', 'string', 'max:191'],
+            'motherLastName' => ['nullable','string', 'max:191'],
             'document_type' => ['required', Rule::exists('document_types','code')],
-            'document' => ['required', Rule::unique('students','document')],
-            'institutional_email' => ['required', 'email', Rule::unique('users','email')],
+            'document' => ['required', 'max:20', Rule::unique('students','document')],
+            'institutional_email' => ['required', 'max:191', 'email', Rule::unique('users','email')],
             'telephone' => ['nullable','string', 'max:20'],
             'headquarters' => ['required', Rule::exists('headquarters','id')],
             'studyTime' => ['required', Rule::exists('study_times','id')],
@@ -426,7 +426,7 @@ class StudentController extends Controller
             $data_treatment = $request->data_treatment;
             if ($request->docsFails > 0)
             {
-                return redirect()->back()->withErrors(["documents_fail" => __("documents are missing to upload")]);
+                return redirect()->back()->withErrors(["custom" => __("documents are missing to upload")]);
             }
         }
         $request->validate([
@@ -438,7 +438,7 @@ class StudentController extends Controller
             'document_type' => ['required', Rule::exists('document_types','code')],
             'document' => ['required', 'string', 'max:20', Rule::unique('students','document')->ignore($student->id)],
             'expedition_city' => [$required, Rule::exists('cities','id')],
-            'number_siblings' => [$required, 'numeric', 'max:200'],
+            'number_siblings' => [$required, 'numeric', 'max:200', 'min:0'],
             'birth_city' => [$required, Rule::exists('cities','id')],
             'country' => ['nullable', Rule::exists('countries','id')],
             'birthdate' => [$required, 'date'],

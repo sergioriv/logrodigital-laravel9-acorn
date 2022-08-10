@@ -10,57 +10,89 @@ use Illuminate\Validation\Rule;
 
 class PersonChargeController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware('can:students.info');
+    }
+
     public function update (Student $student, Request $request)
     {
-        $mother = PersonCharge::find($request->mother);
-        $father = PersonCharge::find($request->father);
+        $mother = PersonCharge::where('id', $request->mother)
+            ->where('kinship_id',1)
+            ->where('student_id', $student->id)
+            ->first();
+        $father = PersonCharge::where('id', $request->father)
+            ->where('kinship_id',2)
+            ->where('student_id', $student->id)
+            ->first();
+        $tutor = PersonCharge::where('id', $request->tutor)
+            ->where('kinship_id','>',2)
+            ->where('student_id', $student->id)
+            ->first();
+
 
         if ($mother !== null)
         {
             $mother_id = $mother->id;
-            $mother_email_required = 'nullable';
         } else
         {
             $mother_id = null;
-            $mother_email_required = ['required','email',Rule::unique('users','email')->ignore($mother_id)];
         }
         if ($father !== null)
         {
             $father_id = $father->id;
-            $father_email_required = 'nullable';
         } else
         {
             $father_id = null;
-            $father_email_required = ['required','email',Rule::unique('users','email')->ignore($father_id)];
+        };
+        if ($tutor !== null)
+        {
+            $tutor_id = $tutor->id;
+        } else
+        {
+            $tutor_id = null;
         };
 
         $request->validate([
             /* MOTHER */
-            'mother_name' => ['required','string'],
-            'mother_email' => $mother_email_required,
-            'mother_document' => ['nullable', 'string'],
-            'mother_expedition_city' => ['nullable',Rule::exists('cities','id')],
-            'mother_residence_city' => ['nullable',Rule::exists('cities','id')],
-            'mother_address' => ['nullable','string'],
-            'mother_telephone' => ['nullable','string'],
-            'mother_cellphone' => ['required','string'],
-            'mother_birthdate' => ['nullable','date'],
-            'mother_occupation' => ['nullable','string'],
+            'mother_name' => ['nullable', 'string', 'max:191'],
+            'mother_email' => ['nullable', 'max:191', 'email', Rule::unique('users','email')->ignore($mother_id)],
+            'mother_document' => ['nullable', 'string', 'max:20'],
+            'mother_expedition_city' => ['nullable', Rule::exists('cities','id')],
+            'mother_residence_city' => ['nullable', Rule::exists('cities','id')],
+            'mother_address' => ['nullable', 'string', 'max:100'],
+            'mother_telephone' => ['nullable', 'string', 'max:20'],
+            'mother_cellphone' => ['nullable', 'string', 'max:20'],
+            'mother_birthdate' => ['nullable', 'date'],
+            'mother_occupation' => ['nullable', 'string', 'max:191'],
 
             /* FATHER */
-            'father_name' => ['required','string'],
-            'father_email' => $father_email_required,
-            'father_document' => ['nullable', 'string'],
-            'father_expedition_city' => ['nullable',Rule::exists('cities','id')],
-            'father_residence_city' => ['nullable',Rule::exists('cities','id')],
-            'father_address' => ['nullable','string'],
-            'father_telephone' => ['nullable','string'],
-            'father_cellphone' => ['required','string'],
-            'father_birthdate' => ['nullable','date'],
-            'father_occupation' => ['nullable','string'],
+            'father_name' => ['nullable', 'string', 'max:191'],
+            'father_email' => ['nullable', 'max:191', 'email', Rule::unique('users','email')->ignore($father_id)],
+            'father_document' => ['nullable', 'string', 'max:20'],
+            'father_expedition_city' => ['nullable', Rule::exists('cities','id')],
+            'father_residence_city' => ['nullable', Rule::exists('cities','id')],
+            'father_address' => ['nullable', 'string', 'max:100'],
+            'father_telephone' => ['nullable', 'string', 'max:20'],
+            'father_cellphone' => ['nullable', 'string', 'max:20'],
+            'father_birthdate' => ['nullable', 'date'],
+            'father_occupation' => ['nullable', 'string', 'max:191'],
+
+            /* FATHER */
+            'tutor_name' => ['nullable', 'string', 'max:191'],
+            'tutor_email' => ['nullable', 'max:191', 'email', Rule::unique('users','email')->ignore($tutor_id)],
+            'tutor_document' => ['nullable', 'string', 'max:20'],
+            'tutor_expedition_city' => ['nullable', Rule::exists('cities','id')],
+            'tutor_residence_city' => ['nullable', Rule::exists('cities','id')],
+            'tutor_address' => ['nullable', 'string', 'max:100'],
+            'tutor_telephone' => ['nullable', 'string', 'max:20'],
+            'tutor_cellphone' => ['nullable', 'string', 'max:20'],
+            'tutor_birthdate' => ['nullable', 'date'],
+            'tutor_occupation' => ['nullable', 'string', 'max:191'],
 
             /* PERSON CHARGE */
-            'person_charge' => ['required',Rule::exists('kinships','id')]
+            'person_charge' => ['required', Rule::exists('kinships','id')]
         ]);
 
         /*
@@ -135,6 +167,53 @@ class PersonChargeController extends Controller
                 'birthdate' => $request->father_birthdate,
                 'occupation' => $request->father_occupation
             ]);
+        }
+
+        /*
+         * Create or Update Tutor User
+         */
+        if( $request->person_charge > 2 )
+        {
+            if ( $tutor === NULL )
+            {
+                $user_tutor = UserController::_create($request->tutor_name, $request->tutor_email, 8);
+                PersonCharge::create([
+                    'id' => $user_tutor->id,
+                    'student_id' => $student->id,
+                    'name' => $request->tutor_name,
+                    'email' => $request->tutor_email,
+                    'document' => $request->tutor_document,
+                    'expedition_city_id' => $request->tutor_expedition_city,
+                    'residence_city_id' => $request->tutor_residence_city,
+                    'address' => $request->tutor_address,
+                    'telephone' => $request->tutor_telephone,
+                    'cellphone' => $request->tutor_cellphone,
+                    'birthdate' => $request->tutor_birthdate,
+                    'kinship_id' => $request->person_charge,
+                    'occupation' => $request->tutor_occupation
+                ]);
+            } else
+            {
+                UserController::_update($tutor->id, $request->tutor_name);
+                $tutor->update([
+                    'name' => $request->tutor_name,
+                    'document' => $request->tutor_document,
+                    'expedition_city_id' => $request->tutor_expedition_city,
+                    'residence_city_id' => $request->tutor_residence_city,
+                    'address' => $request->tutor_address,
+                    'telephone' => $request->tutor_telephone,
+                    'cellphone' => $request->tutor_cellphone,
+                    'birthdate' => $request->tutor_birthdate,
+                    'kinship_id' => $request->person_charge,
+                    'occupation' => $request->tutor_occupation
+                ]);
+            }
+        } else
+        {
+            if ( NULL !== $tutor )
+            {
+                UserController::delete_user($tutor->id);
+            }
         }
 
         $student->update([
