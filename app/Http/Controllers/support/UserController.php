@@ -37,8 +37,9 @@ class UserController extends Controller
 
     public static function _create($name, $email, $role)
     {
-
-        $provider = ProviderUser::provider_validate($email);
+        $provider = null;
+        if (NULL !== $email)
+            $provider = ProviderUser::provider_validate($email);
 
         $user = User::create([
             'provider' => $provider,
