@@ -27,32 +27,7 @@ $title = $student->user->name;
 
 @section('js_page')
     {{-- <script src="/js/forms/genericforms.js"></script> --}}
-    <script src="/js/pages/student-profile.js"></script>
-    <script>
-        jQuery("#document_type").change(function() {
-            let foreigner = $("#document_type option:selected").attr('foreigner');
-            if (1 == foreigner)
-            {
-                $("#birth_city").addClass('d-none');
-                $("#country").removeClass('d-none');
-            } else
-            {
-                $("#birth_city").removeClass('d-none');
-                $("#country").addClass('d-none');
-            }
-        });
-
-        jQuery("#disability").change(function() {
-            let val = $(this).val();
-            if (val > 1)
-            {
-                $("#content-disability").removeClass('d-none');
-            } else
-            {
-                $("#content-disability").addClass('d-none');
-            }
-        })
-    </script>
+    <script src="/js/forms/student-profile.js"></script>
 @endsection
 
 @section('content')
@@ -112,7 +87,16 @@ $title = $student->user->name;
         <!-- Title and Top Buttons End -->
 
         <!-- Validation Errors -->
-        <x-validation-errors-empty class="mb-4" />
+        @error('documents_fail')
+            <x-validation-errors class="mb-4" :errors="$errors" />
+        @else
+            @error('disability_certificate')
+            <x-validation-errors class="mb-4" :message="$message" />
+            @else
+            <x-validation-errors-empty class="mb-4" />
+            @enderror
+        @enderror
+
 
         <section class="row">
             <!-- Left Side Start -->
@@ -215,7 +199,14 @@ $title = $student->user->name;
                 <div class="tab-pane fade active show" id="informationTab" role="tabpanel">
 
                     <form method="POST" action="{{ route('students.update', $student) }}" class="tooltip-label-end"
-                        enctype="multipart/form-data" id="studentInfoForm">
+                        enctype="multipart/form-data"
+                        @hasrole('Student')
+                        id="studentProfileInfoForm"
+                        @else
+                        id="studentInfoForm"
+                        @endhasrole
+                        >
+
                         @csrf
                         @method('PUT')
 
@@ -227,14 +218,15 @@ $title = $student->user->name;
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('first name') }}</x-label>
-                                            <x-input :value="$student->first_name" name="firstName"
+                                            <x-input-error :value="$student->first_name" name="firstName"
                                                 :hasError="'firstName'"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('second name') }}</x-label>
-                                            <x-input :value="$student->second_name" name="secondName" />
+                                            <x-input-error :value="$student->second_name" name="secondName"
+                                                :hasError="'secondName'"/>
                                         </div>
                                     </div>
                                 </div>
@@ -242,14 +234,15 @@ $title = $student->user->name;
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __("father's last name") }}</x-label>
-                                            <x-input :value="$student->father_last_name" name="fatherLastName"
+                                            <x-input-error :value="$student->father_last_name" name="fatherLastName"
                                                 :hasError="'fatherLastName'"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __("mother's last name") }}</x-label>
-                                            <x-input :value="$student->mother_last_name" name="motherLastName" />
+                                            <x-input-error :value="$student->mother_last_name" name="motherLastName"
+                                                :hasError="'motherLastName'"/>
                                         </div>
                                     </div>
                                 </div>
@@ -265,7 +258,7 @@ $title = $student->user->name;
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('telephone') }}</x-label>
-                                            <x-input :value="$student->telephone" name="telephone"
+                                            <x-input-error :value="$student->telephone" name="telephone"
                                                 :hasError="'telephone'"/>
                                         </div>
                                     </div>
@@ -289,7 +282,7 @@ $title = $student->user->name;
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('document') }}</x-label>
-                                            <x-input :value="$student->document" name="document"
+                                            <x-input-error :value="$student->document" name="document"
                                                 :hasError="'document'"/>
                                         </div>
                                     </div>
@@ -313,7 +306,7 @@ $title = $student->user->name;
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('number siblings') }}</x-label>
-                                            <x-input type="number" :value="$student->number_siblings" name="number_siblings"
+                                            <x-input-error type="number" :value="$student->number_siblings" name="number_siblings"
                                                 :hasError="'number_siblings'"/>
                                         </div>
                                     </div>
@@ -354,9 +347,10 @@ $title = $student->user->name;
                                             <x-label>{{ __('birthdate') }}</x-label>
                                             @if (null !== $student->birthdate)
                                                 <span class="form-control text-muted">{{ $student->birthdate }}</span>
-                                                <x-input type="hidden" :value="$student->birthdate" name="birthdate" />
+                                                <x-input-error type="hidden" :value="$student->birthdate" name="birthdate"
+                                                    :hasError="'birthdate'"/>
                                             @else
-                                                <x-input :value="$student->birthdate" logro="datePicker" name="birthdate"
+                                                <x-input-error :value="$student->birthdate" logro="datePicker" name="birthdate"
                                                     :hasError="'birthdate'"/>
                                             @endif
                                         </div>
@@ -438,7 +432,7 @@ $title = $student->user->name;
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('address') }}</x-label>
-                                            <x-input :value="$student->address" name="address"
+                                            <x-input-error :value="$student->address" name="address"
                                                 :hasError="'address'"/>
                                         </div>
                                     </div>
@@ -477,7 +471,7 @@ $title = $student->user->name;
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('neighborhood') }}</x-label>
-                                            <x-input :value="$student->neighborhood" name="neighborhood"
+                                            <x-input-error :value="$student->neighborhood" name="neighborhood"
                                                 :hasError="'neighborhood'"/>
                                         </div>
                                     </div>
@@ -592,7 +586,7 @@ $title = $student->user->name;
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('school insurance') }}</x-label>
-                                            <x-input :value="$student->school_insurance" name="school_insurance"
+                                            <x-input-error :value="$student->school_insurance" name="school_insurance"
                                                 :hasError="'school_insurance'" />
                                         </div>
                                     </div>
@@ -634,7 +628,7 @@ $title = $student->user->name;
                                         <div class="mt-3 position-relative form-group">
                                             <x-label>{{ __("Disability certificate") }}</x-label>
                                             <x-input type="file" class="d-block" name="disability_certificate"
-                                                accept="image/jpg, image/jpeg, image/png, image/webp"  />
+                                                accept="image/jpg, image/jpeg, image/png, image/webp" />
                                         </div>
                                     </div>
                                 </div>
@@ -739,8 +733,7 @@ $title = $student->user->name;
                                         <div class="mb-3 w-100 position-relative form-group">
                                             <x-label>{{ __('name') }} <span class="text-danger">*</span>
                                             </x-label>
-                                            <x-input value="{{ $student->mother->name ?? null }}" name="mother_name"
-                                                required />
+                                            <x-input value="{{ $student->mother->name ?? null }}" name="mother_name" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -749,7 +742,7 @@ $title = $student->user->name;
                                             </x-label>
                                             @if (null === $student->mother)
                                                 <x-input value="{{ $student->mother->email ?? null }}"
-                                                    name="mother_email" required />
+                                                    name="mother_email" />
                                             @else
                                                 <span class="form-control text-muted">
                                                     {{ $student->mother->email }}

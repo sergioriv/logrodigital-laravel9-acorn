@@ -426,7 +426,7 @@ class StudentController extends Controller
             $data_treatment = $request->data_treatment;
             if ($request->docsFails > 0)
             {
-                return redirect()->back()->withErrors( __("documents are missing to upload") );
+                return redirect()->back()->withErrors(["documents_fail" => __("documents are missing to upload")]);
             }
         }
         $request->validate([

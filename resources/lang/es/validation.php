@@ -170,6 +170,7 @@ return [
         'health_manager' => 'administradora de salud',
         'school_insurance' => 'seguro escolar',
         'disability' => 'discapacidad',
+        'disability_certificate' => 'certificado de discapacidad',
 
         'zone' => 'zona',
         'residence_city' => 'ciudad de residencia',

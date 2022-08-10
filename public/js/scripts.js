@@ -72,6 +72,9 @@ class Scripts {
       if (typeof SingleImageUpload !== 'undefined' && document.getElementById('imageProfile')) {
         const singleImageUpload = new SingleImageUpload(document.getElementById('imageProfile'));
       }
+      if ("undefined" !== typeof StudentProfileInfo) {
+        new StudentProfileInfo;
+      }
     }
 
     // Plugin pages initialization
