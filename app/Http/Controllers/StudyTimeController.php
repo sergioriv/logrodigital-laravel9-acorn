@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\Period;
-use App\Models\SchoolYear;
 use App\Models\StudyTime;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -16,6 +16,8 @@ class StudyTimeController extends Controller
         $this->middleware('can:studyTime.create')->only('create','store');
         $this->middleware('can:studyTime.edit')->only('show','edit','update');
         $this->middleware('can:studyTime.periods.edit')->only('periods_update');
+
+        $this->middleware(YearCurrentMiddleware::class)->only('periods_update');
     }
 
     public function index()
@@ -25,7 +27,8 @@ class StudyTimeController extends Controller
 
     public function data()
     {
-        return ['data' => StudyTime::withCount('periods')->get()];
+        $Y = SchoolYearController::current_year();
+        return ['data' => StudyTime::withCount(['periods' => fn($p) => $p->where('school_year_id', $Y->id)])->get()];
     }
 
     public function create()

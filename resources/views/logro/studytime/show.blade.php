@@ -91,7 +91,7 @@ $title = $studyTime->name;
                                     <option label="&nbsp;"></option>
                                     @for ($i = 1; $i <= 15; $i++)
                                         <option value="{{ $i }}"
-                                            @if (count($studyTime->periods) === $i) selected @endif>
+                                            @if (count($periods) === $i) selected @endif>
                                             {{ $i . ' ' . __('Periods') }}</option>
                                     @endfor
                                 </select>

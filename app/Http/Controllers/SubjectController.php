@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\ResourceArea;
 use App\Models\ResourceSubject;
 use App\Models\SchoolYear;
@@ -14,6 +15,8 @@ class SubjectController extends Controller
     {
         $this->middleware('can:subjects.index');
         $this->middleware('can:subjects.edit')->only('store');
+
+        $this->middleware(YearCurrentMiddleware::class)->only('store');
     }
     /**
      * Display a listing of the resource.

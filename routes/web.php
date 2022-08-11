@@ -17,6 +17,8 @@ use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
+use App\Mail\TestMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -140,5 +142,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
 });
 
+Route::get('test-email', function () {
+    // $mail = Mail::raw('Hello World!', function($msg) {$msg->to('sergioa.rivcif@gmail.com')->subject('Test Email'); });
+    Mail::to("sergioa_rivcif@hotmail.es")->send(new TestMail());
+    dd('Email send');
+});
 
 require __DIR__.'/auth.php';

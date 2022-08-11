@@ -54,14 +54,18 @@ $title = $group->name;
                         <div class="col-12">
                             <!-- Title Tabs Start -->
                             <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" role="tablist">
+                                @can('groups.students')
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link active" data-bs-toggle="tab" href="#studentsTab" role="tab"
                                         aria-selected="true">{{ __('Students') }}</a>
                                 </li>
+                                @endcan
+                                @can('groups.teachers')
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" data-bs-toggle="tab" href="#subjectsTab" role="tab"
                                         aria-selected="true">{{ __('Subjects') . ' & ' . __('Teachers') }}</a>
                                 </li>
+                                @endcan
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" data-bs-toggle="tab" href="#otherTab" role="tab"
                                         aria-selected="false">{{ __('Other') }}</a>
@@ -82,6 +86,7 @@ $title = $group->name;
                                             </div>
                                             <!-- Title End -->
 
+                                            @can('groups.students.matriculate')
                                             @if (null !== $Y->available)
                                                 <!-- Groups Buttons Start -->
                                                 <div class="col-12 col-md-5 mb-2 d-flex align-items-start justify-content-end">
@@ -95,6 +100,7 @@ $title = $group->name;
                                                 </div>
                                                 <!-- Groups Buttons End -->
                                             @endif
+                                            @endcan
                                         </div>
                                     </div>
 
@@ -132,6 +138,7 @@ $title = $group->name;
                                 <!-- Groups Tab Start -->
                                 <div class="tab-pane fade" id="subjectsTab" role="tabpanel">
 
+                                    @can('groups.teachers.edit')
                                     @if (null !== $Y->available)
                                         <!-- Groups Buttons Start -->
                                         <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
@@ -156,6 +163,7 @@ $title = $group->name;
                                         </div>
                                         <!-- Groups Buttons End -->
                                     @endif
+                                    @endcan
 
                                     <!-- Groups Content Tab Start -->
                                     <section class="scroll-section">

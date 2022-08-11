@@ -47,10 +47,14 @@ class UserController extends Controller
             'email' => $email,
         ])->assignRole($role);
 
-        if ( $role === 7 )
-            $user->forceFill(['email_verified_at' => now()])->save();
-        else
-            $user->sendEmailVerificationNotification();
+        // if ( $role === 7 )
+        //     $user->forceFill(['email_verified_at' => now()])->save();
+        // else
+        //     $user->sendEmailVerificationNotification();
+        $user->forceFill([
+            'email_verified_at' => now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        ])->save();
 
 
         event(new Registered($user));

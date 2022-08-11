@@ -1262,7 +1262,7 @@ $title = $student->user->name;
                                                     </span>
                                                     <span>
                                                         {{ $studentFile->name }}
-                                                        @if (1 === $studentFile->required) @endif
+                                                        @if (1 === $studentFile->required) <span class="text-danger">*</span> @endif
                                                     </span>
 
                                                     @can('students.documents.checked')

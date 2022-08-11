@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\Period;
 use App\Models\StudyTime;
 use Illuminate\Http\Request;
@@ -9,6 +10,10 @@ use Illuminate\Support\Facades\DB;
 
 class PeriodController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(YearCurrentMiddleware::class)->only('update');
+    }
 
     /**
      * Update the specified resource in storage.

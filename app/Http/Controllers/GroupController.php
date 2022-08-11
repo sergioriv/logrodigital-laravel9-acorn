@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\Group;
 use App\Models\GroupStudent;
 use App\Models\Headquarters;
@@ -25,6 +26,8 @@ class GroupController extends Controller
         $this->middleware('can:groups.students.matriculate')->only('matriculate','matriculate_update');
         // $this->middleware('can:groups.teachers');
         $this->middleware('can:groups.teachers.edit')->only('teacher_edit','teacher_update');
+
+        $this->middleware(YearCurrentMiddleware::class)->except('index','filter','show');
     }
 
     public function index()
