@@ -43,6 +43,7 @@ $title = __('Groups');
                         <!-- Top Buttons Start -->
                         <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
 
+                            @can('groups.create')
                             @if (null !== $Y->available)
                                 <!-- Add New Button Start -->
                                 <a href="{{ route('group.create') }}"
@@ -52,6 +53,7 @@ $title = __('Groups');
                                 </a>
                                 <!-- Add New Button End -->
                             @endif
+                            @endcan
 
                         </div>
                         <!-- Top Buttons End -->
