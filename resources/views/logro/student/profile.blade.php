@@ -665,7 +665,7 @@ $title = $student->user->name;
                                         @if (NULL === $student->signature_student)
                                             <p><b>{{ __("Unsigned") }}</b></p>
                                         @else
-                                            <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" class="w-100 mb-3 mb-md-0 border rounded-md" alt="signature">
+                                            <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" class="w-100 border rounded-md" alt="signature">
                                         @endif
                                     </div>
                                 </div>
@@ -750,11 +750,11 @@ $title = $student->user->name;
                                                 </button>
                                             </div>
                                             <input type="hidden" id="sig-dataUrl-student" name="signature_student" class="form-control">
-                                            <div class="d-none mb-3 mb-md-0">
+                                            <div class="d-none">
                                                 <img id="sig-image-student" src="" class="w-100 border rounded-md" alt="signature">
                                             </div>
                                         @else
-                                            <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" class="w-100 mb-3 mb-md-0 border rounded-md" alt="signature">
+                                            <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" class="w-100 border rounded-md" alt="signature">
                                         @endif
                                     </div>
                                 </div>
