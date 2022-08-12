@@ -12,28 +12,65 @@ class SignaturesInput {
         }
 
 
+        // const sig_tutor = document.getElementById("sig-canvas-tutor");
+        // const sig_student = document.getElementById("sig-canvas-student");
+
+        // if (sig_tutor.length != 0) {
+        //     this._initCanvasWidth(sig_tutor);
+        //     this._initSignature(sig_tutor, 'tutor');
+        // }
+
+        // if (sig_student.length != 0) {
+        //     this._initCanvasWidth(sig_student);
+        //     this._initSignature(sig_student, 'student');
+        // }
+        this._initOpenModalSignatures();
+    }
+
+    _initOpenModalSignatures() {
+        const _this = this;
+
         const sig_tutor = document.getElementById("sig-canvas-tutor");
         const sig_student = document.getElementById("sig-canvas-student");
 
-        if (sig_tutor.length != 0) {
-            this._initCanvasWidth(sig_tutor);
-            this._initSignature(sig_tutor, 'tutor');
+        /* TUTOR */
+        const btnOpenSigTutor = document.getElementById("openSigTutor");
+        if (btnOpenSigTutor && btnOpenSigTutor.length != 0) {
+            const withSigTutor = btnOpenSigTutor.parentElement.clientWidth;
+            btnOpenSigTutor.addEventListener("click", function(e) {
+                sig_tutor.setAttribute('width', withSigTutor +'px');
+                _this._initSignature(sig_tutor, 'tutor');
+            }, false);
         }
 
-        if (sig_student.length != 0) {
-            this._initCanvasWidth(sig_student);
-            this._initSignature(sig_student, 'student');
+        /* STUDENT */
+        const btnOpenSigStudent = document.getElementById("openSigStudent");
+        if (btnOpenSigStudent && btnOpenSigStudent.length != 0) {
+            const withSigStudent = btnOpenSigStudent.parentElement.clientWidth;
+            btnOpenSigStudent.addEventListener("click", function(e) {
+                sig_student.setAttribute('width', withSigStudent +'px');
+                _this._initSignature(sig_student, 'student');
+            }, false);
         }
 
-    }
-
-    _initCanvasWidth(canvas) {
-    //   var canvas = document.getElementById(sig);
-      var canvasWidth = canvas.parentElement.clientWidth;
-      canvas.setAttribute('width', canvasWidth +'px');
     }
 
     _initSignature(canvas, canvaName) {
+
+        // Set up the UI
+        var sigText = document.getElementById("sig-dataUrl-" + canvaName);
+        var sigImage = document.getElementById("sig-image-" + canvaName);
+        var clearBtn = document.getElementById("sig-clearBtn-" + canvaName);
+        var submitBtn = document.getElementById("sig-submitBtn-" + canvaName);
+
+        dataUrlNull();
+
+        function dataUrlNull() {
+            sigText.value = null;
+            sigImage.parentElement.classList.add("d-none");
+            sigImage.setAttribute("src", "");
+        }
+
         (function() {
             window.requestAnimFrame = (function(callback) {
               return window.requestAnimationFrame ||
@@ -46,7 +83,7 @@ class SignaturesInput {
                 };
             })();
 
-            // var canvas = document.getElementById("sig-canvas-tutor");
+            var writing = false;
             var ctx = canvas.getContext("2d");
             ctx.strokeStyle = "#222222";
             ctx.lineWidth = 1;
@@ -60,6 +97,7 @@ class SignaturesInput {
 
             canvas.addEventListener("mousedown", function(e) {
               drawing = true;
+              writing = true;
               lastPos = getMousePos(canvas, e);
             }, false);
 
@@ -69,10 +107,6 @@ class SignaturesInput {
 
             canvas.addEventListener("mousemove", function(e) {
               mousePos = getMousePos(canvas, e);
-            }, false);
-
-            canvas.addEventListener("mouseleave", function(e) {
-              copyCanvas();
             }, false);
 
             // Add touch event support for mobile
@@ -153,24 +187,28 @@ class SignaturesInput {
 
             function clearCanvas() {
               canvas.width = canvas.width;
+              writing = false;
             }
 
-            // Set up the UI
-            var sigText = document.getElementById("sig-dataUrl-" + canvaName);
-            var clearBtn = document.getElementById("sig-clearBtn-" + canvaName);
+
             clearBtn.addEventListener("click", function(e) {
+              dataUrlNull();
               clearCanvas();
-              sigText.value = "";
+            }, false);
+            submitBtn.addEventListener("click", function(e) {
+              if (writing === true) {
+                  var dataUrl = canvas.toDataURL();
+                  sigText.value = dataUrl;
+                  sigImage.setAttribute("src", dataUrl);
+                  sigImage.parentElement.classList.remove("d-none");
+              } else {
+                dataUrlNull();
+              }
             }, false);
 
-            function copyCanvas() {
-                var dataUrl = canvas.toDataURL();
-                sigText.value = dataUrl;
-            }
+
 
           })();
     }
-
-
 
 }

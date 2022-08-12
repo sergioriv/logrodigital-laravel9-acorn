@@ -102,7 +102,7 @@ $title = $student->user->name;
             <div class="col-12 col-xl-3">
                 <!-- Biography Start -->
                 <h2 class="small-title">{{ __('Profile') }}</h2>
-                <div class="card">
+                <div class="card mb-5">
                     <div class="card-body">
                         <div class="d-flex align-items-center flex-column">
                             <div class="mb-5 d-flex align-items-center flex-column">
@@ -648,6 +648,7 @@ $title = $student->user->name;
                         @endif
 
                         <!-- Signatures View Start -->
+                        <h2 class="small-title">{{ __('Signatures') }}</h2>
                         <section class="card mb-5">
                             <div class="card-body">
                                 <div class="row">
@@ -720,18 +721,22 @@ $title = $student->user->name;
                         <!-- Data Treatment Policy Section End -->
 
                         <!-- Signatures Start -->
+                        <h2 class="small-title">{{ __('Signatures') }}</h2>
                         <section class="card mb-5">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <x-label>{{ __('signature tutor') }}</x-label>
                                         @if (NULL === $student->signature_tutor)
-                                            <div>
-                                                <canvas id="sig-canvas-tutor" class="sig-canvas form-signature">
-                                                </canvas>
+                                            <div class="mb-1">
+                                                <button type="button" id="openSigTutor" class="btn btn-outline-secondary mb-1" data-bs-toggle="modal" data-bs-target="#modalSigTutor">
+                                                    {{ __("Make signature") }}
+                                                </button>
                                             </div>
                                             <input type="hidden" id="sig-dataUrl-tutor" name="signature_tutor" class="form-control">
-                                            <span class="btn btn-outline-danger" id="sig-clearBtn-tutor">{{ __("Clear signature") }}</span>
+                                            <div class="d-none">
+                                                <img id="sig-image-tutor" src="" alt="signature">
+                                            </div>
                                         @else
                                             <img src="{{ env('APP_URL') .'/'. $student->signature_tutor }}" alt="signature">
                                         @endif
@@ -740,16 +745,82 @@ $title = $student->user->name;
                                         <x-label>{{ __('signature student') }}</x-label>
                                         @if (NULL === $student->signature_student)
                                             <div>
-                                                <canvas id="sig-canvas-student" class="sig-canvas form-signature">
-                                                </canvas>
+                                                <button type="button" id="openSigStudent" class="btn btn-outline-secondary mb-1" data-bs-toggle="modal" data-bs-target="#modalSigStudent">
+                                                    {{ __("Make signature") }}
+                                                </button>
                                             </div>
                                             <input type="hidden" id="sig-dataUrl-student" name="signature_student" class="form-control">
-                                            <span class="btn btn-outline-danger" id="sig-clearBtn-student">{{ __("Clear signature") }}</span>
+                                            <div class="d-none">
+                                                <img id="sig-image-student" src="" alt="signature">
+                                            </div>
                                         @else
                                             <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" alt="signature">
                                         @endif
                                     </div>
                                 </div>
+
+                                @if (NULL === $student->signature_tutor)
+                                <!-- Signature Tutor modal-->
+                                <div
+                                        class="modal fade"
+                                        id="modalSigTutor"
+                                        tabindex="-1"
+                                        role="dialog"
+                                        aria-labelledby="SigTutorLabel"
+                                        aria-hidden="true"
+                                >
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title logro-label" id="SigTutorLabel">{{ __('signature tutor') }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="text-center">
+                                                    <canvas id="sig-canvas-tutor" class="sig-canvas form-signature">
+                                                    </canvas>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" id="sig-clearBtn-tutor" class="btn btn-outline-danger">{{ __("Clear signature") }}</button>
+                                                <button type="button" id="sig-submitBtn-tutor" data-bs-dismiss="modal" class="btn btn-primary">{{ __("Confirm signature") }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+
+                                @if (NULL === $student->signature_student)
+                                <!-- Signature Student modal-->
+                                <div
+                                        class="modal fade"
+                                        id="modalSigStudent"
+                                        tabindex="-1"
+                                        role="dialog"
+                                        aria-labelledby="SigStudentLabel"
+                                        aria-hidden="true"
+                                >
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title logro-label" id="SigStudentLabel">{{ __('signature student') }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="text-center">
+                                                    <canvas id="sig-canvas-student" class="sig-canvas form-signature">
+                                                    </canvas>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" id="sig-clearBtn-student" class="btn btn-outline-danger">{{ __("Clear signature") }}</button>
+                                                <button type="button" id="sig-submitBtn-student" data-bs-dismiss="modal" class="btn btn-primary">{{ __("Confirm signature") }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+
                             </div>
                         </section>
                         <!-- Signatures End -->
