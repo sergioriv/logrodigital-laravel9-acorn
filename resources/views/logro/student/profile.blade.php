@@ -657,7 +657,7 @@ $title = $student->user->name;
                                         @if (NULL === $student->signature_tutor)
                                             <p><b>{{ __("Unsigned") }}</b></p>
                                         @else
-                                            <img src="{{ env('APP_URL') .'/'. $student->signature_tutor }}" class="w-100 border rounded-md" alt="signature">
+                                            <img src="{{ env('APP_URL') .'/'. $student->signature_tutor }}" class="w-100 mb-3 mb-md-0 border rounded-md" alt="signature">
                                         @endif
                                     </div>
                                     <div class="col-md-6">
@@ -665,7 +665,7 @@ $title = $student->user->name;
                                         @if (NULL === $student->signature_student)
                                             <p><b>{{ __("Unsigned") }}</b></p>
                                         @else
-                                            <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" class="w-100 border rounded-md" alt="signature">
+                                            <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" class="w-100 mb-3 mb-md-0 border rounded-md" alt="signature">
                                         @endif
                                     </div>
                                 </div>
@@ -734,11 +734,11 @@ $title = $student->user->name;
                                                 </button>
                                             </div>
                                             <input type="hidden" id="sig-dataUrl-tutor" name="signature_tutor" class="form-control">
-                                            <div class="d-none">
+                                            <div class="d-none mb-3 mb-md-0">
                                                 <img id="sig-image-tutor" src="" class="w-100 border rounded-md" alt="signature">
                                             </div>
                                         @else
-                                            <img src="{{ env('APP_URL') .'/'. $student->signature_tutor }}" class="w-100 border rounded-md" alt="signature">
+                                            <img src="{{ env('APP_URL') .'/'. $student->signature_tutor }}" class="w-100 mb-3 mb-md-0 border rounded-md" alt="signature">
                                         @endif
                                     </div>
                                     <div class="col-md-6">
@@ -750,11 +750,11 @@ $title = $student->user->name;
                                                 </button>
                                             </div>
                                             <input type="hidden" id="sig-dataUrl-student" name="signature_student" class="form-control">
-                                            <div class="d-none">
+                                            <div class="d-none mb-3 mb-md-0">
                                                 <img id="sig-image-student" src="" class="w-100 border rounded-md" alt="signature">
                                             </div>
                                         @else
-                                            <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" class="w-100 border rounded-md" alt="signature">
+                                            <img src="{{ env('APP_URL') .'/'. $student->signature_student }}" class="w-100 mb-3 mb-md-0 border rounded-md" alt="signature">
                                         @endif
                                     </div>
                                 </div>
@@ -1299,7 +1299,7 @@ $title = $student->user->name;
                                     @method('PUT')
                             @endcan
 
-                                <div class="row g-2 row-cols-4 row-cols-md-5">
+                                <div class="row g-2 row-cols-3 row-cols-md-5">
                                     @foreach ($studentFileTypes as $studentFile)
                                         <div class="col small-gutter-col">
                                             <div class="h-100">
