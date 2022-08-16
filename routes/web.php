@@ -15,6 +15,7 @@ use App\Http\Controllers\StudyYearController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
+use App\Http\Controllers\support\WAController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use Illuminate\Support\Facades\Http;
@@ -140,14 +141,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
 
-    Route::get('/test-wa', function () {
-        $data = [
-            'message' => 'enviando desde laravel',
-            'phone' => '573124887725'
-        ];
-        $response = Http::post(env('API_WA'), $data);
-        // $response = $client->request('POST', env('API_WA'), $data);
-        dd($response);
+    Route::get('test-wa', function () {
+        $message = new WAController('integrando clases', '3124887725');
+        $message->send();
     });
 
 });
