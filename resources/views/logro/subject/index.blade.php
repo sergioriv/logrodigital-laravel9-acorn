@@ -150,13 +150,14 @@ $title = __('Areas & Subjects');
                     <!-- Moving End -->
 
                 @if (NULL !== $Y->available)
+                    @if (count($resourceSubjects) > 0)
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="confirm_save" />
                         <label class="form-check-label" for="confirm_save">Este proceso es irreversible. Por favor confirme que está seguro que de guardar.</label>
                     </div>
 
                     <x-button type="submit" disabled id="save_areas_subjects" class="btn-primary">{{ __('Save') .' '. __('Areas & Subjects') }}</x-button>
-
+                    @endif
                 </form>
                 @endif
                 <!-- Advanced End -->
