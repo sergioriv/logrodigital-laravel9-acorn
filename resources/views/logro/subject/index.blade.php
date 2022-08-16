@@ -40,6 +40,14 @@ $title = __('Areas & Subjects');
     }
     @endforeach
 
+    jQuery("#confirm_save").click(function () {
+        if ( $(this).is(':checked') ) {
+            $("#save_areas_subjects").prop('disabled', false);
+        } else {
+            $("#save_areas_subjects").prop('disabled', true);
+        }
+    });
+
     jQuery("#save_areas_subjects").click(function (e) {
         // e.preventDefault();
         var subejcts = document.querySelectorAll(".input_subject");
@@ -142,7 +150,12 @@ $title = __('Areas & Subjects');
                     <!-- Moving End -->
 
                 @if (NULL !== $Y->available)
-                    <x-button type="submit" id="save_areas_subjects" class="btn-primary">{{ __('Save') .' '. __('Areas & Subjects') }}</x-button>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="confirm_save" />
+                        <label class="form-check-label" for="confirm_save">Este proceso es irreversible. Por favor confirme que está seguro que de guardar.</label>
+                    </div>
+
+                    <x-button type="submit" disabled id="save_areas_subjects" class="btn-primary">{{ __('Save') .' '. __('Areas & Subjects') }}</x-button>
 
                 </form>
                 @endif
