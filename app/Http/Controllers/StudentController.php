@@ -36,7 +36,6 @@ use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
@@ -287,7 +286,7 @@ class StudentController extends Controller
 
                 if (NULL === $groupStudentExist)
                 {
-                    GroupStudent::create([
+                    /* GroupStudent::create([
                         'group_id' => $request->group,
                         'student_id' => $student->id
                     ]);
@@ -300,7 +299,7 @@ class StudentController extends Controller
                         'group_id' => $group->id,
                         'enrolled_date' => now(),
                         'enrolled' => TRUE
-                    ]);
+                    ]); */
 
                     self::send_msg($student, $group);
 
@@ -849,7 +848,7 @@ class StudentController extends Controller
         {
             $tutor = PersonCharge::select('id', 'cellphone')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
 
-            if ($tutor->cellphone !== NULL && count($tutor->cellphone) == 10)
+            if ($tutor->cellphone !== NULL && Str::length($tutor->cellphone) == 10)
             {
                 $school = School::find(1);
 
