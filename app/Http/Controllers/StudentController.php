@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\StudentsInstructuveExport;
 use App\Http\Controllers\support\UserController;
+use App\Http\Controllers\support\WAController;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Imports\StudentsImport;
 use App\Models\City;
@@ -21,6 +22,7 @@ use App\Models\HealthManager;
 use App\Models\IcbfProtectionMeasure;
 use App\Models\Kinship;
 use App\Models\LinkageProcess;
+use App\Models\PersonCharge;
 use App\Models\Piar;
 use App\Models\Religion;
 use App\Models\Rh;
@@ -298,6 +300,8 @@ class StudentController extends Controller
                         'enrolled_date' => now(),
                         'enrolled' => TRUE
                     ]);
+
+                    return self::send_msg($student, $group);
 
                     return redirect()->route('students.show', $student)->with(
                         ['notify' => 'success', 'title' => __('Student matriculate!')],
@@ -836,5 +840,18 @@ class StudentController extends Controller
         }
         File::put( public_path($sigUrl), base64_decode($sig));
         return $sigUrl;
+    }
+
+    private function send_msg($student, $group)
+    {
+        if ($student->person_charge !== NULL)
+        {
+            $tutor = PersonCharge::select('id', 'cellphone')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
+
+            $msg = "El estudiante, " . $student->getFullName() . ", ha sido matriculado en el grupo *" . $group->studyYear->name .": ". $group->name . "*";
+
+            $message = new WAController($msg, $tutor->cellphone);
+            $message->send();
+        }
     }
 }

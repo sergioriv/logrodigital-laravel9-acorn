@@ -15,10 +15,8 @@ use App\Http\Controllers\StudyYearController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
-use App\Http\Controllers\support\WAController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -140,11 +138,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('persons_charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');
     Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
-
-    Route::get('test-wa', function () {
-        $message = new WAController('integrando clases', '3124887725');
-        $message->send();
-    });
 
 });
 
