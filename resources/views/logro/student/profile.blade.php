@@ -48,7 +48,7 @@ $title = $student->user->name;
                     <!-- Matriculate Button Start -->
                     <a class="btn btn-outline-info"
                         href="{{ route('students.matriculate', $student) }}">
-                        @if (1 !== $student->enrolled)
+                        @if (NULL === $student->group_id)
                             {{ __('Matriculate') }}
                         @else
                             {{ __('Change group') }}

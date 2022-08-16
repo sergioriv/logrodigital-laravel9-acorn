@@ -848,10 +848,13 @@ class StudentController extends Controller
         {
             $tutor = PersonCharge::select('id', 'cellphone')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
 
-            $msg = "El estudiante, " . $student->getFullName() . ", ha sido matriculado en el grupo *" . $group->studyYear->name .": ". $group->name . "*";
+            if ($tutor->cellphone !== NULL)
+            {
+                $msg = "El estudiante, " . $student->getFullName() . ", ha sido matriculado en el grupo *" . $group->studyYear->name .": ". $group->name . "*";
 
-            $message = new WAController($msg, $tutor->cellphone);
-            $message->send();
+                $message = new WAController($msg, $tutor->cellphone);
+                $message->send();
+            }
         }
     }
 }
