@@ -140,12 +140,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
 
-    Route::get('/test-wa', function () {
+    Route::get('/test-wa', function (GuzzleHttp\Client $client) {
         $data = [
             'message' => 'enviando desde laravel',
             'phone' => '573124887725'
         ];
-        $response = Http::post(env('API_WA'), $data);
+        // $response = Http::post(env('API_WA'), $data);
+        $response = $client->request('POST', env('API_WA'), $data);
         dd($response);
     });
 
