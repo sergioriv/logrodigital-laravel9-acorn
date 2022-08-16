@@ -184,9 +184,8 @@ html[data-dimension="desktop"] .logro-badge-right-bottom {
 html[data-dimension="mobile"] .logro-badge-right-bottom {
     display: none;
 }
-/* html[data-dimension="mobile"] .card-areas {
-    pointer-events: none;
-} */
+
+
 .modal-dialog {
     margin: .5rem auto !important;
 }

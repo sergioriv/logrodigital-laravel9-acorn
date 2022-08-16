@@ -147,16 +147,17 @@ $title = $student->user->name;
                                 </div>
 
                                 @if (NULL !== $student->group_id)
-                                <div class="mt-2">
-                                    <h5 class="text-primary font-weight-bold">{{ $student->group->name }}</h5>
+                                <div class="mt-2 text-center">
+                                    <h5 class="text-primary font-weight-bold mb-0">{{ $student->group->name }}</h5>
+                                    <text class="text-primary text-small">{{ $student->enrolled_date }}</text>
                                 </div>
                                 @endif
 
                             </div>
                         </div>
 
-                        <div class="nav flex-column" role="tablist">
-                            @can('students.info')
+                        <div class="nav flex-column mb-5" role="tablist">
+                        @can('students.info')
                             <a class="nav-link active logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#informationTab" role="tab">
                                 <span class="align-middle">{{ __('Information') }}</span>
@@ -184,6 +185,11 @@ $title = $student->user->name;
                             </a>
                             @endif
                         @endcan
+                        </div>
+
+                        <div class="d-flex flex-column">
+                            <text class="text-muted text-small">Fecha creación:</text>
+                            <text class="text-muted text-small">{{ $student->created_at }}</text>
                         </div>
 
 
