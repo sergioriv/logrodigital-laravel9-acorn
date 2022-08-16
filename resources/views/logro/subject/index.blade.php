@@ -40,9 +40,15 @@ $title = __('Areas & Subjects');
     }
     @endforeach
 
-    $('.input_subject').mouseleave(function () {
-        $(this).children('input').val( $(this).parent().data('area') + '~' + $(this).data('id') );
-    })
+    jQuery("#save_areas_subjects").click(function (e) {
+        // e.preventDefault();
+        var subejcts = document.querySelectorAll(".input_subject");
+        subejcts.forEach(s => {
+            const value = $(s).attr('data-subject');
+            const area = $(s).parent().data('area');
+            $(s).children('input').val(area +'~'+ value);
+        });
+    });
 </script>
 @endif
 @endsection
@@ -93,15 +99,15 @@ $title = __('Areas & Subjects');
                         <div class="row">
                             <section class="col-12">
                                 <div class="card mb-5 border border-pink">
-                                    <div class="card-body">
+                                    <div class="card-body card-areas" data-area="null">
                                         <div class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm sortable"
                                             id="areaGroupNull" data-area="null">
                                             @foreach ($resourceSubjects as $subject)
                                             <span
                                                 class="logro-tag badge bg-outline-primary hover-bg-primary text-uppercase input_subject"
-                                                data-id="{{ $subject->id }}">
+                                                data-subject="{{ $subject->id }}">
                                                 {{ $subject->name }}
-                                                <input type="hidden" name="subjects[]" value="null~{{ $subject->id }}">
+                                                <input readonly type="hidden" name="subjects[]" value="null~{{ $subject->id }}">
                                             </span>
                                             @endforeach
                                         </div>
@@ -114,9 +120,10 @@ $title = __('Areas & Subjects');
                             @foreach ($resourceAreas as $area)
                             <section class="col-sm-6 col-xxl-3">
                                 <h2 class="small-title">{{ $area->name }}</h2>
-                                <div class="card mb-5">
+                                <div class="card mb-5 card-areas" data-area="{{ $area->id }}">
                                     <div class="card-body d-inline-flex">
-                                        <div id="areaGroup{{ $area->id }}" data-area="{{ $area->id }}" class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm">
+                                        <div id="areaGroup{{ $area->id }}" class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm"
+                                            data-area="{{ $area->id }}">
                                             @foreach ($subjects as $subject_area)
                                             @if ($subject_area->resource_area_id == $area->id)
                                             <span class="logro-tag badge bg-muted text-uppercase disabled"
@@ -135,7 +142,7 @@ $title = __('Areas & Subjects');
                     <!-- Moving End -->
 
                 @if (NULL !== $Y->available)
-                    <x-button type="submit" class="btn-primary">{{ __('Save') .' '. __('Areas & Subjects') }}</x-button>
+                    <x-button type="submit" id="save_areas_subjects" class="btn-primary">{{ __('Save') .' '. __('Areas & Subjects') }}</x-button>
 
                 </form>
                 @endif

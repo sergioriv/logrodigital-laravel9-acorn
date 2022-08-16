@@ -110,9 +110,7 @@ class SignaturesInput {
             }, false);
 
             // Add touch event support for mobile
-            canvas.addEventListener("touchstart", function(e) {
-
-            }, false);
+            /* canvas.addEventListener("touchstart", function(e) {}, false); */
 
             canvas.addEventListener("touchmove", function(e) {
               var touch = e.touches[0];
