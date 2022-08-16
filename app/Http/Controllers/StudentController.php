@@ -301,7 +301,7 @@ class StudentController extends Controller
                         'enrolled' => TRUE
                     ]);
 
-                    return self::send_msg($student, $group);
+                    self::send_msg($student, $group);
 
                     return redirect()->route('students.show', $student)->with(
                         ['notify' => 'success', 'title' => __('Student matriculate!')],
