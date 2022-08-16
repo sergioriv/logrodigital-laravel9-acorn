@@ -9,6 +9,8 @@ class School extends CastCreateModel
 {
     use HasFactory;
 
+    public $table = 'school';
+
     protected $fillable = [
         'name',
         'nit',
@@ -16,6 +18,9 @@ class School extends CastCreateModel
         'contact_telephone',
         'city',
         'badge',
+    ];
+
+    protected $hidden = [
         'students'
     ];
 }

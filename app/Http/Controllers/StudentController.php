@@ -26,6 +26,7 @@ use App\Models\PersonCharge;
 use App\Models\Piar;
 use App\Models\Religion;
 use App\Models\Rh;
+use App\Models\School;
 use App\Models\Sisben;
 use App\Models\Student;
 use App\Models\StudentFile;
@@ -850,7 +851,12 @@ class StudentController extends Controller
 
             if ($tutor->cellphone !== NULL && count($tutor->cellphone) == 10)
             {
-                $msg = "El estudiante, " . $student->getFullName() . ", ha sido matriculado en el grupo *" . $group->studyYear->name .": ". $group->name . "*";
+                $school = School::find(1);
+
+                $msg = "El estudiante, " .
+                    $student->getFullName() .
+                    ", ha sido matriculado en el grupo *" . $group->studyYear->name .": ". $group->name . "*" .
+                    " del colegio, *" . $school->name . "*";
 
                 $message = new WAController($msg, $tutor->cellphone);
                 $message->send();

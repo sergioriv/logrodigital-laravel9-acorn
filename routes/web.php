@@ -17,6 +17,7 @@ use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
+use App\Models\School;
 use Illuminate\Support\Facades\Route;
 
 /*
