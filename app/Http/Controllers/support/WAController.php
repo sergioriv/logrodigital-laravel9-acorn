@@ -23,6 +23,5 @@ class WAController extends Controller
             'phone' => '57' . $this->phone
         ];
         $response = Http::post(env('API_WA'), $data);
-        dd($response);
     }
 }
