@@ -286,7 +286,7 @@ class StudentController extends Controller
 
                 if (NULL === $groupStudentExist)
                 {
-                    /* GroupStudent::create([
+                    GroupStudent::create([
                         'group_id' => $request->group,
                         'student_id' => $student->id
                     ]);
@@ -299,7 +299,7 @@ class StudentController extends Controller
                         'group_id' => $group->id,
                         'enrolled_date' => now(),
                         'enrolled' => TRUE
-                    ]); */
+                    ]);
 
                     self::send_msg($student, $group);
 
