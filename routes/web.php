@@ -17,7 +17,9 @@ use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
+use App\Mail\TestMailable;
 use App\Models\School;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -139,6 +141,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('persons_charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');
     Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
+
+    Route::get('test-mail', function () {
+
+        $correo = new TestMailable;
+        $mail = Mail::to('sergioa.rivcif@gmail.com')->send($correo);
+
+        dd($mail);
+    });
 
 });
 
