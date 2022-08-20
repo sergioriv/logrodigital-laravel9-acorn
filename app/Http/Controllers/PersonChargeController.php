@@ -16,7 +16,7 @@ class PersonChargeController extends Controller
         $this->middleware('can:students.info');
     }
 
-    public function update (Student $student, Request $request)
+    public function update (Student $student, Request $request, $wizard = false)
     {
         $mother = PersonCharge::where('id', $request->mother)
             ->where('kinship_id',1)
@@ -246,8 +246,19 @@ class PersonChargeController extends Controller
             'person_charge' => $request->person_charge
         ]);
 
-        return redirect()->back()->with(
-            ['notify' => 'success', 'title' => __('Student updated!')],
-        );
+        if ( $wizard === TRUE )
+        {
+            $student->forceFill([
+                'wizard_person_charge' => TRUE
+            ])->save();
+
+            return redirect()->back()->with('student', $student);
+        }
+        else
+        {
+            return redirect()->back()->with(
+                ['notify' => 'success', 'title' => __('Student updated!')],
+            );
+        }
     }
 }

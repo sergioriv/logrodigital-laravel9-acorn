@@ -12,18 +12,6 @@ class SignaturesInput {
         }
 
 
-        // const sig_tutor = document.getElementById("sig-canvas-tutor");
-        // const sig_student = document.getElementById("sig-canvas-student");
-
-        // if (sig_tutor.length != 0) {
-        //     this._initCanvasWidth(sig_tutor);
-        //     this._initSignature(sig_tutor, 'tutor');
-        // }
-
-        // if (sig_student.length != 0) {
-        //     this._initCanvasWidth(sig_student);
-        //     this._initSignature(sig_student, 'student');
-        // }
         this._initOpenModalSignatures();
     }
 
@@ -36,7 +24,8 @@ class SignaturesInput {
         /* TUTOR */
         const btnOpenSigTutor = document.getElementById("openSigTutor");
         if (btnOpenSigTutor && btnOpenSigTutor.length != 0) {
-            const withSigTutor = btnOpenSigTutor.parentElement.clientWidth;
+            var withSigTutor = btnOpenSigTutor.parentElement.clientWidth;
+            if (withSigTutor > 440) withSigTutor = 440;
             btnOpenSigTutor.addEventListener("click", function(e) {
                 sig_tutor.setAttribute('width', withSigTutor +'px');
                 _this._initSignature(sig_tutor, 'tutor');
@@ -46,7 +35,8 @@ class SignaturesInput {
         /* STUDENT */
         const btnOpenSigStudent = document.getElementById("openSigStudent");
         if (btnOpenSigStudent && btnOpenSigStudent.length != 0) {
-            const withSigStudent = btnOpenSigStudent.parentElement.clientWidth;
+            var withSigStudent = btnOpenSigStudent.parentElement.clientWidth;
+            if (withSigStudent > 440) withSigStudent = 440;
             btnOpenSigStudent.addEventListener("click", function(e) {
                 sig_student.setAttribute('width', withSigStudent +'px');
                 _this._initSignature(sig_student, 'student');

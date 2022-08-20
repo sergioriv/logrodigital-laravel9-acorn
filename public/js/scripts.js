@@ -75,6 +75,9 @@ class Scripts {
       if ("undefined" !== typeof ChangeAvatarForm) {
         new ChangeAvatarForm;
       }
+      if ("undefined" !== typeof Select2Form) {
+        new Select2Form;
+      }
       if ("undefined" !== typeof StudentProfileInfoForm) {
         new StudentProfileInfoForm;
       }

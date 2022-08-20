@@ -49,13 +49,13 @@ class StudentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('can:students.index')->except('show','update');
-        $this->middleware('can:students.import')->only('data_instructive','export_instructive','import','import_store');
+        $this->middleware('can:students.index')->except('show', 'update','wizard_documents_request','wizard_person_charge_request','wizard_personal_info_request','wizard_complete_request');
+        $this->middleware('can:students.import')->only('data_instructive', 'export_instructive', 'import', 'import_store');
         $this->middleware('can:students.create')->only('create');
-        $this->middleware('can:students.matriculate')->only('matriculate','matriculate_update','create_parents_filter');
-        $this->middleware('can:students.info')->only('show','update');
-        $this->middleware('can:students.psychosocial')->only('psychosocial_update','piar_update');
-        $this->middleware(YearCurrentMiddleware::class)->only('matriculate','matriculate_update');
+        $this->middleware('can:students.matriculate')->only('matriculate', 'matriculate_update', 'create_parents_filter');
+        $this->middleware('can:students.info')->only('show', 'update');
+        $this->middleware('can:students.psychosocial')->only('psychosocial_update', 'piar_update');
+        $this->middleware(YearCurrentMiddleware::class)->only('matriculate', 'matriculate_update');
     }
 
     /*
@@ -65,11 +65,11 @@ class StudentController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $fn_g = fn($g) => $g->where('school_year_id', $Y->id);
+        $fn_g = fn ($g) => $g->where('school_year_id', $Y->id);
 
-        $fn_gs = fn($gs) =>
-                $gs->with(['group' => $fn_g ])
-                ->whereHas('group', $fn_g );
+        $fn_gs = fn ($gs) =>
+        $gs->with(['group' => $fn_g])
+            ->whereHas('group', $fn_g);
 
         $students = Student::select(
             'id',
@@ -83,21 +83,21 @@ class StudentController extends Controller
             'headquarters_id',
             'study_time_id',
             'study_year_id'
-            )->with('headquarters','studyTime','studyYear')
-                ->where('school_year_create', '<=', $Y->id)
-                ->whereNot(fn($q) =>
-                    $q->whereHas('groupYear', $fn_gs)
-                        ->with(['groupYear' => $fn_gs])
-        );
+        )->with('headquarters', 'studyTime', 'studyYear')
+            ->where('school_year_create', '<=', $Y->id)
+            ->whereNot(
+                fn ($q) =>
+                $q->whereHas('groupYear', $fn_gs)
+                    ->with(['groupYear' => $fn_gs])
+            );
 
-        if ( 0 === $Y->available )
-        {
+        if (0 === $Y->available) {
             $students->whereNull('enrolled');
         }
 
 
         $students->orderBy('father_last_name')
-                ->orderBy('mother_last_name');
+            ->orderBy('mother_last_name');
 
         return view('logro.student.noenrolled')->with('students', $students->get());
     }
@@ -128,19 +128,19 @@ class StudentController extends Controller
     {
         $request->validate([
             'firstName' => ['required', 'string', 'max:191'],
-            'secondName' => ['nullable','string', 'max:191'],
+            'secondName' => ['nullable', 'string', 'max:191'],
             'fatherLastName' => ['required', 'string', 'max:191'],
-            'motherLastName' => ['nullable','string', 'max:191'],
-            'document_type' => ['required', Rule::exists('document_types','code')],
-            'document' => ['required', 'max:20', Rule::unique('students','document')],
-            'institutional_email' => ['required', 'max:191', 'email', Rule::unique('users','email')],
-            'telephone' => ['nullable','string', 'max:20'],
-            'headquarters' => ['required', Rule::exists('headquarters','id')],
-            'studyTime' => ['required', Rule::exists('study_times','id')],
-            'studyYear' => ['required', Rule::exists('study_years','id')],
-            'birth_city' => ['nullable',Rule::exists('cities','id')],
-            'country' => ['nullable',Rule::exists('countries','id')],
-            'birthdate' => ['nullable','date'],
+            'motherLastName' => ['nullable', 'string', 'max:191'],
+            'document_type' => ['required', Rule::exists('document_types', 'code')],
+            'document' => ['required', 'max:20', Rule::unique('students', 'document')],
+            'institutional_email' => ['required', 'max:191', 'email', Rule::unique('users', 'email')],
+            'telephone' => ['nullable', 'string', 'max:20'],
+            'headquarters' => ['required', Rule::exists('headquarters', 'id')],
+            'studyTime' => ['required', Rule::exists('study_times', 'id')],
+            'studyYear' => ['required', Rule::exists('study_years', 'id')],
+            'birth_city' => ['nullable', Rule::exists('cities', 'id')],
+            'country' => ['nullable', Rule::exists('countries', 'id')],
+            'birthdate' => ['nullable', 'date'],
         ]);
 
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
@@ -151,12 +151,10 @@ class StudentController extends Controller
         /* DATOS PAIS DE ORIGEN */
         $docType = DocumentType::find($request->document_type);
         $expedition_city = NULL;
-        if ( 1 == $docType->foreigner )
-        {
+        if (1 == $docType->foreigner) {
             $request->birth_city = NULL;
             $expedition_city = 149;
-        } else
-        {
+        } else {
             $request->country = NULL;
         }
 
@@ -182,8 +180,7 @@ class StudentController extends Controller
             'data_treatment' => TRUE
         ]);
 
-        if (1 == $request->matriculate)
-        {
+        if (1 == $request->matriculate) {
             return redirect()->route('students.matriculate', $user->id)->with(
                 ['notify' => 'success', 'title' => __('Student created!')],
             );
@@ -195,17 +192,163 @@ class StudentController extends Controller
     }
 
     /*
+     * WIZARD START
+     */
+    public function wizard_documents(Student $student)
+    {
+        if ('STUDENT' === UserController::role_auth()) {
+            // $student = Student::find(Auth::user()->id);
+            $studentFileTypes = StudentFileType::with([
+                'studentFile' => fn ($files) => $files->where('student_id', $student->id)
+            ]);
+            if (NULL === $student->disability_id || 1 === $student->disability_id)
+                $studentFileTypes->where('inclusive', 0);
+
+            return view('logro.student.wizard-documents')->with([
+                'student' => $student,
+                'studentFileTypes' => $studentFileTypes->get()
+            ]);
+        } else
+            return redirect()->route('dashboard')->with(
+                ['notify' => 'fail', 'title' => __('Unauthorized!')],
+            );
+    }
+    public function wizard_documents_request(Request $request)
+    {
+        if ('STUDENT' === UserController::role_auth()) {
+
+            $student = Student::findOrFail( Auth::user()->id );
+            if ($request->docsFails > 0) {
+                return redirect()->back()->withErrors(["custom" => __("documents are missing to upload")]);
+            }
+
+            $student->forceFill([
+                'wizard_documents' => TRUE
+            ])->save();
+
+            return redirect()->back()->with('student', $student);
+        } else {
+            return redirect()->route('dashboard')->with(
+                ['notify' => 'fail', 'title' => __('Unauthorized!')],
+            );
+        }
+    }
+    public function wizard_person_charge(Student $student)
+    {
+        if ('STUDENT' === UserController::role_auth()) {
+            // $student = Student::find(Auth::user()->id);
+            $cities = City::all();
+            $kinships = Kinship::all();
+
+            return view('logro.student.wizard-person-charge')->with([
+                'student' => $student,
+                'cities' => $cities,
+                'kinships' => $kinships
+            ]);
+        } else
+            return redirect()->route('dashboard')->with(
+                ['notify' => 'fail', 'title' => __('Unauthorized!')],
+            );
+    }
+    public function wizard_person_charge_request(Request $request)
+    {
+        if ('STUDENT' === UserController::role_auth()) {
+
+            $student = Student::findOrFail( Auth::user()->id );
+
+            $person_charge = new PersonChargeController;
+            return $person_charge->update($student, $request, TRUE);
+
+        } else {
+            return redirect()->route('dashboard')->with(
+                ['notify' => 'fail', 'title' => __('Unauthorized!')],
+            );
+        }
+    }
+    public function wizard_personal_info(Student $student)
+    {
+        if ('STUDENT' === UserController::role_auth()) {
+            // $student = Student::find(Auth::user()->id);
+
+            $documentType = DocumentType::orderBy('foreigner')->get();
+            $cities = City::all();
+            $countries = Country::all();
+            $genders = Gender::all();
+            $rhs = Rh::all();
+            $healthManager = HealthManager::all();
+            $sisbenes = Sisben::all();
+            $dwellingTypes = DwellingType::all();
+            $disabilities = Disability::all();
+
+            return view('logro.student.wizard-personal-info')->with([
+                'student' => $student,
+                'documentType' => $documentType,
+                'cities' => $cities,
+                'countries' => $countries,
+                'genders' => $genders,
+                'rhs' => $rhs,
+                'healthManager' => $healthManager,
+                'sisbenes' => $sisbenes,
+                'dwellingTypes' => $dwellingTypes,
+                'disabilities' => $disabilities
+            ]);
+        } else
+            return redirect()->route('dashboard')->with(
+                ['notify' => 'fail', 'title' => __('Unauthorized!')],
+            );
+    }
+    public function wizard_personal_info_request(Request $request)
+    {
+        if ('STUDENT' === UserController::role_auth()) {
+
+            $student = Student::findOrFail( Auth::user()->id );
+
+            return self::update($request, $student, TRUE);
+
+        } else {
+            return redirect()->route('dashboard')->with(
+                ['notify' => 'fail', 'title' => __('Unauthorized!')],
+            );
+        }
+    }
+    public function wizard_complete()
+    {
+        return view('logro.student.wizard-complete');
+    }
+    public function wizard_complete_request()
+    {
+        if ('STUDENT' === UserController::role_auth()) {
+
+            $student = Student::findOrFail( Auth::user()->id );
+
+            $student->forceFill([
+                'wizard_complete' => TRUE
+            ])->save();
+
+            return self::show($student);
+
+        } else {
+            return redirect()->route('dashboard')->with(
+                ['notify' => 'fail', 'title' => __('Unauthorized!')],
+            );
+        }
+    }
+    /*
+     * WIZARD END
+     */
+
+    /*
      * ENROLLED SECTION
      */
     public function enrolled()
     {
         $Y = SchoolYearController::current_year();
 
-        $fn_g = fn($g) => $g->where('school_year_id', $Y->id);
+        $fn_g = fn ($g) => $g->where('school_year_id', $Y->id);
 
-        $fn_gs = fn($gs) =>
-                $gs->with(['group' => $fn_g ])
-                ->whereHas('group', $fn_g );
+        $fn_gs = fn ($gs) =>
+        $gs->with(['group' => $fn_g])
+            ->whereHas('group', $fn_g);
 
         $students = Student::select(
             'id',
@@ -216,12 +359,12 @@ class StudentController extends Controller
             'institutional_email',
             'status',
             'inclusive'
-            )
-                ->whereHas('groupYear', $fn_gs)
-                ->with(['groupYear' => $fn_gs])
-                ->orderBy('father_last_name')
-                ->orderBy('mother_last_name')
-                ->get();
+        )
+            ->whereHas('groupYear', $fn_gs)
+            ->with(['groupYear' => $fn_gs])
+            ->orderBy('father_last_name')
+            ->orderBy('mother_last_name')
+            ->get();
 
 
         return view('logro.student.enrolled')->with('students', $students);
@@ -232,7 +375,8 @@ class StudentController extends Controller
         $Y = SchoolYearController::current_year();
 
         $student = Student::select(
-            'id','first_name',
+            'id',
+            'first_name',
             'second_name',
             'father_last_name',
             'mother_last_name',
@@ -248,44 +392,43 @@ class StudentController extends Controller
          * VALIDACION PARA ESTUDIANTES MATRICULADOS EN AÑOS ANTERIORES
          *  */
 
-            $groups = Group::where('school_year_id', $Y->id)
-                ->where('headquarters_id', $student->headquarters_id)
-                ->where('study_time_id', $student->study_time_id)
-                ->where('study_year_id', $student->study_year_id)
-                ->withCount(['groupStudents' => fn($GS) => $GS->where('student_id', $student->id)])
+        $groups = Group::where('school_year_id', $Y->id)
+            ->where('headquarters_id', $student->headquarters_id)
+            ->where('study_time_id', $student->study_time_id)
+            ->where('study_year_id', $student->study_year_id)
+            ->withCount(['groupStudents' => fn ($GS) => $GS->where('student_id', $student->id)])
             ->get();
 
-            if ( 0 === count($groups) )
-                return redirect()->back()->with(
-                    ['notify' => 'fail', 'title' => __('No groups')],
-                );
+        if (0 === count($groups))
+            return redirect()->back()->with(
+                ['notify' => 'fail', 'title' => __('No groups')],
+            );
 
-            return view('logro.student.matriculate')->with([
-                'student' => $student,
-                'groups' => $groups
-            ]);
+        return view('logro.student.matriculate')->with([
+            'student' => $student,
+            'groups' => $groups
+        ]);
     }
 
     public function matriculate_update(Request $request, Student $student)
     {
         $request->validate([
-            'group' => ['required', Rule::exists('groups','id')]
+            'group' => ['required', Rule::exists('groups', 'id')]
         ]);
 
         $group = Group::find($request->group);
 
-        if ( $group->headquarters_id === $student->headquarters_id
+        if (
+            $group->headquarters_id === $student->headquarters_id
             && $group->study_time_id === $student->study_time_id
-            && $group->study_year_id === $student->study_year_id)
-        {
+            && $group->study_year_id === $student->study_year_id
+        ) {
 
-            if ($student->group_id != $request->group)
-            {
+            if ($student->group_id != $request->group) {
 
                 $groupStudentExist = GroupStudent::where('group_id', $student->group_id)->where('student_id', $student->id)->first();
 
-                if (NULL === $groupStudentExist)
-                {
+                if (NULL === $groupStudentExist) {
                     GroupStudent::create([
                         'group_id' => $request->group,
                         'student_id' => $student->id
@@ -306,9 +449,7 @@ class StudentController extends Controller
                     return redirect()->route('students.show', $student)->with(
                         ['notify' => 'success', 'title' => __('Student matriculate!')],
                     );
-
-                } else
-                {
+                } else {
                     $groupStudentExist->update([
                         'group_id' => $request->group
                     ]);
@@ -335,15 +476,13 @@ class StudentController extends Controller
                 }
 
                 return redirect()->route('students.enrolled');
-            } else
-            {
+            } else {
                 return redirect()->route('students.show', $student)->with(
                     ['notify' => 'info', 'title' => __('Unchanged!')],
                 );
             }
-        } else
-        {
-            return redirect()->back()->withErrors( __("Unexpected Error") );
+        } else {
+            return redirect()->back()->withErrors(__("Unexpected Error"));
         }
     }
 
@@ -353,21 +492,24 @@ class StudentController extends Controller
         $YAvailable = SchoolYearController::available_year();
 
         /* Group x Subjects [teacher, piar] START */
-        if (1 === $student->inclusive)
-        {
-            $groupsStudent = Group::whereHas('groupStudents',
-                fn($groupStudents) => $groupStudents->where('student_id', $student->id)
-            )->with(['studyYear' =>
-                fn($groupSY) => $groupSY->with(['studyYearSubject' =>
-                    fn($groupSYS) => $groupSYS->with(['subject' =>
-                        fn($groupSJ) => $groupSJ->with('teacherSubjectGroups')->with(['piarOne' =>
-                            fn($studentPiar) => $studentPiar->where('student_id', $student->id)
+        if (1 === $student->inclusive) {
+            $groupsStudent = Group::whereHas(
+                'groupStudents',
+                fn ($groupStudents) => $groupStudents->where('student_id', $student->id)
+            )->with([
+                'studyYear' =>
+                fn ($groupSY) => $groupSY->with([
+                    'studyYearSubject' =>
+                    fn ($groupSYS) => $groupSYS->with([
+                        'subject' =>
+                        fn ($groupSJ) => $groupSJ->with('teacherSubjectGroups')->with([
+                            'piarOne' =>
+                            fn ($studentPiar) => $studentPiar->where('student_id', $student->id)
                         ])
                     ])
                 ])
             ])->orderByDesc('id')->get();
-        } else
-        {
+        } else {
             $groupsStudent = [];
         }
         /* Group x Subjects [teacher, piar] END */
@@ -393,8 +535,7 @@ class StudentController extends Controller
                 $files->where('student_id', $student->id);
             }
         ]);
-        if (NULL === $student->disability_id || 1 === $student->disability_id)
-        {
+        if (NULL === $student->disability_id || 1 === $student->disability_id) {
             $studentFileTypes->where('inclusive', 0);
         }
 
@@ -422,16 +563,14 @@ class StudentController extends Controller
         ]);
     }
 
-    public function update(Request $request, Student $student)
+    public function update(Request $request, Student $student, $wizard = false)
     {
         $required = 'nullable';
         $data_treatment = $student->data_treatment;
-        if ('Student' === UserController::role_auth())
-        {
+        if ('STUDENT' === UserController::role_auth()) {
             $required = 'required';
             $data_treatment = $request->data_treatment;
-            if ($request->docsFails > 0)
-            {
+            if ($request->docsFails > 0) {
                 return redirect()->back()->withErrors(["custom" => __("documents are missing to upload")]);
             }
 
@@ -443,20 +582,20 @@ class StudentController extends Controller
             'fatherLastName' => ['required', 'string', 'max:191'],
             'motherLastName' => ['nullable', 'string', 'max:191'],
             'telephone' => [$required, 'string', 'max:20'],
-            'document_type' => ['required', Rule::exists('document_types','code')],
-            'document' => ['required', 'string', 'max:20', Rule::unique('students','document')->ignore($student->id)],
-            'expedition_city' => [$required, Rule::exists('cities','id')],
+            'document_type' => ['required', Rule::exists('document_types', 'code')],
+            'document' => ['required', 'string', 'max:20', Rule::unique('students', 'document')->ignore($student->id)],
+            'expedition_city' => [$required, Rule::exists('cities', 'id')],
             'number_siblings' => [$required, 'numeric', 'max:200', 'min:0'],
-            'birth_city' => [$required, Rule::exists('cities','id')],
-            'country' => ['nullable', Rule::exists('countries','id')],
+            'birth_city' => [$required, Rule::exists('cities', 'id')],
+            'country' => ['nullable', Rule::exists('countries', 'id')],
             'birthdate' => [$required, 'date'],
-            'gender' => [$required, Rule::exists('genders','id')],
-            'rh' => [$required, Rule::exists('rhs','id')],
+            'gender' => [$required, Rule::exists('genders', 'id')],
+            'rh' => [$required, Rule::exists('rhs', 'id')],
             'zone' => [$required, 'string', 'max:6'],
-            'residence_city' => [$required, Rule::exists('cities','id')],
+            'residence_city' => [$required, Rule::exists('cities', 'id')],
             'address' => [$required, 'string', 'max:100'],
             'social_stratum' => [$required, 'max:10'],
-            'dwelling_type' => [$required, Rule::exists('dwelling_types','id')],
+            'dwelling_type' => [$required, Rule::exists('dwelling_types', 'id')],
             'neighborhood' => [$required, 'string', 'max:100'],
             'electrical_energy' => ['nullable', 'boolean'],
             'natural_gas' => ['nullable', 'boolean'],
@@ -467,11 +606,11 @@ class StudentController extends Controller
             'lives_with_mother' => ['nullable', 'boolean'],
             'lives_with_siblings' => ['nullable', 'boolean'],
             'lives_with_other_relatives' => ['nullable', 'boolean'],
-            'health_manager' => [$required, Rule::exists('health_managers','id')],
+            'health_manager' => [$required, Rule::exists('health_managers', 'id')],
             'school_insurance' => [$required, 'string', 'max:100'],
-            'sisben' => [$required, Rule::exists('sisben','id')],
-            'disability' => [$required, Rule::exists('disabilities','id')],
-            'disability_certificate' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp','max:2048'],
+            'sisben' => [$required, Rule::exists('sisben', 'id')],
+            'disability' => [$required, Rule::exists('disabilities', 'id')],
+            'disability_certificate' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'data_treatment' => ['nullable', 'boolean']
         ]);
 
@@ -480,20 +619,16 @@ class StudentController extends Controller
 
         /* DATOS PAIS DE ORIGEN */
         $docType = DocumentType::find($request->document_type);
-        if ( 1 == $docType->foreigner )
-        {
+        if (1 == $docType->foreigner) {
             $request->birth_city = NULL;
-        } else
-        {
+        } else {
             $request->country = NULL;
         }
 
         /* COMPROBACION DE DCERTIFICADO DE DISCAPACIDAD */
-        if ( $request->hasFile('disability_certificate') && $request->disability > 1 )
-        {
+        if ($request->hasFile('disability_certificate') && $request->disability > 1) {
             $disability_file = self::upload_disability_certificate($request, $student);
-            if(FALSE === $disability_file)
-            {
+            if (FALSE === $disability_file) {
                 $request->disability = NULL;
             }
         }
@@ -541,28 +676,39 @@ class StudentController extends Controller
             'data_treatment' => $data_treatment
         ]);
 
-        return redirect()->back()->with(
-            ['notify' => 'success', 'title' => __('Student updated!')],
-        );
+        if ( $wizard === TRUE )
+        {
+            $student->forceFill([
+                'wizard_personal_info' => TRUE
+            ])->save();
+
+            return redirect()->back();
+        }
+        else
+        {
+            return redirect()->back()->with(
+                ['notify' => 'success', 'title' => __('Student updated!')],
+            );
+        }
     }
 
     public function psychosocial_update(Request $request, Student $student)
     {
         $request->validate([
-            'ethnic_group' => ['nullable',Rule::exists('ethnic_groups','id')],
-            'conflict_victim' => ['nullable','boolean'],
-            'origin_school' => ['nullable','string'],
-            'icbf_protection' => ['nullable',Rule::exists('icbf_protection_measures','id')],
-            'foundation_beneficiary' => ['nullable','boolean'],
-            'linked_process' => ['nullable',Rule::exists('linkage_processes','id')],
-            'religion' => ['nullable',Rule::exists('religions','id')],
-            'economic_dependence' => ['nullable',Rule::exists('economic_dependences','id')],
-            'plays_sports' => ['nullable','boolean'],
-            'freetime_activity' => ['nullable','string', 'max:191'],
-            'allergies' => ['nullable','string', 'max:191'],
-            'medicines' => ['nullable','string', 'max:191'],
-            'favorite_subjects' => ['nullable','string', 'max:191'],
-            'most_difficult_subjects' => ['nullable','string', 'max:191'],
+            'ethnic_group' => ['nullable', Rule::exists('ethnic_groups', 'id')],
+            'conflict_victim' => ['nullable', 'boolean'],
+            'origin_school' => ['nullable', 'string'],
+            'icbf_protection' => ['nullable', Rule::exists('icbf_protection_measures', 'id')],
+            'foundation_beneficiary' => ['nullable', 'boolean'],
+            'linked_process' => ['nullable', Rule::exists('linkage_processes', 'id')],
+            'religion' => ['nullable', Rule::exists('religions', 'id')],
+            'economic_dependence' => ['nullable', Rule::exists('economic_dependences', 'id')],
+            'plays_sports' => ['nullable', 'boolean'],
+            'freetime_activity' => ['nullable', 'string', 'max:191'],
+            'allergies' => ['nullable', 'string', 'max:191'],
+            'medicines' => ['nullable', 'string', 'max:191'],
+            'favorite_subjects' => ['nullable', 'string', 'max:191'],
+            'most_difficult_subjects' => ['nullable', 'string', 'max:191'],
             'insomnia' => ['nullable', 'boolean'],
             'colic' => ['nullable', 'boolean'],
             'biting_nails' => ['nullable', 'boolean'],
@@ -656,23 +802,20 @@ class StudentController extends Controller
 
     public function piar_update(Request $request, Student $student)
     {
-        $groupSubjects = rtrim($request->groupSubjects,'~');
+        $groupSubjects = rtrim($request->groupSubjects, '~');
         $groupSubjects = explode('~', $groupSubjects);
 
-        foreach($groupSubjects as $gs)
-        {
+        foreach ($groupSubjects as $gs) {
             $piarStudent = Piar::where('student_id', $student->id)->where('subject_id', $gs)->first();
-            if (NULL !==$piarStudent)
-            {
+            if (NULL !== $piarStudent) {
                 // update
-                $request_annotation = $piarStudent->id .'~'. $gs .'~annotation';
+                $request_annotation = $piarStudent->id . '~' . $gs . '~annotation';
                 $piarStudent->update([
                     'annotation' => $request->$request_annotation
                 ]);
-            } else
-            {
+            } else {
                 // create
-                $request_annotation = 'null~'. $gs .'~annotation';
+                $request_annotation = 'null~' . $gs . '~annotation';
                 Piar::create([
                     'student_id' => $student->id,
                     'subject_id' => $gs,
@@ -685,8 +828,6 @@ class StudentController extends Controller
         return redirect()->back()->with(
             ['notify' => 'success', 'title' => __('PIAR updated!')],
         );
-
-
     }
 
     public function create_parents_filter(Request $request)
@@ -717,29 +858,27 @@ class StudentController extends Controller
         $path_file = StudentFileController::upload_file($request, 'disability_certificate', $student->id);
 
         $student_file = StudentFile::where('student_id', $student->id)
-                ->where('student_file_type_id', $request->file_type)
-                ->first();
+            ->where('student_file_type_id', $request->file_type)
+            ->first();
 
-        if ( $student_file === NULL )
-        {
+        if ($student_file === NULL) {
             StudentFile::create([
                 'student_id' => $student->id,
                 'student_file_type_id' => $request->file_type,
-                'url' => config('app.url') .'/'. $path_file,
+                'url' => config('app.url') . '/' . $path_file,
                 'url_absolute' => $path_file,
                 'checked' => NULL,
                 'creation_user_id' => Auth::user()->id
             ]);
             return true;
-        } else
-        {
+        } else {
 
-            if ( $request->hasFile('disability_certificate') )
+            if ($request->hasFile('disability_certificate'))
                 File::delete(public_path($student_file->url_absolute));
 
-            $renewed = $student_file->approval_date === NULL ? FALSE : TRUE ;
+            $renewed = $student_file->approval_date === NULL ? FALSE : TRUE;
             $student_file->update([
-                'url' => config('app.url') .'/'. $path_file,
+                'url' => config('app.url') . '/' . $path_file,
                 'url_absolute' => $path_file,
                 'renewed' => $renewed,
                 'checked' => NULL,
@@ -783,7 +922,7 @@ class StudentController extends Controller
 
     public function export_instructive()
     {
-        return Excel::download(new StudentsInstructuveExport, __('instructive').'.xlsx');
+        return Excel::download(new StudentsInstructuveExport, __('instructive') . '.xlsx');
     }
 
     public function import()
@@ -795,10 +934,10 @@ class StudentController extends Controller
     {
 
         $request->validate([
-            'file' => ['required','file','max:5000','mimes:xls,xlsx']
+            'file' => ['required', 'file', 'max:5000', 'mimes:xls,xlsx']
         ]);
 
-        Excel::import(new StudentsImport,$request->file('file'));
+        Excel::import(new StudentsImport, $request->file('file'));
 
         return redirect()->back()->with(
             ['notify' => 'success', 'title' => __('Loaded Excel!')],
@@ -809,16 +948,14 @@ class StudentController extends Controller
     /* tratamiento de firmas */
     private function signatures(Student $student, $sigTutor, $sigStudent)
     {
-        if (NULL !== $sigTutor)
-        {
+        if (NULL !== $sigTutor) {
             $sigPath = self::signature_upload($sigTutor);
             $student->forceFill([
                 'signature_tutor' => $sigPath
             ])->save();
         }
 
-        if (NULL !== $sigStudent)
-        {
+        if (NULL !== $sigStudent) {
             $sigPath = self::signature_upload($sigStudent);
             $student->forceFill([
                 'signature_student' => $sigPath
@@ -833,34 +970,30 @@ class StudentController extends Controller
         $sig = str_replace('data:image/png;base64,', '', $sig);
         $sig = str_replace(' ', '+', $sig);
 
-        $sigUrl = $path . Str::random(50).'.'.'png';
-        if(!File::isDirectory( public_path($path) ))
-        {
-            File::makeDirectory( public_path($path) );
+        $sigUrl = $path . Str::random(50) . '.' . 'png';
+        if (!File::isDirectory(public_path($path))) {
+            File::makeDirectory(public_path($path));
         }
-        File::put( public_path($sigUrl), base64_decode($sig));
+        File::put(public_path($sigUrl), base64_decode($sig));
         return $sigUrl;
     }
 
     private function send_msg($student, $group)
     {
-        if ($student->person_charge !== NULL)
-        {
+        if ($student->person_charge !== NULL) {
             $tutor = PersonCharge::select('id', 'cellphone')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
 
-            if ($tutor->cellphone !== NULL && Str::length($tutor->cellphone) == 10)
-            {
+            if ($tutor->cellphone !== NULL && Str::length($tutor->cellphone) == 10) {
                 $school = School::find(1);
 
                 $msg = "El estudiante, " .
                     $student->getFullName() .
-                    ", ha sido matriculado en el grupo *" . $group->studyYear->name .": ". $group->name . "*" .
+                    ", ha sido matriculado en el grupo *" . $group->studyYear->name . ": " . $group->name . "*" .
                     " del colegio, *" . $school->name . "*";
 
                 $message = new WAController($msg, $tutor->cellphone);
                 $message->send();
             }
-
         }
     }
 }

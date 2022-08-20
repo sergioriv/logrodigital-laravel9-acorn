@@ -208,7 +208,7 @@ $title = $student->user->name;
 
                     <form method="POST" action="{{ route('students.update', $student) }}" class="tooltip-label-end"
                         enctype="multipart/form-data"
-                        @hasrole('Student')
+                        @hasrole('STUDENT')
                         id="studentProfileInfoForm"
                         @else
                         id="studentInfoForm"
@@ -644,7 +644,7 @@ $title = $student->user->name;
                         </section>
                         <!-- Social Safety Section End -->
 
-                        @unlessrole('Student')
+                        @unlessrole('STUDENT')
                         @if (1 !== $student->data_treatment)
                         <section class="card mb-5">
                             <div class="card-body">
@@ -680,7 +680,7 @@ $title = $student->user->name;
                         <!-- Signatures View End -->
                         @endunlessrole
 
-                        @hasrole('Student')
+                        @hasrole('STUDENT')
                         <!-- Data Treatment Policy Section Start -->
                         <section class="card mb-5">
                             <div class="card-body">
@@ -1912,7 +1912,7 @@ $title = $student->user->name;
 
     <!-- Modal Document Images -->
     <div class="modal fade modal-close-out" id="modalStudentDocuments" tabindex="-1" role="dialog"
-        aria-labelledby="Imagen 1" aria-hidden="true">
+        aria-labelledby="Document" aria-hidden="true">
         <div class="modal-dialog modal-semi-full modal-dialog-centered logro-modal-image">
             <img src="\img\other\none.png" alt="document">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

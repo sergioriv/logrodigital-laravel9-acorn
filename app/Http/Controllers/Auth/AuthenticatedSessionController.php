@@ -92,7 +92,7 @@ class AuthenticatedSessionController extends Controller
     private function login_redirect()
     {
         switch ( UserController::role_auth() ) :
-            case 'Student':
+            case 'STUDENT':
                 return redirect()->intended(RouteServiceProvider::PROFILE);
                 break;
 

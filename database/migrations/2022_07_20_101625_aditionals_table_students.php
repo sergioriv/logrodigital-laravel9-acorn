@@ -43,6 +43,10 @@ return new class extends Migration
             $table->boolean('sleepwalking')->nullable();
             $table->boolean('nervous_tics')->nullable();
 
+            $table->boolean('wizard_documents')->nullable();
+            $table->boolean('wizard_person_charge')->nullable();
+            $table->boolean('wizard_personal_info')->nullable();
+            $table->boolean('wizard_complete')->nullable();
 
         });
     }

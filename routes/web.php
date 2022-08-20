@@ -17,9 +17,6 @@ use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
-use App\Mail\TestMailable;
-use App\Models\School;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,10 +52,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('roles.json', [RoleController::class, 'data']);
 
     /* Route Profile */
-    Route::get('profile', [ProfileController::class, 'show'])->name('user.profile');
+    Route::get('profile', [ProfileController::class, 'edit'])->name('user.profile');
     Route::get('profile/edit', [ProfileController::class, 'edit'])->name('user.profile.edit');
     Route::put('profile', [ProfileController::class, 'update'])->name('user.profile.update');
     Route::put('profile/{user}/avatar', [ProfileController::class, 'update_avatar'])->name('user.profile.avatar');
+    Route::put('profile/documents', [StudentController::class, 'wizard_documents_request'])->name('student.wizard.documents');
+    Route::put('profile/person_charge', [StudentController::class, 'wizard_person_charge_request'])->name('student.wizard.person-charge');
+    Route::put('profile/personal_info', [StudentController::class, 'wizard_personal_info_request'])->name('student.wizard.personal-info');
+    Route::put('profile/edit', [StudentController::class, 'wizard_complete_request'])->name('student.wizard.complete');
 
 
     /* Route School Year */
@@ -135,20 +136,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('students/{student}/matriculate', 'matriculate_update')->name('students.matriculate.update');
 
         Route::get('students/parents.filter','create_parents_filter');
+
+        // Route::get('students/')
     });
 
 
     Route::put('persons_charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');
     Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
-
-    Route::get('test-mail', function () {
-
-        $correo = new TestMailable;
-        $mail = Mail::to('sergioa.rivcif@gmail.com')->send($correo);
-
-        dd($mail);
-    });
 
 });
 

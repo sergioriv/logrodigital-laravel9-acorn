@@ -108,12 +108,15 @@ class Student extends Model
         'status',
         'person_charge',
         'data_treatment'
-,
     ];
 
     protected $hidden = [
         'signature_tutor',
-        'signature_student'
+        'signature_student',
+        'wizard_documents',
+        'wizard_person_charge',
+        'wizard_personal_info',
+        'wizard_complete'
     ];
 
     /*
