@@ -137,7 +137,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('students/parents.filter','create_parents_filter');
 
-        // Route::get('students/')
     });
 
 

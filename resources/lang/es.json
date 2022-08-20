@@ -192,6 +192,8 @@
     "Thank You!": "¡Gracias!",
     "You have completed the registration and document submission process.": "Ha completado el proceso de registro y envío de documentos.",
     "The information will be checked and validated by the educational institution.": "La información será revisada y validada por la institución educativa.",
+    "image use": "uso de imágen",
+    "By continuing, you accept": "Al continuar, aceptas la",
 
     "Study Year": "Año de studio",
     "Hours week": "Horas semana",
@@ -223,7 +225,7 @@
     "It is not possible to create a group for ": "No es posible crear un grupo para el año ",
     "Not allowed for ": "No permitido para el año ",
 
-    "I accept the": "Acepto la",
+    "I authorize the institution the permissions of": "Autorizo a la institución los derechos de",
     "data treatment policy": "política de tratamiento de datos",
     "The student did not accept the data treatment policy.": "El estudiante no acepta la política de tratamiento de datos.",
 

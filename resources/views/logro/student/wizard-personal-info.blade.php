@@ -88,7 +88,8 @@ $title = __('Personal Information');
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('first name') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('first name') }} <span class="text-danger">*</span>
+                                                        </x-label>
                                                         <x-input-error :value="$student->first_name" name="firstName"
                                                             :hasError="'firstName'" />
                                                     </div>
@@ -104,7 +105,8 @@ $title = __('Personal Information');
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __("father's last name") }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __("father's last name") }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-input-error :value="$student->father_last_name" name="fatherLastName"
                                                             :hasError="'fatherLastName'" />
                                                     </div>
@@ -128,7 +130,8 @@ $title = __('Personal Information');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('telephone') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('telephone') }} <span class="text-danger">*</span>
+                                                        </x-label>
                                                         <x-input-error :value="$student->telephone" name="telephone"
                                                             :hasError="'telephone'" />
                                                     </div>
@@ -137,7 +140,8 @@ $title = __('Personal Information');
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('document type') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('document type') }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-select name="document_type" id="document_type" logro="select2"
                                                             :hasError="'document_type'">
                                                             <option label="&nbsp;"></option>
@@ -153,7 +157,8 @@ $title = __('Personal Information');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('document') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('document') }} <span class="text-danger">*</span>
+                                                        </x-label>
                                                         <x-input-error :value="$student->document" name="document"
                                                             :hasError="'document'" />
                                                     </div>
@@ -162,7 +167,8 @@ $title = __('Personal Information');
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('expedition city') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('expedition city') }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-select name="expedition_city" id="expedition_city"
                                                             logro="select2" :hasError="'expedition_city'">
                                                             <option label="&nbsp;"></option>
@@ -177,7 +183,8 @@ $title = __('Personal Information');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('number siblings') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('number siblings') }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-input-error type="number" :value="$student->number_siblings"
                                                             name="number_siblings" max="200" min="0"
                                                             :hasError="'number_siblings'" />
@@ -188,7 +195,8 @@ $title = __('Personal Information');
                                                 <div class="col-md-6 @if ($student->country_id !== null) d-none @endif"
                                                     id="birth_city">
                                                     <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('birth city') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('birth city') }} <span class="text-danger">*</span>
+                                                        </x-label>
                                                         <x-select name="birth_city" logro="select2" :hasError="'birth_city'">
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($cities as $city)
@@ -203,7 +211,8 @@ $title = __('Personal Information');
                                                 <div class="col-md-6 @if ($student->country_id === null) d-none @endif"
                                                     id="country">
                                                     <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('home country') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('home country') }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-select name="country" logro="select2" :hasError="'country'">
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($countries as $country)
@@ -233,7 +242,8 @@ $title = __('Personal Information');
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="w-100 position-relative form-group">
-                                                        <x-label>{{ __('gender') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('gender') }} <span class="text-danger">*</span>
+                                                        </x-label>
                                                         <x-select name="gender" logro="select2" :hasError="'gender'">
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($genders as $gender)
@@ -247,7 +257,8 @@ $title = __('Personal Information');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="w-100 position-relative form-group">
-                                                        <x-label class="text-uppercase">RH <span class="text-danger">*</span></x-label>
+                                                        <x-label class="text-uppercase">RH <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-select name="rh" logro="select2" :hasError="'rh'">
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($rhs as $rh)
@@ -271,7 +282,8 @@ $title = __('Personal Information');
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('zone') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('zone') }} <span class="text-danger">*</span>
+                                                        </x-label>
                                                         <x-select name="zone" logro="select2" :hasError="'zone'">
                                                             <option label="&nbsp;"></option>
                                                             <option value="rural" @selected('rural' === $student->zone)>
@@ -285,7 +297,8 @@ $title = __('Personal Information');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('residence city') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('residence city') }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-select name="residence_city" logro="select2"
                                                             :hasError="'residence_city'">
                                                             <option label="&nbsp;"></option>
@@ -302,14 +315,16 @@ $title = __('Personal Information');
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('address') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('address') }} <span class="text-danger">*</span>
+                                                        </x-label>
                                                         <x-input-error :value="$student->address" name="address"
                                                             :hasError="'address'" />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('social stratum') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('social stratum') }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-select name="social_stratum" logro="select2"
                                                             :hasError="'social_stratum'">
                                                             <option label="&nbsp;"></option>
@@ -326,7 +341,8 @@ $title = __('Personal Information');
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('dwelling type') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('dwelling type') }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-select name="dwelling_type" logro="select2" :hasError="'dwelling_type'">
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($dwellingTypes as $dwellingType)
@@ -340,7 +356,8 @@ $title = __('Personal Information');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('neighborhood') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('neighborhood') }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-input-error :value="$student->neighborhood" name="neighborhood"
                                                             :hasError="'neighborhood'" />
                                                     </div>
@@ -444,7 +461,8 @@ $title = __('Personal Information');
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="mb-3 w-100 position-relative form-group">
-                                                        <x-label>{{ __('health manager') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('health manager') }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-select name="health_manager" logro="select2"
                                                             :hasError="'health_manager'">
                                                             <option label="&nbsp;"></option>
@@ -459,7 +477,8 @@ $title = __('Personal Information');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3 position-relative form-group">
-                                                        <x-label>{{ __('school insurance') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('school insurance') }} <span
+                                                                class="text-danger">*</span></x-label>
                                                         <x-input-error :value="$student->school_insurance" name="school_insurance"
                                                             :hasError="'school_insurance'" />
                                                     </div>
@@ -482,7 +501,8 @@ $title = __('Personal Information');
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="w-100 position-relative form-group">
-                                                        <x-label>{{ __('disability') }} <span class="text-danger">*</span></x-label>
+                                                        <x-label>{{ __('disability') }} <span class="text-danger">*</span>
+                                                        </x-label>
                                                         <x-select name="disability" id="disability" logro="select2"
                                                             :hasError="'disability'">
                                                             <option label="&nbsp;"></option>
@@ -513,17 +533,31 @@ $title = __('Personal Information');
                                     <!-- Data Treatment Policy Section Start -->
                                     <section class="mb-5">
                                         <div class="card-body">
-                                            <div class="form-check d-inline-block w-100">
-                                                <input class="form-check-input" type="checkbox" name="data_treatment"
-                                                    value="1" @checked($student->data_treatment)>
-                                                <label class="form-check-label logro-label">
-                                                    {{ __('I accept the') }}
+                                            <div class="row g-3">
+                                                <div class="col-md-12 mb-3">
+                                                    {{ __("By continuing, you accept") }}
                                                     <span class="text-primary cursor-pointer" data-bs-toggle="modal"
                                                         data-bs-target="#modalDataTreatmentPolicy">
                                                         {{ __('data treatment policy') }}
                                                     </span>
-                                                </label>
+                                                </div>
                                             </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-12">
+                                                    <div class="form-check d-inline-block w-100">
+                                                        <input class="form-check-input" type="checkbox" name="data_treatment"
+                                                            value="1" @checked($student->data_treatment)>
+                                                        <label class="form-check-label logro-label">
+                                                            {{ __('I authorize the institution the permissions of') }}
+                                                            <span class="text-primary cursor-pointer" data-bs-toggle="modal"
+                                                                data-bs-target="#modalDataTreatmentImage">
+                                                                {{ __('image use') }}
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <!-- Modal Data Treatment Policy Start -->
                                             <div class="modal fade scroll-out" id="modalDataTreatmentPolicy"
                                                 tabindex="-1" role="dialog"
@@ -548,6 +582,32 @@ $title = __('Personal Information');
                                                 </div>
                                             </div>
                                             <!-- Modal Data Treatment Policy End -->
+
+                                            <!-- Modal Data Treatment Imagen Rights Start -->
+                                            <div class="modal fade scroll-out" id="modalDataTreatmentImage"
+                                                tabindex="-1" role="dialog"
+                                                aria-labelledby="modalCloseDataTreatmentImage" aria-hidden="true">
+                                                <div
+                                                    class="modal-dialog modal-xl modal-dialog-scrollable short modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title logro-label"
+                                                                id="modalCloseDataTreatmentImage">
+                                                                {{ __('image use') }}
+                                                            </h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="scroll-track-visible">
+                                                                <x-data-treatment-image-rights />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Data Treatment Imagen Rights End -->
+
                                         </div>
                                     </section>
                                     <!-- Data Treatment Policy Section End -->

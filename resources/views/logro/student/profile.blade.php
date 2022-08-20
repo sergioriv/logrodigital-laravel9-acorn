@@ -684,44 +684,81 @@ $title = $student->user->name;
                         <!-- Data Treatment Policy Section Start -->
                         <section class="card mb-5">
                             <div class="card-body">
-                                <div class="form-check d-inline-block w-100">
-                                    <input class="form-check-input" type="checkbox" name="data_treatment"
-                                        value="1" @checked($student->data_treatment)>
-                                    <label class="form-check-label logro-label">
-                                        {{ __("I accept the") }}
-                                        <span class="text-primary cursor-pointer"
-                                            data-bs-toggle="modal"
+                                <div class="row g-3">
+                                    <div class="col-md-12 mb-3">
+                                        {{ __("By continuing, you accept") }}
+                                        <span class="text-primary cursor-pointer" data-bs-toggle="modal"
                                             data-bs-target="#modalDataTreatmentPolicy">
-                                            {{ __("data treatment policy") }}
+                                            {{ __('data treatment policy') }}
                                         </span>
-                                    </label>
+                                    </div>
                                 </div>
+                                <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <div class="form-check d-inline-block w-100">
+                                            <input class="form-check-input" type="checkbox" name="data_treatment"
+                                                value="1" @checked($student->data_treatment)>
+                                            <label class="form-check-label logro-label">
+                                                {{ __('I authorize the institution the permissions of') }}
+                                                <span class="text-primary cursor-pointer" data-bs-toggle="modal"
+                                                    data-bs-target="#modalDataTreatmentImage">
+                                                    {{ __('image use') }}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Modal Data Treatment Policy Start -->
-                                <div class="modal fade scroll-out"
-                                    id="modalDataTreatmentPolicy"
-                                    tabindex="-1"
-                                    role="dialog"
-                                    aria-labelledby="modalCloseDataTreatmentPolicy"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-xl modal-dialog-scrollable short modal-dialog-centered">
+                                <div class="modal fade scroll-out" id="modalDataTreatmentPolicy"
+                                    tabindex="-1" role="dialog"
+                                    aria-labelledby="modalCloseDataTreatmentPolicy" aria-hidden="true">
+                                    <div
+                                        class="modal-dialog modal-xl modal-dialog-scrollable short modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title logro-label" id="modalCloseDataTreatmentPolicy">
-                                                {{ __("data treatment policy") }}
+                                                <h5 class="modal-title logro-label"
+                                                    id="modalCloseDataTreatmentPolicy">
+                                                    {{ __('data treatment policy') }}
                                                 </h5>
                                                 <button type="button" class="btn-close"
-                                                data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="scroll-track-visible">
-                                                <x-data-treatment-policy />
+                                                    <x-data-treatment-policy />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Modal Data Treatment Policy End -->
+
+                                <!-- Modal Data Treatment Imagen Rights Start -->
+                                <div class="modal fade scroll-out" id="modalDataTreatmentImage"
+                                    tabindex="-1" role="dialog"
+                                    aria-labelledby="modalCloseDataTreatmentImage" aria-hidden="true">
+                                    <div
+                                        class="modal-dialog modal-xl modal-dialog-scrollable short modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title logro-label"
+                                                    id="modalCloseDataTreatmentImage">
+                                                    {{ __('image use') }}
+                                                </h5>
+                                                <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="scroll-track-visible">
+                                                    <x-data-treatment-image-rights />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal Data Treatment Imagen Rights End -->
+
                             </div>
                         </section>
                         <!-- Data Treatment Policy Section End -->
