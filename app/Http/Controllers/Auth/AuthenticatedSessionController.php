@@ -65,7 +65,8 @@ class AuthenticatedSessionController extends Controller
     {
         $microsoft = Socialite::driver('azure')->user();
 
-        $user = User::where('provider', 'microsoft')->where('email', $microsoft->email)->first();
+        // $user = User::where('provider', 'microsoft')->where('email', $microsoft->email)->first();
+        $user = User::where('email', $microsoft->email)->first();
 
         if ( $user )
         {

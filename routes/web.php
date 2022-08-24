@@ -150,4 +150,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 });
 
+// Route::get('email', function () {
+    // $user = User::find(954);
+    // SmtpMail::sendEmailVerificationNotification($user);
+    // SmtpMail::sendEmailEnrollmentNotification($user, 'Fernando Rivera', 'Once', '1101');
+    // dd( (new App\Http\Controllers\SchoolController)->name() );
+
+    // $content = (new ContentMail)
+    //         ->title( 'Hola' )
+    //         ->line( 'Contenido' );
+    // return $content->toContent();
+// });
+
 require __DIR__.'/auth.php';
