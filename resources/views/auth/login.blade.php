@@ -24,9 +24,8 @@ $description = 'Login Page'
                 <div class="logo-default img-logro"></div>
             </a>
         </div>
-        <div class="mb-5">
-            <h2 class="cta-1 mb-0 text-primary">{{ __('Welcome') }},</h2>
-            <h2 class="cta-1 text-primary">{{ __("let's get started!") }}</h2>
+        <div class="mb-5 text-center">
+            <h2 class="cta-1 text-primary">{{ (new App\Http\Controllers\SchoolController)->name() }}</h2>
         </div>
         <div>
             <!-- Session Status -->

@@ -21,18 +21,17 @@ $description = 'Forgot Password Page'
     <div class="sw-lg-50 px-5">
         <div class="sh-13 mb-7 d-flex justify-content-center">
             <a href="/">
-                <div class="logo-default img-uchuva"></div>
+                <div class="logo-default img-logro"></div>
             </a>
         </div>
         <div class="mb-5">
-            <h2 class="cta-1 mb-0 text-primary">Password is gone?</h2>
-            <h2 class="cta-1 text-primary">Let's reset it!</h2>
+            <h2 class="cta-1 text-primary">{{ __("Password is gone?") }}</h2>
         </div>
         <div class="mb-5">
-            <p class="h6">Please enter your email to receive a link to reset your password.</p>
+            <p class="h6">{{ __("Please enter your email to receive a link to reset your password.") }}</p>
             <p class="h6">
                 If you are a member, please
-                <a href="/">login</a>
+                <a href="/">Login</a>
                 .
             </p>
         </div>

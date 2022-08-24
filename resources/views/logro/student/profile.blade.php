@@ -218,6 +218,12 @@ $title = $student->user->name;
                         @csrf
                         @method('PUT')
 
+                        @php $input_required = "" @endphp
+                        @hasrole('STUDENT')
+                        @php $input_required = '<span class="text-danger">*</span>' @endphp
+                        @endhasrole
+
+
                         <!-- Basic Information Section Start -->
                         <h2 class="small-title">{{ __('Basic information') }}</h2>
                         <section class="card mb-5">
@@ -225,7 +231,7 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __('first name') }}</x-label>
+                                            <x-label>{{ __('first name') }} <span class="text-danger">*</span></x-label>
                                             <x-input-error :value="$student->first_name" name="firstName"
                                                 :hasError="'firstName'"/>
                                         </div>
@@ -241,7 +247,7 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __("father's last name") }}</x-label>
+                                            <x-label>{{ __("father's last name") }} <span class="text-danger">*</span></x-label>
                                             <x-input-error :value="$student->father_last_name" name="fatherLastName"
                                                 :hasError="'fatherLastName'"/>
                                         </div>
@@ -265,7 +271,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __('telephone') }}</x-label>
+                                            <x-label>{{ __('telephone') }} {!! $input_required !!}</x-label>
                                             <x-input-error :value="$student->telephone" name="telephone"
                                                 :hasError="'telephone'"/>
                                         </div>
@@ -274,7 +280,7 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('document type') }}</x-label>
+                                            <x-label>{{ __('document type') }} <span class="text-danger">*</span></x-label>
                                             <x-select name="document_type" id="document_type" logro="select2"
                                                 :hasError="'document_type'">
                                                 <option label="&nbsp;"></option>
@@ -289,7 +295,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __('document') }}</x-label>
+                                            <x-label>{{ __('document') }} <span class="text-danger">*</span></x-label>
                                             <x-input-error :value="$student->document" name="document"
                                                 :hasError="'document'"/>
                                         </div>
@@ -298,7 +304,7 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('expedition city') }}</x-label>
+                                            <x-label>{{ __('expedition city') }} {!! $input_required !!}</x-label>
                                             <x-select name="expedition_city" id="expedition_city" logro="select2"
                                                 :hasError="'expedition_city'">
                                                 <option label="&nbsp;"></option>
@@ -313,7 +319,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __('number siblings') }}</x-label>
+                                            <x-label>{{ __('number siblings') }} {!! $input_required !!}</x-label>
                                             <x-input-error type="number" :value="$student->number_siblings" name="number_siblings"
                                                 max="200" min="0" :hasError="'number_siblings'"/>
                                         </div>
@@ -322,7 +328,7 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6 @if ($student->country_id !== null) d-none @endif" id="birth_city">
                                         <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('birth city') }}</x-label>
+                                            <x-label>{{ __('birth city') }} {!! $input_required !!}</x-label>
                                             <x-select name="birth_city" logro="select2"
                                                 :hasError="'birth_city'">
                                                 <option label="&nbsp;"></option>
@@ -337,7 +343,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="col-md-6 @if ($student->country_id === null) d-none @endif" id="country">
                                         <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('home country') }}</x-label>
+                                            <x-label>{{ __('home country') }} {!! $input_required !!}</x-label>
                                             <x-select name="country" logro="select2"
                                                 :hasError="'country'">
                                                 <option label="&nbsp;"></option>
@@ -352,12 +358,13 @@ $title = $student->user->name;
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __('birthdate') }}</x-label>
                                             @if (null !== $student->birthdate)
+                                                <x-label>{{ __('birthdate') }}</x-label>
                                                 <span class="form-control text-muted">{{ $student->birthdate }}</span>
                                                 <x-input-error type="hidden" :value="$student->birthdate" name="birthdate"
                                                     :hasError="'birthdate'"/>
                                             @else
+                                                <x-label>{{ __('birthdate') }} {!! $input_required !!}</x-label>
                                                 <x-input-error :value="$student->birthdate" logro="datePicker" name="birthdate"
                                                     :hasError="'birthdate'"/>
                                             @endif
@@ -367,7 +374,7 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="w-100 position-relative form-group">
-                                            <x-label>{{ __('gender') }}</x-label>
+                                            <x-label>{{ __('gender') }} {!! $input_required !!}</x-label>
                                             <x-select name="gender" logro="select2"
                                                 :hasError="'gender'">
                                                 <option label="&nbsp;"></option>
@@ -382,7 +389,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="col-md-6">
                                         <div class="w-100 position-relative form-group">
-                                            <x-label class="text-uppercase">RH</x-label>
+                                            <x-label class="text-uppercase">RH {!! $input_required !!}</x-label>
                                             <x-select name="rh" logro="select2"
                                                 :hasError="'rh'">
                                                 <option label="&nbsp;"></option>
@@ -407,7 +414,7 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('zone') }}</x-label>
+                                            <x-label>{{ __('zone') }} {!! $input_required !!}</x-label>
                                             <x-select name="zone" logro="select2"
                                                 :hasError="'zone'">
                                                 <option label="&nbsp;"></option>
@@ -422,7 +429,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('residence city') }}</x-label>
+                                            <x-label>{{ __('residence city') }} {!! $input_required !!}</x-label>
                                             <x-select name="residence_city" logro="select2"
                                                 :hasError="'residence_city'">
                                                 <option label="&nbsp;"></option>
@@ -439,14 +446,14 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __('address') }}</x-label>
+                                            <x-label>{{ __('address') }} {!! $input_required !!}</x-label>
                                             <x-input-error :value="$student->address" name="address"
                                                 :hasError="'address'"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('social stratum') }}</x-label>
+                                            <x-label>{{ __('social stratum') }} {!! $input_required !!}</x-label>
                                             <x-select name="social_stratum" logro="select2"
                                                 :hasError="'social_stratum'">
                                                 <option label="&nbsp;"></option>
@@ -463,7 +470,7 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('dwelling type') }}</x-label>
+                                            <x-label>{{ __('dwelling type') }} {!! $input_required !!}</x-label>
                                             <x-select name="dwelling_type" logro="select2"
                                                 :hasError="'dwelling_type'">
                                                 <option label="&nbsp;"></option>
@@ -478,7 +485,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __('neighborhood') }}</x-label>
+                                            <x-label>{{ __('neighborhood') }} {!! $input_required !!}</x-label>
                                             <x-input-error :value="$student->neighborhood" name="neighborhood"
                                                 :hasError="'neighborhood'"/>
                                         </div>
@@ -578,7 +585,7 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('health manager') }}</x-label>
+                                            <x-label>{{ __('health manager') }} {!! $input_required !!}</x-label>
                                             <x-select name="health_manager" logro="select2"
                                                 :hasError="'health_manager'">
                                                 <option label="&nbsp;"></option>
@@ -593,7 +600,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __('school insurance') }}</x-label>
+                                            <x-label>{{ __('school insurance') }} {!! $input_required !!}</x-label>
                                             <x-input-error :value="$student->school_insurance" name="school_insurance"
                                                 :hasError="'school_insurance'" />
                                         </div>
@@ -602,7 +609,7 @@ $title = $student->user->name;
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="w-100 position-relative form-group">
-                                            <x-label>sisben</x-label>
+                                            <x-label>sisben {!! $input_required !!}</x-label>
                                             <x-select name="sisben" logro="select2"
                                                 :hasError="'sisben'">
                                                 <option label="&nbsp;"></option>
@@ -617,7 +624,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="col-md-6">
                                         <div class="w-100 position-relative form-group">
-                                            <x-label>{{ __('disability') }}</x-label>
+                                            <x-label>{{ __('disability') }} {!! $input_required !!}</x-label>
                                             <x-select name="disability" id="disability" logro="select2"
                                                 :hasError="'disability'">
                                                 <option label="&nbsp;"></option>

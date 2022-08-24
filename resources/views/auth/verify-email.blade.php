@@ -19,7 +19,7 @@ $description = '';
     <div class="sw-lg-50 px-5">
         <div class="sh-13 mb-7 d-flex justify-content-center">
             <a href="/">
-                <div class="logo-default img-uchuva"></div>
+                <div class="logo-default img-logro"></div>
             </a>
         </div>
         <div class="mb-5">

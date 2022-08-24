@@ -3,10 +3,13 @@
 use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
+use App\Http\Controllers\Mail\ContentMail;
+use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\PersonChargeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceAreaController;
 use App\Http\Controllers\ResourceSubjectController;
+use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFileController;
@@ -17,6 +20,7 @@ use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*

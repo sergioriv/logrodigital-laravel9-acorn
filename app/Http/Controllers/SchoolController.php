@@ -7,24 +7,12 @@ use Illuminate\Http\Request;
 
 class SchoolController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    private static $mySchool;
+
+    function __construct()
     {
-        //
+        static::$mySchool = School::find(1);
     }
 
     /**
@@ -72,14 +60,8 @@ class SchoolController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\School  $school
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(School $school)
+    public function name()
     {
-        //
+        return static::$mySchool->name ?? null;
     }
 }

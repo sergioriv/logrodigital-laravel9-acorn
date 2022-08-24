@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Mail\SmtpMail;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,8 @@ class EmailVerificationNotificationController extends Controller
             return redirect()->intended(RouteServiceProvider::HOME);
         }
 
-        $request->user()->sendEmailVerificationNotification();
+        SmtpMail::sendEmailVerificationNotification($request->user());
+        // $request->user()->sendEmailVerificationNotification();
 
         return back()->with('status', 'verification-link-sent');
     }
