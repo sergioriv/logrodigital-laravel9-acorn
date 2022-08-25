@@ -55,6 +55,11 @@ class ProfileController extends Controller
                 return view('profile.support-edit')->with('support', $support);
                 break;
 
+            case 'SECRETARY':
+                $support = User::findOrFail(Auth::user()->id);
+                return view('profile.support-edit')->with('support', $support);
+                break;
+
             case 'STUDENT':
                 $student = new StudentController();
                 $student_find = Student::find($user->id);
@@ -93,6 +98,11 @@ class ProfileController extends Controller
     {
         switch (UserController::role_auth()) {
             case 'SUPPORT':
+                $support = User::findOrFail(Auth::user()->id);
+                UserController::profile_update($request, $support);
+                break;
+
+            case 'SECRETARY':
                 $support = User::findOrFail(Auth::user()->id);
                 UserController::profile_update($request, $support);
                 break;
