@@ -30,6 +30,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('city')->nullable();
             $table->string('badge')->nullable();
             $table->unsignedMediumInteger('students');
+            $table->string('institutional_email')->nullable();
             $table->timestamps();
         });
 

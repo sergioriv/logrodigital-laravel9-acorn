@@ -64,4 +64,12 @@ class SchoolController extends Controller
     {
         return static::$mySchool->name ?? null;
     }
+    public function badge()
+    {
+        return static::$mySchool->badge ?? null;
+    }
+    public function email()
+    {
+        return static::$mySchool->institutional_email ?? null;
+    }
 }

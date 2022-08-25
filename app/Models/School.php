@@ -18,9 +18,6 @@ class School extends CastCreateModel
         'contact_telephone',
         'city',
         'badge',
-    ];
-
-    protected $hidden = [
-        'students'
+        'institutional_email'
     ];
 }

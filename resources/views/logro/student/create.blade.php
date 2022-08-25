@@ -61,6 +61,11 @@ $title = __('Create') . ' ' . __('Student');
                 }
             });
         }
+
+        jQuery('#addInstitutionalEmail').click(function () {
+            var email = $('#institutional_email');
+            email.val( email.val().concat( $(this).data('value') ) );
+        });
     </script>
 @endsection
 
@@ -177,7 +182,10 @@ $title = __('Create') . ' ' . __('Student');
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('institutional email') }} <span class="text-danger">*</span>
                                             </x-label>
-                                            <x-input :value="old('institutional_email')" name="institutional_email" required />
+                                            <div class="input-group">
+                                                <x-input :value="old('institutional_email')" name="institutional_email" id="institutional_email" required />
+                                                <span class="input-group-text cursor-pointer" id="addInstitutionalEmail" data-value="{{ (new \App\Http\Controllers\SchoolController)->email() }}">@ correo institucional</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
