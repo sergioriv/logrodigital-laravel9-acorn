@@ -36,8 +36,7 @@ class SmtpMail extends Controller
             ->line(Lang::get('If you did not create an account, no further action is required.'))
             ->subcopy();
 
-        return $content->toContent();
-        // static::send_email( $content->toContent() );
+        static::send_email( $content->toContent() );
     }
 
     public static function sendPasswordResetNotification(User $user, $token)

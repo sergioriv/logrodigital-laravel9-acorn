@@ -63,7 +63,7 @@ class TeacherController extends Controller
         ]);
 
         return redirect()->route('teacher.index')->with(
-            ['notify' => 'success', 'title' => __('Teacher updated!')],
+            ['notify' => 'success', 'title' => __('Teacher created!')],
         );
     }
 
