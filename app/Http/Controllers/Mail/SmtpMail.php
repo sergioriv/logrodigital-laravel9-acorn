@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Mail;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SchoolController;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -81,6 +82,7 @@ class SmtpMail extends Controller
     {
 
         $mail = new PHPMailer(true);
+        $schoolName = (new SchoolController)->name();
 
         try {
             $mail->isSMTP();
@@ -94,7 +96,7 @@ class SmtpMail extends Controller
             $mail->setFrom(config('mail.from.address'), config('mail.from.name'));
             $mail->Subject = static::$subject;
             $mail->MsgHTML($contentEmail);
-            $mail->addAddress(static::$userEmail, static::$userName);
+            $mail->addAddress(static::$userEmail, $schoolName);
             $mail->send();
         } catch (Exception $e) {
             dd($e);
