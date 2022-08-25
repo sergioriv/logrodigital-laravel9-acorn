@@ -35,7 +35,8 @@ class SmtpMail extends Controller
             ->line(Lang::get('If you did not create an account, no further action is required.'))
             ->subcopy();
 
-        static::send_email( $content->toContent() );
+        return $content->toContent();
+        // static::send_email( $content->toContent() );
     }
 
     public static function sendPasswordResetNotification(User $user, $token)
@@ -48,7 +49,7 @@ class SmtpMail extends Controller
         $resetUrl = static::resetUrl($user, $token);
 
         $content = (new ContentMail)
-            ->title( Lang::get('Hello') .', '. $user->name )
+            ->title( Lang::get('Hi') .', '. $user->name )
             ->line(Lang::get('You are receiving this email because we received a password reset request for your account.'))
             ->action(Lang::get('Reset Password'), $resetUrl)
             ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))

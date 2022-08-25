@@ -249,6 +249,10 @@
 
     "Password is gone?": "¿Ha olvidado la contraseña?",
     "Please enter your email to receive a link to reset your password.": "Ingrese su correo electrónico para recibir un enlace para restablecer su contraseña.",
+    "Your account has already been verified": "Tu cuenta ya ha sido verificada",
+    "Go to Login": "Ir a iniciar sesión",
+    "Send": "Enviar",
+    "Enter new password for your account": "Ingrese una contraseña para su cuenta",
 
     "full name": "nombre completo",
     "new": "nuevo",

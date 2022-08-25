@@ -24,17 +24,11 @@ $description = 'Reset Password Page'
                 <div class="logo-default img-logro"></div>
             </a>
         </div>
-        <div class="mb-5">
-            <h2 class="cta-1 mb-0 text-primary">Password trouble?</h2>
-            <h2 class="cta-1 text-primary">Renew it here!</h2>
+        <div class="mb-5 text-center">
+            <h2 class="cta-1 text-primary">{{ (new App\Http\Controllers\SchoolController)->name() }}</h2>
         </div>
         <div class="mb-5">
-            <p class="h6">Please use below form to reset your password.</p>
-            <p class="h6">
-                If you are a member, please
-                <a href="/Pages/Authentication/Login">login</a>
-                .
-            </p>
+            <p class="h6">{{ __("Enter new password for your account") }}</p>
         </div>
         <div>
 
@@ -66,6 +60,8 @@ $description = 'Reset Password Page'
                 <x-button type="submit" class="btn-primary">
                     {{ __('Reset Password') }}
                 </x-button>
+
+                <a href="/" class="btn btn-outline-primary">{{ __("Go Home") }}</a>
             </form>
         </div>
     </div>

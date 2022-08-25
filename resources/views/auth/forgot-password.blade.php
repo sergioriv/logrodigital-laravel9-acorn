@@ -30,9 +30,7 @@ $description = 'Forgot Password Page'
         <div class="mb-5">
             <p class="h6">{{ __("Please enter your email to receive a link to reset your password.") }}</p>
             <p class="h6">
-                If you are a member, please
-                <a href="/">Login</a>
-                .
+                <a href="/">{{ __("Go Home") }}</a>
             </p>
         </div>
         <div>
@@ -53,7 +51,7 @@ $description = 'Forgot Password Page'
                 </div>
 
                 <x-button type="submit" class="btn-primary">
-                    {{ __('Send Reset Email') }}
+                    {{ __('Send') }}
                 </x-button>
             </form>
         </div>

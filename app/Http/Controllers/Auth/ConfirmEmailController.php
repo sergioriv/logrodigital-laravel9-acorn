@@ -26,9 +26,19 @@ class ConfirmEmailController extends Controller
     {
         $auth = Auth::user();
 
-        $diff = Carbon::create($auth->email_verified_at)->diffInMinutes(Carbon::now());
+        // $diff = Carbon::create($auth->email_verified_at)->diffInMinutes(Carbon::now());
 
-        if ( in_array($auth->provider, $this->providers ) && $diff <= 2 )
+        if ( NULL === $auth->password )
+        {
+            return view('auth.confirm-email')->with('status', 'password');
+        }
+        else
+        {
+            Auth::logout();
+            return view('auth.confirm-email')->with('status', 'fail');
+        }
+
+        /* if ( in_array($auth->provider, $this->providers ) && $diff <= 2 )
         {
             return view('auth.confirm-email')->with('status', 'provider');
         }
@@ -40,7 +50,7 @@ class ConfirmEmailController extends Controller
         {
             Auth::logout();
             return view('auth.confirm-email')->with('status', 'fail');
-        }
+        } */
     }
 
     public function change_password(Request $request)

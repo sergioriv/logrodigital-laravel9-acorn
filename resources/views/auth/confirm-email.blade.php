@@ -22,13 +22,17 @@ $description = '';
                 <div class="logo-default img-logro"></div>
             </a>
         </div>
-        <div class="mb-5">
-            <h2 class="cta-1 text-primary">{{ __('Welcome') }}</h2>
+        <div class="mb-5 text-center">
+            <h2 class="cta-1 text-primary">
+                {{ (new App\Http\Controllers\SchoolController)->name() }}</h2>
         </div>
         <div class="mb-5">
 
             @if ($status == 'password')
-            <p class="h6 mb-4">{{ __('Account verified successfully') }}</p>
+            <p class="h6 mb-4">
+                <i data-acorn-icon="shield-check" class="me-1 text-success"></i>
+                {{ __('Account verified successfully') }}
+            </p>
 
             <form method="POST" action="{{ route('support.users.password') }}">
                 @csrf
@@ -49,9 +53,9 @@ $description = '';
                 <x-button type="submit" class="btn-primary">{{ __('Confirm') }}</x-button>
             </form>
 
-            @elseif ($status == 'provider')
+            {{-- @elseif ($status == 'provider')
             <p class="h6 mb-4">{{ __('Account verified successfully') }}</p>
-            <a href="{{ route('dashboard') }}" class="btn btn-primary">{{ __('Continue') }}</a>
+            <a href="{{ route('dashboard') }}" class="btn btn-primary">{{ __('Continue') }}</a> --}}
             @else
             <p class="h6 mb-4">{{ __('Your account has already been verified') }}</p>
             <a href="/" class="btn btn-primary">{{ __('Go to Login') }}</a>
