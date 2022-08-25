@@ -73,7 +73,7 @@ class StudentFileController extends Controller
     {
         if ( $request->hasFile($file_name) )
         {
-            $path = $request->file($file_name)->store('student_files/'.$student_id, 'public');
+            $path = $request->file($file_name)->store('students/'.$student_id.'/files', 'public');
             return config('filesystems.disks.public.url') .'/' . $path;
         }
         else return null;

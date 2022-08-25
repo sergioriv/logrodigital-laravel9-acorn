@@ -949,31 +949,33 @@ class StudentController extends Controller
     private function signatures(Student $student, $sigTutor, $sigStudent)
     {
         if (NULL !== $sigTutor) {
-            $sigPath = self::signature_upload($sigTutor);
+            $sigPath = self::signature_upload($student->id, $sigTutor);
             $student->forceFill([
                 'signature_tutor' => $sigPath
             ])->save();
         }
 
         if (NULL !== $sigStudent) {
-            $sigPath = self::signature_upload($sigStudent);
+            $sigPath = self::signature_upload($student->id, $sigStudent);
             $student->forceFill([
                 'signature_student' => $sigPath
             ])->save();
         }
     }
 
-    private function signature_upload($sig)
+    private function signature_upload($student_id, $sig)
     {
-        $path = "app/signatures/";
+        $path = "app/students/$student_id/signatures/";
+
+        if (!File::isDirectory(public_path($path))) {
+            File::makeDirectory(public_path($path), 0755, true, true);
+        }
+
+        $sigUrl = $path . Str::random(50) . '.' . 'png';
 
         $sig = str_replace('data:image/png;base64,', '', $sig);
         $sig = str_replace(' ', '+', $sig);
 
-        $sigUrl = $path . Str::random(50) . '.' . 'png';
-        if (!File::isDirectory(public_path($path))) {
-            File::makeDirectory(public_path($path));
-        }
         File::put(public_path($sigUrl), base64_decode($sig));
         return $sigUrl;
     }
