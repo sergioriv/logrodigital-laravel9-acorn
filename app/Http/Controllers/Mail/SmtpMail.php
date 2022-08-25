@@ -92,10 +92,10 @@ class SmtpMail extends Controller
             $mail->Port = config('mail.mailers.smtp.port');
             $mail->Username = config('mail.mailers.smtp.username');
             $mail->Password = config('mail.mailers.smtp.password');
-            $mail->setFrom(config('mail.from.address'), config('mail.from.name'));
+            $mail->setFrom(config('mail.from.address'), $schoolName);
             $mail->Subject = static::$subject;
             $mail->MsgHTML($contentEmail);
-            $mail->addAddress(static::$userEmail, $schoolName);
+            $mail->addAddress(static::$userEmail, static::$userName);
             $mail->send();
         } catch (Exception $e) {
             dd($e);
