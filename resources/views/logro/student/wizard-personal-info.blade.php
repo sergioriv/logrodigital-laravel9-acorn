@@ -22,6 +22,15 @@ $title = __('Personal Information');
     <script src="/js/forms/select2.js"></script>
     <script src="/js/forms/student-profile.js"></script>
     <script src="/js/forms/signature.js"></script>
+    <script>
+        jQuery("#confirm_save").click(function () {
+            if ( $(this).is(':checked') ) {
+                $("#save_personal_info").prop('disabled', false);
+            } else {
+                $("#save_personal_info").prop('disabled', true);
+            }
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -730,7 +739,11 @@ $title = __('Personal Information');
                                 </div>
                             </div>
                             <div class="card-footer text-center">
-                                <button class="btn btn-icon btn-icon-end btn-outline-primary btn-next" type="submit">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input float-none me-1" type="checkbox" id="confirm_save" />
+                                    <label class="form-check-label" for="confirm_save">{{ __("I confirm that the information that I am registering on this form is reliable.") }}</label>
+                                </div>
+                                <button disabled id="save_personal_info" class="btn btn-icon btn-icon-end btn-outline-primary btn-next" type="submit">
                                     <span>{{ __('Continue') }}</span>
                                     <i data-acorn-icon="chevron-right" class="icon" data-acorn-size="18"></i>
                                 </button>

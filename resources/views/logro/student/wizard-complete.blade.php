@@ -69,7 +69,7 @@ $title = __('Register completed');
                                             </p>
                                             <button class="btn btn-icon btn-icon-end btn-primary btn-reset"
                                                 type="submit">
-                                                <span>{{ __("Continue") }}</span>
+                                                <span>{{ __("Finish") }}</span>
                                                 <i data-acorn-icon="chevron-right"></i>
                                             </button>
                                         </div>
