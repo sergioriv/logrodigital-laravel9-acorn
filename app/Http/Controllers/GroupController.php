@@ -115,7 +115,7 @@ class GroupController extends Controller
             'headquarters' => ['required', 'numeric', Rule::exists('headquarters','id')],
             'study_time' => ['required', 'numeric', Rule::exists('study_times','id')],
             'study_year' => ['required', 'numeric', Rule::exists('study_years','id')],
-            'teacher' => ['required', 'numeric', Rule::exists('teachers','id')],
+            'teacher' => ['nullable', 'numeric', Rule::exists('teachers','id')],
             'name' => ['required', 'string']
         ]);
 

@@ -41,7 +41,7 @@ $title = __('Create Teacher');
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative form-group">
-                                        <x-label>{{ __("first name") }}</x-label>
+                                        <x-label>{{ __("first name") }} <x-required/></x-label>
                                         <x-input :value="old('firstName')" name="firstName" required />
                                     </div>
                                 </div>
@@ -55,7 +55,7 @@ $title = __('Create Teacher');
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative form-group">
-                                        <x-label>{{ __("father's last name") }}</x-label>
+                                        <x-label>{{ __("father's last name") }} <x-required/></x-label>
                                         <x-input :value="old('fatherLastName')" name="fatherLastName" required />
                                     </div>
                                 </div>
@@ -69,13 +69,13 @@ $title = __('Create Teacher');
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative form-group">
-                                        <x-label>{{ __("telephone") }}</x-label>
+                                        <x-label>{{ __("telephone") }} <x-required/></x-label>
                                         <x-input :value="old('phone')" name="phone" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative form-group">
-                                        <x-label>{{ __("email") }}</x-label>
+                                        <x-label>{{ __("email") }} <x-required/></x-label>
                                         <x-input :value="old('email')" name="email" required />
                                     </div>
                                 </div>

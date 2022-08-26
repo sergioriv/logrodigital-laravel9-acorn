@@ -256,6 +256,7 @@
     "Finish": "Finalizar",
     "I confirm that the information that I am registering on this form is reliable.": "Confirmo que la información que estoy registrando en este formulario es verídica.",
     "Add Institutional Email": "Agregar correo institucional",
+    "Invalid email (:email)": "Email invalido (:email)",
 
     "full name": "nombre completo",
     "new": "nuevo",

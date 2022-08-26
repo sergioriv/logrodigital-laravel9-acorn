@@ -48,7 +48,7 @@ $title = __('Create Group');
 
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <x-label>{{ __('Headquarters') }}</x-label>
+                                        <x-label>{{ __('Headquarters') }} <x-required/></x-label>
                                         <select id="select2Headquarters" name="headquarters" required>
                                             <option label="&nbsp;"></option>
                                             @foreach ($headquarters as $hq)
@@ -57,7 +57,7 @@ $title = __('Create Group');
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <x-label>{{ __('Study time') }}</x-label>
+                                        <x-label>{{ __('Study time') }} <x-required/></x-label>
                                         <select id="select2StudyTime" name="study_time" required>
                                             <option label="&nbsp;"></option>
                                             @foreach ($studyTime as $st)
@@ -69,7 +69,7 @@ $title = __('Create Group');
 
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-6">
-                                        <x-label>{{ __('Study year') }}</x-label>
+                                        <x-label>{{ __('Study year') }} <x-required/></x-label>
                                         <select id="select2StudyYear" name="study_year" required>
                                             <option label="&nbsp;"></option>
                                             @foreach ($studyYear as $sy)
@@ -79,7 +79,7 @@ $title = __('Create Group');
                                     </div>
                                     <div class="col-md-6">
                                         <x-label>{{ __('Group director') }}</x-label>
-                                        <select id="select2Teacher" name="teacher" required>
+                                        <select id="select2Teacher" name="teacher">
                                             <option label="&nbsp;"></option>
                                             @foreach ($teachers as $tc)
                                             <option value="{{ $tc->id }}">{{ $tc->getFullName() }}</option>
@@ -90,7 +90,7 @@ $title = __('Create Group');
 
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-6">
-                                        <x-label>{{ __('Name') }}</x-label>
+                                        <x-label>{{ __('Name') }} <x-required/></x-label>
                                         <x-input name="name" :value="old('name')" required />
                                     </div>
                                 </div>

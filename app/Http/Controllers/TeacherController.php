@@ -45,7 +45,7 @@ class TeacherController extends Controller
             'secondName' => ['nullable', 'string'],
             'fatherLastName' => ['required', 'string'],
             'motherLastName' => ['nullable', 'string'],
-            'phone' => ['nullable', 'numeric'],
+            'phone' => ['required', 'numeric'],
             'email' => ['required', 'email', Rule::unique('users')]
         ]);
 
@@ -54,7 +54,7 @@ class TeacherController extends Controller
 
         if (!$user) {
             return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('Email :email invalid!', ['email' => $request->email])],
+                ['notify' => 'fail', 'title' => __('Invalid email (:email)', ['email' => $request->email])],
             );
         }
 
