@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\StudentsInstructuveExport;
+use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\support\WAController;
 use App\Http\Middleware\YearCurrentMiddleware;
@@ -444,7 +445,11 @@ class StudentController extends Controller
                         'enrolled' => TRUE
                     ]);
 
-                    self::send_msg($student, $group);
+                    /* Send message WhatsApp */
+                    // self::send_msg($student, $group);
+
+                    /* Send mail to Email Person Charge */
+                    SmtpMail::sendEmailEnrollmentNotification($student, $group);
 
                     return redirect()->route('students.show', $student)->with(
                         ['notify' => 'success', 'title' => __('Student matriculate!')],

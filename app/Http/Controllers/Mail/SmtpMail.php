@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Mail;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SchoolController;
+use App\Models\Group;
+use App\Models\PersonCharge;
 use App\Models\School;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
@@ -12,6 +15,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
+use Illuminate\Support\Str;
+
 
 class SmtpMail extends Controller
 {
@@ -30,13 +35,13 @@ class SmtpMail extends Controller
         $verificationUrl = static::verificationUrl($user);
 
         $content = (new ContentMail)
-            ->title( Lang::get('Hi') .', '. $user->name )
+            ->title(Lang::get('Hi') . ', ' . $user->name)
             ->line(Lang::get('Please click the button below to verify your email address.'))
             ->action(Lang::get('Verify Email Address'), $verificationUrl)
             ->line(Lang::get('If you did not create an account, no further action is required.'))
             ->subcopy();
 
-        static::send_email( $content->toContent() );
+        static::send_email($content->toContent());
     }
 
     public static function sendPasswordResetNotification(User $user, $token)
@@ -49,35 +54,43 @@ class SmtpMail extends Controller
         $resetUrl = static::resetUrl($user, $token);
 
         $content = (new ContentMail)
-            ->title( Lang::get('Hi') .', '. $user->name )
+            ->title(Lang::get('Hi') . ', ' . $user->name)
             ->line(Lang::get('You are receiving this email because we received a password reset request for your account.'))
             ->action(Lang::get('Reset Password'), $resetUrl)
-            ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
+            ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire')]))
             ->line(Lang::get('If you did not request a password reset, no further action is required.'))
             ->subcopy();
 
-        static::send_email( $content->toContent() );
+        static::send_email($content->toContent());
     }
 
-    public static function sendEmailEnrollmentNotification(User $user, $student, $studyyear, $groupname)
+    public static function sendEmailEnrollmentNotification(Student $student, Group $group)
     {
 
-        static::$subject = Lang::get("Enrollment Notification");
-        static::$userName = $user->name;
-        static::$userEmail = $user->email;
+        if ($student->person_charge !== NULL) {
+            $tutor = PersonCharge::select('id', 'cellphone')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
+            $user = $tutor->user;
 
-        $content = (new ContentMail)
-            ->title( Lang::get('Hi') .', '. $user->name )
-            ->line(Lang::get('The student, :student, has been enrolled in the group :studyyear :groupname.', [
-                'student' => $student,
-                'studyyear' => $studyyear,
-                'groupname' => $groupname
-            ]));
+            if ($user->email_verified_at !== NULL ) {
 
-        static::send_email( $content->toContent() );
+                static::$subject = Lang::get("Enrollment Notification");
+                static::$userName = $user->name;
+                static::$userEmail = $user->email;
+
+                $content = (new ContentMail)
+                    ->title(Lang::get('Hi') . ', ' . $user->name)
+                    ->line(Lang::get('The student, :student, has been enrolled in the group :studyyear :groupname.', [
+                        'student' => $student->getFullName(),
+                        'studyyear' => $group->studyYear->name,
+                        'groupname' => $group->name
+                    ]));
+
+                static::send_email($content->toContent());
+            }
+        }
     }
 
-    private static function send_email( $contentEmail )
+    private static function send_email($contentEmail)
     {
 
         $mail = new PHPMailer(true);
