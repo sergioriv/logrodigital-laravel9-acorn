@@ -160,7 +160,7 @@ return new class extends Migration
             $table->unsignedBigInteger('headquarters_id');
             $table->unsignedBigInteger('study_time_id');
             $table->unsignedBigInteger('study_year_id');
-            $table->unsignedBigInteger('teacher_id');
+            $table->unsignedBigInteger('teacher_id')->nullable();
             $table->string('name');
             $table->unsignedSmallInteger('student_quantity')->default(0);
             $table->timestamps();

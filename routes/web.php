@@ -109,7 +109,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('teachers', TeacherController::class)->except('destroy')->names('teacher');
 
     /* Route Groups */
-    Route::resource('groups', GroupController::class)->except('destroy','edit','update')->names('group');
+    Route::resource('groups', GroupController::class)->except('destroy')->names('group');
     Route::get('groups.filter', [GroupController::class, 'filter']);
     Route::get('groups/{group}/teachers', [GroupController::class, 'teacher_edit'])->name('group.teachers.edit');
     Route::put('groups/{group}/teachers', [GroupController::class, 'teacher_update'])->name('group.teachers.update');

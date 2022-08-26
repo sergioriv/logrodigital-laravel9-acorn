@@ -128,8 +128,14 @@ $title = __('Groups');
                                             <small class="text-muted">{{ $group->studyTime->name }}</small>
                                             <small class="text-muted">{{ $group->studyYear->name }}</small>
                                             <small class="btn-icon-start text-muted">
-                                                <i class="icon icon-15 bi-award text-muted"></i>
-                                                <span>{{ $group->teacher->getFullName() }}</span>
+                                                @if (NULL !== $group->teacher_id)
+                                                    <i class="icon icon-15 bi-award text-muted"></i>
+                                                    <span>
+                                                        {{ $group->teacher->getFullName() }}
+                                                    </span>
+                                                @else
+                                                <span>&nbsp;</span>
+                                                @endif
                                             </small>
                                             <small class="mt-2 text-muted">{{ $group->student_quantity .' '. __("students") }}</small>
                                         </div>

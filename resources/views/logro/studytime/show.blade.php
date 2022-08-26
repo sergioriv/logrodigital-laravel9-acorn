@@ -64,13 +64,13 @@ $title = $studyTime->name;
 
                         <!-- Top Buttons Start -->
                         <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-                            <!-- Add New Button Start -->
+                            <!-- Edit Name Button Start -->
                             <a href="{{ route('studyTime.edit', $studyTime) }}"
                                 class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
                                 <i data-acorn-icon="edit-square"></i>
                                 <span>{{ __('Edit') . ' ' . __('Name') }}</span>
                             </a>
-                            <!-- Add New Button End -->
+                            <!-- Edit Name Button End -->
                         </div>
                         <!-- Top Buttons End -->
                     </div>

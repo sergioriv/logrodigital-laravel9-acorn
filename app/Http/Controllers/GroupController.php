@@ -21,7 +21,7 @@ class GroupController extends Controller
     function __construct()
     {
         $this->middleware('can:groups.index');
-        $this->middleware('can:groups.create')->only('create','store');
+        $this->middleware('can:groups.create')->only('create','store','edit','update');
         // $this->middleware('can:groups.students');
         $this->middleware('can:groups.students.matriculate')->only('matriculate','matriculate_update');
         // $this->middleware('can:groups.teachers');
@@ -112,10 +112,10 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'headquarters' => ['required', 'numeric', Rule::exists('headquarters','id')],
-            'study_time' => ['required', 'numeric', Rule::exists('study_times','id')],
-            'study_year' => ['required', 'numeric', Rule::exists('study_years','id')],
-            'teacher' => ['nullable', 'numeric', Rule::exists('teachers','id')],
+            'headquarters' => ['required', Rule::exists('headquarters','id')],
+            'study_time' => ['required', Rule::exists('study_times','id')],
+            'study_year' => ['required', Rule::exists('study_years','id')],
+            'teacher' => ['nullable', Rule::exists('teachers','id')],
             'name' => ['required', 'string']
         ]);
 
@@ -162,6 +162,68 @@ class GroupController extends Controller
             'studentsGroup' => $studentsGroup->get(),
             'areas' => $areas
         ]);
+    }
+
+    public function edit(Group $group)
+    {
+        $Y = SchoolYearController::current_year();
+
+        if( NULL !== $Y->available )
+        {
+            $headquarters = Headquarters::where('available', TRUE)->get();
+            $studyTime = StudyTime::all();
+            $studyYear = StudyYear::where('available', TRUE)->get();
+            $teachers = Teacher::select('id','first_name','father_last_name')->get();
+
+            return view('logro.group.edit')->with([
+                'group' => $group,
+                'headquarters' => $headquarters,
+                'studyTime' => $studyTime,
+                'studyYear' => $studyYear,
+                'teachers' => $teachers
+            ]);
+
+        } else
+        {
+            return redirect()->back()->with(
+                ['notify' => 'fail', 'title' => __('It is not possible to create a group for ') . $Y->name],
+            );
+        }
+    }
+
+    public function update(Group $group, Request $request)
+    {
+        $request->validate([
+            'headquarters' => ['required', Rule::exists('headquarters','id')],
+            'study_time' => ['required', Rule::exists('study_times','id')],
+            'study_year' => ['required', Rule::exists('study_years','id')],
+            'teacher' => ['nullable', Rule::exists('teachers','id')],
+            'name' => ['required', 'string']
+        ]);
+
+        $Y = SchoolYearController::current_year();
+
+        if( NULL !== $Y->available )
+        {
+
+            $group->update([
+                'headquarters_id' => $request->headquarters,
+                'study_time_id' => $request->study_time,
+                'study_year_id' => $request->study_year,
+                'teacher_id' => $request->teacher,
+                'name' => $request->name,
+            ]);
+
+            return redirect()->route('group.index')->with(
+                ['notify' => 'success', 'title' => __('Group updated!')],
+            );
+
+        } else
+        {
+            return redirect()->back()->with(
+                ['notify' => 'fail', 'title' => __('It is not possible to create a group for ') . $Y->name],
+            );
+        }
     }
 
     public function matriculate(Group $group)

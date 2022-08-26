@@ -20,29 +20,49 @@ $title = $group->name;
                 <!-- Title Start -->
                 <section class="scroll-section" id="title">
                     <div class="page-title-container">
-                        <h1 class="mb-1 pb-0 display-4">{{ __('Group') . ' | ' . $title }}</h1>
-                        <div aria-label="breadcrumb">
-                            <div class="breadcrumb">
-                                <span class="breadcrumb-item text-muted">
-                                    <div class="text-muted d-inline-block">
-                                        <i data-acorn-icon="building-large" class="me-1" data-acorn-size="12"></i>
-                                        <span class="align-middle">{{ $group->headquarters->name }}</span>
+                        <div class="row">
+
+                            <!-- Title Start -->
+                            <div class="col-12 col-md-7">
+                                <h1 class="mb-1 pb-0 display-4">{{ __('Group') . ' | ' . $title }}</h1>
+                                <div aria-label="breadcrumb">
+                                    <div class="breadcrumb">
+                                        <span class="breadcrumb-item text-muted">
+                                            <div class="text-muted d-inline-block">
+                                                <i data-acorn-icon="building-large" class="me-1" data-acorn-size="12"></i>
+                                                <span class="align-middle">{{ $group->headquarters->name }}</span>
+                                            </div>
+                                        </span>
+                                        <span class="breadcrumb-item text-muted">
+                                            <div class="text-muted d-inline-block">
+                                                <i data-acorn-icon="clock" class="me-1" data-acorn-size="12"></i>
+                                                <span class="align-middle">{{ $group->studyTime->name }}</span>
+                                            </div>
+                                        </span>
+                                        <span class="breadcrumb-item text-muted">
+                                            <div class="text-muted d-inline-block">
+                                                <i data-acorn-icon="calendar" class="me-1" data-acorn-size="12"></i>
+                                                <span class="align-middle">{{ $group->studyYear->name }}</span>
+                                            </div>
+                                        </span>
                                     </div>
-                                </span>
-                                <span class="breadcrumb-item text-muted">
-                                    <div class="text-muted d-inline-block">
-                                        <i data-acorn-icon="clock" class="me-1" data-acorn-size="12"></i>
-                                        <span class="align-middle">{{ $group->studyTime->name }}</span>
-                                    </div>
-                                </span>
-                                <span class="breadcrumb-item text-muted">
-                                    <div class="text-muted d-inline-block">
-                                        <i data-acorn-icon="calendar" class="me-1" data-acorn-size="12"></i>
-                                        <span class="align-middle">{{ $group->studyYear->name }}</span>
-                                    </div>
-                                </span>
+                                </div>
                             </div>
+                            <!-- Title End -->
+
+                            <!-- Top Buttons Start -->
+                            <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                                <!-- Edit Name Button Start -->
+                                <a href="{{ route('group.edit', $group) }}"
+                                    class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                    <i data-acorn-icon="edit-square"></i>
+                                    <span>{{ __('Edit') }}</span>
+                                </a>
+                                <!-- Edit Name Button End -->
+                            </div>
+                            <!-- Top Buttons End -->
                         </div>
+
                     </div>
                 </section>
                 <!-- Title End -->
@@ -55,16 +75,16 @@ $title = $group->name;
                             <!-- Title Tabs Start -->
                             <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" role="tablist">
                                 @can('groups.students')
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#studentsTab" role="tab"
-                                        aria-selected="true">{{ __('Students') }}</a>
-                                </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" data-bs-toggle="tab" href="#studentsTab" role="tab"
+                                            aria-selected="true">{{ __('Students') }}</a>
+                                    </li>
                                 @endcan
                                 @can('groups.teachers')
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#subjectsTab" role="tab"
-                                        aria-selected="true">{{ __('Subjects') . ' & ' . __('Teachers') }}</a>
-                                </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" data-bs-toggle="tab" href="#subjectsTab" role="tab"
+                                            aria-selected="true">{{ __('Subjects') . ' & ' . __('Teachers') }}</a>
+                                    </li>
                                 @endcan
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" data-bs-toggle="tab" href="#otherTab" role="tab"
@@ -87,19 +107,20 @@ $title = $group->name;
                                             <!-- Title End -->
 
                                             @can('groups.students.matriculate')
-                                            @if (null !== $Y->available)
-                                                <!-- Groups Buttons Start -->
-                                                <div class="col-12 col-md-5 mb-2 d-flex align-items-start justify-content-end">
-                                                    <!-- Matriculate Students Button Start -->
-                                                    <a href="{{ route('group.matriculate', $group) }}"
-                                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                                        <i data-acorn-icon="edit-square"></i>
-                                                        <span>{{ __('Matriculate students') }}</span>
-                                                    </a>
-                                                    <!-- Matriculate Students Button End -->
-                                                </div>
-                                                <!-- Groups Buttons End -->
-                                            @endif
+                                                @if (null !== $Y->available)
+                                                    <!-- Groups Buttons Start -->
+                                                    <div
+                                                        class="col-12 col-md-5 mb-2 d-flex align-items-start justify-content-end">
+                                                        <!-- Matriculate Students Button Start -->
+                                                        <a href="{{ route('group.matriculate', $group) }}"
+                                                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                            <i data-acorn-icon="edit-square"></i>
+                                                            <span>{{ __('Matriculate students') }}</span>
+                                                        </a>
+                                                        <!-- Matriculate Students Button End -->
+                                                    </div>
+                                                    <!-- Groups Buttons End -->
+                                                @endif
                                             @endcan
                                         </div>
                                     </div>
@@ -139,30 +160,30 @@ $title = $group->name;
                                 <div class="tab-pane fade" id="subjectsTab" role="tabpanel">
 
                                     @can('groups.teachers.edit')
-                                    @if (null !== $Y->available)
-                                        <!-- Groups Buttons Start -->
-                                        <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
-                                            @if ($areas->count() !== 0)
-                                                <!-- Add New Button Start -->
-                                                <a href="{{ route('group.teachers.edit', $group) }}"
-                                                    class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                                    <i data-acorn-icon="edit-square"></i>
-                                                    <span>{{ __('Edit') . ' ' . __('Teachers') }}</span>
-                                                </a>
-                                                <!-- Add New Button End -->
-                                            @else
-                                                <!-- Assing Teachers Button Start -->
-                                                <a href="{{ route('studyYear.subject.show', $group->studyYear) }}"
-                                                    class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                                    <i data-acorn-icon="edit-square"></i>
-                                                    <span>{{ __('Assign') . ' ' . __('Subjects') . ' ' . $group->studyYear->name }}</span>
-                                                </a>
-                                                <!-- Assing Teachers Button End -->
-                                            @endif
+                                        @if (null !== $Y->available)
+                                            <!-- Groups Buttons Start -->
+                                            <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
+                                                @if ($areas->count() !== 0)
+                                                    <!-- Add New Button Start -->
+                                                    <a href="{{ route('group.teachers.edit', $group) }}"
+                                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>{{ __('Edit') . ' ' . __('Teachers') }}</span>
+                                                    </a>
+                                                    <!-- Add New Button End -->
+                                                @else
+                                                    <!-- Assing Teachers Button Start -->
+                                                    <a href="{{ route('studyYear.subject.show', $group->studyYear) }}"
+                                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>{{ __('Assign') . ' ' . __('Subjects') . ' ' . $group->studyYear->name }}</span>
+                                                    </a>
+                                                    <!-- Assing Teachers Button End -->
+                                                @endif
 
-                                        </div>
-                                        <!-- Groups Buttons End -->
-                                    @endif
+                                            </div>
+                                            <!-- Groups Buttons End -->
+                                        @endif
                                     @endcan
 
                                     <!-- Groups Content Tab Start -->
