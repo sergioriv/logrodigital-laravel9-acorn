@@ -151,10 +151,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
 
 });
-Route::get('test', function () {
-    $student = Student::find(931);
-    $group = Group::find(3);
-    SmtpMail::sendEmailEnrollmentNotification($student, $group);
+Route::get('mail/{id}', function ($id) {
+    $user = User::find($id);
+    SmtpMail::sendEmailVerificationNotification($user);
 });
 
 require __DIR__.'/auth.php';
