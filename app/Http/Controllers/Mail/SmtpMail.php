@@ -111,8 +111,9 @@ class SmtpMail extends Controller
             $mail->addAddress(static::$userEmail, static::$userName);
             $mail->send();
         } catch (Exception $e) {
-            dd($e);
+            return false;
         }
+        return true;
     }
 
     /**

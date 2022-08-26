@@ -119,6 +119,13 @@ class PersonChargeController extends Controller
             if ( $mother === NULL )
             {
                 $user_mother = UserController::_create($request->mother_name, $request->mother_email, 8);
+
+                if (!$user_mother) {
+                    return redirect()->back()->with(
+                        ['notify' => 'fail', 'title' => __('Email :email invalid!', ['email' => $request->mother_email])],
+                    );
+                }
+
                 PersonCharge::create([
                     'id' => $user_mother->id,
                     'student_id' => $student->id,
@@ -160,6 +167,13 @@ class PersonChargeController extends Controller
             if ( $father === NULL )
             {
                 $user_father = UserController::_create($request->father_name, $request->father_email, 8);
+
+                if (!$user_father) {
+                    return redirect()->back()->with(
+                        ['notify' => 'fail', 'title' => __('Email :email invalid!', ['email' => $request->father_email])],
+                    );
+                }
+
                 PersonCharge::create([
                     'id' => $user_father->id,
                     'student_id' => $student->id,
@@ -202,6 +216,13 @@ class PersonChargeController extends Controller
                 if ( $tutor === NULL )
                 {
                     $user_tutor = UserController::_create($request->tutor_name, $request->tutor_email, 8);
+
+                    if (!$user_tutor) {
+                        return redirect()->back()->with(
+                            ['notify' => 'fail', 'title' => __('Email :email invalid!', ['email' => $request->tutor_email])],
+                        );
+                    }
+
                     PersonCharge::create([
                         'id' => $user_tutor->id,
                         'student_id' => $student->id,

@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-Use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
@@ -26,7 +26,7 @@ class UserController extends Controller
 
     public function data()
     {
-        return ['data' => User::with('roles')->orderBy('created_at','DESC')->get()];
+        return ['data' => User::with('roles')->orderBy('created_at', 'DESC')->get()];
     }
 
     /* public function create($name, $email, $role)
@@ -48,10 +48,15 @@ class UserController extends Controller
             'email' => $email,
         ])->assignRole($role);
 
-        if ( $role === 7 )
+        if ($role === 7)
             $user->forceFill(['email_verified_at' => now()])->save();
-        else
-            SmtpMail::sendEmailVerificationNotification($user);
+        elseif (NULL !== $email) {
+            $sendmail = SmtpMail::sendEmailVerificationNotification($user);
+            if (!$sendmail) {
+                $user->delete();
+                return false;
+            }
+        }
 
 
         event(new Registered($user));
@@ -107,20 +112,20 @@ class UserController extends Controller
         ]);
     }
 
-    public static function _update($user_id, $name, $email=NULL, $avatar=NULL)
+    public static function _update($user_id, $name, $email = NULL, $avatar = NULL)
     {
         $user = User::findOrFail($user_id);
         $user->update([
             'name' => $name,
         ]);
 
-        if($email != null){
+        if ($email != null) {
             $user->update([
                 'email' => $email,
             ]);
         }
 
-        if($avatar != null){
+        if ($avatar != null) {
             $user->update([
                 'avatar' => $avatar
             ]);
@@ -131,7 +136,7 @@ class UserController extends Controller
     {
         $path = self::upload_avatar($request);
 
-        if ( $request->hasFile('avatar') )
+        if ($request->hasFile('avatar'))
             File::delete(public_path($user->avatar));
 
         $user->update([
@@ -141,13 +146,11 @@ class UserController extends Controller
 
     public static function upload_avatar($request)
     {
-        if ( $request->hasFile('avatar') )
-        {
-            $path = $request->file('avatar')->store('avatar','public');
-            return config('filesystems.disks.public.url') .'/' . $path;
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatar', 'public');
+            return config('filesystems.disks.public.url') . '/' . $path;
             // return config('app.url') .'/'. config('filesystems.disks.public.url') .'/' . $path;
-        }
-        else return null;
+        } else return null;
     }
 
     public static function role_auth()
@@ -160,28 +163,24 @@ class UserController extends Controller
 
         $avatar = UserController::upload_avatar($request);
 
-        if ( $request->hasFile('avatar') && NULL !== $user->avatar )
+        if ($request->hasFile('avatar') && NULL !== $user->avatar)
             File::delete(public_path($user->avatar));
 
         $user->update([
             'avatar' => $avatar
         ]);
-
     }
 
     public static function delete_user($user_id)
     {
         $user = User::find($user_id);
-        if (NULL !== $user)
-        {
+        if (NULL !== $user) {
 
             if (NULL !== $user->avatar)
                 File::delete(public_path($user->avatar));
 
             $user->delete();
-
-        } else
-        {
+        } else {
             return redirect()->back()->withErrors("custom", __("Unexpected Error"));
         }
     }

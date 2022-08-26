@@ -20,7 +20,7 @@ class TeacherController extends Controller
         $this->middleware('can:teachers.index');
         $this->middleware('can:teachers.create');
         $this->middleware('can:teachers.edit');
-        $this->middleware('can:teachers.import')->only('export','import','import_store');
+        $this->middleware('can:teachers.import')->only('export', 'import', 'import_store');
     }
 
     public function index()
@@ -42,15 +42,21 @@ class TeacherController extends Controller
     {
         $request->validate([
             'firstName' => ['required', 'string'],
-            'secondName' => ['nullable','string'],
-            'fatherLastName' => ['required','string'],
-            'motherLastName' => ['nullable','string'],
-            'phone' => ['nullable','numeric'],
+            'secondName' => ['nullable', 'string'],
+            'fatherLastName' => ['required', 'string'],
+            'motherLastName' => ['nullable', 'string'],
+            'phone' => ['nullable', 'numeric'],
             'email' => ['required', 'email', Rule::unique('users')]
         ]);
 
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
         $user = UserController::_create($user_name, $request->email, 6);
+
+        if (!$user) {
+            return redirect()->back()->with(
+                ['notify' => 'fail', 'title' => __('Email :email invalid!', ['email' => $request->email])],
+            );
+        }
 
         Teacher::create([
             'id' => $user->id,
@@ -70,7 +76,7 @@ class TeacherController extends Controller
     public function show(Teacher $teacher)
     {
         $schoolYear = SchoolYear::whereHas('teacherSubjectGroups', function ($subject) use ($teacher) {
-            $subject->where('teacher_id',$teacher->id);
+            $subject->where('teacher_id', $teacher->id);
         })->orderByDesc('id')->get();
 
         return view('logro.teacher.show')->with([
@@ -94,7 +100,7 @@ class TeacherController extends Controller
 
     public function export()
     {
-        return Excel::download(new TeachersExport, __('teachers').'.xlsx');
+        return Excel::download(new TeachersExport, __('teachers') . '.xlsx');
     }
 
     public function import()
@@ -106,10 +112,10 @@ class TeacherController extends Controller
     {
 
         $request->validate([
-            'file' => ['required','file','max:5000','mimes:xls,xlsx']
+            'file' => ['required', 'file', 'max:5000', 'mimes:xls,xlsx']
         ]);
 
-        Excel::import(new TeachersImport,$request->file('file'));
+        Excel::import(new TeachersImport, $request->file('file'));
 
         return redirect()->route('teacher.index')->with(
             ['notify' => 'success', 'title' => __('Loaded Excel!')],
