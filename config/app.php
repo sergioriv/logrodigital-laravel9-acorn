@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Kiiwii'),
+    'name' => env('APP_NAME', 'Logro Digital'),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://kiiwii.test'),
+    'url' => env('APP_URL', 'https://logro.digital'),
 
     'asset_url' => env('ASSET_URL'),
 

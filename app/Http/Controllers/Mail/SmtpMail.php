@@ -41,7 +41,7 @@ class SmtpMail extends Controller
             ->line(Lang::get('If you did not create an account, no further action is required.'))
             ->subcopy();
 
-        static::send_email($content->toContent());
+        return static::send_email($content->toContent());
     }
 
     public static function sendPasswordResetNotification(User $user, $token)
@@ -126,7 +126,7 @@ class SmtpMail extends Controller
     {
         return URL::temporarySignedRoute(
             'verification.verify',
-            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 262800)), // 6 meses
             [
                 'id' => $user->getKey(),
                 'hash' => sha1($user->getEmailForVerification()),

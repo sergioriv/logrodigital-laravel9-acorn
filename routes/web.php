@@ -41,8 +41,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard'); })->name('dashboard');
 
-    Route::get('insert_roles', [UserController::class, 'insert_roles']);
-    Route::get('destroy_users', [UserController::class, 'destroy_users']);
     Route::get('permissions-reset', function() {
         app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
         return redirect()->back();

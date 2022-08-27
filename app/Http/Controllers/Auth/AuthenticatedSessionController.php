@@ -64,7 +64,6 @@ class AuthenticatedSessionController extends Controller
     public function microsoft_callback()
     {
         $microsoft = Socialite::driver('azure')->user();
-
         // $user = User::where('provider', 'microsoft')->where('email', $microsoft->email)->first();
         $user = User::where('email', $microsoft->email)->first();
 
@@ -88,6 +87,14 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('login')->withErrors( $microsoft->email .' '. __("unregistered on our platform"));
         }
     }
+
+    /* public function microsoft_logout(Request $request)
+    {
+        Auth::guard()->logout();
+        $request->session()->flush();
+        $azureLogoutUrl = Socialite::driver('azure')->getLogoutUrl(route('login'));
+        return redirect($azureLogoutUrl);
+    } */
 
 
     private function login_redirect()
