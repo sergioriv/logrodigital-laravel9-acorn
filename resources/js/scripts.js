@@ -69,6 +69,15 @@ class Scripts {
       if ("undefined" !== typeof GenericForms) {
         new GenericForms;
       }
+      if ("undefined" !== typeof AuthLogin) {
+        new AuthLogin;
+      }
+      if ("undefined" !== typeof AuthForgotPassword) {
+        new AuthForgotPassword;
+      }
+      if ("undefined" !== typeof AuthResetPassword) {
+        new AuthResetPassword;
+      }
       if (typeof SingleImageUpload !== 'undefined' && document.getElementById('imageProfile')) {
         const singleImageUpload = new SingleImageUpload(document.getElementById('imageProfile'));
       }

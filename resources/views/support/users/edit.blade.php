@@ -34,7 +34,7 @@ $title = 'Edit user';
                     <div class="card-body">
 
                         <!-- Validation Errors -->
-                        <x-validation-errors class="mb-4" :errors="$errors" />
+                        {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
 
                         <form id="registerForm" method="POST" action="{{ route('support.users.update', $user) }}" class="tooltip-end-bottom" novalidate>
                             @csrf

@@ -33,9 +33,9 @@ $title = __('Documents');
                 </section>
                 <!-- Title End -->
 
-                @error('custom')
+                {{-- @error('custom')
                     <x-validation-errors class="mb-4" :errors="$errors" />
-                @enderror
+                @enderror --}}
 
                 <section class="scroll-section">
                     <div class="card mb-5 wizard">

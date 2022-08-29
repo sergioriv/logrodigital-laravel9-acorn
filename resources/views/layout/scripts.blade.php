@@ -17,11 +17,9 @@
 <!-- Template Base Scripts End -->
 <!-- Page Specific Scripts Start -->
 <script src="/js/app.js"></script>
-@if (Session::has('notify'))
-<script>
-    callNotify( "{{ Session::get('notify') }}", "{{ Session::get('title') }}")
-</script>
-@endif
+@auth
+<x-notify-errors />
+@endauth
 @yield('js_page')
 <script src="/js/common.js"></script>
 <script src="/js/scripts.js"></script>

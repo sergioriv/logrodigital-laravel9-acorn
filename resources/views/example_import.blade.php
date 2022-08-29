@@ -29,7 +29,7 @@ $title = 'Example upload file';
                     <div class="card-body">
 
                         <!-- Validation Errors -->
-                        <x-validation-errors class="mb-4" :errors="$errors" />
+                        {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
 
                         <form method="POST" action="{{ route('user.import') }}" class="tooltip-end-bottom"
                             enctype="multipart/form-data" novalidate>

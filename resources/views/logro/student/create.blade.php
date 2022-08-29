@@ -88,7 +88,7 @@ $title = __('Create') . ' ' . __('Student');
                         @csrf
 
                         <!-- Validation Errors -->
-                        <x-validation-errors class="mb-4" :errors="$errors" />
+                        {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
 
                         <div class="card mb-5">
                             <div class="card-body">

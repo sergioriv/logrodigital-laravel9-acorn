@@ -21,13 +21,13 @@ class GroupController extends Controller
     function __construct()
     {
         $this->middleware('can:groups.index');
-        $this->middleware('can:groups.create')->only('create','store','edit','update');
+        $this->middleware('can:groups.create')->only('create', 'store', 'edit', 'update');
         // $this->middleware('can:groups.students');
-        $this->middleware('can:groups.students.matriculate')->only('matriculate','matriculate_update');
+        $this->middleware('can:groups.students.matriculate')->only('matriculate', 'matriculate_update');
         // $this->middleware('can:groups.teachers');
-        $this->middleware('can:groups.teachers.edit')->only('teacher_edit','teacher_update');
+        $this->middleware('can:groups.teachers.edit')->only('teacher_edit', 'teacher_update');
 
-        $this->middleware(YearCurrentMiddleware::class)->except('index','filter','show');
+        $this->middleware(YearCurrentMiddleware::class)->except('index', 'filter', 'show');
     }
 
     public function index()
@@ -53,7 +53,8 @@ class GroupController extends Controller
         ]);
     }
 
-    public function filter(Request $request){
+    public function filter(Request $request)
+    {
         $Y = SchoolYearController::current_year();
 
         $hq = $request->headquarters;
@@ -72,7 +73,7 @@ class GroupController extends Controller
         if (NULL !== $sy)
             $groups->where('study_year_id', $sy);
 
-        if(NULL !== $name)
+        if (NULL !== $name)
             $groups->where('name', 'like', '%' . $name . '%');
 
         $groups->orderBy('headquarters_id')
@@ -84,65 +85,44 @@ class GroupController extends Controller
 
     public function create()
     {
-        $Y = SchoolYearController::current_year();
 
-        if( NULL !== $Y->available )
-        {
-            $headquarters = Headquarters::where('available', TRUE)->get();
-            $studyTime = StudyTime::all();
-            $studyYear = StudyYear::where('available', TRUE)->get();
-            $teachers = Teacher::select('id','first_name','father_last_name')->get();
+        $headquarters = Headquarters::where('available', TRUE)->get();
+        $studyTime = StudyTime::all();
+        $studyYear = StudyYear::where('available', TRUE)->get();
+        $teachers = Teacher::select('id', 'first_name', 'father_last_name')->get();
 
-            return view('logro.group.create')->with([
-                'headquarters' => $headquarters,
-                'studyTime' => $studyTime,
-                'studyYear' => $studyYear,
-                'teachers' => $teachers
-            ]);
-
-
-        } else
-        {
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('It is not possible to create a group for ') . $Y->name],
-            );
-        }
+        return view('logro.group.create')->with([
+            'headquarters' => $headquarters,
+            'studyTime' => $studyTime,
+            'studyYear' => $studyYear,
+            'teachers' => $teachers
+        ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'headquarters' => ['required', Rule::exists('headquarters','id')],
-            'study_time' => ['required', Rule::exists('study_times','id')],
-            'study_year' => ['required', Rule::exists('study_years','id')],
-            'teacher' => ['nullable', Rule::exists('teachers','id')],
+            'headquarters' => ['required', Rule::exists('headquarters', 'id')],
+            'study_time' => ['required', Rule::exists('study_times', 'id')],
+            'study_year' => ['required', Rule::exists('study_years', 'id')],
+            'group_director' => ['nullable', Rule::exists('teachers', 'id')],
             'name' => ['required', 'string']
         ]);
 
         $Y = SchoolYearController::current_year();
 
-        if( NULL !== $Y->available )
-        {
+        Group::create([
+            'school_year_id' => $Y->id,
+            'headquarters_id' => $request->headquarters,
+            'study_time_id' => $request->study_time,
+            'study_year_id' => $request->study_year,
+            'teacher_id' => $request->group_director,
+            'name' => $request->name,
+        ]);
 
-            Group::create([
-                'school_year_id' => $Y->id,
-                'headquarters_id' => $request->headquarters,
-                'study_time_id' => $request->study_time,
-                'study_year_id' => $request->study_year,
-                'teacher_id' => $request->teacher,
-                'name' => $request->name,
-            ]);
-
-            return redirect()->route('group.index')->with(
-                ['notify' => 'success', 'title' => __('Group created!')],
-            );
-
-        } else
-        {
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('It is not possible to create a group for ') . $Y->name],
-            );
-        }
+        return redirect()->route('group.index')->with(
+            ['notify' => 'success', 'title' => __('Group created!')],
+        );
     }
 
     public function show(Group $group)
@@ -166,75 +146,46 @@ class GroupController extends Controller
 
     public function edit(Group $group)
     {
-        $Y = SchoolYearController::current_year();
+        $headquarters = Headquarters::where('available', TRUE)->get();
+        $studyTime = StudyTime::all();
+        $studyYear = StudyYear::where('available', TRUE)->get();
+        $teachers = Teacher::select('id', 'first_name', 'father_last_name')->get();
 
-        if( NULL !== $Y->available )
-        {
-            $headquarters = Headquarters::where('available', TRUE)->get();
-            $studyTime = StudyTime::all();
-            $studyYear = StudyYear::where('available', TRUE)->get();
-            $teachers = Teacher::select('id','first_name','father_last_name')->get();
-
-            return view('logro.group.edit')->with([
-                'group' => $group,
-                'headquarters' => $headquarters,
-                'studyTime' => $studyTime,
-                'studyYear' => $studyYear,
-                'teachers' => $teachers
-            ]);
-
-        } else
-        {
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('It is not possible to create a group for ') . $Y->name],
-            );
-        }
+        return view('logro.group.edit')->with([
+            'group' => $group,
+            'headquarters' => $headquarters,
+            'studyTime' => $studyTime,
+            'studyYear' => $studyYear,
+            'teachers' => $teachers
+        ]);
     }
 
     public function update(Group $group, Request $request)
     {
         $request->validate([
-            'headquarters' => ['required', Rule::exists('headquarters','id')],
-            'study_time' => ['required', Rule::exists('study_times','id')],
-            'study_year' => ['required', Rule::exists('study_years','id')],
-            'teacher' => ['nullable', Rule::exists('teachers','id')],
+            'headquarters' => ['required', Rule::exists('headquarters', 'id')],
+            'study_time' => ['required', Rule::exists('study_times', 'id')],
+            'study_year' => ['required', Rule::exists('study_years', 'id')],
+            'group_director' => ['nullable', Rule::exists('teachers', 'id')],
             'name' => ['required', 'string']
         ]);
 
-        $Y = SchoolYearController::current_year();
+        $group->update([
+            'headquarters_id' => $request->headquarters,
+            'study_time_id' => $request->study_time,
+            'study_year_id' => $request->study_year,
+            'teacher_id' => $request->group_director,
+            'name' => $request->name,
+        ]);
 
-        if( NULL !== $Y->available )
-        {
-
-            $group->update([
-                'headquarters_id' => $request->headquarters,
-                'study_time_id' => $request->study_time,
-                'study_year_id' => $request->study_year,
-                'teacher_id' => $request->teacher,
-                'name' => $request->name,
-            ]);
-
-            return redirect()->route('group.index')->with(
-                ['notify' => 'success', 'title' => __('Group updated!')],
-            );
-
-        } else
-        {
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('It is not possible to create a group for ') . $Y->name],
-            );
-        }
+        return redirect()->route('group.index')->with(
+            ['notify' => 'success', 'title' => __('Group updated!')],
+        );
     }
 
     public function matriculate(Group $group)
     {
         $Y = SchoolYearController::current_year();
-
-        /* $fn_g = fn($g) => $g->where('school_year_id', $Y->id);
-
-        $fn_gs = fn($gs) =>
-                $gs->with(['group' => $fn_g ])
-                ->whereHas('group', $fn_g ); */
 
         $studentsNoEnrolled = Student::select(
             'id',
@@ -242,8 +193,9 @@ class GroupController extends Controller
             'second_name',
             'father_last_name',
             'mother_last_name',
-            'inclusive','status'
-            )->with('headquarters','studyTime','studyYear')
+            'inclusive',
+            'status'
+        )->with('headquarters', 'studyTime', 'studyYear')
             ->where('school_year_create', '<=', $Y->id)
             ->where('headquarters_id', $group->headquarters_id)
             ->where('study_time_id', $group->study_time_id)
@@ -251,10 +203,6 @@ class GroupController extends Controller
             ->whereNull('enrolled')
             ->orderBy('father_last_name')
             ->orderBy('mother_last_name');
-            /* ->whereNot(fn($q) =>
-                $q->whereHas('groupYear', $fn_gs)
-                    ->with(['groupYear' => $fn_gs]) */
-            // );
 
 
         return view('logro.group.matriculate')->with([
@@ -266,19 +214,17 @@ class GroupController extends Controller
     public function matriculate_update(Group $group, Request $request)
     {
         $request->validate([
-            'students' => ['required','array']
+            'students' => ['required', 'array']
         ]);
 
-        foreach ($request->students as $student)
-        {
+        foreach ($request->students as $student) {
             $studentNoNull = Student::where('id', $student)
                 ->where('headquarters_id', $group->headquarters_id)
                 ->where('study_time_id', $group->study_time_id)
                 ->where('study_year_id', $group->study_year_id)
                 ->whereNull('enrolled')->first();
 
-            if ( NULL !== $studentNoNull )
-            {
+            if (NULL !== $studentNoNull) {
                 GroupStudent::create([
                     'group_id' => $group->id,
                     'student_id' => $student
@@ -293,10 +239,8 @@ class GroupController extends Controller
                     'enrolled_date' => now(),
                     'enrolled' => TRUE
                 ]);
-
-            } else
-            {
-                return redirect()->back()->withErrors( __("Unexpected Error") );
+            } else {
+                return redirect()->back()->withErrors(__("Unexpected Error"));
             }
         }
 
@@ -309,94 +253,70 @@ class GroupController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        if( NULL !== $Y->available )
-        {
+        $sy = $group->study_year_id;
 
-            $sy = $group->study_year_id;
+        $teachers = Teacher::where('active', TRUE)->get();
 
-            $teachers = Teacher::where('active', TRUE)->get();
+        $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
 
-            $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
-
-            return view('logro.group.teachers_edit')->with([
-                'group' => $group,
-                'areas' => $areas,
-                'teachers' => $teachers
-            ]);
-
-        } else
-        {
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('Not allowed for ') . $Y->name],
-            );
-        }
+        return view('logro.group.teachers_edit')->with([
+            'group' => $group,
+            'areas' => $areas,
+            'teachers' => $teachers
+        ]);
     }
 
     public function teacher_update(Group $group, Request $request)
     {
         $Y = SchoolYearController::current_year();
 
-        if( NULL !== $Y->available )
-        {
+        foreach ($request->teachers as $teacher_subject) {
+            if (NULL !== $teacher_subject) {
 
-            foreach ($request->teachers as $teacher_subject) {
-                if(NULL !== $teacher_subject)
-                {
+                [$create, $subject, $teacher] = explode('~', $teacher_subject);
 
-                    [$create, $subject, $teacher] = explode('~',$teacher_subject);
-
-                    if ('null' === $create) {
-                        TeacherSubjectGroup::create([
-                            'school_year_id' => $Y->id,
-                            'teacher_id' => $teacher,
-                            'subject_id' => $subject,
-                            'group_id' => $group->id
-                        ]);
-                    } else
-                    {
-                        echo 'update | ';
-                        $teacherGroup = TeacherSubjectGroup::find($create);
-                        $teacherGroup->update([
-                            'teacher_id' => $teacher
-                        ]);
-                    }
+                if ('null' === $create) {
+                    TeacherSubjectGroup::create([
+                        'school_year_id' => $Y->id,
+                        'teacher_id' => $teacher,
+                        'subject_id' => $subject,
+                        'group_id' => $group->id
+                    ]);
+                } else {
+                    echo 'update | ';
+                    $teacherGroup = TeacherSubjectGroup::find($create);
+                    $teacherGroup->update([
+                        'teacher_id' => $teacher
+                    ]);
                 }
-
             }
-
-            return redirect()->route('group.show', $group)->with(
-                ['notify' => 'success', 'title' => __('Group updated!')],
-            );
-
-        } else
-        {
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('Not allowed for ') . $Y->name],
-            );
         }
+
+        return redirect()->route('group.show', $group)->with(
+            ['notify' => 'success', 'title' => __('Group updated!')],
+        );
     }
 
     private function subjects_teacher($Y_id, $sy_id, $g_id)
     {
-        $fn_sy = fn($sy) =>
-                $sy->where('school_year_id', $Y_id)
-                ->where('study_year_id', $sy_id);
+        $fn_sy = fn ($sy) =>
+        $sy->where('school_year_id', $Y_id)
+            ->where('study_year_id', $sy_id);
 
-        $fn_tsg = fn($tsg) =>
-                $tsg->where('school_year_id', $Y_id)
-                ->where('group_id', $g_id);
+        $fn_tsg = fn ($tsg) =>
+        $tsg->where('school_year_id', $Y_id)
+            ->where('group_id', $g_id);
 
-        $fn_sb = fn($s) =>
-                $s->where('school_year_id', $Y_id)
+        $fn_sb = fn ($s) =>
+        $s->where('school_year_id', $Y_id)
 
-                ->whereHas('studyYearSubject', $fn_sy)
-                ->with(['studyYearSubject' => $fn_sy])
+            ->whereHas('studyYearSubject', $fn_sy)
+            ->with(['studyYearSubject' => $fn_sy])
 
-                ->with(['teacherSubjectGroups' => $fn_tsg]);
+            ->with(['teacherSubjectGroups' => $fn_tsg]);
 
         return ResourceArea::with(['subjects' => $fn_sb])
-                    ->whereHas('subjects', $fn_sb)
-                    ->get();
+            ->whereHas('subjects', $fn_sb)
+            ->get();
     }
-
 }

@@ -25,23 +25,18 @@ class AuthLogin {
           required: true,
           email: true,
         },
-      },
-      messages: {
-        email: {
-          email: 'Your email address must be in correct format!',
+        password: {
+          required: true,
+          minlength: 6,
         },
       },
     };
+
     jQuery(form).validate(validateOptions);
     form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (jQuery(form).valid()) {
-        const formValues = {
-          email: form.querySelector('[name="email"]').value,
-          password: form.querySelector('[name="password"]').value,
-        };
-        console.log(formValues);
+      if (!jQuery(form).valid()) {
+        event.preventDefault();
+        event.stopPropagation();
         return;
       }
     });

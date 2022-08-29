@@ -9,10 +9,11 @@ $description = 'Login Page'
 @section('js_vendor')
 <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
 <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
+<script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
 @endsection
 
 @section('js_page')
-{{-- <script src="/js/pages/auth.login.js"></script> --}}
+<script src="/js/pages/auth.login.js"></script>
 @endsection
 
 @section('content_right')
@@ -34,18 +35,18 @@ $description = 'Login Page'
             <!-- Validation Errors -->
             <x-validation-errors class="mb-4" :errors="$errors" />
 
-            <form id="loginForm" class="tooltip-end-bottom" method="POST" action="{{ route('login') }}" novalidate>
+            <form id="loginForm" class="tooltip-end-top" method="POST" action="{{ route('login') }}" >
                 @csrf
 
                 <!-- Email Address -->
-                <div class="mb-3 filled form-group tooltip-end-top">
+                <div class="mb-3 filled form-group">
                     <i data-acorn-icon="email"></i>
                     <x-input id="email" name="email" type="email" :placeholder="__('E-Mail Address')" :value="old('email')" required
                         autofocus />
                 </div>
 
                 <!-- Password -->
-                <div class="mb-3 filled form-group tooltip-end-top">
+                <div class="mb-3 filled form-group">
                     <i data-acorn-icon="lock-off"></i>
                     <x-input id="password" class="pe-7" type="password" name="password" :placeholder="__('Password')"
                         required autocomplete="current-password" />

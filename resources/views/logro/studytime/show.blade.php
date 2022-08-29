@@ -103,11 +103,11 @@ $title = $studyTime->name;
                     <section class="scroll-section">
 
                         <!-- Validation Errors -->
-                        @error('custom')
+                        {{-- @error('custom')
                             <x-validation-errors class="mb-4" :errors="$errors" />
                         @else
                             <x-validation-empty-fields class="mb-4" :errors="$errors" />
-                        @enderror
+                        @enderror --}}
 
                         <h2 class="small-title @if (count($periods) == 0) d-none @endif" id="periods-title">{{ __('Periods') }}</h2>
 

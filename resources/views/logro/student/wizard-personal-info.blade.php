@@ -45,7 +45,7 @@ $title = __('Personal Information');
                 </section>
                 <!-- Title End -->
 
-                @error('custom')
+                {{-- @error('custom')
                     <x-validation-errors class="mb-4" :errors="$errors" />
                 @else
                     @error('disability_certificate')
@@ -53,7 +53,7 @@ $title = __('Personal Information');
                     @else
                         <x-validation-errors-empty class="mb-4" />
                     @enderror
-                @enderror
+                @enderror --}}
 
                 <section class="scroll-section">
                     <div class="card mb-5 wizard">

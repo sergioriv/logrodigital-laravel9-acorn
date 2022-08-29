@@ -86,7 +86,7 @@ $title = $student->user->name;
         <!-- Title and Top Buttons End -->
 
         <!-- Validation Errors -->
-        @error('custom')
+        {{-- @error('custom')
             <x-validation-errors class="mb-4" :errors="$errors" />
         @else
             @error('disability_certificate')
@@ -94,7 +94,7 @@ $title = $student->user->name;
             @else
             <x-validation-errors-empty class="mb-4" />
             @enderror
-        @enderror
+        @enderror --}}
 
 
         <section class="row">

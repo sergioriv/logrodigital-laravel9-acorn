@@ -29,7 +29,7 @@ $title = $studyYear->name
                     <div class="card-body">
 
                         <!-- Validation Errors -->
-                        <x-validation-errors class="mb-4" :errors="$errors" />
+                        {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
 
                         <form method="POST" action="{{ route('studyYear.update', $studyYear) }}" class="tooltip-end-bottom" novalidate>
                             @csrf

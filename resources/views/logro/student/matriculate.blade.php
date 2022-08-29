@@ -48,7 +48,7 @@ $title = __('Change group');
                 <!-- Title End -->
 
                 <!-- Validation Errors -->
-                <x-validation-errors class="mb-4" :errors="$errors" />
+                {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
 
                 <!-- Content Start -->
                 <form method="POST" action="{{ route('students.matriculate', $student) }}" novalidate>

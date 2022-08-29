@@ -9,6 +9,7 @@ $description = 'Reset Password Page'
 @section('js_vendor')
 <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
 <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
+<script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
 @endsection
 
 @section('js_page')
@@ -35,7 +36,7 @@ $description = 'Reset Password Page'
             <!-- Validation Errors -->
             <x-validation-errors class="mb-4" :errors="$errors" />
 
-            <form id="resetForm" method="POST" action="{{ route('password.update') }}" class="tooltip-end-bottom"
+            <form id="resetForm" method="POST" action="{{ route('password.update') }}" class="tooltip-end-top"
                 novalidate>
                 @csrf
 
@@ -43,16 +44,19 @@ $description = 'Reset Password Page'
                 <input type="hidden" name="token" value="{{ $request->route('token') }}" />
 
                 <!-- Email Address -->
-                <input type="hidden" name="email" value="{{ $request->email }}" />
+                <div class="mb-3 filled form-group">
+                    <i data-acorn-icon="email"></i>
+                    <x-input type="text" readonly name="email" value="{{ $request->email }}" required />
+                </div>
 
                 <!-- Password -->
-                <div class="mb-3 filled">
+                <div class="mb-3 filled form-group">
                     <i data-acorn-icon="lock-off"></i>
                     <x-input id="password" name="password" type="password" :placeholder="__('Password')" required />
                 </div>
 
                 <!-- Confirm Password -->
-                <div class="mb-3 filled">
+                <div class="mb-3 filled form-group">
                     <i data-acorn-icon="lock-on"></i>
                     <x-input id="password_confirmation" name="password_confirmation" type="password" :placeholder="__('Confirm Password')" required />
                 </div>

@@ -9,6 +9,7 @@ $description = 'Forgot Password Page'
 @section('js_vendor')
 <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
 <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
+<script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
 @endsection
 
 @section('js_page')

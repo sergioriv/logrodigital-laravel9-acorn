@@ -38,7 +38,7 @@ $title = __('Create Group');
                     <div class="card-body">
 
                         <!-- Validation Errors -->
-                        <x-validation-errors class="mb-4" :errors="$errors" />
+                        {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
 
                         <form method="POST" action="{{ route('group.store') }}" novalidate>
                             @csrf
@@ -79,7 +79,7 @@ $title = __('Create Group');
                                     </div>
                                     <div class="col-md-6">
                                         <x-label>{{ __('Group director') }}</x-label>
-                                        <select id="select2Teacher" name="teacher">
+                                        <select id="select2Teacher" name="group_director">
                                             <option label="&nbsp;"></option>
                                             @foreach ($teachers as $tc)
                                             <option value="{{ $tc->id }}">{{ $tc->getFullName() }}</option>

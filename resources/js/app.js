@@ -26,7 +26,7 @@ function callNotify(type = "success", title, message = "") {
         },
         {
             type: color,
-            delay: 5000,
+            delay: 10000,
         }
     );
 }

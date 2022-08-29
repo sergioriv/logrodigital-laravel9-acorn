@@ -26,21 +26,12 @@ class AuthForgotPassword {
           email: true,
         },
       },
-      messages: {
-        email: {
-          email: 'Your email address must be in correct format!',
-        },
-      },
     };
     jQuery(form).validate(validateOptions);
     form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (jQuery(form).valid()) {
-        const formValues = {
-          email: form.querySelector('[name="email"]').value,
-        };
-        console.log(formValues);
+      if (!jQuery(form).valid()) {
+        event.preventDefault();
+        event.stopPropagation();
         return;
       }
     });

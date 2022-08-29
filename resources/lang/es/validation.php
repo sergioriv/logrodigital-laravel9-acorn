@@ -150,6 +150,9 @@ return [
     */
 
     'attributes' => [
+        'email' => 'correo electrónico',
+        'password' => 'contraseña',
+
         'firstName' => 'primer nombre',
         'secondName' => 'segundo nombre',
         'fatherLastName' => 'apellido del padre',
@@ -210,7 +213,13 @@ return [
         'address' => 'dirección',
         'social_stratum' => 'estrato social',
         'dwelling_type' => 'tipo de vivienda',
-        'neighborhood' => 'barrio'
+        'neighborhood' => 'barrio',
+
+        'headquarters' => 'sede',
+        'study_time' => 'jornada',
+        'study_year' => 'año de estudio',
+        'name' => 'nombre',
+        'group_director' => 'director de grupo'
     ],
 
 ];

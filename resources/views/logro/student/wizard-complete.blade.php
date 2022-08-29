@@ -24,7 +24,7 @@ $title = __('Register completed');
                 </section>
                 <!-- Title End -->
 
-                <x-validation-errors class="mb-4" :errors="$errors" />
+                {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
 
                 <section class="scroll-section">
                     <div class="card mb-5 wizard">

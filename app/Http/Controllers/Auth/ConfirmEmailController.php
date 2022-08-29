@@ -57,7 +57,7 @@ class ConfirmEmailController extends Controller
     {
 
         $request->validate([
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Rules\Password::min(6)],
         ]);
 
         $user = User::find(Auth::user()->id);

@@ -38,7 +38,7 @@ $title = $studyYear->name;
                 <!-- Title End -->
 
                 <!-- Validation Errors -->
-                <x-validation-errors class="mb-4" :errors="$errors" />
+                {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
 
                 <form method="POST" action="{{ route('studyYear.subject.store', $studyYear) }}" autocomplete="off">
                     @csrf
