@@ -41,10 +41,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard'); })->name('dashboard');
 
-    Route::get('permissions-reset', function() {
-        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-        return redirect()->back();
-    })->middleware('can:support.access');
+
+    /* ACCESS SUPPORT */
+    Route::middleware('can:support.access')->group(function () {
+
+        /* RESET PERMISSIONS */
+        Route::get('permissions-reset', function() {
+            app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+            return redirect()->back();
+        });
+
+        /* SEND MAIL VERIFICATION FOR EMAIL */
+        Route::get('verification/{user}', function (User $user) {
+            SmtpMail::sendEmailVerificationNotification($user);
+            return redirect()->back()->with(
+                ['notify' => 'success', 'title' => __('Email send!')],
+            );
+        });
+    });
 
     /* Route Users */
     Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');
@@ -149,5 +163,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
 
 });
+
 
 require __DIR__.'/auth.php';

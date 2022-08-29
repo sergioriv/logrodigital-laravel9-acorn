@@ -859,7 +859,7 @@ class StudentController extends Controller
 
     private function upload_disability_certificate($request, $student)
     {
-        $request->file_type = 13; //certificado de discapacidad
+        $request->file_type = StudentFileType::select('id')->where('inclusive', 1)->first()->id; //certificado de discapacidad
         $path_file = StudentFileController::upload_file($request, 'disability_certificate', $student->id);
 
         $student_file = StudentFile::where('student_id', $student->id)

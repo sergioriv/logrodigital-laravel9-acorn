@@ -63,13 +63,6 @@ class User extends Authenticatable
         );
     } */
 
-    protected function emailVerifiedAt(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value, 'UTC')->timezone(config('app.timezone'))->format('Y-m-d H:i:s')
-        );
-    }
-
     protected function createdAt(): Attribute
     {
         return Attribute::make(

@@ -88,7 +88,7 @@ $title = 'User list';
                                 <th class="text-muted text-small text-uppercase">{{ __('Email verified at') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('Created at') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('Role') }}</th>
-                                {{-- <th class="empty">&nbsp;</th> --}}
+                                <th class="empty">&nbsp;</th>
                             </tr>
                         </thead>
                     </table>

@@ -41,6 +41,7 @@
                 { data: "email_verified_at" },
                 { data: "created_at" },
                 { data: "roles" },
+                { data: "id" }
             ],
             language: {
                 url: '/json/datatable.spanish.json',
@@ -83,6 +84,23 @@
                                 '<span class="badge bg-outline-primary">' + role.name + "</span>";
                         });
                         return rolesUser
+                    },
+                },
+                // reset email verification #
+                {
+                    targets: 5,
+                    render: function (data, type, row, meta) {
+                        if (!row.email_verified_at)
+                        {
+                            return (
+                                '<a class="list-item-heading body btn btn-secondary" href="/verification/' + data +'">correo de verificación</a>'
+                            );
+                        } else
+                        {
+                            return (
+                                ''
+                            );
+                        }
                     },
                 },
             ],
