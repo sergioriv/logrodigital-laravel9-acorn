@@ -72,4 +72,8 @@ class SchoolController extends Controller
     {
         return static::$mySchool->institutional_email ?? null;
     }
+    public function handbook()
+    {
+        return static::$mySchool->handbook_coexistence ?? null;
+    }
 }

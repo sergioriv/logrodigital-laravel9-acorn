@@ -269,29 +269,19 @@ class StudentController extends Controller
     public function wizard_personal_info(Student $student)
     {
         if ('STUDENT' === UserController::role_auth()) {
-            // $student = Student::find(Auth::user()->id);
-
-            $documentType = DocumentType::orderBy('foreigner')->get();
-            $cities = City::all();
-            $countries = Country::all();
-            $genders = Gender::all();
-            $rhs = Rh::all();
-            $healthManager = HealthManager::all();
-            $sisbenes = Sisben::all();
-            $dwellingTypes = DwellingType::all();
-            $disabilities = Disability::all();
 
             return view('logro.student.wizard-personal-info')->with([
                 'student' => $student,
-                'documentType' => $documentType,
-                'cities' => $cities,
-                'countries' => $countries,
-                'genders' => $genders,
-                'rhs' => $rhs,
-                'healthManager' => $healthManager,
-                'sisbenes' => $sisbenes,
-                'dwellingTypes' => $dwellingTypes,
-                'disabilities' => $disabilities
+                'documentType' => DocumentType::orderBy('foreigner')->get(),
+                'cities' => City::all(),
+                'countries' => Country::all(),
+                'genders' => Gender::all(),
+                'rhs' => Rh::all(),
+                'healthManager' => HealthManager::all(),
+                'sisbenes' => Sisben::all(),
+                'dwellingTypes' => DwellingType::all(),
+                'disabilities' => Disability::all(),
+                'handbook' => (new SchoolController)->handbook()
             ]);
         } else
             return redirect()->route('dashboard')->with(
@@ -519,22 +509,6 @@ class StudentController extends Controller
         }
         /* Group x Subjects [teacher, piar] END */
 
-        $documentType = DocumentType::orderBy('foreigner')->get();
-        $cities = City::all();
-        $countries = Country::all();
-        $genders = Gender::all();
-        $rhs = Rh::all();
-        $healthManager = HealthManager::all();
-        $sisbenes = Sisben::all();
-        $ethnicGroups = EthnicGroup::all();
-        $dwellingTypes = DwellingType::all();
-        $disabilities = Disability::all();
-        $icbfProtections = IcbfProtectionMeasure::all();
-        $linkageProcesses = LinkageProcess::all();
-        $religions = Religion::all();
-        $economicDependences = EconomicDependence::all();
-
-        $kinships = Kinship::all();
         $studentFileTypes = StudentFileType::with([
             'studentFile' => function ($files) use ($student) {
                 $files->where('student_id', $student->id);
@@ -548,23 +522,24 @@ class StudentController extends Controller
             'Y' => $Y,
             'YAvailable' => $YAvailable->id,
             'student' => $student,
-            'documentType' => $documentType,
-            'cities' => $cities,
-            'countries' => $countries,
-            'genders' => $genders,
-            'rhs' => $rhs,
-            'healthManager' => $healthManager,
-            'sisbenes' => $sisbenes,
-            'ethnicGroups' => $ethnicGroups,
-            'dwellingTypes' => $dwellingTypes,
-            'disabilities' => $disabilities,
-            'icbfProtections' => $icbfProtections,
-            'linkageProcesses' => $linkageProcesses,
-            'religions' => $religions,
-            'economicDependences' => $economicDependences,
-            'kinships' => $kinships,
+            'documentType' => DocumentType::orderBy('foreigner')->get(),
+            'cities' => City::all(),
+            'countries' => Country::all(),
+            'genders' => Gender::all(),
+            'rhs' => Rh::all(),
+            'healthManager' => HealthManager::all(),
+            'sisbenes' => Sisben::all(),
+            'ethnicGroups' => EthnicGroup::all(),
+            'dwellingTypes' => DwellingType::all(),
+            'disabilities' => Disability::all(),
+            'icbfProtections' => IcbfProtectionMeasure::all(),
+            'linkageProcesses' => LinkageProcess::all(),
+            'religions' => Religion::all(),
+            'economicDependences' => EconomicDependence::all(),
+            'kinships' => Kinship::all(),
             'studentFileTypes' => $studentFileTypes->get(),
-            'groupsStudent' => $groupsStudent
+            'groupsStudent' => $groupsStudent,
+            'handbook' => (new SchoolController)->handbook()
         ]);
     }
 

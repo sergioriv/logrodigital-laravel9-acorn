@@ -29,8 +29,9 @@ return new class extends Migration
             $table->string('contact_telephone', 20)->nullable();
             $table->unsignedSmallInteger('city')->nullable();
             $table->string('badge')->nullable();
-            $table->unsignedMediumInteger('students');
+            $table->unsignedMediumInteger('number_students');
             $table->string('institutional_email')->nullable();
+            $table->text('handbook_coexistence')->nullable();
             $table->timestamps();
         });
 

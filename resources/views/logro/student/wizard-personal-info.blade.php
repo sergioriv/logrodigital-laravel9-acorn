@@ -92,7 +92,7 @@ $title = __('Personal Information');
 
                                     <!-- Basic Information Section Start -->
                                     <h2 class="small-title">{{ __('Basic information') }}</h2>
-                                    <section class="mb-5">
+                                    <section class="mb-5 border-bottom">
                                         <div class="card-body">
                                             <div class="row g-3">
                                                 <div class="col-md-6">
@@ -248,7 +248,7 @@ $title = __('Personal Information');
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row g-3">
+                                            <div class="row g-3 mb-3">
                                                 <div class="col-md-6">
                                                     <div class="w-100 position-relative form-group">
                                                         <x-label>{{ __('gender') }} <span class="text-danger">*</span>
@@ -286,7 +286,7 @@ $title = __('Personal Information');
 
                                     <!-- Localization Section Start -->
                                     <h2 class="small-title">{{ __('Domicile Place') }}</h2>
-                                    <section class="mb-5">
+                                    <section class="mb-5 border-bottom">
                                         <div class="card-body">
                                             <div class="row g-3">
                                                 <div class="col-md-6">
@@ -419,7 +419,7 @@ $title = __('Personal Information');
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row g-3">
+                                            <div class="row g-3 mb-3">
                                                 <div class="col-md-12">
                                                     <div class="position-relative form-group">
                                                         <x-label class="d-block">{{ __('who lives with you at home') }}
@@ -465,7 +465,7 @@ $title = __('Personal Information');
 
                                     <!-- Social Safety Section Start -->
                                     <h2 class="small-title">{{ __('Social Safety') }}</h2>
-                                    <section class="mb-5">
+                                    <section class="border-bottom">
                                         <div class="card-body">
                                             <div class="row g-3">
                                                 <div class="col-md-6">
@@ -495,7 +495,7 @@ $title = __('Personal Information');
                                             </div>
                                             <div class="row g-3">
                                                 <div class="col-md-6">
-                                                    <div class="w-100 position-relative form-group">
+                                                    <div class="mb-3 w-100 position-relative form-group">
                                                         <x-label>sisben <span class="text-danger">*</span></x-label>
                                                         <x-select name="sisben" logro="select2" :hasError="'sisben'">
                                                             <option label="&nbsp;"></option>
@@ -509,7 +509,7 @@ $title = __('Personal Information');
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <div class="w-100 position-relative form-group">
+                                                    <div class="mb-3 w-100 position-relative form-group">
                                                         <x-label>{{ __('disability') }} <span class="text-danger">*</span>
                                                         </x-label>
                                                         <x-select name="disability" id="disability" logro="select2"
@@ -527,7 +527,7 @@ $title = __('Personal Information');
                                             </div>
                                             <div class="row g-3 d-none" id="content-disability">
                                                 <div class="col-md-12">
-                                                    <div class="mt-3 position-relative form-group">
+                                                    <div class="mb-3 position-relative form-group">
                                                         <x-label>{{ __('Disability certificate') }}</x-label>
                                                         <x-input type="file" class="d-block"
                                                             name="disability_certificate"
@@ -540,7 +540,7 @@ $title = __('Personal Information');
                                     <!-- Social Safety Section End -->
 
                                     <!-- Data Treatment Policy Section Start -->
-                                    <section class="mb-5">
+                                    <section class="mb-5 border-bottom">
                                         <div class="card-body">
                                             <div class="row g-3">
                                                 <div class="col-md-12 mb-3">
@@ -566,6 +566,18 @@ $title = __('Personal Information');
                                                     </div>
                                                 </div>
                                             </div>
+                                            @if ($handbook !== NULL)
+                                            <div class="row g-3 mb-3">
+                                                <div class="col-md-12">
+                                                    <div>
+                                                        <a class="btn btn-link p-0 mt-3" target="_blank" href="{{ $handbook }}">
+                                                            <i data-acorn-icon="book" data-acorn-size="16"></i>
+                                                            {{ __("Handbook of coexistence") }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endif
 
                                             <!-- Modal Data Treatment Policy Start -->
                                             <div class="modal fade scroll-out" id="modalDataTreatmentPolicy"
@@ -623,7 +635,7 @@ $title = __('Personal Information');
 
                                     <!-- Signatures Start -->
                                     <h2 class="small-title">{{ __('Signatures') }}</h2>
-                                    <section class="mb-5">
+                                    <section class="">
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6">

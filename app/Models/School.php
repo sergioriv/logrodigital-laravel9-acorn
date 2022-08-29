@@ -18,6 +18,7 @@ class School extends CastCreateModel
         'contact_telephone',
         'city',
         'badge',
-        'institutional_email'
+        'institutional_email',
+        'handbook_coexistence'
     ];
 }

@@ -715,6 +715,18 @@ $title = $student->user->name;
                                         </div>
                                     </div>
                                 </div>
+                                @if ($handbook !== NULL)
+                                <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <div>
+                                            <a class="btn btn-link p-0 mt-3" target="_blank" href="{{ $handbook }}">
+                                                <i data-acorn-icon="book" data-acorn-size="16"></i>
+                                                {{ __("Handbook of coexistence") }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
 
                                 <!-- Modal Data Treatment Policy Start -->
                                 <div class="modal fade scroll-out" id="modalDataTreatmentPolicy"
