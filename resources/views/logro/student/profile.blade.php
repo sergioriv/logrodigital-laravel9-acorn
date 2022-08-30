@@ -57,7 +57,7 @@ $title = $student->user->name;
                     <!-- Matriculate Button End -->
 
                     <!-- Dropdown Button Start -->
-                    {{-- <div class="ms-1">
+                    <div class="ms-1">
                         <button
                                 type="button"
                                 class="btn btn-outline-info btn-icon btn-icon-only"
@@ -70,11 +70,9 @@ $title = $student->user->name;
                             <i data-acorn-icon="more-horizontal"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <button class="dropdown-item" type="button">Follow</button>
-                            <button class="dropdown-item" type="button">Hire</button>
-                            <button class="dropdown-item" type="button">Report</button>
+                            <x-dropdown-item type="button" :link="route('students.transfer', $student)">{{ __("Transfer") }}</x-dropdown-item>
                         </div>
-                    </div> --}}
+                    </div>
                     <!-- Dropdown Button End -->
                 </div>
                 <!-- Top Buttons End -->

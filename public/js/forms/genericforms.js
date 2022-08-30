@@ -53,6 +53,7 @@ class GenericForms {
                 },
                 document: {
                     required: true,
+                    minlength: 5,
                     maxlength: 20
                 },
                 headquarters: {

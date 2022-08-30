@@ -96,6 +96,9 @@ class Scripts {
       if ("undefined" !== typeof SignaturesInput) {
         new SignaturesInput;
       }
+      if ("undefined" !== typeof StudentTransferForm) {
+        new StudentTransferForm;
+      }
     }
 
     // Plugin pages initialization

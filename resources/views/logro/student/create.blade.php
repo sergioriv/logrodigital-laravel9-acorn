@@ -128,7 +128,7 @@ $title = __('Create') . ' ' . __('Student');
                                             <select name="document_type" id="document_type" logro="select2" required>
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($documentType as $docType)
-                                                    <option value="{{ $docType->code }}" foreigner="{{ $docType->foreigner }}" @selected(old('document_type') === $docType->code)>
+                                                    <option value="{{ $docType->code }}" foreigner="{{ $docType->foreigner }}" @selected(old('document_type') == $docType->code)>
                                                         {{ $docType->name }}
                                                     </option>
                                                 @endforeach
@@ -144,26 +144,38 @@ $title = __('Create') . ' ' . __('Student');
                                     </div>
                                 </div>
                                 <div class="row g-3">
-                                    <div class="col-md-6" id="birth_city">
+                                    <div class="col-md-6
+                                    @if(session('docType'))
+                                        @if (session('docType')->foreigner === 1)
+                                        d-none
+                                        @endif
+                                    @endif" id="birth_city">
                                         <div class="mb-3 w-100 position-relative form-group">
                                             <x-label>{{ __('birth city') }}</x-label>
                                             <select name="birth_city" logro="select2">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($cities as $city)
-                                                    <option value="{{ $city->id }}" @selected(old('birth_city') === $city->id)>
+                                                    <option value="{{ $city->id }}" @selected(old('birth_city') == $city->id)>
                                                         {{ $city->department->name . ' | ' . $city->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 d-none" id="country">
+                                    <div class="col-md-6
+                                    @if(session('docType'))
+                                        @if (session('docType')->foreigner !== 1)
+                                        d-none
+                                        @endif
+                                    @else
+                                        d-none
+                                    @endif" id="country">
                                         <div class="mb-3 w-100 position-relative form-group">
                                             <x-label>{{ __('home country') }}</x-label>
                                             <select name="country" logro="select2">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($countries as $country)
-                                                    <option value="{{ $country->id }}" @selected(old('country') === $country->id)>
+                                                    <option value="{{ $country->id }}" @selected(old('country') == $country->id)>
                                                         {{ __($country->name) }}
                                                     </option>
                                                 @endforeach
@@ -198,7 +210,7 @@ $title = __('Create') . ' ' . __('Student');
                                             <select name="headquarters" id="headquarters" class="filter" logro="select2">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($headquarters as $hq)
-                                                    <option value="{{ $hq->id }}" @selected(old('headquarters') === $hq->id)>
+                                                    <option value="{{ $hq->id }}" @selected(old('headquarters') == $hq->id)>
                                                         {{ $hq->name }}
                                                     </option>
                                                 @endforeach
@@ -213,7 +225,7 @@ $title = __('Create') . ' ' . __('Student');
                                             <select name="studyTime" id="studyTime" class="filter" logro="select2">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($studyTime as $st)
-                                                    <option value="{{ $st->id }}" @selected(old('studyTime') === $st->id)>
+                                                    <option value="{{ $st->id }}" @selected(old('studyTime') == $st->id)>
                                                         {{ $st->name }}
                                                     </option>
                                                 @endforeach
@@ -226,7 +238,7 @@ $title = __('Create') . ' ' . __('Student');
                                             <select name="studyYear" id="studyYear" class="filter" logro="select2">
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($studyYear as $sy)
-                                                    <option value="{{ $sy->id }}" @selected(old('studyYear') === $sy->id)>
+                                                    <option value="{{ $sy->id }}" @selected(old('studyYear') == $sy->id)>
                                                         {{ $sy->name }}
                                                     </option>
                                                 @endforeach

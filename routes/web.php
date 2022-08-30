@@ -139,6 +139,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('students/{student}/edit', 'show')->name('students.show');
         Route::put('students/{student}', 'update')->name('students.update');
         Route::put('students/{student}/psychosocial', 'psychosocial_update')->name('students.psychosocial.update');
+        Route::get('students/{student}/transfer', 'transfer')->name('students.transfer');
+        Route::post('students/{student}/transfer', 'transfer_store')->name('students.transfer.store');
 
         Route::get('students/no-enrolled', 'no_enrolled')->name('students.no_enrolled');
         Route::get('students', 'enrolled')->name('students.enrolled');

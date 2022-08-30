@@ -108,18 +108,14 @@ class StudentController extends Controller
         $Y = SchoolYearController::current_year();
 
         $documentType = DocumentType::orderBy('foreigner')->get();
-        $headquarters = Headquarters::all();
-        $studyTime = StudyTime::all();
-        $studyYear = StudyYear::all();
         $countGroups = Group::where('school_year_id', $Y->id)->count();
-        $cities = City::all();
-        $countries = Country::all();
+
         return view("logro.student.create")->with([
-            'headquarters' => $headquarters,
-            'studyTime' => $studyTime,
-            'studyYear' => $studyYear,
-            'cities' => $cities,
-            'countries' => $countries,
+            'headquarters' => Headquarters::all(),
+            'studyTime' => StudyTime::all(),
+            'studyYear' => StudyYear::all(),
+            'cities' => City::all(),
+            'countries' => Country::all(),
             'documentType' => $documentType,
             'countGroups' => $countGroups
         ]);
@@ -127,6 +123,9 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
+
+        session()->flash('docType', DocumentType::find($request->document_type) ?? null);
+
         $request->validate([
             'firstName' => ['required', 'string', 'max:191'],
             'secondName' => ['nullable', 'string', 'max:191'],
@@ -869,6 +868,72 @@ class StudentController extends Controller
         }
 
         return false;
+    }
+
+
+    /* TRANSFER */
+    public function transfer(Student $student)
+    {
+        $Y = SchoolYearController::current_year();
+
+        $countGroups = Group::where('school_year_id', $Y->id)->count();
+
+        return view('logro.student.transfer', [
+            'student' => $student,
+            'headquarters' => Headquarters::all(),
+            'studyTime' => StudyTime::all(),
+            'studyYear' => StudyYear::all(),
+            'countGroups' => $countGroups
+        ]);
+    }
+
+    public function transfer_store(Student $student, Request $request)
+    {
+        $request->validate([
+            'headquarters' => ['required', Rule::exists('headquarters', 'id')],
+            'studyTime' => ['required', Rule::exists('study_times', 'id')],
+            'studyYear' => ['required', Rule::exists('study_years', 'id')],
+        ]);
+
+        if ($student->headquarters_id == $request->headquarters
+            && $student->study_time_id == $request->studyTime
+            && $student->study_year_id == $request->studyYear)
+            {
+                return redirect()->route('students.show', $student)->with(
+                    ['notify' => 'info', 'title' => __('Unchanged!')],
+                );
+            }
+
+        if (NULL !== $student->group_id)
+        {
+            $groupStudent = $student->group;
+            GroupStudent::where('student_id', $student->id)
+                ->where('group_id', $student->group_id)
+                ->first()
+                ->delete();
+
+            $newGroupQuantity = --$groupStudent->student_quantity;
+            $groupStudent->update([
+                'student_quantity' => $newGroupQuantity
+            ]);
+        }
+
+        $student->update([
+            'headquarters_id' => $request->headquarters,
+            'study_time_id' => $request->studyTime,
+            'study_year_id' => $request->studyYear,
+            'group_id' => NULL
+        ]);
+
+        if (1 == $request->matriculate) {
+            return redirect()->route('students.matriculate', $student->id)->with(
+                ['notify' => 'success', 'title' => __('Transferred student!')],
+            );
+        }
+
+        return redirect()->route('students.show', $student)->with(
+            ['notify' => 'success', 'title' => __('Transferred student!')],
+        );
     }
 
 

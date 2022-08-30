@@ -72,8 +72,14 @@ $title = __('Change group');
                                             <small class="text-muted">{{ $group->studyTime->name }}</small>
                                             <small class="text-muted">{{ $group->studyYear->name }}</small>
                                             <small class="text-muted btn-icon-start mb-2">
-                                                <i class="icon icon-15 bi-award text-muted"></i>
-                                                <span>{{ $group->teacher->getFullName() }}</span>
+                                                @if (NULL !== $group->teacher_id)
+                                                    <i class="icon icon-15 bi-award text-muted"></i>
+                                                    <span>
+                                                        {{ $group->teacher->getFullName() }}
+                                                    </span>
+                                                @else
+                                                <span>&nbsp;</span>
+                                                @endif
                                             </small>
                                             <h5 class="text-primary font-weight-bold mb-2">{{ $group->name }}</h5>
                                             <span class="mb-2 text-extra-small fw-medium text-muted text-uppercase d-block">
