@@ -876,7 +876,11 @@ class StudentController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $countGroups = Group::where('school_year_id', $Y->id)->count();
+        $countGroups = Group::where('school_year_id', $Y->id)
+            ->where('headquarters_id', $student->headquarters_id)
+            ->where('study_time_id', $student->study_time_id)
+            ->where('study_year_id', $student->study_year_id)
+            ->count();
 
         return view('logro.student.transfer', [
             'student' => $student,
