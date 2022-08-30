@@ -124,7 +124,7 @@ $title = __('Persons in Charge');
                                                                 <option label="&nbsp;"></option>
                                                                 @foreach ($cities as $city)
                                                                     <option value="{{ $city->id }}"
-                                                                        @if ($student->mother->expedition_city_id ?? null !== null) @selected($student->mother->expedition_city_id === $city->id) @endif>
+                                                                        @if ($student->mother->expedition_city_id ?? null !== null) @selected(old('mother_expedition_city', $student->mother->expedition_city_id) == $city->id) @endif>
                                                                         {{ $city->department->name . ' | ' . $city->name }}
                                                                     </option>
                                                                 @endforeach
@@ -142,7 +142,7 @@ $title = __('Persons in Charge');
                                                                 <option label="&nbsp;"></option>
                                                                 @foreach ($cities as $city)
                                                                     <option value="{{ $city->id }}"
-                                                                        @if ($student->mother->residence_city_id ?? null !== null) @selected($student->mother->residence_city_id === $city->id) @endif>
+                                                                        @if ($student->mother->residence_city_id ?? null !== null) @selected(old('mother_residence_city', $student->mother->residence_city_id) == $city->id) @endif>
                                                                         {{ $city->department->name . ' | ' . $city->name }}
                                                                     </option>
                                                                 @endforeach
@@ -252,7 +252,7 @@ $title = __('Persons in Charge');
                                                                 <option label="&nbsp;"></option>
                                                                 @foreach ($cities as $city)
                                                                     <option value="{{ $city->id }}"
-                                                                        @if ($student->father->expedition_city_id ?? null !== null) @selected($student->father->expedition_city_id === $city->id) @endif>
+                                                                        @if ($student->father->expedition_city_id ?? null !== null) @selected(old('father_expedition_city', $student->father->expedition_city_id) == $city->id) @endif>
                                                                         {{ $city->department->name . ' | ' . $city->name }}
                                                                     </option>
                                                                 @endforeach
@@ -270,7 +270,7 @@ $title = __('Persons in Charge');
                                                                 <option label="&nbsp;"></option>
                                                                 @foreach ($cities as $city)
                                                                     <option value="{{ $city->id }}"
-                                                                        @if ($student->father->residence_city_id ?? null !== null) @selected($student->father->residence_city_id === $city->id) @endif>
+                                                                        @if ($student->father->residence_city_id ?? null !== null) @selected(old('father_residence_city', $student->father->residence_city_id) == $city->id) @endif>
                                                                         {{ $city->department->name . ' | ' . $city->name }}
                                                                     </option>
                                                                 @endforeach
@@ -341,7 +341,7 @@ $title = __('Persons in Charge');
                                                         <option label="&nbsp;"></option>
                                                         @foreach ($kinships as $kinship)
                                                             <option value="{{ $kinship->id }}"
-                                                                @if ($student->person_charge ?? null !== null) @selected($student->person_charge === $kinship->id) @endif>
+                                                                @if ($student->person_charge ?? null !== null) @selected(old('person_charge', $student->person_charge) == $kinship->id) @endif>
                                                                 {{ __($kinship->name) }}
                                                             </option>
                                                         @endforeach
@@ -405,7 +405,7 @@ $title = __('Persons in Charge');
                                                                     <option label="&nbsp;"></option>
                                                                     @foreach ($cities as $city)
                                                                         <option value="{{ $city->id }}"
-                                                                            @if ($student->tutor->expedition_city_id ?? null !== null) @selected($student->tutor->expedition_city_id === $city->id) @endif>
+                                                                            @if ($student->tutor->expedition_city_id ?? null !== null) @selected(old('tutor_expedition_city', $student->tutor->expedition_city_id) == $city->id) @endif>
                                                                             {{ $city->department->name . ' | ' . $city->name }}
                                                                         </option>
                                                                     @endforeach
@@ -423,7 +423,7 @@ $title = __('Persons in Charge');
                                                                     <option label="&nbsp;"></option>
                                                                     @foreach ($cities as $city)
                                                                         <option value="{{ $city->id }}"
-                                                                            @if ($student->tutor->residence_city_id ?? null !== null) @selected($student->tutor->residence_city_id === $city->id) @endif>
+                                                                            @if ($student->tutor->residence_city_id ?? null !== null) @selected(old('tutor_residence_city', $student->tutor->residence_city_id) == $city->id) @endif>
                                                                             {{ $city->department->name . ' | ' . $city->name }}
                                                                         </option>
                                                                     @endforeach

@@ -104,6 +104,7 @@ input[type="file"] {
 }
 .logro-label { text-transform: lowercase; }
 .logro-label::first-letter { text-transform: uppercase; }
+.text-t-none { text-transform: none; }
 .hover-bg-primary:hover {
     background-color: var(--primary);
     color: var(--light-text) !important

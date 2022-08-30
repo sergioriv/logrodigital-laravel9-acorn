@@ -157,7 +157,7 @@ $title = __('Personal Information');
                                                             @foreach ($documentType as $docType)
                                                                 <option value="{{ $docType->code }}"
                                                                     foreigner="{{ $docType->foreigner }}"
-                                                                    @if ($student->document_type_code !== null) @selected($student->document_type_code === $docType->code) @endif>
+                                                                    @if ($student->document_type_code !== null) @selected(old('document_type', $student->document_type_code) == $docType->code) @endif>
                                                                     {{ $docType->name }}
                                                                 </option>
                                                             @endforeach
@@ -183,7 +183,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($cities as $city)
                                                                 <option value="{{ $city->id }}"
-                                                                    @if ($student->expedition_city_id !== null) @selected($student->expedition_city_id === $city->id) @endif>
+                                                                    @if ($student->expedition_city_id !== null) @selected(old('expedition_city', $student->expedition_city_id) == $city->id) @endif>
                                                                     {{ $city->department->name . ' | ' . $city->name }}
                                                                 </option>
                                                             @endforeach
@@ -210,7 +210,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($cities as $city)
                                                                 <option value="{{ $city->id }}"
-                                                                    @if ($student->birth_city_id !== null) @selected($student->birth_city_id === $city->id) @endif>
+                                                                    @if ($student->birth_city_id !== null) @selected(old('birth_city', $student->birth_city_id) == $city->id) @endif>
                                                                     {{ $city->department->name . ' | ' . $city->name }}
                                                                 </option>
                                                             @endforeach
@@ -226,7 +226,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($countries as $country)
                                                                 <option value="{{ $country->id }}"
-                                                                    @if ($student->country_id !== null) @selected($student->country_id === $country->id) @endif>
+                                                                    @if ($student->country_id !== null) @selected(old('country', $student->country_id) == $country->id) @endif>
                                                                     {{ __($country->name) }}
                                                                 </option>
                                                             @endforeach
@@ -257,7 +257,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($genders as $gender)
                                                                 <option value="{{ $gender->id }}"
-                                                                    @if ($student->gender_id !== null) @selected($student->gender_id === $gender->id) @endif>
+                                                                    @if ($student->gender_id !== null) @selected(old('gender', $student->gender_id) == $gender->id) @endif>
                                                                     {{ $gender->name }}
                                                                 </option>
                                                             @endforeach
@@ -272,7 +272,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($rhs as $rh)
                                                                 <option value="{{ $rh->id }}"
-                                                                    @if ($student->rh_id !== null) @selected($student->rh_id === $rh->id) @endif>
+                                                                    @if ($student->rh_id !== null) @selected(old('rh', $student->rh_id) == $rh->id) @endif>
                                                                     {{ $rh->name }}
                                                                 </option>
                                                             @endforeach
@@ -295,10 +295,10 @@ $title = __('Personal Information');
                                                         </x-label>
                                                         <x-select name="zone" logro="select2" :hasError="'zone'">
                                                             <option label="&nbsp;"></option>
-                                                            <option value="rural" @selected('rural' === $student->zone)>
+                                                            <option value="rural" @selected(old('zone', 'rural') == $student->zone)>
                                                                 {{ __('Rural') }}
                                                             </option>
-                                                            <option value="urban" @selected('urban' === $student->zone)>
+                                                            <option value="urban" @selected(old('zone', 'urban') == $student->zone)>
                                                                 {{ __('Urban') }}
                                                             </option>
                                                         </x-select>
@@ -313,7 +313,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($cities as $city)
                                                                 <option value="{{ $city->id }}"
-                                                                    @if ($student->residence_city_id !== null) @selected($student->residence_city_id === $city->id) @endif>
+                                                                    @if ($student->residence_city_id !== null) @selected(old('residence_city', $student->residence_city_id) == $city->id) @endif>
                                                                     {{ $city->department->name . ' | ' . $city->name }}
                                                                 </option>
                                                             @endforeach
@@ -339,7 +339,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @for ($stratum = 1; $stratum <= 6; $stratum++)
                                                                 <option value="{{ $stratum }}"
-                                                                    @if ($student->social_stratum !== null) @selected($student->social_stratum === $stratum) @endif>
+                                                                    @if ($student->social_stratum !== null) @selected(old('social_stratum', $student->social_stratum) == $stratum) @endif>
                                                                     {{ $stratum }}
                                                                 </option>
                                                             @endfor
@@ -356,7 +356,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($dwellingTypes as $dwellingType)
                                                                 <option value="{{ $dwellingType->id }}"
-                                                                    @if ($student->dwelling_type_id !== null) @selected($student->dwelling_type_id === $dwellingType->id) @endif>
+                                                                    @if ($student->dwelling_type_id !== null) @selected(old('dwelling_type', $student->dwelling_type_id) == $dwellingType->id) @endif>
                                                                     {{ __($dwellingType->name) }}
                                                                 </option>
                                                             @endforeach
@@ -477,7 +477,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($healthManager as $health)
                                                                 <option value="{{ $health->id }}"
-                                                                    @if ($student->health_manager_id !== null) @selected($student->health_manager_id === $health->id) @endif>
+                                                                    @if ($student->health_manager_id !== null) @selected(old('health_manager', $student->health_manager_id) == $health->id) @endif>
                                                                     {{ $health->name }}
                                                                 </option>
                                                             @endforeach
@@ -501,7 +501,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($sisbenes as $sisben)
                                                                 <option value="{{ $sisben->id }}"
-                                                                    @if ($student->sisben_id !== null) @selected($student->sisben_id === $sisben->id) @endif>
+                                                                    @if ($student->sisben_id !== null) @selected(old('sisben', $student->sisben_id) == $sisben->id) @endif>
                                                                     {{ $sisben->name }}
                                                                 </option>
                                                             @endforeach
@@ -517,7 +517,7 @@ $title = __('Personal Information');
                                                             <option label="&nbsp;"></option>
                                                             @foreach ($disabilities as $disability)
                                                                 <option value="{{ $disability->id }}"
-                                                                    @if ($student->disability_id !== null) @selected($student->disability_id === $disability->id) @endif>
+                                                                    @if ($student->disability_id !== null) @selected(old('disability', $student->disability_id) == $disability->id) @endif>
                                                                     {{ __($disability->name) }}
                                                                 </option>
                                                             @endforeach
