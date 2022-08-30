@@ -4,12 +4,35 @@ $title = __('Matriculate students');
 @extends('layout', ['title' => $title])
 
 @section('css')
+    <link rel="stylesheet" href="/css/vendor/datatables.min.css" />
 @endsection
 
 @section('js_vendor')
+    <script src="/js/vendor/datatables.min.js"></script>
 @endsection
 
 @section('js_page')
+    <script src="/js/cs/datatable.extend.js"></script>
+    <script src="/js/plugins/datatable/boxed-students-matriculate.js"></script>
+    <script>
+        jQuery("#studentsMatriculateCheckAll").click(function() {
+            if ($(this).is(':checked')) {
+                $("[logro='studentCheck']").prop('checked', 'checked');
+                $("#saveStudentsMatriculate").prop('disabled', false);
+            } else {
+                $("[logro='studentCheck']").prop('checked', '');
+                $("#saveStudentsMatriculate").prop('disabled', true);
+            }
+        });
+        jQuery("[logro='studentCheck']").click(function() {
+            var check = $("[logro='studentCheck']:checked").length;
+            if (check > 0) {
+                $("#saveStudentsMatriculate").prop('disabled', false);
+            } else {
+                $("#saveStudentsMatriculate").prop('disabled', true);
+            }
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -20,7 +43,7 @@ $title = __('Matriculate students');
                 <section class="scroll-section" id="title">
                     <div class="page-title-container">
                         <h1 class="mb-1 pb-0 display-4">
-                            {{ __("Group") .' | ' . $group->name .' | '. $title  }}
+                            {{ __('Group') . ' | ' . $group->name . ' | ' . $title }}
                         </h1>
                         <div aria-label="breadcrumb">
                             <div class="breadcrumb">
@@ -58,36 +81,86 @@ $title = __('Matriculate students');
                         @csrf
                         @method('PUT')
 
-                        <table class="table table-striped">
-                            <tbody>
-                                @foreach ($studentsNoEnrolled as $student)
-                                    <tr>
-                                        <td scope="row">
-                                            <div class="form-check d-inline-block">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="checkbox" name="students[]"
-                                                        value="{{ $student->id }}">
-                                                    {{ $student->getLastNames() . ' ' . $student->getNames() }}
+                        <div class="mb-3">
+                            <!-- Stripe Controls Start -->
+                            <div class="row">
+                                <!-- Search Start -->
+                                <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-3">
+                                    <div
+                                        class="d-inline-block float-md-start search-input-container w-100 shadow bg-foreground">
+                                        <input class="form-control datatable-search" placeholder="Search"
+                                            data-datatable="#boxedStudentsMatriculate" />
+                                        <span class="search-magnifier-icon">
+                                            <i data-acorn-icon="search"></i>
+                                        </span>
+                                        <span class="search-delete-icon d-none">
+                                            <i data-acorn-icon="close"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Search End -->
 
-                                                    @if (1 === $student->inclusive)
-                                                        <span class="badge bg-outline-warning">{{ __('inclusive') }}</span>
-                                                    @endif
-                                                    @if ('new' === $student->status)
-                                                        <span
-                                                            class="badge bg-outline-primary">{{ __($student->status) }}</span>
-                                                    @elseif ('repeat' === $student->status)
-                                                        <span
-                                                            class="badge bg-outline-danger">{{ __($student->status) }}</span>
-                                                    @endif
-                                                </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                            </div>
+                            <!-- Stripe Controls End -->
 
-                        <x-button type="submit" class="btn-primary">{{ __('Matriculate') }}</x-button>
+                            <!-- Stripe Table Start -->
+                            <div class="mb-3">
+                                <table id="boxedStudentsMatriculate"
+                                    class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    data-order='[[ 2, "asc" ]]'>
+                                    <thead>
+                                        <tr>
+                                            <th class="empty all sw-3">
+                                                <!-- Check Button Start -->
+                                                <span class="form-check ms-2 mb-0">
+                                                    <input type="checkbox" class="form-check-input"
+                                                        id="studentsMatriculateCheckAll" />
+                                                </span>
+                                                <!-- Check Button End -->
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase">{{ __('document') }}</th>
+                                            <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($studentsNoEnrolled as $student)
+                                            <tr>
+                                                <td class="text-alternate">
+                                                    <div class="form-check ms-2 mb-0">
+                                                        <input class="form-check-input" logro="studentCheck" type="checkbox"
+                                                            name="students[]" id="student{{ $student->id }}" value="{{ $student->id }}">
+                                                    </div>
+                                                </td>
+                                                <td class="text-alternate">
+                                                    <label for="student{{ $student->id }}">
+                                                        {{ $student->document_type_code . ' - ' . $student->document }}
+                                                    </label>
+                                                </td>
+                                                <td class="text-alternate">
+                                                    <label for="student{{ $student->id }}">
+                                                        {{ $student->getLastNames() . ' ' . $student->getNames() }}
+
+                                                        @if (1 === $student->inclusive)
+                                                            <span class="badge bg-outline-warning">{{ __('inclusive') }}</span>
+                                                        @endif
+                                                        @if ('new' === $student->status)
+                                                            <span
+                                                                class="badge bg-outline-primary">{{ __($student->status) }}</span>
+                                                        @elseif ('repeat' === $student->status)
+                                                            <span
+                                                                class="badge bg-outline-danger">{{ __($student->status) }}</span>
+                                                        @endif
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <x-button type="submit" id="saveStudentsMatriculate" disabled class="btn-primary">
+                            {{ __('Matriculate') }}</x-button>
 
                     </form>
 

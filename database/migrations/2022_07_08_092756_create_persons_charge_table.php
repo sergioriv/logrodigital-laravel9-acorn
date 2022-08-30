@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id');
             $table->unsignedBigInteger('student_id');
             $table->string('name');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('document', 20)->nullable();
             $table->unsignedBigInteger('expedition_city_id')->nullable();
             $table->unsignedBigInteger('residence_city_id')->nullable();

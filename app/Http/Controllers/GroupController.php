@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\Group;
 use App\Models\GroupStudent;
@@ -139,6 +140,7 @@ class GroupController extends Controller
         return view('logro.group.show')->with([
             'Y' => $Y,
             'group' => $group,
+            'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
             'studentsGroup' => $studentsGroup->get(),
             'areas' => $areas
         ]);
@@ -193,6 +195,8 @@ class GroupController extends Controller
             'second_name',
             'father_last_name',
             'mother_last_name',
+            'document_type_code',
+            'document',
             'inclusive',
             'status'
         )->with('headquarters', 'studyTime', 'studyYear')
@@ -202,12 +206,17 @@ class GroupController extends Controller
             ->where('study_year_id', $group->study_year_id)
             ->whereNull('enrolled')
             ->orderBy('father_last_name')
-            ->orderBy('mother_last_name');
+            ->orderBy('mother_last_name')
+            ->get();
 
+        if (0 === count($studentsNoEnrolled))
+            return redirect()->back()->with(
+                ['notify' => 'fail', 'title' => __('No students to enroll')],
+            );
 
         return view('logro.group.matriculate')->with([
             'group' => $group,
-            'studentsNoEnrolled' => $studentsNoEnrolled->get()
+            'studentsNoEnrolled' => $studentsNoEnrolled
         ]);
     }
 
@@ -239,6 +248,10 @@ class GroupController extends Controller
                     'enrolled_date' => now(),
                     'enrolled' => TRUE
                 ]);
+
+                /* Send mail to Email Person Charge */
+                SmtpMail::sendEmailEnrollmentNotification($studentNoNull, $group);
+
             } else {
                 return redirect()->back()->withErrors(__("Unexpected Error"));
             }
@@ -318,5 +331,17 @@ class GroupController extends Controller
         return ResourceArea::with(['subjects' => $fn_sb])
             ->whereHas('subjects', $fn_sb)
             ->get();
+    }
+
+
+    /* ADICIONALES */
+    private function countStudentsNoEnrolled($Y, $group)
+    {
+        return $count_studentsNoEnrolled = Student::where('school_year_create', '<=', $Y->id)
+            ->where('headquarters_id', $group->headquarters_id)
+            ->where('study_time_id', $group->study_time_id)
+            ->where('study_year_id', $group->study_year_id)
+            ->whereNull('enrolled')
+            ->count();
     }
 }

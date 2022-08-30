@@ -77,7 +77,7 @@ $title = $group->name;
                                 @can('groups.students')
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link active" data-bs-toggle="tab" href="#studentsTab" role="tab"
-                                            aria-selected="true">{{ __('Students') }}</a>
+                                            aria-selected="true">{{ __('Students') }} ({{ $group->student_quantity }})</a>
                                     </li>
                                 @endcan
                                 @can('groups.teachers')
@@ -98,19 +98,12 @@ $title = $group->name;
                                 <!-- Students Tab Start -->
                                 <div class="tab-pane fade active show" id="studentsTab" role="tabpanel">
 
-                                    <div class="page-title-container">
-                                        <div class="row">
-                                            <!-- Title Start -->
-                                            <div class="col-12 col-md-7">
-                                                <h3>{{ $group->student_quantity }}</h3>
-                                            </div>
-                                            <!-- Title End -->
-
-                                            @can('groups.students.matriculate')
-                                                @if (null !== $Y->available)
+                                    <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
+                                        @can('groups.students.matriculate')
+                                            @if (null !== $Y->available)
+                                                @if ($count_studentsNoEnrolled > 0)
                                                     <!-- Groups Buttons Start -->
-                                                    <div
-                                                        class="col-12 col-md-5 mb-2 d-flex align-items-start justify-content-end">
+                                                    <div class="col-12 d-flex align-items-start justify-content-end">
                                                         <!-- Matriculate Students Button Start -->
                                                         <a href="{{ route('group.matriculate', $group) }}"
                                                             class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
@@ -121,38 +114,44 @@ $title = $group->name;
                                                     </div>
                                                     <!-- Groups Buttons End -->
                                                 @endif
-                                            @endcan
-                                        </div>
+                                            @endif
+                                        @endcan
                                     </div>
 
                                     <!-- Students Content Tab Start -->
                                     <section class="scroll-section">
-                                        <table class="table table-striped">
-                                            <tbody>
-                                                @foreach ($studentsGroup as $studentG)
-                                                    <tr>
-                                                        <td scope="row">
-                                                            <a href="{{ route('students.show', $studentG) }}"
-                                                                class="list-item-heading body">
-                                                                {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
-                                                            </a>
-                                                            @if (1 === $studentG->inclusive)
-                                                                <span
-                                                                    class="badge bg-outline-warning">{{ __('inclusive') }}</span>
-                                                            @endif
-                                                            @if ('new' === $studentG->status)
-                                                                <span
-                                                                    class="badge bg-outline-primary">{{ __($studentG->status) }}</span>
-                                                            @elseif ('repeat' === $studentG->status)
-                                                                <span
-                                                                    class="badge bg-outline-danger">{{ __($studentG->status) }}</span>
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                        <!-- Students Content Tab End -->
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <table class="table table-striped mb-0">
+                                                    <tbody>
+                                                        @foreach ($studentsGroup as $studentG)
+                                                            <tr>
+                                                                <td scope="row">
+                                                                    <a href="{{ route('students.show', $studentG) }}"
+                                                                        class="list-item-heading body">
+                                                                        {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
+                                                                    </a>
+                                                                    @if (1 === $studentG->inclusive)
+                                                                        <span
+                                                                            class="badge bg-outline-warning">{{ __('inclusive') }}</span>
+                                                                    @endif
+                                                                    @if ('new' === $studentG->status)
+                                                                        <span
+                                                                            class="badge bg-outline-primary">{{ __($studentG->status) }}</span>
+                                                                    @elseif ('repeat' === $studentG->status)
+                                                                        <span
+                                                                            class="badge bg-outline-danger">{{ __($studentG->status) }}</span>
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </section>
+                                    <!-- Students Content Tab End -->
                                 </div>
                                 <!-- Students Tab End -->
 

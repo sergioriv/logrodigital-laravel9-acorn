@@ -27,21 +27,25 @@ class SmtpMail extends Controller
 
     public static function sendEmailVerificationNotification(User $user)
     {
+        if ( $user->email !== NULL )
+        {
 
-        static::$subject = Lang::get("Registration Notification");
-        static::$userName = $user->name;
-        static::$userEmail = $user->email;
+            static::$subject = Lang::get("Registration Notification");
+            static::$userName = $user->name;
+            static::$userEmail = $user->email;
 
-        $verificationUrl = static::verificationUrl($user);
+            $verificationUrl = static::verificationUrl($user);
 
-        $content = (new ContentMail)
-            ->title(Lang::get('Hi') . ', ' . $user->name)
-            ->line(Lang::get('Please click the button below to verify your email address.'))
-            ->action(Lang::get('Verify Email Address'), $verificationUrl)
-            ->line(Lang::get('If you did not create an account, no further action is required.'))
-            ->subcopy();
+            $content = (new ContentMail)
+                ->title(Lang::get('Hi') . ', ' . $user->name)
+                ->line(Lang::get('Please click the button below to verify your email address.'))
+                ->action(Lang::get('Verify Email Address'), $verificationUrl)
+                ->line(Lang::get('If you did not create an account, no further action is required.'))
+                ->subcopy();
 
-        return static::send_email($content->toContent());
+            return static::send_email($content->toContent());
+        }
+        return false;
     }
 
     public static function sendPasswordResetNotification(User $user, $token)
