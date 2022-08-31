@@ -38,6 +38,8 @@ $title = __('Import') .' '. __('students');
                                     <ul>
                                         <li>first_name</li>
                                         <li>father_last_name</li>
+                                        <li>document_type</li>
+                                        <li>document</li>
                                         <li>institutional_email</li>
                                         <li>headquarters</li>
                                         <li>study_time</li>

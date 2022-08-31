@@ -44,6 +44,12 @@ class StudentsImport implements ToCollection, WithHeadingRow
             if(!isset( $row['father_last_name'] )) {
                 throw ValidationException::withMessages(['data' => 'La columna (father_last_name) no existe']);
             } else
+            if(!isset( $row['document_type'] )) {
+                throw ValidationException::withMessages(['data' => 'La columna (document_type) no existe']);
+            } else
+            if(!isset( $row['document'] )) {
+                throw ValidationException::withMessages(['data' => 'La columna (document) no existe']);
+            } else
             if(!isset( $row['institutional_email'] )) {
                 throw ValidationException::withMessages(['data' => 'La columna (institutional_email) no existe']);
             } else
@@ -62,28 +68,28 @@ class StudentsImport implements ToCollection, WithHeadingRow
              * Validating that the email is not empty.
              */
             if (empty(trim($row['first_name']))) {
-                throw ValidationException::withMessages(['data' => 'El primer nombre no puede estar vacio']);
+                throw ValidationException::withMessages(['data' => 'hay un (first_name) vacio']);
             } else
             if (empty(trim($row['father_last_name']))) {
-                throw ValidationException::withMessages(['data' => 'El apellido paterno no puede estar vacio']);
-            } else
-            if (empty(trim($row['institutional_email']))) {
-                throw ValidationException::withMessages(['data' => 'El correo institucional no puede estar vacio']);
+                throw ValidationException::withMessages(['data' => 'hay un (father_last_name) vacio']);
             } else
             if (empty(trim($row['document_type']))) {
-                throw ValidationException::withMessages(['data' => 'El tipo de documento no puede estar vacio']);
+                throw ValidationException::withMessages(['data' => 'hay un (document_type) vacio']);
             } else
             if (empty(trim($row['document']))) {
-                throw ValidationException::withMessages(['data' => 'El documento no puede estar vacio']);
+                throw ValidationException::withMessages(['data' => 'hay un (document) vacio']);
+            } else
+            if (empty(trim($row['institutional_email']))) {
+                throw ValidationException::withMessages(['data' => 'hay un (institutional_email) vacio']);
             } else
             if (empty(trim($row['headquarters']))) {
-                throw ValidationException::withMessages(['data' => 'La sede no puede estar vacio']);
+                throw ValidationException::withMessages(['data' => 'hay un (headquarters) vacio']);
             } else
             if (empty(trim($row['study_time']))) {
-                throw ValidationException::withMessages(['data' => 'La jornada no puede estar vacio']);
+                throw ValidationException::withMessages(['data' => 'hay un (study_time) vacio']);
             } else
             if (empty(trim($row['study_year']))) {
-                throw ValidationException::withMessages(['data' => 'El año de estudio no puede estar vacio']);
+                throw ValidationException::withMessages(['data' => 'hay un (study_year) vacio']);
             }
 
 
@@ -101,9 +107,9 @@ class StudentsImport implements ToCollection, WithHeadingRow
              * Validating that the email is unique.
              */
             $row['institutional_email'] = Str::lower($row['institutional_email']);
-            $user = User::where('email', $row['institutional_email'])->first();
+            $validEmail = User::where('email', $row['institutional_email'])->first();
 
-            if ($user) {
+            if ($validEmail) {
                 throw ValidationException::withMessages(['data' => 'El correo (' . $row['institutional_email'] . ') ya se encuentra registrado!']);
             }
 

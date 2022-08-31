@@ -122,7 +122,7 @@ class PersonChargeController extends Controller
 
                 if (!$user_mother) {
                     return redirect()->back()->with(
-                        ['notify' => 'fail', 'title' => __('Email :email invalid!', ['email' => $request->mother_email])],
+                        ['notify' => 'fail', 'title' => __('Invalid email (:email)', ['email' => $request->mother_email])],
                     );
                 }
 
@@ -170,7 +170,7 @@ class PersonChargeController extends Controller
 
                 if (!$user_father) {
                     return redirect()->back()->with(
-                        ['notify' => 'fail', 'title' => __('Email :email invalid!', ['email' => $request->father_email])],
+                        ['notify' => 'fail', 'title' => __('Invalid email (:email)', ['email' => $request->father_email])],
                     );
                 }
 
@@ -219,7 +219,7 @@ class PersonChargeController extends Controller
 
                     if (!$user_tutor) {
                         return redirect()->back()->with(
-                            ['notify' => 'fail', 'title' => __('Email :email invalid!', ['email' => $request->tutor_email])],
+                            ['notify' => 'fail', 'title' => __('Invalid email (:email)', ['email' => $request->tutor_email])],
                         );
                     }
 
