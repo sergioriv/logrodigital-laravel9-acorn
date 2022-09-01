@@ -3,77 +3,101 @@
 namespace App\Http\Controllers;
 
 use App\Models\School;
+use App\Models\Secretariat;
+use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class SchoolController extends Controller
 {
-
-    private static $mySchool;
-
     function __construct()
     {
-        static::$mySchool = School::find(1);
+        $this->middleware('can:myinstitution')->except('name', 'badge', 'email', 'handbook');
+        $this->middleware('can:myinstitution.edit')->only('update');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    private static function myschool()
     {
-        //
+        return School::find(1);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\School  $school
-     * @return \Illuminate\Http\Response
-     */
-    public function show(School $school)
+    public function show()
     {
-        //
+
+        return view('logro.school.show', [
+            'school' => $this->myschool(),
+            'teachers' => Teacher::all(),
+            'secretariats' => Secretariat::all()
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\School  $school
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(School $school)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', 'max:191'],
+            'nit' => ['required', 'string', 'max:20'],
+            'contact_email' => ['required', 'email', 'max:100'],
+            'contact_telephone' => ['required', 'string', 'max:20'],
+            'institutional_email' => ['nullable', 'string', 'max:191'],
+            'handbook_coexistence' => ['required', 'url'],
+            'badge' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048']
+        ]);
+
+        static::myschool()->update([
+            'name' => $request->name,
+            'nit' => $request->nit,
+            'contact_email' => $request->contact_email,
+            'contact_telephone' => $request->contact_telephone,
+            'institutional_email' => $request->institutional_email,
+            'handbook_coexistence' => $request->handbook_coexistence,
+        ]);
+
+        self::update_badge($request);
+
+        return redirect()->back()->with(
+            ['notify' => 'success', 'title' => __('Updated info!')],
+        );
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\School  $school
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, School $school)
+    private function update_badge($request)
     {
-        //
+        $school = static::myschool();
+
+        if ($request->hasFile('badge'))
+        {
+            $path = $this->upload_badge($request);
+            File::delete(public_path($school->badge));
+
+            $school->update([
+                'badge' => $path
+            ]);
+        }
+
     }
 
-    public function name()
+    private function upload_badge($request)
     {
-        return static::$mySchool->name ?? null;
+        if ($request->hasFile('badge')) {
+            $path = $request->file('badge')->store('badge', 'public');
+            return config('filesystems.disks.public.url') . '/' . $path;
+        } else return null;
     }
-    public function badge()
+
+    public static function name()
     {
-        return static::$mySchool->badge ?? null;
+        return static::myschool()->name ?? null;
     }
-    public function email()
+    public static function badge()
     {
-        return static::$mySchool->institutional_email ?? null;
+        return static::myschool()->badge ?? null;
     }
-    public function handbook()
+    public static function email()
     {
-        return static::$mySchool->handbook_coexistence ?? null;
+        return static::myschool()->institutional_email ?? null;
+    }
+    public static function handbook()
+    {
+        return static::myschool()->handbook_coexistence ?? null;
     }
 }

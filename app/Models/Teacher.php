@@ -52,6 +52,14 @@ class Teacher extends CastCreateModel
     {
         return "{$this->first_name} {$this->father_last_name}";
     }
+    public function getNames()
+    {
+        return "{$this->first_name} {$this->second_name}";
+    }
+    public function getLastNames()
+    {
+        return "{$this->father_last_name} {$this->mother_last_name}";
+    }
 
     protected function bondingType(): Attribute
     {

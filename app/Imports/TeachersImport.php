@@ -37,17 +37,23 @@ class TeachersImport implements ToCollection, WithHeadingRow
             /*
              * Validating that the email is not empty.
              */
+            if (empty(trim($row['first_name']))) {
+                throw ValidationException::withMessages(['data' => 'hay un (first_name) vacio']);
+            }
+            if (empty(trim($row['father_last_name']))) {
+                throw ValidationException::withMessages(['data' => 'hay un (father_last_name) vacio']);
+            }
             if (empty(trim($row['email']))) {
-                throw ValidationException::withMessages(['data' => 'El correo no puede estar vacio']);
+                throw ValidationException::withMessages(['data' => 'hay un (email) vacio']);
             }
 
 
             /*
              * Validating that the email is unique.
              */
-            $user = User::where('email', $row['email'])->first();
+            $validEmail = User::where('email', $row['email'])->first();
 
-            if ($user) {
+            if ($validEmail) {
                 throw ValidationException::withMessages(['data' => 'El correo (' . $row['email'] . ') ya existe!']);
             }
 
@@ -58,7 +64,7 @@ class TeachersImport implements ToCollection, WithHeadingRow
             $newUser = User::create([
                 'name'     => $row['first_name'] . ' ' . $row['father_last_name'],
                 'email'    => $row['email'],
-            ]);
+            ])->assignRole(6);
 
             Teacher::create([
                 'id'                    => $newUser->id,

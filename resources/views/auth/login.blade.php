@@ -26,7 +26,7 @@ $description = 'Login Page'
             </a>
         </div>
         <div class="mb-5 text-center">
-            <h2 class="cta-1 mb-0 text-primary">{{ (new App\Http\Controllers\SchoolController)->name() }}</h2>
+            <h2 class="cta-1 mb-0 text-primary">{{ \App\Http\Controllers\SchoolController::name() }}</h2>
         </div>
         <div>
             <!-- Session Status -->

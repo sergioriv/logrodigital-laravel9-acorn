@@ -154,6 +154,9 @@ return [
         'password' => 'contraseña',
 
         'institutional_email' => 'correo electrónico institucional',
+        'contact_email' => 'email de contacto',
+        'contact_telephone' => 'teléfono de contacto',
+        'handbook_coexistence' => 'manual de convivencia',
 
         'firstName' => 'primer nombre',
         'secondName' => 'segundo nombre',

@@ -69,6 +69,9 @@ class Scripts {
       if ("undefined" !== typeof GenericForms) {
         new GenericForms;
       }
+      if ("undefined" !== typeof GenericUserForms) {
+        new GenericUserForms;
+      }
       if ("undefined" !== typeof AuthLogin) {
         new AuthLogin;
       }
@@ -99,6 +102,9 @@ class Scripts {
       if ("undefined" !== typeof StudentTransferForm) {
         new StudentTransferForm;
       }
+      if ("undefined" !== typeof MyInstitutionForm) {
+        new MyInstitutionForm;
+      }
     }
 
     // Plugin pages initialization
@@ -122,8 +128,8 @@ class Scripts {
         if ("undefined" !== typeof DatatableSubjects) {
             new DatatableSubjects;
         }
-        if ("undefined" !== typeof DatatableTeachers) {
-            new DatatableTeachers;
+        if ("undefined" !== typeof DatatablesMyInstitution) {
+            new DatatablesMyInstitution;
         }
         if ("undefined" !== typeof DatatableTeacherSubjects) {
             new DatatableTeacherSubjects;

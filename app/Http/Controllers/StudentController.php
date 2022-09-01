@@ -280,7 +280,7 @@ class StudentController extends Controller
                 'sisbenes' => Sisben::all(),
                 'dwellingTypes' => DwellingType::all(),
                 'disabilities' => Disability::all(),
-                'handbook' => (new SchoolController)->handbook()
+                'handbook' => SchoolController::handbook()
             ]);
         } else
             return redirect()->route('dashboard')->with(

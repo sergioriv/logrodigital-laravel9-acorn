@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Exports\TeachersExport;
+use App\Exports\TeachersInstructuveExport;
 use App\Http\Controllers\support\UserController;
 use App\Imports\TeachersImport;
 use App\Models\SchoolYear;
-use App\Models\Subject;
 use App\Models\Teacher;
-use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,21 +16,20 @@ class TeacherController extends Controller
 {
     function __construct()
     {
-        $this->middleware('can:teachers.index');
         $this->middleware('can:teachers.create');
         $this->middleware('can:teachers.edit');
         $this->middleware('can:teachers.import')->only('export', 'import', 'import_store');
     }
 
-    public function index()
-    {
-        return view('logro.teacher.index');
-    }
+    // public function index()
+    // {
+    //     return view('logro.teacher.index', ['teachers' => Teacher::all()]);
+    // }
 
-    public function data()
-    {
-        return ['data' => Teacher::orderBy('first_name')->orderBy('father_last_name')->get()];
-    }
+    // public function data()
+    // {
+    //     return ['data' => Teacher::orderBy('first_name')->orderBy('father_last_name')->get()];
+    // }
 
     public function create()
     {
@@ -41,12 +39,12 @@ class TeacherController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'firstName' => ['required', 'string'],
-            'secondName' => ['nullable', 'string'],
-            'fatherLastName' => ['required', 'string'],
-            'motherLastName' => ['nullable', 'string'],
-            'phone' => ['required', 'numeric'],
-            'email' => ['required', 'email', Rule::unique('users')]
+            'firstName' => ['required', 'string', 'max:191'],
+            'secondName' => ['nullable', 'string', 'max:191'],
+            'fatherLastName' => ['required', 'string', 'max:191'],
+            'motherLastName' => ['nullable', 'string', 'max:191'],
+            'phone' => ['required', 'string', 'max:20'],
+            'email' => ['required', 'email', 'max:191', Rule::unique('users')]
         ]);
 
         $user_name = $request->firstName . ' ' . $request->fatherLastName;
@@ -68,7 +66,8 @@ class TeacherController extends Controller
             'institutional_email' => $request->email
         ]);
 
-        return redirect()->route('teacher.index')->with(
+        self::tab();
+        return redirect()->route('myinstitution')->with(
             ['notify' => 'success', 'title' => __('Teacher created!')],
         );
     }
@@ -103,6 +102,11 @@ class TeacherController extends Controller
         return Excel::download(new TeachersExport, __('teachers') . '.xlsx');
     }
 
+    public function export_instructive()
+    {
+        return Excel::download(new TeachersInstructuveExport, __('instruction for teachers') . '.xlsx');
+    }
+
     public function import()
     {
         return view('logro.teacher.import');
@@ -117,8 +121,14 @@ class TeacherController extends Controller
 
         Excel::import(new TeachersImport, $request->file('file'));
 
-        return redirect()->route('teacher.index')->with(
+        self::tab();
+        return redirect()->route('myinstitution')->with(
             ['notify' => 'success', 'title' => __('Loaded Excel!')],
         );
+    }
+
+    private function tab()
+    {
+        session()->flash('tab', 'teachers');
     }
 }

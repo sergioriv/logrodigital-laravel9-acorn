@@ -62,36 +62,6 @@ return new class extends Migration
                     ->onDelete('cascade');
         });
 
-        Schema::create('psychology', function (Blueprint $table) {/* [User] */
-            $table->unsignedBigInteger('id');
-            $table->string('telephone', 20)->nullable();
-            $table->timestamps();
-
-            $table->primary('id');
-
-            $table->foreign('id')
-                    ->references('id')
-                    ->on('users')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
-
-        Schema::create('coordinators', function (Blueprint $table) {/* [User] */
-            $table->unsignedBigInteger('id');
-            $table->string('telephone', 20)->nullable();
-            $table->timestamps();
-
-            $table->primary('id');
-
-            $table->foreign('id')
-                    ->references('id')
-                    ->on('users')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
-
-
-
         Schema::create('school_years', function (Blueprint $table) {/* Ej: 2022, 2023  */
             $table->id();
             $table->string('name');
@@ -375,8 +345,6 @@ return new class extends Migration
         Schema::dropIfExists('study_times');
         Schema::dropIfExists('headquarters');
         Schema::dropIfExists('school_years');
-        Schema::dropIfExists('coordinators');
-        Schema::dropIfExists('psychology');
         Schema::dropIfExists('students');
         Schema::dropIfExists('teachers');
         Schema::dropIfExists('school');

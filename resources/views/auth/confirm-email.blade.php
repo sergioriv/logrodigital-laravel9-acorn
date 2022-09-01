@@ -24,7 +24,7 @@ $description = '';
         </div>
         <div class="mb-5 text-center">
             <h2 class="cta-1 text-primary">
-                {{ (new App\Http\Controllers\SchoolController)->name() }}</h2>
+                {{ \App\Http\Controllers\SchoolController::name() }}</h2>
         </div>
         <div class="mb-5">
 

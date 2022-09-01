@@ -26,7 +26,7 @@ $description = 'Reset Password Page'
             </a>
         </div>
         <div class="mb-5 text-center">
-            <h2 class="cta-1 text-primary">{{ (new App\Http\Controllers\SchoolController)->name() }}</h2>
+            <h2 class="cta-1 text-primary">{{ \App\Http\Controllers\SchoolController::name() }}</h2>
         </div>
         <div class="mb-5">
             <p class="h6">{{ __("Enter new password for your account") }}</p>

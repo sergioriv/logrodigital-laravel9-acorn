@@ -12,17 +12,6 @@
     </div>
     <!-- Logo End -->
 
-    <!-- Language Switch Start
-    <div class="language-switch-container">
-        <button class="btn btn-empty language-button dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">EN</button>
-        <div class="dropdown-menu">
-            <a href="#" class="dropdown-item">DE</a>
-            <a href="#" class="dropdown-item active">EN</a>
-            <a href="#" class="dropdown-item">ES</a>
-        </div>
-    </div>
-    Language Switch End -->
-
     <!-- User Menu Start -->
     <div class="user-container d-flex">
         <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -30,7 +19,7 @@
             <div class="name">{{ Auth::user()->name }}</div>
         </a>
         <div class="dropdown-menu dropdown-menu-end user-menu wide">
-            <div class="row mb-1 ms-0 me-0">
+            <div class="row mb-3 ms-0 me-0">
                 <div class="col-12 p-1 mb-3 pt-3">
                     <div class="text-extra-small text-primary">{{ __('ACCOUNT') }}</div>
                 </div>
@@ -42,12 +31,6 @@
                                 <span class="align-middle">{{ __('Profile') }}</span>
                             </a>
                         </li>
-                        {{-- <li>
-                            <a href="#">
-                                <i data-acorn-icon="help" class="me-2" data-acorn-size="17"></i>
-                                <span class="align-middle">{{ __('Help') }}</span>
-                            </a>
-                        </li> --}}
                         {{-- <li>
                             <a href="#">
                                 <i data-acorn-icon="file-text" class="me-2" data-acorn-size="17"></i>
@@ -68,69 +51,24 @@
                     </ul>
                 </div>
             </div>
-        </div>
-    </div>
-    <!-- User Menu End -->
-
-    <!-- Icons Menu Start
-    <ul class="list-unstyled list-inline text-center menu-icons">
-        <li class="list-inline-item">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#searchPagesModal">
-                <i data-acorn-icon="search" data-acorn-size="18"></i>
-            </a>
-        </li>
-        <li class="list-inline-item">
-            <a href="#" id="pinButton" class="pin-button">
-                <i data-acorn-icon="lock-on" class="unpin" data-acorn-size="18"></i>
-                <i data-acorn-icon="lock-off" class="pin" data-acorn-size="18"></i>
-            </a>
-        </li>
-        <li class="list-inline-item">
-            <a href="#" id="colorButton">
-                <i data-acorn-icon="light-on" class="light" data-acorn-size="18"></i>
-                <i data-acorn-icon="light-off" class="dark" data-acorn-size="18"></i>
-            </a>
-        </li>
-        <li class="list-inline-item">
-            <a href="#" data-bs-toggle="dropdown" data-bs-target="#notifications" aria-haspopup="true" aria-expanded="false" class="notification-button">
-                <div class="position-relative d-inline-flex">
-                    <i data-acorn-icon="bell" data-acorn-size="18"></i>
-                    <span class="position-absolute notification-dot rounded-xl"></span>
+            <div class="row mb-1 ms-0 me-0">
+                <div class="col-12 p-1 mb-2 pt-2">
+                    <div class="text-extra-small text-primary">{{ __('DOCS') }}</div>
                 </div>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end wide notification-dropdown scroll-out" id="notifications">
-                <div class="scroll">
-                    <ul class="list-unstyled border-last-none">
-                        <li class="mb-3 pb-3 border-bottom border-separator-light d-flex">
-                            <img src="/img/profile/profile-1.webp" class="me-3 sw-4 sh-4 rounded-xl align-self-center" alt="..." />
-                            <div class="align-self-center">
-                                <a href="#">Joisse Kaycee just sent a new comment!</a>
-                            </div>
-                        </li>
-                        <li class="mb-3 pb-3 border-bottom border-separator-light d-flex">
-                            <img src="/img/profile/profile-2.webp" class="me-3 sw-4 sh-4 rounded-xl align-self-center" alt="..." />
-                            <div class="align-self-center">
-                                <a href="#">New order received! It is total $147,20.</a>
-                            </div>
-                        </li>
-                        <li class="mb-3 pb-3 border-bottom border-separator-light d-flex">
-                            <img src="/img/profile/profile-3.webp" class="me-3 sw-4 sh-4 rounded-xl align-self-center" alt="..." />
-                            <div class="align-self-center">
-                                <a href="#">3 items just added to wish list by a user!</a>
-                            </div>
-                        </li>
-                        <li class="pb-3 border-bottom border-separator-light d-flex">
-                            <img src="/img/profile/profile-6.webp" class="me-3 sw-4 sh-4 rounded-xl align-self-center" alt="..." />
-                            <div class="align-self-center">
-                                <a href="#">Kirby Peters just sent a new message!</a>
-                            </div>
+                <div class="ps-1 pe-1">
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="https://www.youtube.com/channel/UC-eq0v9pdpjWCrOJ8SFgIkg" target="_blank">
+                                <i data-acorn-icon="youtube" class="me-2" data-acorn-size="17"></i>
+                                <span class="align-middle">YouTube</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
-        </li>
-    </ul>
-    <!-- Icons Menu End -->
+        </div>
+    </div>
+    <!-- User Menu End -->
 
     <!-- Menu Start -->
     <div class="menu-container flex-grow-1 mt-0">
@@ -178,14 +116,6 @@
                 </a>
             </li>
             @endcan
-            @can('teachers.index')
-            <li>
-                <a href="{{ route('teacher.index') }}" data-href="/teachers">
-                    <i data-acorn-icon="question-hexagon" class="icon" data-acorn-size="18"></i>
-                    <span class="label">{{ __('Teachers') }}</span>
-                </a>
-            </li>
-            @endcan
             @can('groups.index')
             <li>
                 <a href="{{ route('group.index') }}" data-href="/groups">
@@ -215,6 +145,14 @@
                 <a href="{{ route('schoolYear.index') }}" data-href="/school_years">
                     <i class="icon icon-18 bi-clock-history"></i>
                     <span class="label">{{ __('Years') }}</span>
+                </a>
+            </li>
+            @endcan
+            @can('myinstitution')
+            <li>
+                <a href="{{ route('myinstitution') }}" data-href="/myinstitution">
+                    <i data-acorn-icon="home-garage" class="icon" data-acorn-size="18"></i>
+                    <span class="label">{{ __('My Institution') }}</span>
                 </a>
             </li>
             @endcan

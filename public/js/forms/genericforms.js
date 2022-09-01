@@ -139,6 +139,7 @@ class GenericForms {
                     maxlength: 191,
                 },
                 secondName: {
+                    required: false,
                     maxlength: 191,
                 },
                 fatherLastName: {
@@ -149,7 +150,7 @@ class GenericForms {
                     maxlength: 191,
                 },
                 phone: {
-                    number: true,
+                    required: true,
                     minlength: 6,
                     maxlength: 20,
                 },

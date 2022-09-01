@@ -11,6 +11,7 @@ use App\Http\Controllers\ResourceAreaController;
 use App\Http\Controllers\ResourceSubjectController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SchoolYearController;
+use App\Http\Controllers\SecretariatController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFileController;
 use App\Http\Controllers\StudyTimeController;
@@ -23,7 +24,9 @@ use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Models\Group;
 use App\Models\Student;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Permission;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +82,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('profile/personal_info', [StudentController::class, 'wizard_personal_info_request'])->name('student.wizard.personal-info');
     Route::put('profile/edit', [StudentController::class, 'wizard_complete_request'])->name('student.wizard.complete');
 
+    /* My Institution */
+    Route::get('myinstitution', [SchoolController::class, 'show'])->name('myinstitution');
+    Route::put('myinstitution', [SchoolController::class, 'update'])->name('myinstitution.update');
 
     /* Route School Year */
     Route::resource('school_years', SchoolYearController::class)->except('destroy','edit','update')->names('schoolYear');
@@ -113,12 +119,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route Teachers */
     Route::controller(TeacherController::class)->group( function () {
-        Route::get('teachers.json', 'data');
+        // Route::get('teachers.json', 'data');
         Route::get('teachers/export', 'export')->name('teacher.export');
         Route::get('teachers/import', 'import')->name('teacher.import');
         Route::post('teachers/import', 'import_store')->name('teacher.import');
+        Route::get('teachers/instructive', 'export_instructive')->name('teachers.instructive');
     });
-    Route::resource('teachers', TeacherController::class)->except('destroy')->names('teacher');
+    Route::resource('teachers', TeacherController::class)->except('destroy','index')->names('teacher');
+    Route::resource('secretariat', SecretariatController::class)->only('create','store')->names('secreatariat');
 
     /* Route Groups */
     Route::resource('groups', GroupController::class)->except('destroy')->names('group');
@@ -165,6 +173,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
 
 });
-
 
 require __DIR__.'/auth.php';
