@@ -180,11 +180,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 });
 
-Route::get('faker/students', function () {
-    Student::factory(1000)->create();
-});
-Route::get('faker/groups', function () {
-    Group::factory(50)->create();
-});
-
 require __DIR__.'/auth.php';
