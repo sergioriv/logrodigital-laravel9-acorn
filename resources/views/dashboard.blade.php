@@ -29,9 +29,12 @@ $title = __('Dashboard');
     <!-- Title and Top Buttons End -->
 
     <!-- Content Start -->
-    <div class="card mb-2">
+    <div class="card mb-3">
         <div class="card-body h-100">Bienvenido a {{ config('app.name') }}</div>
     </div>
+    @hasrole('PARENT')
+    <div class="alert alert-info" role="alert">Próximamente, en esta plataforma tendrá información sobre los estudiantes que usted tenga a cargo</div>
+    @endhasrole
     <!-- Content End -->
 </div>
 @endsection
