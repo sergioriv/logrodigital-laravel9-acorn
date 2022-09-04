@@ -50,7 +50,7 @@ class StudentFactory extends Factory
             'institutional_email' => $user->email,
             'document_type_code' => DocumentType::all()->random()->code,
             'document' => $this->faker->numberBetween(100000, 199999999),
-            'country_id' => Country::all()->random()->id,
+            'country_id' => 42,
             'birth_city_id' => City::all()->random()->id,
             'gender_id' => Gender::all()->random()->id,
             'rh_id' => Rh::all()->random()->id,
