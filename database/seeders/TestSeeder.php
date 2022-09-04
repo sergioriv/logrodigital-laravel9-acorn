@@ -46,7 +46,7 @@ class TestSeeder extends Seeder
 
         Student::create(['id' => $estudiante01->id,
             'first_name' => $estudiante01->name,
-            'father_last_name' => 'last name',
+            'first_last_name' => 'last name',
             'institutional_email' => $estudiante01->email,
             'school_year_create' => $year->id,
             'headquarters_id' => $principal->id,

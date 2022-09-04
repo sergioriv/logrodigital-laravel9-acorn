@@ -21,16 +21,6 @@ class TeacherController extends Controller
         $this->middleware('can:teachers.import')->only('export', 'import', 'import_store');
     }
 
-    // public function index()
-    // {
-    //     return view('logro.teacher.index', ['teachers' => Teacher::all()]);
-    // }
-
-    // public function data()
-    // {
-    //     return ['data' => Teacher::orderBy('first_name')->orderBy('father_last_name')->get()];
-    // }
-
     public function create()
     {
         return view('logro.teacher.create');
@@ -41,13 +31,13 @@ class TeacherController extends Controller
         $request->validate([
             'firstName' => ['required', 'string', 'max:191'],
             'secondName' => ['nullable', 'string', 'max:191'],
-            'fatherLastName' => ['required', 'string', 'max:191'],
-            'motherLastName' => ['nullable', 'string', 'max:191'],
+            'firstLastName' => ['required', 'string', 'max:191'],
+            'secondLastName' => ['nullable', 'string', 'max:191'],
             'phone' => ['required', 'string', 'max:20'],
             'email' => ['required', 'email', 'max:191', Rule::unique('users')]
         ]);
 
-        $user_name = $request->firstName . ' ' . $request->fatherLastName;
+        $user_name = $request->firstName . ' ' . $request->firstLastName;
         $user = UserController::_create($user_name, $request->email, 6);
 
         if (!$user) {
@@ -60,8 +50,8 @@ class TeacherController extends Controller
             'id' => $user->id,
             'first_name' => $request->firstName,
             'second_name' => $request->secondName,
-            'father_last_name' => $request->fatherLastName,
-            'mother_last_name' => $request->motherLastName,
+            'first_last_name' => $request->firstLastName,
+            'second_last_name' => $request->secondLastName,
             'telephone' => $request->phone,
             'institutional_email' => $request->email
         ]);

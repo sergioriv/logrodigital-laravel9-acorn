@@ -76,14 +76,15 @@ class StudentController extends Controller
             'id',
             'first_name',
             'second_name',
-            'father_last_name',
-            'mother_last_name',
+            'first_last_name',
+            'second_last_name',
             'institutional_email',
             'status',
             'inclusive',
             'headquarters_id',
             'study_time_id',
-            'study_year_id'
+            'study_year_id',
+            'created_at'
         )->with('headquarters', 'studyTime', 'studyYear')
             ->where('school_year_create', '<=', $Y->id)
             ->whereNot(
@@ -97,8 +98,8 @@ class StudentController extends Controller
         }
 
 
-        $students->orderBy('father_last_name')
-            ->orderBy('mother_last_name');
+        $students->orderBy('first_last_name')
+            ->orderBy('second_last_name');
 
         return view('logro.student.noenrolled')->with('students', $students->get());
     }
@@ -110,68 +111,62 @@ class StudentController extends Controller
         $documentType = DocumentType::orderBy('foreigner')->get();
         $countGroups = Group::where('school_year_id', $Y->id)->count();
 
-        return view("logro.student.create")->with([
+        return view("logro.student.create", [
             'headquarters' => Headquarters::all(),
             'studyTime' => StudyTime::all(),
             'studyYear' => StudyYear::all(),
             'cities' => City::all(),
             'countries' => Country::all(),
             'documentType' => $documentType,
-            'countGroups' => $countGroups
+            'countGroups' => $countGroups,
+            'nationalCountry' => NationalCountry::country()
         ]);
     }
 
     public function store(Request $request)
     {
 
-        session()->flash('docType', DocumentType::find($request->document_type) ?? null);
-
         $request->validate([
             'firstName' => ['required', 'string', 'max:191'],
             'secondName' => ['nullable', 'string', 'max:191'],
-            'fatherLastName' => ['required', 'string', 'max:191'],
-            'motherLastName' => ['nullable', 'string', 'max:191'],
+            'firstLastName' => ['required', 'string', 'max:191'],
+            'secondLastName' => ['nullable', 'string', 'max:191'],
             'document_type' => ['required', Rule::exists('document_types', 'code')],
             'document' => ['required', 'max:20', Rule::unique('students', 'document')],
+            'country' => ['required', Rule::exists('countries', 'id')],
+            'birth_city' => ['nullable', Rule::exists('cities', 'id')],
+            'birthdate' => ['nullable', 'date'],
+            'siblings_in_institution' => ['nullable', 'boolean'],
             'institutional_email' => ['required', 'max:191', 'email', Rule::unique('users', 'email')],
-            'telephone' => ['nullable', 'string', 'max:20'],
             'headquarters' => ['required', Rule::exists('headquarters', 'id')],
             'studyTime' => ['required', Rule::exists('study_times', 'id')],
             'studyYear' => ['required', Rule::exists('study_years', 'id')],
-            'birth_city' => ['nullable', Rule::exists('cities', 'id')],
-            'country' => ['nullable', Rule::exists('countries', 'id')],
-            'birthdate' => ['nullable', 'date'],
         ]);
 
-        $user_name = $request->firstName . ' ' . $request->fatherLastName;
+        $user_name = $request->firstName . ' ' . $request->firstLastName;
         $user = UserController::_create($user_name, $request->institutional_email, 7);
 
         $Y = SchoolYearController::current_year();
 
         /* DATOS PAIS DE ORIGEN */
-        $docType = DocumentType::find($request->document_type);
-        $expedition_city = NULL;
-        if (1 == $docType->foreigner) {
+        if ( NationalCountry::country()->id !== $request->country )
+        {
             $request->birth_city = NULL;
-            $expedition_city = 149;
-        } else {
-            $request->country = NULL;
         }
 
         Student::create([
             'id' => $user->id,
             'first_name' => $request->firstName,
             'second_name' => $request->secondName,
-            'father_last_name' => $request->fatherLastName,
-            'mother_last_name' => $request->motherLastName,
-            'institutional_email' => $request->institutional_email,
-            'telephone' => $request->telephone,
+            'first_last_name' => $request->firstLastName,
+            'second_last_name' => $request->secondLastName,
             'document_type_code' => $request->document_type,
             'document' => $request->document,
-            'birth_city_id' => $request->birth_city,
             'country_id' => $request->country,
+            'birth_city_id' => $request->birth_city,
             'birthdate' => $request->birthdate,
-            'expedition_city_id' => $expedition_city,
+            'siblings_in_institution' => $request->siblings_in_institution,
+            'institutional_email' => $request->institutional_email,
             'school_year_create' => $Y->id,
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->studyTime,
@@ -280,7 +275,8 @@ class StudentController extends Controller
                 'sisbenes' => Sisben::all(),
                 'dwellingTypes' => DwellingType::all(),
                 'disabilities' => Disability::all(),
-                'handbook' => SchoolController::handbook()
+                'handbook' => SchoolController::handbook(),
+                'nationalCountry' => NationalCountry::country()
             ]);
         } else
             return redirect()->route('dashboard')->with(
@@ -344,16 +340,16 @@ class StudentController extends Controller
             'id',
             'first_name',
             'second_name',
-            'father_last_name',
-            'mother_last_name',
+            'first_last_name',
+            'second_last_name',
             'institutional_email',
             'status',
             'inclusive'
         )
             ->whereHas('groupYear', $fn_gs)
             ->with(['groupYear' => $fn_gs])
-            ->orderBy('father_last_name')
-            ->orderBy('mother_last_name')
+            ->orderBy('first_last_name')
+            ->orderBy('second_last_name')
             ->get();
 
 
@@ -368,8 +364,8 @@ class StudentController extends Controller
             'id',
             'first_name',
             'second_name',
-            'father_last_name',
-            'mother_last_name',
+            'first_last_name',
+            'second_last_name',
             'headquarters_id',
             'study_time_id',
             'study_year_id',
@@ -538,12 +534,15 @@ class StudentController extends Controller
             'kinships' => Kinship::all(),
             'studentFileTypes' => $studentFileTypes->get(),
             'groupsStudent' => $groupsStudent,
-            'handbook' => (new SchoolController)->handbook()
+            'handbook' => (new SchoolController)->handbook(),
+            'nationalCountry' => NationalCountry::country()
         ]);
     }
 
     public function update(Request $request, Student $student, $wizard = false)
     {
+        // session()->flash('docType', DocumentType::find($request->document_type) ?? null);
+
         $required = 'nullable';
         $data_treatment = $student->data_treatment;
         if ('STUDENT' === UserController::role_auth()) {
@@ -558,16 +557,17 @@ class StudentController extends Controller
         $request->validate([
             'firstName' => ['required', 'string', 'max:191'],
             'secondName' => ['nullable', 'string', 'max:191'],
-            'fatherLastName' => ['required', 'string', 'max:191'],
-            'motherLastName' => ['nullable', 'string', 'max:191'],
+            'firstLastName' => ['required', 'string', 'max:191'],
+            'secondLastName' => ['nullable', 'string', 'max:191'],
             'telephone' => [$required, 'string', 'max:20'],
             'document_type' => ['required', Rule::exists('document_types', 'code')],
             'document' => ['required', 'string', 'max:20', Rule::unique('students', 'document')->ignore($student->id)],
             'expedition_city' => [$required, Rule::exists('cities', 'id')],
             'number_siblings' => [$required, 'numeric', 'max:200', 'min:0'],
-            'birth_city' => [$required, Rule::exists('cities', 'id')],
-            'country' => ['nullable', Rule::exists('countries', 'id')],
+            'country' => ['required', Rule::exists('countries', 'id')],
+            'birth_city' => ['nullable', Rule::exists('cities', 'id')],
             'birthdate' => [$required, 'date'],
+            'siblings_in_institution' => [$required, 'boolean'],
             'gender' => [$required, Rule::exists('genders', 'id')],
             'rh' => [$required, Rule::exists('rhs', 'id')],
             'zone' => [$required, 'string', 'max:6'],
@@ -593,15 +593,13 @@ class StudentController extends Controller
             'data_treatment' => ['nullable', 'boolean']
         ]);
 
-        $user_name = $request->firstName . ' ' . $request->fatherLastName;
+        $user_name = $request->firstName . ' ' . $request->firstLastName;
         UserController::_update($student->id, $user_name);
 
         /* DATOS PAIS DE ORIGEN */
-        $docType = DocumentType::find($request->document_type);
-        if (1 == $docType->foreigner) {
+        if ( NationalCountry::country()->id !== $request->country )
+        {
             $request->birth_city = NULL;
-        } else {
-            $request->country = NULL;
         }
 
         /* COMPROBACION DE DCERTIFICADO DE DISCAPACIDAD */
@@ -615,8 +613,8 @@ class StudentController extends Controller
         $student->update([
             'first_name' => $request->firstName,
             'second_name' => $request->secondName,
-            'father_last_name' => $request->fatherLastName,
-            'mother_last_name' => $request->motherLastName,
+            'first_last_name' => $request->firstLastName,
+            'second_last_name' => $request->secondLastName,
             'document_type_code' => $request->document_type,
             'document' => $request->document,
             'telephone' => $request->telephone,
@@ -624,6 +622,7 @@ class StudentController extends Controller
             'birth_city_id' => $request->birth_city,
             'country_id' => $request->country,
             'birthdate' => $request->birthdate,
+            'siblings_in_institution' => $request->siblings_in_institution,
             'gender_id' => $request->gender,
             'rh_id' => $request->rh,
             'number_siblings' => $request->number_siblings,

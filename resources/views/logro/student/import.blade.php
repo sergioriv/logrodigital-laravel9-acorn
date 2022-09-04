@@ -37,7 +37,7 @@ $title = __('Import') .' '. __('students');
                                 <li>Los datos requeridos son:
                                     <ul>
                                         <li>first_name</li>
-                                        <li>father_last_name</li>
+                                        <li>first_last_name</li>
                                         <li>document_type</li>
                                         <li>document</li>
                                         <li>institutional_email</li>

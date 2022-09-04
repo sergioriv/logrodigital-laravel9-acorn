@@ -90,7 +90,7 @@ class GroupController extends Controller
         $headquarters = Headquarters::where('available', TRUE)->get();
         $studyTime = StudyTime::all();
         $studyYear = StudyYear::where('available', TRUE)->get();
-        $teachers = Teacher::select('id', 'first_name', 'father_last_name')->get();
+        $teachers = Teacher::select('id', 'first_name', 'first_last_name')->get();
 
         return view('logro.group.create')->with([
             'headquarters' => $headquarters,
@@ -133,8 +133,8 @@ class GroupController extends Controller
         $sy = $group->study_year_id;
 
         $studentsGroup = Student::where('group_id', $group->id)
-            ->orderBy('father_last_name')
-            ->orderBy('mother_last_name');
+            ->orderBy('first_last_name')
+            ->orderBy('second_last_name');
         $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
 
         return view('logro.group.show')->with([
@@ -151,7 +151,7 @@ class GroupController extends Controller
         $headquarters = Headquarters::where('available', TRUE)->get();
         $studyTime = StudyTime::all();
         $studyYear = StudyYear::where('available', TRUE)->get();
-        $teachers = Teacher::select('id', 'first_name', 'father_last_name')->get();
+        $teachers = Teacher::select('id', 'first_name', 'first_last_name')->get();
 
         return view('logro.group.edit')->with([
             'group' => $group,
@@ -193,8 +193,8 @@ class GroupController extends Controller
             'id',
             'first_name',
             'second_name',
-            'father_last_name',
-            'mother_last_name',
+            'first_last_name',
+            'second_last_name',
             'document_type_code',
             'document',
             'inclusive',
@@ -205,8 +205,8 @@ class GroupController extends Controller
             ->where('study_time_id', $group->study_time_id)
             ->where('study_year_id', $group->study_year_id)
             ->whereNull('enrolled')
-            ->orderBy('father_last_name')
-            ->orderBy('mother_last_name')
+            ->orderBy('first_last_name')
+            ->orderBy('second_last_name')
             ->get();
 
         if (0 === count($studentsNoEnrolled))

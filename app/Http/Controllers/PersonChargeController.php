@@ -75,7 +75,7 @@ class PersonChargeController extends Controller
         $request->validate([
             /* MOTHER */
             'mother_name' => [$mother_required, 'string', 'max:191'],
-            'mother_email' => ['nullable', 'max:191', 'email', Rule::unique('users','email')->ignore($mother_id)],
+            'mother_email' => ['nullable', 'max:191', 'email'], // Rule::unique('users','email')->ignore($mother_id)
             'mother_document' => [$mother_required, 'string', 'max:20'],
             'mother_expedition_city' => [$mother_required, Rule::exists('cities','id')],
             'mother_residence_city' => [$mother_required, Rule::exists('cities','id')],
@@ -87,7 +87,7 @@ class PersonChargeController extends Controller
 
             /* FATHER */
             'father_name' => [$father_required, 'string', 'max:191'],
-            'father_email' => ['nullable', 'max:191', 'email', Rule::unique('users','email')->ignore($father_id)],
+            'father_email' => ['nullable', 'max:191', 'email'], // Rule::unique('users','email')->ignore($father_id)
             'father_document' => [$father_required, 'string', 'max:20'],
             'father_expedition_city' => [$father_required, Rule::exists('cities','id')],
             'father_residence_city' => [$father_required, Rule::exists('cities','id')],
@@ -99,7 +99,7 @@ class PersonChargeController extends Controller
 
             /* FATHER */
             'tutor_name' => [$tutor_required, 'string', 'max:191'],
-            'tutor_email' => ['nullable', 'max:191', 'email', Rule::unique('users','email')->ignore($tutor_id)],
+            'tutor_email' => ['nullable', 'max:191', 'email'], // Rule::unique('users','email')->ignore($tutor_id)
             'tutor_document' => [$tutor_required, 'string', 'max:20'],
             'tutor_expedition_city' => [$tutor_required, Rule::exists('cities','id')],
             'tutor_residence_city' => [$tutor_required, Rule::exists('cities','id')],

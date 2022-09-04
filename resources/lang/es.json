@@ -68,8 +68,6 @@
 
     "first name": "primer nombre",
     "second name": "segundo nombre",
-    "father's last name": "apellido del padre",
-    "mother's last name": "apellido de la madre",
     "institutional email": "Correo electrónico institucional",
 
     "created at": "fecha creación",
@@ -273,6 +271,9 @@
     "instruction for teachers": "instructivo para docentes",
     "Created secretariat user!": "Usuario de secreataría creado!",
     "Create Secretariat User": "Crear usuario secretaría",
+    "first last name": "primer apellido",
+    "second last name": "segundo apellido",
+    "Do you have siblings in the institution?": "¿Tiene hermanos en la institución?",
 
     "full name": "nombre completo",
     "new": "nuevo",

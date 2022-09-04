@@ -16,8 +16,8 @@ class Teacher extends CastCreateModel
         'document',
         'first_name',
         'second_name',
-        'father_last_name',
-        'mother_last_name',
+        'first_last_name',
+        'second_last_name',
         'bonding_type',
         'latest_degree',
         'institutional_email',
@@ -50,7 +50,7 @@ class Teacher extends CastCreateModel
      */
     public function getFullName()
     {
-        return "{$this->first_name} {$this->father_last_name}";
+        return "{$this->first_name} {$this->first_last_name}";
     }
     public function getNames()
     {
@@ -58,7 +58,7 @@ class Teacher extends CastCreateModel
     }
     public function getLastNames()
     {
-        return "{$this->father_last_name} {$this->mother_last_name}";
+        return "{$this->first_last_name} {$this->second_last_name}";
     }
 
     protected function bondingType(): Attribute
@@ -74,7 +74,7 @@ class Teacher extends CastCreateModel
             get: fn ($value) => $value !== NULL ? $value : ''
         );
     }
-    protected function motherLastName(): Attribute
+    protected function secondLastName(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value !== NULL ? $value : ''

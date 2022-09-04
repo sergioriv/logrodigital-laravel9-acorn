@@ -32,7 +32,7 @@ $title = __('Import') . ' ' . __('teachers');
                                 Los datos requeridos son:
                             <ul>
                                 <li>first_name</li>
-                                <li>father_last_name</li>
+                                <li>first_last_name</li>
                                 <li>email</li>
                             </ul>
 

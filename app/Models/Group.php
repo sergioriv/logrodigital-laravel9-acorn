@@ -44,7 +44,7 @@ class Group extends CastCreateModel
 
     public function teacher()
     {
-        return $this->belongsTo(Teacher::class)->select('id', 'first_name', 'father_last_name');
+        return $this->belongsTo(Teacher::class)->select('id', 'first_name', 'first_last_name');
     }
 
 

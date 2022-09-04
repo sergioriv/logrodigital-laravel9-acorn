@@ -171,7 +171,7 @@
             <li>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <a href="{{ route('logout') }}"
+                    <a id="logout" href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
                         <i data-acorn-icon="logout" class="icon" data-acorn-size="18"></i>

@@ -16,7 +16,6 @@ class GenericForms {
         }
 
         this._initStudentCreateForm();
-        this._initStudentInfoForm();
         this._initTeacherForm();
     }
 
@@ -27,7 +26,7 @@ class GenericForms {
             return;
         }
 
-        jQuery(form).validate({
+        const validateOptions = {
             rules: {
                 firstName: {
                     required: true,
@@ -36,11 +35,11 @@ class GenericForms {
                 secondName: {
                     maxlength: 191,
                 },
-                fatherLastName: {
+                firstLastName: {
                     required: true,
                     maxlength: 191,
                 },
-                motherLastName: {
+                secondLastName: {
                     maxlength: 191,
                 },
                 institutional_email: {
@@ -70,59 +69,9 @@ class GenericForms {
                 }
             },
 
-        });
-    }
+        };
 
-    _initStudentInfoForm() {
-        const form = document.getElementById("studentInfoForm");
-        if (!form) {
-            console.log("studentInfoForm is null");
-            return;
-        }
-
-        jQuery(form).validate({
-            rules: {
-                firstName: {
-                    required: true,
-                    maxlength: 191,
-                },
-                secondName: {
-                    maxlength: 191,
-                },
-                fatherLastName: {
-                    required: true,
-                    maxlength: 191,
-                },
-                motherLastName: {
-                    maxlength: 191,
-                },
-                institutional_email: {
-                    required: true,
-                    email: true,
-                    maxlength: 191,
-                },
-                document_type: {
-                    required: true,
-                },
-                document: {
-                    required: true,
-                    maxlength: 20
-                },
-                headquarters: {
-                    required: true
-                },
-                studyTime: {
-                    required: true
-                },
-                studyYear: {
-                    required: true
-                },
-                birthdate: {
-                    date: true
-                }
-            },
-
-        });
+        this.formValidate(form, validateOptions);
     }
 
     _initTeacherForm() {
@@ -132,7 +81,7 @@ class GenericForms {
             return;
         }
 
-        jQuery(form).validate({
+        const validateOptions = {
             rules: {
                 firstName: {
                     required: true,
@@ -142,11 +91,11 @@ class GenericForms {
                     required: false,
                     maxlength: 191,
                 },
-                fatherLastName: {
+                firstLastName: {
                     required: true,
                     maxlength: 191,
                 },
-                motherLastName: {
+                secondLastName: {
                     maxlength: 191,
                 },
                 phone: {
@@ -161,6 +110,22 @@ class GenericForms {
                 },
             },
 
+        };
+
+        this.formValidate(form, validateOptions);
+    }
+
+    formValidate(form, validateOptions) {
+        jQuery(form).validate(validateOptions);
+        form.addEventListener("submit", (event) => {
+            if (!jQuery(form).valid()) {
+                $("button[type='submit']", form).prop("disabled", false);
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            } else {
+                $("button[type='submit']", form).prop("disabled", true);
+            }
         });
     }
 }

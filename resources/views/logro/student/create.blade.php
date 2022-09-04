@@ -26,16 +26,12 @@ $title = __('Create') . ' ' . __('Student');
             placeholder: ''
         });
 
-        jQuery("#document_type").change(function() {
-            let foreigner = $("#document_type option:selected").attr('foreigner');
-            if (1 == foreigner)
-            {
-                $("#birth_city").addClass('d-none');
-                $("#country").removeClass('d-none');
-            } else
-            {
-                $("#birth_city").removeClass('d-none');
-                $("#country").addClass('d-none');
+        jQuery("#country").change(function() {
+            let national = $("option:selected", this).attr('national');
+            if (1 == national) {
+                $("#birth_city").prop('disabled', false);
+            } else {
+                $("#birth_city").prop('disabled', true);
             }
         });
 
@@ -62,9 +58,9 @@ $title = __('Create') . ' ' . __('Student');
             });
         }
 
-        jQuery('#addInstitutionalEmail').click(function () {
+        jQuery('#addInstitutionalEmail').click(function() {
             var email = $('#institutional_email');
-            email.val( email.val().concat( $(this).data('value') ) );
+            email.val(email.val().concat($(this).data('value')));
         });
     </script>
 @endsection
@@ -109,15 +105,15 @@ $title = __('Create') . ' ' . __('Student');
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __("father's last name") }} <span class="text-danger">*</span>
+                                            <x-label>{{ __('first last name') }} <span class="text-danger">*</span>
                                             </x-label>
-                                            <x-input :value="old('fatherLastName')" name="fatherLastName" required />
+                                            <x-input :value="old('firstLastName')" name="firstLastName" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
-                                            <x-label>{{ __("mother's last name") }}</x-label>
-                                            <x-input :value="old('motherLastName')" name="motherLastName" />
+                                            <x-label>{{ __('second last name') }}</x-label>
+                                            <x-input :value="old('secondLastName')" name="secondLastName" />
                                         </div>
                                     </div>
                                 </div>
@@ -128,7 +124,8 @@ $title = __('Create') . ' ' . __('Student');
                                             <select name="document_type" id="document_type" logro="select2" required>
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($documentType as $docType)
-                                                    <option value="{{ $docType->code }}" foreigner="{{ $docType->foreigner }}" @selected(old('document_type') == $docType->code)>
+                                                    <option value="{{ $docType->code }}"
+                                                        foreigner="{{ $docType->foreigner }}" @selected(old('document_type') == $docType->code)>
                                                         {{ $docType->name }}
                                                     </option>
                                                 @endforeach
@@ -144,15 +141,29 @@ $title = __('Create') . ' ' . __('Student');
                                     </div>
                                 </div>
                                 <div class="row g-3">
-                                    <div class="col-md-6
-                                    @if(session('docType'))
-                                        @if (session('docType')->foreigner === 1)
-                                        d-none
-                                        @endif
-                                    @endif" id="birth_city">
+                                    <div class="col-md-6">
+                                        <div class="mb-3 w-100 position-relative form-group">
+                                            <x-label>{{ __('home country') }}
+                                                <x-required />
+                                            </x-label>
+                                            <select name="country" id="country" logro="select2">
+                                                <option label="&nbsp;"></option>
+                                                @foreach ($countries as $country)
+                                                    <option value="{{ $country->id }}"
+                                                        national="{{ $country->national }}" @selected(old('country', $nationalCountry->id) == $country->id)>
+                                                        {{ __($country->name) }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
                                         <div class="mb-3 w-100 position-relative form-group">
                                             <x-label>{{ __('birth city') }}</x-label>
-                                            <select name="birth_city" logro="select2">
+                                            <select name="birth_city" id="birth_city" logro="select2"
+                                            @if (old('country', $nationalCountry->id) != $nationalCountry->id)
+                                                disabled
+                                            @endif>
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($cities as $city)
                                                     <option value="{{ $city->id }}" @selected(old('birth_city') == $city->id)>
@@ -162,30 +173,25 @@ $title = __('Create') . ' ' . __('Student');
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6
-                                    @if(session('docType'))
-                                        @if (session('docType')->foreigner !== 1)
-                                        d-none
-                                        @endif
-                                    @else
-                                        d-none
-                                    @endif" id="country">
-                                        <div class="mb-3 w-100 position-relative form-group">
-                                            <x-label>{{ __('home country') }}</x-label>
-                                            <select name="country" logro="select2">
-                                                <option label="&nbsp;"></option>
-                                                @foreach ($countries as $country)
-                                                    <option value="{{ $country->id }}" @selected(old('country') == $country->id)>
-                                                        {{ __($country->name) }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('birthdate') }}</x-label>
                                             <x-input :value="old('birthdate')" logro="datePicker" name="birthdate" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3 w-100 position-relative form-group">
+                                            <x-label>{{ __('Do you have siblings in the institution?') }}</x-label>
+                                            <select name="siblings_in_institution" logro="select2">
+                                                <option value="0" @selected(old('siblings_in_institution') == 0)>
+                                                    {{ __('No') }}
+                                                </option>
+                                                <option value="1" @selected(old('siblings_in_institution') == 1)>
+                                                    {{ __('Yes') }}
+                                                </option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -194,13 +200,15 @@ $title = __('Create') . ' ' . __('Student');
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('institutional email') }} <span class="text-danger">*</span>
                                             </x-label>
-                                            <x-input :value="old('institutional_email')" name="institutional_email" id="institutional_email" required />
+                                            <x-input :value="old('institutional_email')" name="institutional_email" id="institutional_email"
+                                                required />
 
-                                            @if ( \App\Http\Controllers\SchoolController::email() !== NULL)
-                                            <div class="form-text cursor-pointer underline-link"
-                                                id="addInstitutionalEmail" data-value="{{ \App\Http\Controllers\SchoolController::email() }}">
-                                                {{ __("Add Institutional Email") }}
-                                            </div>
+                                            @if (\App\Http\Controllers\SchoolController::email() !== null)
+                                                <div class="form-text cursor-pointer underline-link"
+                                                    id="addInstitutionalEmail"
+                                                    data-value="{{ \App\Http\Controllers\SchoolController::email() }}">
+                                                    {{ __('Add Institutional Email') }}
+                                                </div>
                                             @endif
                                         </div>
                                     </div>

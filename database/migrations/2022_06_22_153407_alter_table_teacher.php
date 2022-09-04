@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::table('teachers', function (Blueprint $table) {
             $table->string('first_name');
             $table->string('second_name')->nullable();
-            $table->string('father_last_name');
-            $table->string('mother_last_name')->nullable();
+            $table->string('first_last_name');
+            $table->string('second_last_name')->nullable();
             $table->string('document', 20)->nullable();
             $table->string('telephone', 20)->nullable();
             $table->enum('bonding_type', [
@@ -47,8 +47,8 @@ return new class extends Migration
             $table->dropColumn('telephone');
             $table->dropColumn('first_name');
             $table->dropColumn('second_name');
-            $table->dropColumn('father_last_name');
-            $table->dropColumn('mother_last_name');
+            $table->dropColumn('first_last_name');
+            $table->dropColumn('second_last_name');
             $table->dropColumn('bonding_type');
             $table->dropColumn('latest_degree');
             $table->dropColumn('institutional_email');

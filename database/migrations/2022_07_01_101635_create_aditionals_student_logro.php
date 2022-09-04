@@ -78,8 +78,8 @@ return new class extends Migration
         Schema::table('students', function (Blueprint $table) { /* document_types, cities, genders, rhs, sisben, ethnic_groups health_managers, origin_schools, headquarters, study_times, study_years */
             $table->string('first_name');
             $table->string('second_name')->nullable();
-            $table->string('father_last_name');
-            $table->string('mother_last_name')->nullable();
+            $table->string('first_last_name');
+            $table->string('second_last_name')->nullable();
             $table->string('document_type_code', 5)->nullable();
             $table->string('document', 20)->unique()->nullable();
             $table->string('telephone', 20)->nullable();
@@ -235,8 +235,8 @@ return new class extends Migration
             /* informacion basica */
             $table->dropColumn('first_name');
             $table->dropColumn('second_name');
-            $table->dropColumn('father_last_name');
-            $table->dropColumn('mother_last_name');
+            $table->dropColumn('first_last_name');
+            $table->dropColumn('second_last_name');
             $table->dropColumn('document_type_code');
             $table->dropColumn('document');
             $table->dropColumn('telephone');
@@ -247,6 +247,7 @@ return new class extends Migration
             $table->dropColumn('gender_id');
             $table->dropColumn('rh_id');
             $table->dropColumn('number_siblings');
+            $table->dropColumn('siblings_in_institution');
 
             /* lugar de domicilio */
             $table->dropColumn('zone');

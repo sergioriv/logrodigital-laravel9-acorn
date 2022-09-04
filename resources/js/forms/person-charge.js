@@ -4,7 +4,7 @@
  *
  * */
 
- class StudentPersonChargeForm {
+class StudentPersonChargeForm {
     constructor() {
         // Initialization of the page
         this.form = document.getElementById("studentPersonChargeForm");
@@ -21,26 +21,37 @@
 
     _initPersonCharge() {
         const _this = this;
-        jQuery(_this.form).validate({
+        // jQuery(_this.form).validate({
+        const validateOptions = {
             rules: {
                 person_charge: {
-                    required: true
-                }
+                    required: true,
+                },
+            },
+        };
+
+        jQuery(_this.form).validate(validateOptions);
+        _this.form.addEventListener("submit", (event) => {
+            if (!jQuery(_this.form).valid()) {
+                $("button[type='submit']", _this.form).prop("disabled", false);
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            } else {
+                $("button[type='submit']", _this.form).prop("disabled", true);
             }
         });
     }
 
     _initStudentTutor() {
-        const _this = this;
         jQuery("#person_charge").change(function () {
             let val = $(this).val();
 
             if (val > 2) {
-                $("#section-tutor").removeClass('d-none');
+                $("#section-tutor").removeClass("d-none");
             } else {
-                $("#section-tutor").addClass('d-none');
+                $("#section-tutor").addClass("d-none");
             }
-
         });
     }
 
@@ -168,6 +179,4 @@
 
     //     });
     // }
-
-
- }
+}

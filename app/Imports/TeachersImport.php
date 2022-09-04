@@ -26,8 +26,8 @@ class TeachersImport implements ToCollection, WithHeadingRow
             if(!isset( $row['first_name'] )) {
                 throw ValidationException::withMessages(['data' => 'La columna (first_name) no existe']);
             } else
-            if(!isset( $row['father_last_name'] )) {
-                throw ValidationException::withMessages(['data' => 'La columna (father_last_name) no existe']);
+            if(!isset( $row['first_last_name'] )) {
+                throw ValidationException::withMessages(['data' => 'La columna (first_last_name) no existe']);
             } else
             if(!isset( $row['email'] )) {
                 throw ValidationException::withMessages(['data' => 'La columna (email) no existe']);
@@ -40,8 +40,8 @@ class TeachersImport implements ToCollection, WithHeadingRow
             if (empty(trim($row['first_name']))) {
                 throw ValidationException::withMessages(['data' => 'hay un (first_name) vacio']);
             }
-            if (empty(trim($row['father_last_name']))) {
-                throw ValidationException::withMessages(['data' => 'hay un (father_last_name) vacio']);
+            if (empty(trim($row['first_last_name']))) {
+                throw ValidationException::withMessages(['data' => 'hay un (first_last_name) vacio']);
             }
             if (empty(trim($row['email']))) {
                 throw ValidationException::withMessages(['data' => 'hay un (email) vacio']);
@@ -62,7 +62,7 @@ class TeachersImport implements ToCollection, WithHeadingRow
              * Creating a new user and a new teacher.
              */
             $newUser = User::create([
-                'name'     => $row['first_name'] . ' ' . $row['father_last_name'],
+                'name'     => $row['first_name'] . ' ' . $row['first_last_name'],
                 'email'    => $row['email'],
             ])->assignRole(6);
 
@@ -70,8 +70,8 @@ class TeachersImport implements ToCollection, WithHeadingRow
                 'id'                    => $newUser->id,
                 'first_name'            => $row['first_name'],
                 'second_name'           => $row['second_name'],
-                'father_last_name'      => $row['father_last_name'],
-                'mother_last_name'      => $row['mother_last_name'],
+                'first_last_name'       => $row['first_last_name'],
+                'second_last_name'      => $row['second_last_name'],
                 'telephone'             => $row['phone_number'],
                 'institutional_email'   => $row['email']
             ]);

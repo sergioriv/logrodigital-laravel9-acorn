@@ -5,6 +5,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\Mail\ContentMail;
 use App\Http\Controllers\Mail\SmtpMail;
+use App\Http\Controllers\NationalCountry;
 use App\Http\Controllers\PersonChargeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceAreaController;
@@ -22,9 +23,14 @@ use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Models\Group;
+use App\Models\Rh;
 use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
+use Database\Factories\StudentFactory;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Console\Migrations\MigrateCommand;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
 
@@ -172,6 +178,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
 
+});
+
+Route::get('faker/students', function () {
+    Student::factory(1000)->create();
+});
+Route::get('faker/groups', function () {
+    Group::factory(50)->create();
 });
 
 require __DIR__.'/auth.php';

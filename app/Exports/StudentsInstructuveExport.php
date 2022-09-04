@@ -16,8 +16,8 @@ class StudentsInstructuveExport implements WithHeadings, WithColumnWidths, WithS
         return [
             "first_name",
             "second_name",
-            'father_last_name',
-            'mother_last_name',
+            'first_last_name',
+            'second_last_name',
             'document_type',
             'document',
             'institutional_email',

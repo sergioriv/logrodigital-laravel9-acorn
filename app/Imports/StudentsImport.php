@@ -41,8 +41,8 @@ class StudentsImport implements ToCollection, WithHeadingRow
             if(!isset( $row['first_name'] )) {
                 throw ValidationException::withMessages(['data' => 'La columna (first_name) no existe']);
             } else
-            if(!isset( $row['father_last_name'] )) {
-                throw ValidationException::withMessages(['data' => 'La columna (father_last_name) no existe']);
+            if(!isset( $row['first_last_name'] )) {
+                throw ValidationException::withMessages(['data' => 'La columna (first_last_name) no existe']);
             } else
             if(!isset( $row['document_type'] )) {
                 throw ValidationException::withMessages(['data' => 'La columna (document_type) no existe']);
@@ -70,8 +70,8 @@ class StudentsImport implements ToCollection, WithHeadingRow
             if (empty(trim($row['first_name']))) {
                 throw ValidationException::withMessages(['data' => 'hay un (first_name) vacio']);
             } else
-            if (empty(trim($row['father_last_name']))) {
-                throw ValidationException::withMessages(['data' => 'hay un (father_last_name) vacio']);
+            if (empty(trim($row['first_last_name']))) {
+                throw ValidationException::withMessages(['data' => 'hay un (first_last_name) vacio']);
             } else
             if (empty(trim($row['document_type']))) {
                 throw ValidationException::withMessages(['data' => 'hay un (document_type) vacio']);
@@ -134,7 +134,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
 
             $newUser = User::create([
                 'provider' => $provider,
-                'name'     => $row['first_name'] . ' ' . $row['father_last_name'],
+                'name'     => $row['first_name'] . ' ' . $row['first_last_name'],
                 'email'    => $row['institutional_email'],
             ])->assignRole(7);
             $newUser->forceFill(['email_verified_at' => now()])->save();
@@ -143,8 +143,8 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 'id'                    => $newUser->id,
                 'first_name'            => $row['first_name'],
                 'second_name'           => $row['second_name'],
-                'father_last_name'      => $row['father_last_name'],
-                'mother_last_name'      => $row['mother_last_name'],
+                'first_last_name'       => $row['first_last_name'],
+                'second_last_name'      => $row['second_last_name'],
                 'document_type_code'    => $row['document_type'],
                 'document'              => $row['document'],
                 'institutional_email'   => $row['institutional_email'],

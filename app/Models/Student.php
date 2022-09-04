@@ -14,14 +14,15 @@ class Student extends Model
         'id',
         'first_name',
         'second_name',
-        'father_last_name',
-        'mother_last_name',
+        'first_last_name',
+        'second_last_name',
         'institutional_email',
         'telephone',
         'document_type_code',
         'document',
         'expedition_city_id',
         'number_siblings',
+        'siblings_in_institution',
         'country_id', // *
         'birth_city_id',
         'birthdate',
@@ -119,26 +120,9 @@ class Student extends Model
         'wizard_complete'
     ];
 
-    /*
-    * nacionalidad
-    * medida de proteccion ICBF (No, Hogar sustituto, Medio abierto, Menor infractor)
-    * beneficiario de fundacion
-    * vinculacion de procesos (Ninguna, ICBF, Comisaria de familia, Fiscalia, Inspeccion de policia)
-    * Tipo de vivienda (Propia, Familiar, En arriendo, Usufructo, Posecion sin título)
-    * servicios de la vivienda (Energía eléctrica, Gas natural, Alcantarillado, Acueducto, Internet)
-    * Barrio
-    * religion
-    * religion de la familia
-    * dependencia económica (recuersos familiares, recursos propios, ...)
-    * deporte que practica
-    * actividad en tiempo libre
-    * con quien vive en su casa (...)
-    * ha sido victima de: (Abuso sexual, Maltrato, Violencia intrafamiliar, Bullyng, ...)
-    *
-    * alergias
-    *
-    * antecedentes psicosociales (...)
-    */
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d h:i:s'
+    ];
 
     public function user()
     {
@@ -226,7 +210,7 @@ class Student extends Model
      */
     public function getFullName()
     {
-        return "{$this->first_name} {$this->father_last_name}";
+        return "{$this->first_name} {$this->first_last_name}";
     }
 
     public function getNames()
@@ -236,7 +220,7 @@ class Student extends Model
 
     public function getLastNames()
     {
-        return "{$this->father_last_name} {$this->mother_last_name}";
+        return "{$this->first_last_name} {$this->second_last_name}";
     }
 
     public function age()

@@ -234,15 +234,15 @@ $title = $student->user->name;
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <div class="mb-3 position-relative form-group">
-                                                <x-label>{{ __("father's last name") }} <span class="text-danger">*</span>
+                                                <x-label>{{ __("first last name") }} <span class="text-danger">*</span>
                                                 </x-label>
-                                                <x-input-error :value="$student->father_last_name" name="fatherLastName" :hasError="'fatherLastName'" />
+                                                <x-input-error :value="$student->first_last_name" name="firstLastName" :hasError="'firstLastName'" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3 position-relative form-group">
-                                                <x-label>{{ __("mother's last name") }}</x-label>
-                                                <x-input-error :value="$student->mother_last_name" name="motherLastName" :hasError="'motherLastName'" />
+                                                <x-label>{{ __("second last name") }}</x-label>
+                                                <x-input-error :value="$student->second_last_name" name="secondLastName" :hasError="'secondLastName'" />
                                             </div>
                                         </div>
                                     </div>
@@ -312,46 +312,72 @@ $title = $student->user->name;
                                         </div>
                                     </div>
                                     <div class="row g-3">
-                                        <div class="col-md-6 @if ($student->country_id !== null) d-none @endif" id="birth_city">
+                                        <div class="col-md-6">
                                             <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('birth city') }} {!! $input_required !!}</x-label>
-                                                <x-select name="birth_city" logro="select2" :hasError="'birth_city'">
-                                                    <option label="&nbsp;"></option>
-                                                    @foreach ($cities as $city)
-                                                        <option value="{{ $city->id }}"
-                                                            @if ($student->birth_city_id !== null) @selected(old('birth_city', $student->birth_city_id) == $city->id) @endif>
-                                                            {{ $city->department->name . ' | ' . $city->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </x-select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 @if ($student->country_id === null) d-none @endif" id="country">
-                                            <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('home country') }} {!! $input_required !!}</x-label>
-                                                <x-select name="country" logro="select2" :hasError="'country'">
+                                                <x-label>{{ __('home country') }} <x-required /></x-label>
+                                                <select name="country" id="country" logro="select2">
                                                     <option label="&nbsp;"></option>
                                                     @foreach ($countries as $country)
                                                         <option value="{{ $country->id }}"
-                                                            @if ($student->country_id !== null) @selected(old('country', $student->country_id) == $country->id) @endif>
+                                                            national="{{ $country->national }}"
+                                                            @if ($student->country_id !== null)
+                                                                @selected(old('country', $student->country_id) == $country->id)
+                                                            @endif>
                                                             {{ __($country->name) }}
                                                         </option>
                                                     @endforeach
-                                                </x-select>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="mb-3 position-relative form-group">
-                                                @if (null !== $student->birthdate)
-                                                    <x-label>{{ __('birthdate') }}</x-label>
-                                                    <span class="form-control text-muted">{{ $student->birthdate }}</span>
-                                                    <x-input-error type="hidden" :value="$student->birthdate" name="birthdate"
-                                                        :hasError="'birthdate'" />
-                                                @else
-                                                    <x-label>{{ __('birthdate') }} {!! $input_required !!}</x-label>
-                                                    <x-input-error :value="$student->birthdate" logro="datePicker" name="birthdate"
-                                                        :hasError="'birthdate'" />
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('birth city') }}</x-label>
+                                                <select name="birth_city" id="birth_city" logro="select2"
+                                                @if ($student->country_id !== null)
+                                                @if (old('country', $student->country_id) != $nationalCountry->id)
+                                                    disabled
                                                 @endif
+                                                @endif>
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($cities as $city)
+                                                        <option value="{{ $city->id }}"
+                                                            @if ($student->birth_city_id !== null)
+                                                                @selected(old('birth_city', $student->birth_city_id) == $city->id)
+                                                            @endif>
+                                                            {{ $city->department->name . ' | ' . $city->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 position-relative form-group">
+                                                @unlessrole('STUDENT')
+                                                <x-label>{{ __('birthdate') }} {!! $input_required !!}</x-label>
+                                                <x-input-error :value="$student->birthdate" logro="datePicker" name="birthdate"
+                                                    :hasError="'birthdate'" />
+                                                @else
+                                                <x-label>{{ __('birthdate') }}</x-label>
+                                                <span class="form-control text-muted">{{ $student->birthdate }}</span>
+                                                <x-input-error type="hidden" :value="$student->birthdate" name="birthdate"
+                                                    :hasError="'birthdate'" />
+                                                @endunlessrole
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('Do you have siblings in the institution?') }} {!! $input_required !!}</x-label>
+                                                <select name="siblings_in_institution" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    <option value="0" @selected(old('siblings_in_institution', 0) == $student->siblings_in_institution)>
+                                                        {{ __('No') }}
+                                                    </option>
+                                                    <option value="1" @selected(old('siblings_in_institution', 1) == $student->siblings_in_institution)>
+                                                        {{ __('Yes') }}
+                                                    </option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -894,6 +920,25 @@ $title = $student->user->name;
                             @csrf
                             @method('PUT')
 
+                            <!-- Tutor Student Section Start -->
+                            <div class="w-100 tooltip-start-top position-relative">
+                                <h2 class="small-title">{{ __('Tutor') }} <span class="text-danger">*</span></h2>
+                                <section class="card mb-5">
+                                    <div class="card-body w-100">
+                                        <select name="person_charge" logro="select2" id="person_charge" required>
+                                            <option label="&nbsp;"></option>
+                                            @foreach ($kinships as $kinship)
+                                                <option value="{{ $kinship->id }}"
+                                                    @if ($student->person_charge ?? null !== null) @selected(old('person_charge', $student->person_charge) == $kinship->id) @endif>
+                                                    {{ __($kinship->name) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </section>
+                            </div>
+                            <!-- Tutor Student Section End -->
+
                             <!-- Mother Section Start -->
                             <h2 class="small-title">{{ __('Mother Information') }}</h2>
                             <input type="hidden" name="mother" value="{{ $student->mother->id ?? null }}">
@@ -1133,25 +1178,6 @@ $title = $student->user->name;
                                 </div>
                             </section>
                             <!-- Father Section End -->
-
-                            <!-- Tutor Student Section Start -->
-                            <div class="w-100 tooltip-start-top position-relative">
-                                <h2 class="small-title">{{ __('Tutor') }} <span class="text-danger">*</span></h2>
-                                <section class="card mb-5">
-                                    <div class="card-body w-100">
-                                        <select name="person_charge" logro="select2" id="person_charge" required>
-                                            <option label="&nbsp;"></option>
-                                            @foreach ($kinships as $kinship)
-                                                <option value="{{ $kinship->id }}"
-                                                    @if ($student->person_charge ?? null !== null) @selected(old('person_charge', $student->person_charge) == $kinship->id) @endif>
-                                                    {{ __($kinship->name) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </section>
-                            </div>
-                            <!-- Tutor Student Section End -->
 
                             <!-- Tutor Section Start -->
                             <div class="@if (null === $student->tutor) d-none @endif" id="section-tutor">

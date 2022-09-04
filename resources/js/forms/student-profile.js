@@ -7,7 +7,7 @@ class StudentProfileInfoForm {
       this._initStudentInfoForm();
       this._initStudentProfileInfoForm();
       this._initSelect2();
-      this._initChangeDocumentType();
+      this._initChangeCountry();
       this._initDisability();
       this._initViewDocument();
       this._initDescriptionDocument();
@@ -20,7 +20,7 @@ class StudentProfileInfoForm {
             return;
         }
 
-        jQuery(form).validate({
+        const validateOptions = {
             rules: {
                 firstName: {
                     required: true,
@@ -29,11 +29,11 @@ class StudentProfileInfoForm {
                 secondName: {
                     maxlength: 191,
                 },
-                fatherLastName: {
+                firstLastName: {
                     required: true,
                     maxlength: 191,
                 },
-                motherLastName: {
+                secondLastName: {
                     maxlength: 191,
                 },
                 document_type: {
@@ -53,7 +53,9 @@ class StudentProfileInfoForm {
                 },
             },
 
-        });
+        };
+
+        this.formValidate(form, validateOptions);
     }
 
     _initStudentProfileInfoForm() {
@@ -63,7 +65,7 @@ class StudentProfileInfoForm {
             return;
         }
 
-        jQuery(form).validate({
+        const validateOptions = {
             rules: {
                 firstName: {
                     required: true,
@@ -72,11 +74,11 @@ class StudentProfileInfoForm {
                 secondName: {
                     maxlength: 191,
                 },
-                fatherLastName: {
+                firstLastName: {
                     required: true,
                     maxlength: 191,
                 },
-                motherLastName: {
+                secondLastName: {
                     maxlength: 191,
                 },
                 telephone: {
@@ -99,6 +101,12 @@ class StudentProfileInfoForm {
                 birthdate: {
                     required: true,
                     date: true
+                },
+                country: {
+                    required: true,
+                },
+                siblings_in_institution: {
+                    required: true,
                 },
                 gender: {
                     required: true,
@@ -141,7 +149,9 @@ class StudentProfileInfoForm {
                 }
             },
 
-        });
+        };
+
+        this.formValidate(form, validateOptions);
     }
 
     _initSelect2() {
@@ -151,17 +161,13 @@ class StudentProfileInfoForm {
         });
     }
 
-    _initChangeDocumentType() {
-        jQuery("#document_type").change(function() {
-            let foreigner = $("#document_type option:selected").attr('foreigner');
-            if (1 == foreigner)
-            {
-                $("#birth_city").addClass('d-none');
-                $("#country").removeClass('d-none');
-            } else
-            {
-                $("#birth_city").removeClass('d-none');
-                $("#country").addClass('d-none');
+    _initChangeCountry() {
+        jQuery("#country").change(function() {
+            let national = $("option:selected", this).attr('national');
+            if (1 == national) {
+                $("#birth_city").prop('disabled', false);
+            } else {
+                $("#birth_city").prop('disabled', true);
             }
         });
     }
@@ -189,6 +195,20 @@ class StudentProfileInfoForm {
         jQuery("#selectStudentDocument").change(function () {
             var info = $(this).find('option:selected').attr('fileInfo');
             jQuery("#infoStudentDocument").removeClass('d-none').html(info);
+        });
+    }
+
+    formValidate(form, validateOptions) {
+        jQuery(form).validate(validateOptions);
+        form.addEventListener("submit", (event) => {
+            if (!jQuery(form).valid()) {
+                $("button[type='submit']", form).prop("disabled", false);
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            } else {
+                $("button[type='submit']", form).prop("disabled", true);
+            }
         });
     }
 }

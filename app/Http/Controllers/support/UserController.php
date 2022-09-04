@@ -51,7 +51,16 @@ class UserController extends Controller
         if ($role === 7)
             $user->forceFill(['email_verified_at' => now()])->save();
         elseif (NULL !== $email) {
-            $sendmail = SmtpMail::sendEmailVerificationNotification($user);
+
+            /* evita enviar más de un mail de verificación al mismo correo */
+            $sendmail = true;
+            $countEmail = User::where('email', $email)->count();
+            if ( $countEmail == 1 )
+            {
+                $sendmail = SmtpMail::sendEmailVerificationNotification($user);
+            }
+
+            /* si el mail de verificación rebota, el usuario es eliminado */
             if (!$sendmail) {
                 $user->delete();
                 return false;

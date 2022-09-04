@@ -20,7 +20,7 @@ return new class extends Migration
                 'google'
             ])->nullable();
             $table->string('name');
-            $table->string('email')->unique()->nullable();
+            $table->string('email')->nullable(); //->unique()
             $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();

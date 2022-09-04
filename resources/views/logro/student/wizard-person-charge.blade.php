@@ -64,7 +64,8 @@ $title = __('Persons in Charge');
                                 </li>
                             </ul>
                         </div>
-                        <form method="POST" action="{{ route('student.wizard.person-charge') }}" id="studentPersonChargeForm">
+                        <form method="POST" action="{{ route('student.wizard.person-charge') }}"
+                            id="studentPersonChargeForm">
                             @csrf
                             @method('PUT')
 
@@ -72,10 +73,37 @@ $title = __('Persons in Charge');
                                 <div class="tab-content">
                                     <div class="tab-pane fade active show" role="tabpanel">
 
+                                        <!-- Tutor Student Section Start -->
+                                        <h3>
+                                            @if (old('person_charge') == 2)
+                                                person charge
+                                            @endif
+                                        </h3>
+                                        <section class="card-body mb-5 border-bottom">
+                                            <div class="tooltip-label-end position-relative form-group">
+                                                <x-label class="small-title">{{ __('Tutor') }}
+                                                    <span class="text-danger">*</span>
+                                                </x-label>
+                                                <div class="w-100 mb-2">
+                                                    <select name="person_charge" logro="select2" id="person_charge"
+                                                        required>
+                                                        <option label="&nbsp;"></option>
+                                                        @foreach ($kinships as $kinship)
+                                                            <option value="{{ $kinship->id }}"
+                                                                @if ($student->person_charge ?? null !== null) @selected(old('person_charge', $student->person_charge) == $kinship->id) @endif>
+                                                                {{ __($kinship->name) }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <!-- Tutor Student Section End -->
+
                                         <!-- Mother Section Start -->
                                         <h2 class="small-title">{{ __('Mother Information') }}</h2>
                                         <input type="hidden" name="mother" value="{{ $student->mother->id ?? null }}">
-                                        <section class="mb-3">
+                                        <section class="mb-5 border-bottom">
                                             <div class="card-body">
                                                 <div class="row g-3">
                                                     <div class="col-md-6">
@@ -177,7 +205,7 @@ $title = __('Persons in Charge');
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row g-3">
+                                                <div class="row g-3 mb-2">
                                                     <div class="col-md-6">
                                                         <div class="tooltip-label-end position-relative form-group">
                                                             <x-label>{{ __('birthdate') }}</x-label>
@@ -196,14 +224,14 @@ $title = __('Persons in Charge');
                                                         </div>
                                                     </div>
                                                 </div>
-                                                {{-- </div> --}}
+                                            </div>
                                         </section>
                                         <!-- Mother Section End -->
 
                                         <!-- Father Section Start -->
                                         <h2 class="small-title">{{ __('Father Information') }}</h2>
                                         <input type="hidden" name="father" value="{{ $student->father->id ?? null }}">
-                                        <section class="mb-3">
+                                        <section class="">
                                             <div class="card-body">
                                                 <div class="row g-3">
                                                     <div class="col-md-6">
@@ -328,31 +356,11 @@ $title = __('Persons in Charge');
                                         </section>
                                         <!-- Father Section End -->
 
-                                        <!-- Tutor Student Section Start -->
-                                        <h3>@if (old('person_charge') == 2) person charge @endif</h3>
-                                        <section class="card-body mb-3">
-                                            <div class="tooltip-label-end position-relative form-group">
-                                                <x-label class="small-title">{{ __('Tutor') }}
-                                                    <span class="text-danger">*</span>
-                                                </x-label>
-                                                <div class="w-100">
-                                                    <select name="person_charge" logro="select2" id="person_charge"
-                                                        required>
-                                                        <option label="&nbsp;"></option>
-                                                        @foreach ($kinships as $kinship)
-                                                            <option value="{{ $kinship->id }}"
-                                                                @if ($student->person_charge ?? null !== null) @selected(old('person_charge', $student->person_charge) == $kinship->id) @endif>
-                                                                {{ __($kinship->name) }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </section>
-                                        <!-- Tutor Student Section End -->
+
 
                                         <!-- Tutor Section Start -->
-                                        <div class="mt-5 @if (old('person_charge') < 3) d-none @endif" id="section-tutor">
+                                        <div class="mt-5 @if (old('person_charge') < 3) d-none @endif"
+                                            id="section-tutor">
                                             <h2 class="small-title">{{ __('Tutor Information') }}</h2>
                                             <input type="hidden" name="tutor"
                                                 value="{{ $student->tutor->id ?? null }}">
