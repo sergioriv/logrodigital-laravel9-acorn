@@ -21,6 +21,7 @@ function groups_filter()
 function template_card_group(group)
 {
     var template = `<div class="col small-gutter-col"><div class="card h-100">`
+        template += `<a href="groups/` + group.id + `">`
         template += `<div class="card-body text-center d-flex flex-column">`
         template += `<h5 class="text-primary font-weight-bold">` + group.name +`</h5>`
         template += `<small class="text-muted">` + group.headquarters.name + `</small>`
@@ -34,7 +35,7 @@ function template_card_group(group)
             template += `<span>&nbsp;</span>`
         }
         template += `</small><small class="mt-2 text-muted">` + group.student_quantity + ` estudiantes</small>`
-        template += `</div></div></div>`
+        template += `</div></a></div></div>`
     return template;
 }
 
