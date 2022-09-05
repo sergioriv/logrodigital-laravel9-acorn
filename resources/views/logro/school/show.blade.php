@@ -78,6 +78,15 @@ $title = $school->name;
                     </div>
                 </div>
                 <!-- Biography End -->
+
+                <!-- Students Number Start -->
+                <h2 class="small-title">{{ __('Students Number') }}</h2>
+                <div class="card mb-5">
+                    <div class="card-body">
+                    </div>
+                </div>
+                <!-- Students Number End -->
+
             </div>
             <!-- Left Side End -->
 

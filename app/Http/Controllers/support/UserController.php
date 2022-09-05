@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -38,6 +39,13 @@ class UserController extends Controller
 
     public static function _create($name, $email, $role)
     {
+
+        /* convertir email in lower */
+        $email = Str::lower($email);
+
+        /* tratamiento para el username */
+        $name = static::_username($name);
+
         $provider = null;
         if (NULL !== $email)
             $provider = ProviderUser::provider_validate($email);
@@ -60,7 +68,9 @@ class UserController extends Controller
                 $sendmail = SmtpMail::sendEmailVerificationNotification($user);
             }
 
-            /* si el mail de verificación rebota, el usuario es eliminado */
+            /* si el mail de verificación rebota, el usuario es eliminado
+             * se retorna false para la creación del usuario
+             * */
             if (!$sendmail) {
                 $user->delete();
                 return false;
@@ -73,23 +83,11 @@ class UserController extends Controller
         return $user;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show(User $user)
     {
         return redirect()->route('support.users.edit', $user);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(User $user)
     {
         $roles = Role::all();
@@ -99,13 +97,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, User $user)
     {
 
@@ -124,11 +115,19 @@ class UserController extends Controller
     public static function _update($user_id, $name, $email = NULL, $avatar = NULL)
     {
         $user = User::findOrFail($user_id);
+
+        /* tratamiento para el username */
+        $name = static::_username($name);
+
         $user->update([
             'name' => $name,
         ]);
 
         if ($email != null) {
+
+            /* convertir email in lower */
+            $email = Str::lower($email);
+
             $user->update([
                 'email' => $email,
             ]);
@@ -192,5 +191,13 @@ class UserController extends Controller
         } else {
             return redirect()->back()->withErrors("custom", __("Unexpected Error"));
         }
+    }
+
+    /* Tratamiento de datos */
+    private static function _username($name)
+    {
+        $name = Str::limit($name, 15, null);
+        $name = Str::words($name, 2, null);
+        return $name;
     }
 }

@@ -40,7 +40,7 @@
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <a href="{{ route('logout') }}"
+                                <a logro="btn-logout" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                                     this.closest('form').submit();">
                                     <i data-acorn-icon="logout" class="me-2" data-acorn-size="17"></i>
@@ -171,7 +171,7 @@
             <li>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <a id="logout" href="{{ route('logout') }}"
+                    <a logro="btn-logout" href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
                         <i data-acorn-icon="logout" class="icon" data-acorn-size="18"></i>
@@ -188,6 +188,12 @@
 
             <!-- Support Nav Start -->
 
+            <li>
+                <a href="{{ route('support.number_students') }}" data-href="/number_students">
+                    <i class="bi-gear icon icon-18"></i>
+                    <span class="label">{{ __('Students Number') }}</span>
+                </a>
+            </li>
             <li>
                 <a href="{{ route('support.users.index') }}" data-href="/users">
                     <i class="bi-people-fill icon icon-18"></i>

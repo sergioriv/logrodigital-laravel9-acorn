@@ -42,8 +42,8 @@ class Common {
                 $("button[type='submit']", this).prop("disabled", true);
             });
         }
-        if (jQuery("#logout")) {
-            jQuery("#logout").click(function () {
+        if (jQuery("[logro='btn-logout']")) {
+            jQuery("[logro='btn-logout']").click(function () {
                 $(this).addClass("pointer-events-none");
             });
         }

@@ -3,9 +3,7 @@
 use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
-use App\Http\Controllers\Mail\ContentMail;
 use App\Http\Controllers\Mail\SmtpMail;
-use App\Http\Controllers\NationalCountry;
 use App\Http\Controllers\PersonChargeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceAreaController;
@@ -22,17 +20,8 @@ use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
-use App\Models\Group;
-use App\Models\Rh;
-use App\Models\Student;
 use App\Models\User;
-use Carbon\Carbon;
-use Database\Factories\StudentFactory;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Console\Migrations\MigrateCommand;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Spatie\Permission\Models\Permission;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,16 +56,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ['notify' => 'success', 'title' => __('Email send!')],
             );
         });
+
+        /* Route Users */
+        Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');
+        Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');
+        Route::get('users.json', [UserController::class, 'data']);
+
+        /* Route Roles */
+        Route::resource('roles', RoleController::class)->except('destroy','show')->names('support.roles');
+        Route::get('roles.json', [RoleController::class, 'data']);
+
+        /* Route Number Students */
+        Route::get('number_students', [SchoolController::class, 'number_students_show'])->name('support.number_students');
+        Route::put('number_students', [SchoolController::class, 'number_students_update'])->name('support.number_students');
     });
 
-    /* Route Users */
-    Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');
-    Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');
-    Route::get('users.json', [UserController::class, 'data']);
-
-    /* Route Roles */
-    Route::resource('roles', RoleController::class)->except('destroy','show')->names('support.roles');
-    Route::get('roles.json', [RoleController::class, 'data']);
 
     /* Route Profile */
     Route::get('profile', [ProfileController::class, 'edit'])->name('user.profile');

@@ -13,8 +13,9 @@ class SchoolController extends Controller
 {
     function __construct()
     {
-        $this->middleware('can:myinstitution')->except('name', 'badge', 'email', 'handbook');
+        $this->middleware('can:myinstitution')->except('name', 'badge', 'email', 'handbook', 'numberStudents');
         $this->middleware('can:myinstitution.edit')->only('update');
+        $this->middleware('can:support.access')->only('number_students_show', 'number_students_update');
     }
 
     private static function myschool()
@@ -99,5 +100,37 @@ class SchoolController extends Controller
     public static function handbook()
     {
         return static::myschool()->handbook_coexistence ?? null;
+    }
+
+    /*  */
+    private static function numberStudents()
+    {
+        return static::myschool()->number_students;
+    }
+    public function number_students_show()
+    {
+        return view('support.students.number_show', ['number_students' => static::numberStudents()]);
+    }
+    public function number_students_update(Request $request)
+    {
+        $request->validate(['students' => 'required', 'numeric']);
+
+        $numberCurrent = self::numberStudents();
+
+        if ($numberCurrent == $request->students)
+        {
+            return redirect()->back()->with(
+                ['notify' => 'info', 'title' => __("Unchanged!")]
+            );
+        }
+
+        self::myschool()->forceFill(
+            ['number_students' => $request->students]
+        )->save();
+
+        return redirect()->back()->with(
+            ['notify' => 'success', 'title' => __("Saved!")]
+        );
+
     }
 }
