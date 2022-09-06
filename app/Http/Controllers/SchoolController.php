@@ -27,6 +27,7 @@ class SchoolController extends Controller
     {
 
         return view('logro.school.show', [
+            'studentsCount' => Student::count(),
             'school' => $this->myschool(),
             'teachers' => Teacher::all(),
             'secretariats' => Secretariat::all()
@@ -103,7 +104,7 @@ class SchoolController extends Controller
     }
 
     /*  */
-    private static function numberStudents()
+    public static function numberStudents()
     {
         return static::myschool()->number_students;
     }

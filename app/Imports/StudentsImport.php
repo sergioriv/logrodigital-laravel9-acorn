@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Http\Controllers\ProviderUser;
+use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SchoolYearController;
 use App\Models\City;
 use App\Models\Headquarters;
@@ -27,6 +28,16 @@ class StudentsImport implements ToCollection, WithHeadingRow
      */
     public function collection(Collection $rows)
     {
+
+        $CC = Student::count();
+        $MCS = SchoolController::numberStudents();
+
+        if ( $CC + count($rows) > $MCS )
+        {
+            throw ValidationException::withMessages(['custom' => __('Imported students exceed contracted limit.')]);
+        }
+
+
         if(count( $rows ) === 0) {
             throw ValidationException::withMessages(['data' => 'El archivo no contiene estudiantes']);
         }

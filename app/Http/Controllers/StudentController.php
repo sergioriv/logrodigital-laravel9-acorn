@@ -6,6 +6,7 @@ use App\Exports\StudentsInstructuveExport;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\support\WAController;
+use App\Http\Middleware\CheckStudentCountMiddleware;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Imports\StudentsImport;
 use App\Models\City;
@@ -56,7 +57,9 @@ class StudentController extends Controller
         $this->middleware('can:students.matriculate')->only('matriculate', 'matriculate_update', 'create_parents_filter');
         $this->middleware('can:students.info')->only('show', 'update');
         $this->middleware('can:students.psychosocial')->only('psychosocial_update', 'piar_update');
+
         $this->middleware(YearCurrentMiddleware::class)->only('matriculate', 'matriculate_update');
+        $this->middleware(CheckStudentCountMiddleware::class)->only('create', 'store', 'import', 'import_store');
     }
 
     /*
@@ -174,6 +177,8 @@ class StudentController extends Controller
             'status' => 'new',
             'data_treatment' => TRUE
         ]);
+
+
 
         if (1 == $request->matriculate) {
             return redirect()->route('students.matriculate', $user->id)->with(
@@ -1027,6 +1032,23 @@ class StudentController extends Controller
         File::put(public_path($sigUrl), base64_decode($sig));
         return $sigUrl;
     }
+
+
+    /* Check Students Count */
+    /* private function checkStudentsCount($next)
+    {
+        $CC = Student::count();
+        $MCS = SchoolController::numberStudents();
+
+        if ($CC >= ($MCS - 100)) {
+            $left = $MCS - $CC;
+
+            if ($next)
+            return redirect()->route($next)->with(
+                ['notify' => 'info', 'title' => __(':count students remain from the contracted plan.', ['count' => $left])],
+            );
+        }
+    } */
 
     private function send_msg($student, $group)
     {

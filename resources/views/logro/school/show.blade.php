@@ -52,7 +52,7 @@ $title = $school->name;
             <!-- Left Side Start -->
             <div class="col-12 col-xl-3 col-xxl-2">
                 <!-- Biography Start -->
-                <h2 class="small-title">{{ __('Falta un titulo') }}</h2>
+                <h2 class="small-title text-muted">{{ __('Falta un titulo') }}</h2>
                 <div class="card mb-5">
                     <div class="card-body">
                         <div class="nav flex-column" role="tablist">
@@ -83,6 +83,13 @@ $title = $school->name;
                 <h2 class="small-title">{{ __('Students Number') }}</h2>
                 <div class="card mb-5">
                     <div class="card-body">
+                        <div class="text-end">
+                            <h5 class="mb-0">
+                                @thousands($studentsCount)
+                                <small class="text-small text-muted">/ @thousands($school->number_students)</small>
+                            </h5>
+
+                        </div>
                     </div>
                 </div>
                 <!-- Students Number End -->

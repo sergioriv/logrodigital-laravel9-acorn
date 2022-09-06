@@ -277,6 +277,9 @@
     "Students Number": "Número de estudiantes",
     "limit": "limite",
     "Saved!": "Guardado!",
+    "Has reached the limit of the contracted plan.": "Ha llegado al límite del plan contratado",
+    ":count students remain from the contracted plan.": "Quedan :count estudiantes del plan contratado",
+    "Imported students exceed contracted limit.": "Los estudiantes importados exceden el límite contratado.",
 
     "full name": "nombre completo",
     "new": "nuevo",
