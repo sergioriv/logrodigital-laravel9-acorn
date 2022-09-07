@@ -249,10 +249,16 @@ $title = $student->user->name;
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <div class="mb-3 position-relative form-group">
+                                                @unlessrole('STUDENT')
+                                                <x-label>{{ __('institutional email') }} <x-required /></x-label>
+                                                <x-input-error :value="$student->institutional_email" name="institutional_email"
+                                                    :hasError="'institutional_email'" />
+                                                @else
                                                 <x-label>{{ __('institutional email') }}</x-label>
                                                 <span class="form-control text-muted">
                                                     {{ $student->institutional_email }}
                                                 </span>
+                                                @endunlessrole
                                             </div>
                                         </div>
                                         <div class="col-md-6">

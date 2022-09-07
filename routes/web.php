@@ -22,6 +22,8 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Models\Student;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -173,6 +175,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
 
+});
+
+Route::get('pdf', function () {
+    /* forma 1 */
+    // iniciacion de los componentes
+    /* $pdf = App::make('dompdf.wrapper');
+    $pdf->loadHTML('<h1>Test</h1>');
+    return $pdf->stream(); */
+
+    /* forma 2 */
+    $pdf = Pdf::loadHTML('<h1>Test</h1>');
+    return $pdf->stream();
 });
 
 require __DIR__.'/auth.php';

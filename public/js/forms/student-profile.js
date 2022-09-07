@@ -36,6 +36,11 @@ class StudentProfileInfoForm {
                 secondLastName: {
                     maxlength: 191,
                 },
+                institutional_email: {
+                    required: true,
+                    email: true,
+                    maxlength: 191,
+                },
                 document_type: {
                     required: true,
                 },

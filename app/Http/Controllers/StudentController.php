@@ -546,11 +546,12 @@ class StudentController extends Controller
 
     public function update(Request $request, Student $student, $wizard = false)
     {
-        // session()->flash('docType', DocumentType::find($request->document_type) ?? null);
-
+        $userRole = UserController::role_auth();
         $required = 'nullable';
         $data_treatment = $student->data_treatment;
-        if ('STUDENT' === UserController::role_auth()) {
+        $studentEmail = $student->institutional_email;
+
+        if ('STUDENT' === $userRole) {
             $required = 'required';
             $data_treatment = $request->data_treatment;
             if ($request->docsFails > 0) {
@@ -559,6 +560,16 @@ class StudentController extends Controller
 
             self::signatures($student, $request->signature_tutor, $request->signature_student);
         }
+
+        else
+        {
+            $request->validate([
+                'institutional_email' => ['required', 'email', 'max:191', Rule::unique('users','email')->ignore($student->id)]
+            ]);
+
+            $studentEmail = $request->institutional_email;
+        }
+
         $request->validate([
             'firstName' => ['required', 'string', 'max:191'],
             'secondName' => ['nullable', 'string', 'max:191'],
@@ -599,7 +610,7 @@ class StudentController extends Controller
         ]);
 
         $user_name = $request->firstName . ' ' . $request->firstLastName;
-        UserController::_update($student->id, $user_name);
+        UserController::_update($student->id, $user_name, $studentEmail);
 
         /* DATOS PAIS DE ORIGEN */
         if ( NationalCountry::country()->id !== $request->country )
@@ -622,6 +633,7 @@ class StudentController extends Controller
             'second_last_name' => $request->secondLastName,
             'document_type_code' => $request->document_type,
             'document' => $request->document,
+            'institutional_email' => $studentEmail,
             'telephone' => $request->telephone,
             'expedition_city_id' => $request->expedition_city,
             'birth_city_id' => $request->birth_city,
