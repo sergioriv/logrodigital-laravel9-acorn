@@ -40,15 +40,18 @@ class UserController extends Controller
     public static function _create($name, $email, $role)
     {
 
-        /* convertir email in lower */
-        $email = Str::lower($email);
+
 
         /* tratamiento para el username */
         $name = static::_username($name);
 
         $provider = null;
-        if (NULL !== $email)
+        if (NULL != $email)
+        {
+            /* convertir email in lower */
+            $email = Str::lower($email);
             $provider = ProviderUser::provider_validate($email);
+        }
 
         $user = User::create([
             'provider' => $provider,
