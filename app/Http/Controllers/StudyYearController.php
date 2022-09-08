@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
+use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\ResourceArea;
-use App\Models\SchoolYear;
 use App\Models\StudyYear;
 use App\Models\StudyYearSubject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
-use phpDocumentor\Reflection\Types\Resource_;
 
 class StudyYearController extends Controller
 {
