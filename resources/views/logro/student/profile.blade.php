@@ -1333,7 +1333,9 @@ $title = $student->user->name;
                                             <div class="col-md-6">
                                                 <div class="w-100 position-relative form-group">
                                                     <select data-placeholder="Seleccione documento" name="file_type"
-                                                        logro="select2" id="selectStudentDocument">
+                                                        logro="select2" id="selectStudentDocument"
+                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#modalStudentDocumentsInfo">
                                                         <option label="&nbsp;"></option>
                                                         @foreach ($studentFileTypes as $fileType)
                                                             @if ($fileType->studentFile === null)
@@ -2004,6 +2006,19 @@ $title = $student->user->name;
         <div class="modal-dialog modal-semi-full modal-dialog-centered logro-modal-image">
             <img src="\img\other\none.png" alt="document">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- Modal Student Document Info -->
+    <div class="modal fade" id="modalStudentDocumentsInfo" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title h5 text-danger"></h5>
+                    <button type="button" class="btn btn-outline-primary ms-2" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

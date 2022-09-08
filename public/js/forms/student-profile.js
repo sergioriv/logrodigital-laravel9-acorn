@@ -198,7 +198,12 @@ class StudentProfileInfoForm {
 
     _initDescriptionDocument() {
         jQuery("#selectStudentDocument").change(function () {
+
             var info = $(this).find('option:selected').attr('fileInfo');
+
+            $('#modalStudentDocumentsInfo .modal-title').html(info);
+            $('#modalStudentDocumentsInfo').modal('show');
+
             jQuery("#infoStudentDocument").removeClass('d-none').html(info);
         });
     }
