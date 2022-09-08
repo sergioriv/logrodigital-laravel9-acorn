@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\TeachersExport;
 use App\Exports\TeachersInstructuveExport;
+use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Imports\TeachersImport;
 use App\Models\SchoolYear;
@@ -41,9 +42,8 @@ class TeacherController extends Controller
         $user = UserController::_create($user_name, $request->email, 6);
 
         if (!$user) {
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('Invalid email (:email)', ['email' => $request->email])],
-            );
+            Notify::fail(__('Invalid email (:email)', ['email' => $request->email]));
+            return redirect()->back();
         }
 
         Teacher::create([
@@ -56,10 +56,9 @@ class TeacherController extends Controller
             'institutional_email' => $request->email
         ]);
 
+        Notify::success(__('Teacher created!'));
         self::tab();
-        return redirect()->route('myinstitution')->with(
-            ['notify' => 'success', 'title' => __('Teacher created!')],
-        );
+        return redirect()->route('myinstitution');
     }
 
     public function show(Teacher $teacher)
@@ -111,10 +110,9 @@ class TeacherController extends Controller
 
         Excel::import(new TeachersImport, $request->file('file'));
 
+        Notify::success(__('Loaded Excel!'));
         self::tab();
-        return redirect()->route('myinstitution')->with(
-            ['notify' => 'success', 'title' => __('Loaded Excel!')],
-        );
+        return redirect()->route('myinstitution');
     }
 
     private function tab()

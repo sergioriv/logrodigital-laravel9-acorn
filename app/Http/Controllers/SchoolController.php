@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Models\School;
 use App\Models\Secretariat;
 use App\Models\Student;
@@ -57,9 +58,8 @@ class SchoolController extends Controller
 
         self::update_badge($request);
 
-        return redirect()->back()->with(
-            ['notify' => 'success', 'title' => __('Updated info!')],
-        );
+        Notify::success( __('Updated info!') );
+        return redirect()->back();
     }
 
     private function update_badge($request)
@@ -120,18 +120,16 @@ class SchoolController extends Controller
 
         if ($numberCurrent == $request->students)
         {
-            return redirect()->back()->with(
-                ['notify' => 'info', 'title' => __("Unchanged!")]
-            );
+            Notify::info( __('Unchanged!') );
+            return redirect()->back();
         }
 
         self::myschool()->forceFill(
             ['number_students' => $request->students]
         )->save();
 
-        return redirect()->back()->with(
-            ['notify' => 'success', 'title' => __("Saved!")]
-        );
+        Notify::success( __('Saved!') );
+        return redirect()->back();
 
     }
 }

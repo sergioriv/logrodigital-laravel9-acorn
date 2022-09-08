@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\Period;
 use App\Models\StudyTime;
@@ -46,9 +47,8 @@ class StudyTimeController extends Controller
             'name' => $request->name
         ]);
 
-        return redirect()->route('studyTime.index')->with(
-            ['notify' => 'success', 'title' => __('Study time created!')],
-        );
+        Notify::success(__('Study time created!'));
+        return redirect()->route('studyTime.index');
     }
 
     public function show(StudyTime $studyTime)
@@ -78,9 +78,8 @@ class StudyTimeController extends Controller
             'name' => $request->name
         ]);
 
-        return redirect()->route('studyTime.show', $studyTime)->with(
-            ['notify' => 'success', 'title' => __('Study time updated!')],
-        );
+        Notify::success(__('Study time updated!'));
+        return redirect()->route('studyTime.show', $studyTime);
     }
 
     public function periods_update(Request $request, StudyTime $studyTime)

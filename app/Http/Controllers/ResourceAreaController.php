@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Models\ResourceArea;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -39,9 +40,8 @@ class ResourceAreaController extends Controller
             'name' => $request->name
         ]);
 
-        return redirect()->route('resourceArea.index')->with(
-            ['notify' => 'success', 'title' => __('Area created!')],
-        );
+        Notify::success( __('Area created!') );
+        return redirect()->route('resourceArea.index');
     }
 
     public function show(ResourceArea $resourceArea)
@@ -64,8 +64,7 @@ class ResourceAreaController extends Controller
             'name' => $request->name
         ]);
 
-        return redirect()->route('resourceArea.index')->with(
-            ['notify' => 'success', 'title' => __('Area updated!')],
-        );
+        Notify::success( __('Area updated!') );
+        return redirect()->route('resourceArea.index');
     }
 }

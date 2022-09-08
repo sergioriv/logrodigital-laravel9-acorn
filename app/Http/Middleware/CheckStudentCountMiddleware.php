@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\support\Notify;
 use App\Models\Student;
 use Closure;
 use Illuminate\Http\Request;
@@ -25,9 +26,10 @@ class CheckStudentCountMiddleware
         $MCS = SchoolController::numberStudents();
 
         if ($CC >= $MCS)
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('Has reached the limit of the contracted plan.')],
-            );
+        {
+            Notify::fail(__('Has reached the limit of the contracted plan.'));
+            return redirect()->back();
+        }
 
         return $next($request);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\ResourceArea;
 use App\Models\ResourceSubject;
@@ -27,13 +28,11 @@ class SubjectController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        if (NULL === $Y->available)
-        {
+        if (NULL === $Y->available) {
             $resourceAreas = ResourceArea::whereHas('subjects', function ($subjects) use ($Y) {
                 $subjects->where('school_year_id', $Y->id);
             })->get();
-        } else
-        {
+        } else {
             $resourceAreas = ResourceArea::all();
         }
 
@@ -62,47 +61,19 @@ class SubjectController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        if (NULL !== $Y->available)
-        {
-
-            foreach ($request->subjects as $are_subject) {
-                [$area, $subject] = explode('~',$are_subject);
-                if ('null' !== $area) {
-                    Subject::create([
-                        'school_year_id' => $Y->id,
-                        'resource_area_id' => $area,
-                        'resource_subject_id' => $subject
-                    ]);
-                }
+        foreach ($request->subjects as $are_subject) {
+            [$area, $subject] = explode('~', $are_subject);
+            if ('null' !== $area) {
+                Subject::create([
+                    'school_year_id' => $Y->id,
+                    'resource_area_id' => $area,
+                    'resource_subject_id' => $subject
+                ]);
             }
-
-            return redirect()->route('subject.index')->with(
-                ['notify' => 'success', 'title' => __('Areas & Subjects updated!')],
-            );
-
-        } else
-        {
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('Not allowed for ') . $Y->name],
-            );
         }
+
+        Notify::success(__('Areas & Subjects updated!'));
+        return redirect()->route('subject.index');
     }
 
-    /* public static function year_studyYear_subjects($Y_id, $sy_id)
-    {
-        $fn_sy = fn($sy) =>
-                $sy->where('school_year_id', $Y_id)
-                ->where('study_year_id', $sy_id);
-
-        $fn_sb = fn($s) =>
-                $s->where('school_year_id', $Y_id)
-                ->whereHas('studyYearSubject', $fn_sy)
-                ->with(['studyYearSubject' => $fn_sy]);
-
-        $a_sb = ResourceArea::with(['subjects' => $fn_sb])
-                    ->whereHas('subjects', $fn_sb)
-                    ->get();
-
-        return $a_sb;
-    } */
 }

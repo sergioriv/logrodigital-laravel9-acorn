@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\Period;
 use App\Models\StudyTime;
@@ -29,35 +30,29 @@ class PeriodController extends Controller
         DB::beginTransaction();
 
         foreach ($request->period as $key => $period) {
-            if ( $period['start'] > $period['end'] )
-            {
+            if ($period['start'] > $period['end']) {
                 DB::rollBack();
                 return redirect()->back()->withErrors(['custom' => __('Start date must be less than the end date of each period')]);
             }
 
-            if ( isset($period['id']) )
-            {
+            if (isset($period['id'])) {
                 $updatePeriod = Period::where('id', $period['id'])
                     ->where('school_year_id', $Y->id)
                     ->where('study_time_id', $studyTime->id)
                     ->where('ordering', $key)->first();
 
-                if (NULL !== $updatePeriod)
-                {
+                if (NULL !== $updatePeriod) {
                     $updatePeriod->update([
                         'name' => $period['name'],
                         'start' => $period['start'],
                         'end' => $period['end'],
                         'days' => $period['days']
                     ]);
-                } else
-                {
+                } else {
                     DB::rollBack();
                     return redirect()->back()->withErrors(['custom' => __('Unexpected Error')]);
                 }
-
-            } else
-            {
+            } else {
                 Period::create([
                     'school_year_id' => $Y->id,
                     'study_time_id' => $studyTime->id,
@@ -69,15 +64,11 @@ class PeriodController extends Controller
                     'days' => $period['days']
                 ]);
             }
-
         }
 
         DB::commit();
 
-        return redirect()->route('studyTime.index')->with([
-            ['notify' => 'success', 'title' => __('Periods updated!')],
-        ]);
-
+        Notify::success(__('Periods updated!'));
+        return redirect()->route('studyTime.index');
     }
-
 }

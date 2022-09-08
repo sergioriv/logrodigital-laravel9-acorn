@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\support\Notify;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Password;
@@ -69,9 +70,7 @@ class ConfirmEmailController extends Controller
 
         event(new PasswordReset($user));
 
-        return redirect()->route('dashboard')->with([
-            'notify' => 'success',
-            'title' => 'Welcome ' . $user->name,
-        ]);
+        Notify::success('Welcome ' . $user->name);
+        return redirect()->route('dashboard');
     }
 }

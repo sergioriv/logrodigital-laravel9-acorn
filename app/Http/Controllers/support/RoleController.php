@@ -59,9 +59,8 @@ class RoleController extends Controller
 
         $newRole->permissions()->sync($request->permissions);
 
-        return redirect()->route('support.roles.index')->with(
-            ['notify' => 'success', 'title' => __('Saved role!')],
-        );
+        Notify::success(__('Saved role!'));
+        return redirect()->route('support.roles.index');
     }
 
     /**
@@ -94,9 +93,8 @@ class RoleController extends Controller
 
         $role->permissions()->sync($request->permissions);
 
-        return redirect()->route('support.roles.index')->with(
-            ['notify' => 'success', 'title' => __('Updated role!')],
-        );
+        Notify::success(__('Updated role!'));
+        return redirect()->route('support.roles.index');
     }
 
 }

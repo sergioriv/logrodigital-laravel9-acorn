@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Models\Headquarters;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -54,9 +55,8 @@ class HeadquartersController extends Controller
             'available' => TRUE
         ]);
 
-        return redirect()->route('headquarters.index')->with(
-            ['notify' => 'success', 'title' => __('Headquarters created!')],
-        );
+        Notify::success( __('Headquarters created!') );
+        return redirect()->route('headquarters.index');
     }
 
     /**
@@ -98,8 +98,7 @@ class HeadquartersController extends Controller
             'name' => $request->name
         ]);
 
-        return redirect()->route('headquarters.index')->with(
-            ['notify' => 'success', 'title' => __('Headquarters updated!')],
-        );
+        Notify::success( __('Headquarters updated!') );
+        return redirect()->route('headquarters.index');
     }
 }

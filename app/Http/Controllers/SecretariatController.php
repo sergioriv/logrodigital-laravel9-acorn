@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Secretariat;
 use Illuminate\Http\Request;
@@ -43,9 +44,8 @@ class SecretariatController extends Controller
         $user = UserController::_create($request->name, $request->email, 4);
 
         if (!$user) {
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('Invalid email (:email)', ['email' => $request->email])],
-            );
+            Notify::fail( __('Invalid email (:email)', ['email' => $request->email]) );
+            return redirect()->back();
         }
 
         Secretariat::create([
@@ -56,10 +56,9 @@ class SecretariatController extends Controller
             'telephone' => $request->telephone
         ]);
 
+        Notify::success( __('Created secretariat user!') );
         self::tab();
-        return redirect()->route('myinstitution')->with(
-            ['notify' => 'success', 'title' => __('Created secretariat user!')],
-        );
+        return redirect()->route('myinstitution');
     }
 
     /**

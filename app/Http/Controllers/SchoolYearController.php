@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Models\SchoolYear;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -62,9 +63,8 @@ class SchoolYearController extends Controller
             'available' => FALSE
         ]);
 
-        return redirect()->route('schoolYear.index')->with(
-            ['notify' => 'success', 'title' => __('New School Year in process!')],
-        );
+        Notify::success( __('New School Year in process!') );
+        return redirect()->route('schoolYear.index');
     }
 
     /**
@@ -92,9 +92,8 @@ class SchoolYearController extends Controller
 
         $schoolYear = SchoolYear::find($request->school_year);
 
-        return redirect()->back()->with(
-            ['notify' => 'success', 'title' => $schoolYear->name .' '. __('selected!')],
-        );
+        Notify::success( __(':year selected!', ['year' => $schoolYear->name]) );
+        return redirect()->back();
     }
 
     public static function available_year()

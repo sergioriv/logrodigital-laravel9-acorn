@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\SchoolYearController;
+use App\Http\Controllers\support\Notify;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -22,9 +23,10 @@ class YearCurrentMiddleware
         $Y = SchoolYearController::current_year();
 
         if( NULL === $Y->available )
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('Not allowed for ') . $Y->name],
-            );
+        {
+            Notify::fail(__('Not allowed for ') . $Y->name);
+            return redirect()->back();
+        }
 
         return $next($request);
     }

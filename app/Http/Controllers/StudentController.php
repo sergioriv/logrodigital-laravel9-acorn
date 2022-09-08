@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\StudentsInstructuveExport;
 use App\Http\Controllers\Mail\SmtpMail;
+use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\support\WAController;
 use App\Http\Middleware\CheckStudentCountMiddleware;
@@ -51,7 +52,7 @@ class StudentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('can:students.index')->except('show', 'update','wizard_documents_request','wizard_person_charge_request','wizard_personal_info_request','wizard_complete_request');
+        $this->middleware('can:students.index')->except('show', 'update', 'wizard_documents_request', 'wizard_person_charge_request', 'wizard_personal_info_request', 'wizard_complete_request');
         $this->middleware('can:students.import')->only('data_instructive', 'export_instructive', 'import', 'import_store');
         $this->middleware('can:students.create')->only('create');
         $this->middleware('can:students.matriculate')->only('matriculate', 'matriculate_update', 'create_parents_filter');
@@ -114,6 +115,13 @@ class StudentController extends Controller
         $documentType = DocumentType::orderBy('foreigner')->get();
         $countGroups = Group::where('school_year_id', $Y->id)->count();
 
+        /* notificación de estudiantes restantes */
+        $CC = Student::count();
+        $MCS = SchoolController::numberStudents();
+        if ($CC >= ($MCS - 100)) {
+            Notify::info(__(":count students remain from the contracted plan.", ['count' => $MCS - $CC]));
+        }
+
         return view("logro.student.create", [
             'headquarters' => Headquarters::all(),
             'studyTime' => StudyTime::all(),
@@ -152,8 +160,7 @@ class StudentController extends Controller
         $Y = SchoolYearController::current_year();
 
         /* DATOS PAIS DE ORIGEN */
-        if ( NationalCountry::country()->id !== $request->country )
-        {
+        if (NationalCountry::country()->id !== $request->country) {
             $request->birth_city = NULL;
         }
 
@@ -180,15 +187,13 @@ class StudentController extends Controller
 
 
 
+        Notify::success(__('Student created!'));
+
         if (1 == $request->matriculate) {
-            return redirect()->route('students.matriculate', $user->id)->with(
-                ['notify' => 'success', 'title' => __('Student created!')],
-            );
+            return redirect()->route('students.matriculate', $user->id);
         }
 
-        return redirect()->route('students.no_enrolled')->with(
-            ['notify' => 'success', 'title' => __('Student created!')],
-        );
+        return redirect()->route('students.no_enrolled');
     }
 
     /*
@@ -208,16 +213,16 @@ class StudentController extends Controller
                 'student' => $student,
                 'studentFileTypes' => $studentFileTypes->get()
             ]);
-        } else
-            return redirect()->route('dashboard')->with(
-                ['notify' => 'fail', 'title' => __('Unauthorized!')],
-            );
+        }
+
+        Notify::fail(__('Unauthorized!'));
+        return redirect()->route('dashboard');
     }
     public function wizard_documents_request(Request $request)
     {
         if ('STUDENT' === UserController::role_auth()) {
 
-            $student = Student::findOrFail( Auth::user()->id );
+            $student = Student::findOrFail(Auth::user()->id);
             if ($request->docsFails > 0) {
                 return redirect()->back()->withErrors(["custom" => __("documents are missing to upload")]);
             }
@@ -227,11 +232,10 @@ class StudentController extends Controller
             ])->save();
 
             return redirect()->back()->with('student', $student);
-        } else {
-            return redirect()->route('dashboard')->with(
-                ['notify' => 'fail', 'title' => __('Unauthorized!')],
-            );
         }
+
+        Notify::fail(__('Unauthorized!'));
+        return redirect()->route('dashboard');
     }
     public function wizard_person_charge(Student $student)
     {
@@ -245,25 +249,23 @@ class StudentController extends Controller
                 'cities' => $cities,
                 'kinships' => $kinships
             ]);
-        } else
-            return redirect()->route('dashboard')->with(
-                ['notify' => 'fail', 'title' => __('Unauthorized!')],
-            );
+        }
+
+        Notify::fail(__('Unauthorized!'));
+        return redirect()->route('dashboard');
     }
     public function wizard_person_charge_request(Request $request)
     {
         if ('STUDENT' === UserController::role_auth()) {
 
-            $student = Student::findOrFail( Auth::user()->id );
+            $student = Student::findOrFail(Auth::user()->id);
 
             $person_charge = new PersonChargeController;
             return $person_charge->update($student, $request, TRUE);
-
-        } else {
-            return redirect()->route('dashboard')->with(
-                ['notify' => 'fail', 'title' => __('Unauthorized!')],
-            );
         }
+
+        Notify::fail(__('Unauthorized!'));
+        return redirect()->route('dashboard');
     }
     public function wizard_personal_info(Student $student)
     {
@@ -283,24 +285,22 @@ class StudentController extends Controller
                 'handbook' => SchoolController::handbook(),
                 'nationalCountry' => NationalCountry::country()
             ]);
-        } else
-            return redirect()->route('dashboard')->with(
-                ['notify' => 'fail', 'title' => __('Unauthorized!')],
-            );
+        }
+
+        Notify::fail(__('Unauthorized!'));
+        return redirect()->route('dashboard');
     }
     public function wizard_personal_info_request(Request $request)
     {
         if ('STUDENT' === UserController::role_auth()) {
 
-            $student = Student::findOrFail( Auth::user()->id );
+            $student = Student::findOrFail(Auth::user()->id);
 
             return self::update($request, $student, TRUE);
-
-        } else {
-            return redirect()->route('dashboard')->with(
-                ['notify' => 'fail', 'title' => __('Unauthorized!')],
-            );
         }
+
+        Notify::fail(__('Unauthorized!'));
+        return redirect()->route('dashboard');
     }
     public function wizard_complete()
     {
@@ -310,19 +310,17 @@ class StudentController extends Controller
     {
         if ('STUDENT' === UserController::role_auth()) {
 
-            $student = Student::findOrFail( Auth::user()->id );
+            $student = Student::findOrFail(Auth::user()->id);
 
             $student->forceFill([
                 'wizard_complete' => TRUE
             ])->save();
 
             return self::show($student);
-
-        } else {
-            return redirect()->route('dashboard')->with(
-                ['notify' => 'fail', 'title' => __('Unauthorized!')],
-            );
         }
+
+        Notify::fail(__('Unauthorized!'));
+        return redirect()->route('dashboard');
     }
     /*
      * WIZARD END
@@ -390,10 +388,10 @@ class StudentController extends Controller
             ->withCount(['groupStudents' => fn ($GS) => $GS->where('student_id', $student->id)])
             ->get();
 
-        if (0 === count($groups))
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('No groups')],
-            );
+        if (0 === count($groups)) {
+            Notify::fail(__('No groups'));
+            return redirect()->back();
+        }
 
         return view('logro.student.matriculate')->with([
             'student' => $student,
@@ -441,9 +439,8 @@ class StudentController extends Controller
                     /* Send mail to Email Person Charge */
                     SmtpMail::sendEmailEnrollmentNotification($student, $group);
 
-                    return redirect()->route('students.show', $student)->with(
-                        ['notify' => 'success', 'title' => __('Student matriculate!')],
-                    );
+                    Notify::success(__('Student matriculate!'));
+                    return redirect()->route('students.show', $student);
                 } else {
                     $groupStudentExist->update([
                         'group_id' => $request->group
@@ -465,16 +462,15 @@ class StudentController extends Controller
                         'enrolled' => TRUE
                     ]);
 
-                    return redirect()->route('students.show', $student)->with(
-                        ['notify' => 'success', 'title' => __('Changed group!')],
-                    );
+                    Notify::success(__('Changed group!'));
+                    return redirect()->route('students.show', $student);
                 }
 
                 return redirect()->route('students.enrolled');
             } else {
-                return redirect()->route('students.show', $student)->with(
-                    ['notify' => 'info', 'title' => __('Unchanged!')],
-                );
+
+                Notify::info(__('Unchanged!'));
+                return redirect()->route('students.show', $student);
             }
         } else {
             return redirect()->back()->withErrors(__("Unexpected Error"));
@@ -559,12 +555,9 @@ class StudentController extends Controller
             }
 
             self::signatures($student, $request->signature_tutor, $request->signature_student);
-        }
-
-        else
-        {
+        } else {
             $request->validate([
-                'institutional_email' => ['required', 'email', 'max:191', Rule::unique('users','email')->ignore($student->id)]
+                'institutional_email' => ['required', 'email', 'max:191', Rule::unique('users', 'email')->ignore($student->id)]
             ]);
 
             $studentEmail = $request->institutional_email;
@@ -613,8 +606,7 @@ class StudentController extends Controller
         UserController::_update($student->id, $user_name, $studentEmail);
 
         /* DATOS PAIS DE ORIGEN */
-        if ( NationalCountry::country()->id !== $request->country )
-        {
+        if (NationalCountry::country()->id !== $request->country) {
             $request->birth_city = NULL;
         }
 
@@ -671,19 +663,16 @@ class StudentController extends Controller
             'data_treatment' => $data_treatment
         ]);
 
-        if ( $wizard === TRUE )
-        {
+        if ($wizard === TRUE) {
             $student->forceFill([
                 'wizard_personal_info' => TRUE
             ])->save();
 
             return redirect()->back();
-        }
-        else
-        {
-            return redirect()->back()->with(
-                ['notify' => 'success', 'title' => __('Student updated!')],
-            );
+        } else {
+
+            Notify::success(__('Student updated!'));
+            return redirect()->back();
         }
     }
 
@@ -790,9 +779,8 @@ class StudentController extends Controller
             'psyc_student_family' => $request->psyc_student_family
         ]);
 
-        return redirect()->back()->with(
-            ['notify' => 'success', 'title' => __('Student updated!')],
-        );
+        Notify::success(__('Student updated!'));
+        return redirect()->back();
     }
 
     public function piar_update(Request $request, Student $student)
@@ -820,9 +808,8 @@ class StudentController extends Controller
             }
         }
 
-        return redirect()->back()->with(
-            ['notify' => 'success', 'title' => __('PIAR updated!')],
-        );
+        Notify::success(__('PIAR updated!'));
+        return redirect()->back();
     }
 
     public function create_parents_filter(Request $request)
@@ -915,17 +902,17 @@ class StudentController extends Controller
             'studyYear' => ['required', Rule::exists('study_years', 'id')],
         ]);
 
-        if ($student->headquarters_id == $request->headquarters
+        if (
+            $student->headquarters_id == $request->headquarters
             && $student->study_time_id == $request->studyTime
-            && $student->study_year_id == $request->studyYear)
-            {
-                return redirect()->route('students.show', $student)->with(
-                    ['notify' => 'info', 'title' => __('Unchanged!')],
-                );
-            }
+            && $student->study_year_id == $request->studyYear
+        ) {
 
-        if (NULL !== $student->group_id)
-        {
+            Notify::info(__('Unchanged!'));
+            return redirect()->route('students.show', $student);
+        }
+
+        if (NULL !== $student->group_id) {
             $groupStudent = $student->group;
             GroupStudent::where('student_id', $student->id)
                 ->where('group_id', $student->group_id)
@@ -945,15 +932,13 @@ class StudentController extends Controller
             'group_id' => NULL
         ]);
 
+        Notify::success(__('Transferred student!'));
+
         if (1 == $request->matriculate) {
-            return redirect()->route('students.matriculate', $student->id)->with(
-                ['notify' => 'success', 'title' => __('Transferred student!')],
-            );
+            return redirect()->route('students.matriculate', $student->id);
         }
 
-        return redirect()->route('students.show', $student)->with(
-            ['notify' => 'success', 'title' => __('Transferred student!')],
-        );
+        return redirect()->route('students.show', $student);
     }
 
 
@@ -1004,9 +989,8 @@ class StudentController extends Controller
 
         Excel::import(new StudentsImport, $request->file('file'));
 
-        return redirect()->back()->with(
-            ['notify' => 'success', 'title' => __('Loaded Excel!')],
-        );
+        Notify::success(__('Loaded Excel!'));
+        return redirect()->back();
     }
 
 
@@ -1044,23 +1028,6 @@ class StudentController extends Controller
         File::put(public_path($sigUrl), base64_decode($sig));
         return $sigUrl;
     }
-
-
-    /* Check Students Count */
-    /* private function checkStudentsCount($next)
-    {
-        $CC = Student::count();
-        $MCS = SchoolController::numberStudents();
-
-        if ($CC >= ($MCS - 100)) {
-            $left = $MCS - $CC;
-
-            if ($next)
-            return redirect()->route($next)->with(
-                ['notify' => 'info', 'title' => __(':count students remain from the contracted plan.', ['count' => $left])],
-            );
-        }
-    } */
 
     private function send_msg($student, $group)
     {

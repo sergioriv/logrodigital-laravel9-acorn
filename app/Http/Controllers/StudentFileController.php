@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Models\Student;
 use App\Models\StudentFile;
 use Illuminate\Http\Request;
@@ -44,9 +45,8 @@ class StudentFileController extends Controller
                 'creation_user_id' => Auth::user()->id
             ]);
 
-            return redirect()->back()->with(
-                ['notify' => 'success', 'title' => __('File upload!')],
-            );
+            Notify::success(__('File upload!'));
+            return redirect()->back();
         } else
         {
 
@@ -63,9 +63,8 @@ class StudentFileController extends Controller
 
             ]);
 
-            return redirect()->back()->with(
-                ['notify' => 'success', 'title' => __('File updated!')],
-            );
+            Notify::success(__('File updated!'));
+            return redirect()->back();
         }
     }
 
@@ -112,8 +111,7 @@ class StudentFileController extends Controller
                     ->orWhere('checked', 0)->update(['checked' => FALSE]);
         }
 
-        return redirect()->back()->with(
-            ['notify' => 'success', 'title' => __('Files updated!')],
-        );
+        Notify::success(__('Files updated!'));
+        return redirect()->back();
     }
 }

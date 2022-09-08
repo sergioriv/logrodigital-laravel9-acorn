@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Student;
 use App\Models\User;
@@ -123,9 +123,8 @@ class ProfileController extends Controller
                 break;
         }
 
-        return redirect()->route('user.profile.edit')->with(
-            ['notify' => 'success', 'title' => __('Updated!')],
-        );
+        Notify::success( __('Updated!') );
+        return redirect()->route('user.profile.edit');
     }
 
     public function update_avatar(Request $request, User $user)
@@ -136,9 +135,8 @@ class ProfileController extends Controller
 
         UserController::_update_avatar($request, $user);
 
-        return redirect()->back()->with(
-            ['notify' => 'success', 'title' => __('Avatar Updated!')],
-        );
+        Notify::success( __('Avatar Updated!') );
+        return redirect()->back();
     }
 
     public function wizard()
@@ -175,8 +173,7 @@ class ProfileController extends Controller
 
     private function not_found()
     {
-        return redirect()->route('dashboard')->with(
-            ['notify' => 'fail', 'title' => __('Unauthorized!')],
-        );
+        Notify::fail( __('Unauthorized!') );
+        return redirect()->route('dashboard');
     }
 }

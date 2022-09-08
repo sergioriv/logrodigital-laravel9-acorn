@@ -1,6 +1,17 @@
 const lang = $('html').attr('lang');
 
-function callNotify(type = "success", title, message = "") {
+// function callNotify(type = "success", title, message = "") {
+function callNotify(notify) {
+
+    var n = notify.split('|');
+
+    var type = n[0];
+    var title = n[1];
+    var message = ""
+
+    if (n[2])
+        message = n[2];
+
     let icon = "cs-check";
     let color = "primary";
 

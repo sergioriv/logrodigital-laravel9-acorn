@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Mail\SmtpMail;
+use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\Group;
 use App\Models\GroupStudent;
@@ -121,9 +122,8 @@ class GroupController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('group.index')->with(
-            ['notify' => 'success', 'title' => __('Group created!')],
-        );
+        Notify::success(__('Group created!'));
+        return redirect()->route('group.index');
     }
 
     public function show(Group $group)
@@ -180,9 +180,8 @@ class GroupController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('group.index')->with(
-            ['notify' => 'success', 'title' => __('Group updated!')],
-        );
+        Notify::success(__('Group updated!'));
+        return redirect()->route('group.index');
     }
 
     public function matriculate(Group $group)
@@ -210,9 +209,10 @@ class GroupController extends Controller
             ->get();
 
         if (0 === count($studentsNoEnrolled))
-            return redirect()->back()->with(
-                ['notify' => 'fail', 'title' => __('No students to enroll')],
-            );
+        {
+            Notify::fail(__('No students to enroll'));
+            return redirect()->back();
+        }
 
         return view('logro.group.matriculate')->with([
             'group' => $group,
@@ -257,9 +257,8 @@ class GroupController extends Controller
             }
         }
 
-        return redirect()->route('group.show', $group)->with(
-            ['notify' => 'success', 'title' => __('Students matriculate!')],
-        );
+        Notify::success( __('Students matriculate!') );
+        return redirect()->route('group.show', $group);
     }
 
     public function teacher_edit(Group $group)
@@ -305,9 +304,8 @@ class GroupController extends Controller
             }
         }
 
-        return redirect()->route('group.show', $group)->with(
-            ['notify' => 'success', 'title' => __('Group updated!')],
-        );
+        Notify::success( __('Group updated!') );
+        return redirect()->route('group.show', $group);
     }
 
     private function subjects_teacher($Y_id, $sy_id, $g_id)

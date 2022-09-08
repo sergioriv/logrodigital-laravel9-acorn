@@ -106,10 +106,8 @@ class UserController extends Controller
 
         $user->roles()->sync($request->role);
 
-        return redirect()->route('support.users.index')->with([
-            'notify' => 'success',
-            'title' => 'Updated user!',
-        ]);
+        Notify::success(__('Updated user!'));
+        return redirect()->route('support.users.index');
     }
 
     public static function _update($user_id, $name, $email = NULL, $avatar = NULL)

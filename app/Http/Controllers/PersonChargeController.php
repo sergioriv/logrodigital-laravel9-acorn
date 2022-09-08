@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\PersonCharge;
 use App\Models\Student;
@@ -16,57 +17,49 @@ class PersonChargeController extends Controller
         $this->middleware('can:students.info');
     }
 
-    public function update (Student $student, Request $request, $wizard = false)
+    public function update(Student $student, Request $request, $wizard = false)
     {
         $mother = PersonCharge::where('id', $request->mother)
-            ->where('kinship_id',1)
+            ->where('kinship_id', 1)
             ->where('student_id', $student->id)
             ->first();
         $father = PersonCharge::where('id', $request->father)
-            ->where('kinship_id',2)
+            ->where('kinship_id', 2)
             ->where('student_id', $student->id)
             ->first();
         $tutor = PersonCharge::where('id', $request->tutor)
-            ->where('kinship_id','>',2)
+            ->where('kinship_id', '>', 2)
             ->where('student_id', $student->id)
             ->first();
 
 
-        if ($mother !== null)
-        {
+        if ($mother !== null) {
             $mother_id = $mother->id;
-        } else
-        {
+        } else {
             $mother_id = null;
         }
-        if ($father !== null)
-        {
+        if ($father !== null) {
             $father_id = $father->id;
-        } else
-        {
+        } else {
             $father_id = null;
         }
-        if ($tutor !== null)
-        {
+        if ($tutor !== null) {
             $tutor_id = $tutor->id;
-        } else
-        {
+        } else {
             $tutor_id = null;
         }
 
         $request->validate([
             /* PERSON CHARGE */
-            'person_charge' => ['required', Rule::exists('kinships','id')]
+            'person_charge' => ['required', Rule::exists('kinships', 'id')]
         ]);
 
         $mother_required = 'nullable';
         $father_required = 'nullable';
         $tutor_required = 'nullable';
-        if (1 == $request->person_charge)
-        {
+        if (1 == $request->person_charge) {
             $mother_required = 'required';
-        } elseif (2 == $request->person_charge)
-        {
+        } elseif (2 == $request->person_charge) {
             $father_required = 'required';
         } else {
             $tutor_required = 'required';
@@ -77,8 +70,8 @@ class PersonChargeController extends Controller
             'mother_name' => [$mother_required, 'string', 'max:191'],
             'mother_email' => ['nullable', 'max:191', 'email'], // Rule::unique('users','email')->ignore($mother_id)
             'mother_document' => [$mother_required, 'string', 'max:20'],
-            'mother_expedition_city' => [$mother_required, Rule::exists('cities','id')],
-            'mother_residence_city' => [$mother_required, Rule::exists('cities','id')],
+            'mother_expedition_city' => [$mother_required, Rule::exists('cities', 'id')],
+            'mother_residence_city' => [$mother_required, Rule::exists('cities', 'id')],
             'mother_address' => [$mother_required, 'string', 'max:100'],
             'mother_telephone' => [$mother_required, 'string', 'max:20'],
             'mother_cellphone' => [$mother_required, 'string', 'max:20'],
@@ -89,8 +82,8 @@ class PersonChargeController extends Controller
             'father_name' => [$father_required, 'string', 'max:191'],
             'father_email' => ['nullable', 'max:191', 'email'], // Rule::unique('users','email')->ignore($father_id)
             'father_document' => [$father_required, 'string', 'max:20'],
-            'father_expedition_city' => [$father_required, Rule::exists('cities','id')],
-            'father_residence_city' => [$father_required, Rule::exists('cities','id')],
+            'father_expedition_city' => [$father_required, Rule::exists('cities', 'id')],
+            'father_residence_city' => [$father_required, Rule::exists('cities', 'id')],
             'father_address' => [$father_required, 'string', 'max:100'],
             'father_telephone' => [$father_required, 'string', 'max:20'],
             'father_cellphone' => [$father_required, 'string', 'max:20'],
@@ -101,8 +94,8 @@ class PersonChargeController extends Controller
             'tutor_name' => [$tutor_required, 'string', 'max:191'],
             'tutor_email' => ['nullable', 'max:191', 'email'], // Rule::unique('users','email')->ignore($tutor_id)
             'tutor_document' => [$tutor_required, 'string', 'max:20'],
-            'tutor_expedition_city' => [$tutor_required, Rule::exists('cities','id')],
-            'tutor_residence_city' => [$tutor_required, Rule::exists('cities','id')],
+            'tutor_expedition_city' => [$tutor_required, Rule::exists('cities', 'id')],
+            'tutor_residence_city' => [$tutor_required, Rule::exists('cities', 'id')],
             'tutor_address' => [$tutor_required, 'string', 'max:100'],
             'tutor_telephone' => [$tutor_required, 'string', 'max:20'],
             'tutor_cellphone' => [$tutor_required, 'string', 'max:20'],
@@ -114,16 +107,13 @@ class PersonChargeController extends Controller
         /*
          * Create or Update Mother User
          */
-        if( NULL !== $request->mother_name )
-        {
-            if ( $mother === NULL )
-            {
+        if (NULL !== $request->mother_name) {
+            if ($mother === NULL) {
                 $user_mother = UserController::_create($request->mother_name, $request->mother_email, 8);
 
                 if (!$user_mother) {
-                    return redirect()->back()->with(
-                        ['notify' => 'fail', 'title' => __('Invalid email (:email)', ['email' => $request->mother_email])],
-                    );
+                    Notify::fail(__('Invalid email (:email)', ['email' => $request->mother_email]));
+                    return redirect()->back();
                 }
 
                 PersonCharge::create([
@@ -141,9 +131,7 @@ class PersonChargeController extends Controller
                     'kinship_id' => 1,
                     'occupation' => $request->mother_occupation
                 ]);
-
-            } else
-            {
+            } else {
                 UserController::_update($mother->id, $request->mother_name);
                 $mother->update([
                     'name' => $request->mother_name,
@@ -162,16 +150,13 @@ class PersonChargeController extends Controller
         /*
          * Create or Update Father User
          */
-        if( NULL !== $request->father_name )
-        {
-            if ( $father === NULL )
-            {
+        if (NULL !== $request->father_name) {
+            if ($father === NULL) {
                 $user_father = UserController::_create($request->father_name, $request->father_email, 8);
 
                 if (!$user_father) {
-                    return redirect()->back()->with(
-                        ['notify' => 'fail', 'title' => __('Invalid email (:email)', ['email' => $request->father_email])],
-                    );
+                    Notify::fail(__('Invalid email (:email)', ['email' => $request->father_email]));
+                    return redirect()->back();
                 }
 
                 PersonCharge::create([
@@ -189,8 +174,7 @@ class PersonChargeController extends Controller
                     'kinship_id' => 2,
                     'occupation' => $request->father_occupation
                 ]);
-            } else
-            {
+            } else {
                 UserController::_update($father->id, $request->father_name);
                 $father->update([
                     'name' => $request->father_name,
@@ -209,18 +193,14 @@ class PersonChargeController extends Controller
         /*
          * Create or Update Tutor User
          */
-        if( $request->person_charge > 2 )
-        {
-            if( NULL !== $request->tutor_name )
-            {
-                if ( $tutor === NULL )
-                {
+        if ($request->person_charge > 2) {
+            if (NULL !== $request->tutor_name) {
+                if ($tutor === NULL) {
                     $user_tutor = UserController::_create($request->tutor_name, $request->tutor_email, 8);
 
                     if (!$user_tutor) {
-                        return redirect()->back()->with(
-                            ['notify' => 'fail', 'title' => __('Invalid email (:email)', ['email' => $request->tutor_email])],
-                        );
+                        Notify::fail(__('Invalid email (:email)', ['email' => $request->tutor_email]));
+                        return redirect()->back();
                     }
 
                     PersonCharge::create([
@@ -238,8 +218,7 @@ class PersonChargeController extends Controller
                         'kinship_id' => $request->person_charge,
                         'occupation' => $request->tutor_occupation
                     ]);
-                } else
-                {
+                } else {
                     UserController::_update($tutor->id, $request->tutor_name);
                     $tutor->update([
                         'name' => $request->tutor_name,
@@ -255,10 +234,8 @@ class PersonChargeController extends Controller
                     ]);
                 }
             }
-        } else
-        {
-            if ( NULL !== $tutor )
-            {
+        } else {
+            if (NULL !== $tutor) {
                 UserController::delete_user($tutor->id);
             }
         }
@@ -267,19 +244,15 @@ class PersonChargeController extends Controller
             'person_charge' => $request->person_charge
         ]);
 
-        if ( $wizard === TRUE )
-        {
+        if ($wizard === TRUE) {
             $student->forceFill([
                 'wizard_person_charge' => TRUE
             ])->save();
 
             return redirect()->back()->with('student', $student);
-        }
-        else
-        {
-            return redirect()->back()->with(
-                ['notify' => 'success', 'title' => __('Student updated!')],
-            );
+        } else {
+            Notify::success( __('Student updated!') );
+            return redirect()->back();
         }
     }
 }
