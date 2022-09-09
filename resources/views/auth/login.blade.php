@@ -54,17 +54,14 @@ $description = 'Login Page'
                 </div>
 
                 <!-- Remember Me -->
-                <div class="mb-3 form-group">
-                    <div class="form-check">
-                        <input name="remember" class="form-check-input" type="checkbox" id="remember_me" />
-                        <label class="form-check-label" for="remember_me">{{ __('Remember Me') }}</label>
-                    </div>
-                </div>
+                <input type="hidden" name="remember" value="0">
 
                 <x-button type="submit" class="btn-primary">
                     {{ __('Log in') }}
                 </x-button>
-                <a class="btn btn-outline-info" href="/microsoft">
+
+                <a class="btn btn-icon btn-icon-start btn-outline-secondary" href="/microsoft">
+                    <x-social microsoft />
                     Microsoft
                 </a>
             </form>
