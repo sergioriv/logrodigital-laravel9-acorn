@@ -168,7 +168,22 @@ class Student extends Model
     {
         return $this->belongsTo(EthnicGroup::class);
     }
-
+    public function expeditionCity()
+    {
+        return $this->belongsTo(City::class, 'expedition_city_id');
+    }
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+    public function birthCity()
+    {
+        return $this->belongsTo(City::class, 'birth_city_id');
+    }
+    public function residenceCity()
+    {
+        return $this->belongsTo(City::class, 'residence_city_id');
+    }
 
 
 

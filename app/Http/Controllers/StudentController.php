@@ -160,7 +160,7 @@ class StudentController extends Controller
         $Y = SchoolYearController::current_year();
 
         /* DATOS PAIS DE ORIGEN */
-        if (NationalCountry::country()->id !== $request->country) {
+        if (NationalCountry::country()->id != $request->country) {
             $request->birth_city = NULL;
         }
 
@@ -184,8 +184,6 @@ class StudentController extends Controller
             'status' => 'new',
             'data_treatment' => TRUE
         ]);
-
-
 
         Notify::success(__('Student created!'));
 
@@ -606,7 +604,7 @@ class StudentController extends Controller
         UserController::_update($student->id, $user_name, $studentEmail);
 
         /* DATOS PAIS DE ORIGEN */
-        if (NationalCountry::country()->id !== $request->country) {
+        if (NationalCountry::country()->id != $request->country) {
             $request->birth_city = NULL;
         }
 

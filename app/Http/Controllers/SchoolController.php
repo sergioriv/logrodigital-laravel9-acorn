@@ -21,7 +21,7 @@ class SchoolController extends Controller
 
     private static function myschool()
     {
-        return School::find(1);
+        return School::find(1) ?? null;
     }
 
     public function show()
@@ -86,6 +86,10 @@ class SchoolController extends Controller
         } else return null;
     }
 
+    public static function all()
+    {
+        return static::myschool();
+    }
     public static function name()
     {
         return static::myschool()->name ?? null;
