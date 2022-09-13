@@ -67,6 +67,12 @@ $title = __('Register completed');
                                             <p class="card-text text-alternate mb-4">
                                                 {{ __("The information will be checked and validated by the educational institution.") }}
                                             </p>
+                                            <p>
+                                                <a class="btn btn-link btn-icon btn-icon-start" href="{{ route('student.pdf.matriculate') }}">
+                                                    <i data-acorn-icon="download"></i>
+                                                    <span>{{ __("Download enrollment sheet") }}</span>
+                                                </a>
+                                            </p>
                                             <button class="btn btn-icon btn-icon-end btn-primary btn-reset"
                                                 type="submit">
                                                 <span>{{ __("Finish") }}</span>

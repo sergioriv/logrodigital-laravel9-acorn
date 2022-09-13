@@ -184,6 +184,19 @@ class Student extends Model
     {
         return $this->belongsTo(City::class, 'residence_city_id');
     }
+    public function dwellingType()
+    {
+        return $this->belongsTo(DwellingType::class, 'dwelling_type_id');
+    }
+    public function gender()
+    {
+        return $this->belongsTo(Gender::class, 'gender_id');
+    }
+    public function rh()
+    {
+        return $this->belongsTo(Rh::class, 'rh_id');
+    }
+
 
 
 

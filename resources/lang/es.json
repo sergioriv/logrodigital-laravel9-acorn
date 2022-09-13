@@ -89,7 +89,9 @@
     "Domicile Place": "Lugar de Domicilio",
     "zone": "zona",
     "Rural": "Rural",
-    "Urban": "Urbano",
+    "rural": "Rural",
+    "Urban": "Urbana",
+    "urban": "Urbana",
     "residence city": "ciudad de residencia",
     "address": "dirección",
     "social stratum": "estrato social",
@@ -295,6 +297,7 @@
     "Files updated!": "Archivos actualizados!",
     "Teacher created!": "Docente creado!",
     "Student created!": "Estudiante creado!",
+    "Download enrollment sheet": "Descargar hoja de matrícula",
 
     "full name": "nombre completo",
     "new": "nuevo",

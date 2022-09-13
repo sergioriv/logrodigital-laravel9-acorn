@@ -20,11 +20,7 @@ use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
-use App\Models\Student;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -85,6 +81,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('profile/person_charge', [StudentController::class, 'wizard_person_charge_request'])->name('student.wizard.person-charge');
     Route::put('profile/personal_info', [StudentController::class, 'wizard_personal_info_request'])->name('student.wizard.personal-info');
     Route::put('profile/edit', [StudentController::class, 'wizard_complete_request'])->name('student.wizard.complete');
+    Route::get('profile/download/matriculate', [StudentController::class, 'pdf_matriculate'])->name('student.pdf.matriculate');
 
     /* My Institution */
     Route::get('myinstitution', [SchoolController::class, 'show'])->name('myinstitution');
@@ -168,6 +165,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('students/{student}/matriculate', 'matriculate_update')->name('students.matriculate.update');
 
         Route::get('students/parents.filter','create_parents_filter');
+
+        Route::get('students/{student}/download/matriculate', 'pdf_matriculate')->name('students.pdf.matriculate');
 
     });
 

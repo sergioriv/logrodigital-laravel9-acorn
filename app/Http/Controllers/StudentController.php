@@ -36,6 +36,8 @@ use App\Models\StudentFile;
 use App\Models\StudentFileType;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -52,11 +54,25 @@ class StudentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('can:students.index')->except('show', 'update', 'wizard_documents_request', 'wizard_person_charge_request', 'wizard_personal_info_request', 'wizard_complete_request');
-        $this->middleware('can:students.import')->only('data_instructive', 'export_instructive', 'import', 'import_store');
+        $this->middleware('can:students.index')->except(
+            'show',
+            'update',
+            'wizard_documents_request',
+            'wizard_person_charge_request',
+            'wizard_personal_info_request',
+            'wizard_complete_request',
+            'pdf_matriculate');
+        $this->middleware('can:students.import')->only(
+            'data_instructive',
+            'export_instructive',
+            'import',
+            'import_store');
         $this->middleware('can:students.create')->only('create');
-        $this->middleware('can:students.matriculate')->only('matriculate', 'matriculate_update', 'create_parents_filter');
-        $this->middleware('can:students.info')->only('show', 'update');
+        $this->middleware('can:students.matriculate')->only(
+            'matriculate',
+            'matriculate_update',
+            'create_parents_filter');
+        $this->middleware('can:students.info')->only('show', 'update', 'pdf_matriculate');
         $this->middleware('can:students.psychosocial')->only('psychosocial_update', 'piar_update');
 
         $this->middleware(YearCurrentMiddleware::class)->only('matriculate', 'matriculate_update');
@@ -1025,6 +1041,43 @@ class StudentController extends Controller
 
         File::put(public_path($sigUrl), base64_decode($sig));
         return $sigUrl;
+    }
+
+
+    /* PDF */
+    public function pdf_matriculate(Student $student = null)
+    {
+
+        if ('STUDENT' == UserController::role_auth())
+        {
+            return self::pdfMatriculateGenerate(Auth::user()->id);
+        }
+
+        return self::pdfMatriculateGenerate($student->id);
+
+
+    }
+
+    private function pdfMatriculateGenerate($student)
+    {
+        $school = SchoolController::all();
+        $date = Carbon::now()->format('d/m/Y');
+
+        $student = Student::find($student);
+        $tutor = PersonCharge::select('id', 'name')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
+
+
+        $pdf = Pdf::loadView('pdf.starter', [
+            'school' => $school,
+            'date' => $date,
+            'student' => $student,
+            'tutor' => $tutor,
+            'nationalCountry' => NationalCountry::country()
+        ]);
+        $pdf->setPaper('letter', 'portrait');
+        $pdf->setOption('dpi', 72);
+
+        return $pdf->download($student->getFullName() .'.pdf');
     }
 
     private function send_msg($student, $group)

@@ -62,7 +62,14 @@ $title = $student->user->name;
                                     <i data-acorn-icon="more-horizontal"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end">
-                                    <x-dropdown-item type="button" :link="route('students.transfer', $student)">{{ __('Transfer') }}</x-dropdown-item>
+                                    <x-dropdown-item type="button" :link="route('students.pdf.matriculate', $student)">
+                                        <i data-acorn-icon="download"></i>
+                                        <span>{{ __('Download enrollment sheet') }}</span>
+                                    </x-dropdown-item>
+                                    <x-dropdown-item type="button" :link="route('students.transfer', $student)">
+                                        <i data-acorn-icon="destination"></i>
+                                        <span>{{ __('Transfer') }}</span>
+                                    </x-dropdown-item>
                                 </div>
                             </div>
                             <!-- Dropdown Button End -->
@@ -70,6 +77,16 @@ $title = $student->user->name;
                         <!-- Top Buttons End -->
                     @endif
                 @endcan
+
+                @hasrole('STUDENT')
+                    <!-- Top Buttons Start -->
+                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                        <!-- Download Matriculate Button -->
+                        <a class="btn btn-outline-info" href="{{ route('student.pdf.matriculate') }}">
+                            {{ __("Download enrollment sheet") }}
+                        </a>
+                    </div>
+                @endhasrole
 
             </div>
         </section>
@@ -234,14 +251,14 @@ $title = $student->user->name;
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <div class="mb-3 position-relative form-group">
-                                                <x-label>{{ __("first last name") }} <span class="text-danger">*</span>
+                                                <x-label>{{ __('first last name') }} <span class="text-danger">*</span>
                                                 </x-label>
                                                 <x-input-error :value="$student->first_last_name" name="firstLastName" :hasError="'firstLastName'" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3 position-relative form-group">
-                                                <x-label>{{ __("second last name") }}</x-label>
+                                                <x-label>{{ __('second last name') }}</x-label>
                                                 <x-input-error :value="$student->second_last_name" name="secondLastName" :hasError="'secondLastName'" />
                                             </div>
                                         </div>
@@ -250,14 +267,16 @@ $title = $student->user->name;
                                         <div class="col-md-6">
                                             <div class="mb-3 position-relative form-group">
                                                 @unlessrole('STUDENT')
-                                                <x-label>{{ __('institutional email') }} <x-required /></x-label>
-                                                <x-input-error :value="$student->institutional_email" name="institutional_email"
-                                                    :hasError="'institutional_email'" />
+                                                    <x-label>{{ __('institutional email') }}
+                                                        <x-required />
+                                                    </x-label>
+                                                    <x-input-error :value="$student->institutional_email" name="institutional_email"
+                                                        :hasError="'institutional_email'" />
                                                 @else
-                                                <x-label>{{ __('institutional email') }}</x-label>
-                                                <span class="form-control text-muted">
-                                                    {{ $student->institutional_email }}
-                                                </span>
+                                                    <x-label>{{ __('institutional email') }}</x-label>
+                                                    <span class="form-control text-muted">
+                                                        {{ $student->institutional_email }}
+                                                    </span>
                                                 @endunlessrole
                                             </div>
                                         </div>
@@ -320,15 +339,15 @@ $title = $student->user->name;
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('home country') }} <x-required /></x-label>
+                                                <x-label>{{ __('home country') }}
+                                                    <x-required />
+                                                </x-label>
                                                 <select name="country" id="country" logro="select2">
                                                     <option label="&nbsp;"></option>
                                                     @foreach ($countries as $country)
                                                         <option value="{{ $country->id }}"
                                                             national="{{ $country->national }}"
-                                                            @if ($student->country_id !== null)
-                                                                @selected(old('country', $student->country_id) == $country->id)
-                                                            @endif>
+                                                            @if ($student->country_id !== null) @selected(old('country', $student->country_id) == $country->id) @endif>
                                                             {{ __($country->name) }}
                                                         </option>
                                                     @endforeach
@@ -339,17 +358,13 @@ $title = $student->user->name;
                                             <div class="mb-3 w-100 position-relative form-group">
                                                 <x-label>{{ __('birth city') }}</x-label>
                                                 <select name="birth_city" id="birth_city" logro="select2"
-                                                @if ($student->country_id !== null)
-                                                @if (old('country', $student->country_id) != $nationalCountry->id)
-                                                    disabled
-                                                @endif
-                                                @endif>
+                                                    @if ($student->country_id !== null) @if (old('country', $student->country_id) != $nationalCountry->id)
+                                                    disabled @endif
+                                                    @endif>
                                                     <option label="&nbsp;"></option>
                                                     @foreach ($cities as $city)
                                                         <option value="{{ $city->id }}"
-                                                            @if ($student->birth_city_id !== null)
-                                                                @selected(old('birth_city', $student->birth_city_id) == $city->id)
-                                                            @endif>
+                                                            @if ($student->birth_city_id !== null) @selected(old('birth_city', $student->birth_city_id) == $city->id) @endif>
                                                             {{ $city->department->name . ' | ' . $city->name }}
                                                         </option>
                                                     @endforeach
@@ -361,20 +376,21 @@ $title = $student->user->name;
                                         <div class="col-md-6">
                                             <div class="mb-3 position-relative form-group">
                                                 @unlessrole('STUDENT')
-                                                <x-label>{{ __('birthdate') }} {!! $input_required !!}</x-label>
-                                                <x-input-error :value="$student->birthdate" logro="datePicker" name="birthdate"
-                                                    :hasError="'birthdate'" />
+                                                    <x-label>{{ __('birthdate') }} {!! $input_required !!}</x-label>
+                                                    <x-input-error :value="$student->birthdate" logro="datePicker" name="birthdate"
+                                                        :hasError="'birthdate'" />
                                                 @else
-                                                <x-label>{{ __('birthdate') }}</x-label>
-                                                <span class="form-control text-muted">{{ $student->birthdate }}</span>
-                                                <x-input-error type="hidden" :value="$student->birthdate" name="birthdate"
-                                                    :hasError="'birthdate'" />
+                                                    <x-label>{{ __('birthdate') }}</x-label>
+                                                    <span class="form-control text-muted">{{ $student->birthdate }}</span>
+                                                    <x-input-error type="hidden" :value="$student->birthdate" name="birthdate"
+                                                        :hasError="'birthdate'" />
                                                 @endunlessrole
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('Do you have siblings in the institution?') }} {!! $input_required !!}</x-label>
+                                                <x-label>{{ __('Do you have siblings in the institution?') }}
+                                                    {!! $input_required !!}</x-label>
                                                 <select name="siblings_in_institution" logro="select2">
                                                     <option label="&nbsp;"></option>
                                                     <option value="0" @selected(old('siblings_in_institution', 0) == $student->siblings_in_institution)>
@@ -1333,9 +1349,8 @@ $title = $student->user->name;
                                             <div class="col-md-6">
                                                 <div class="w-100 position-relative form-group">
                                                     <select data-placeholder="Seleccione documento" name="file_type"
-                                                        logro="select2" id="selectStudentDocument"
-                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#modalStudentDocumentsInfo">
+                                                        logro="select2" id="selectStudentDocument" data-bs-toggle="modal"
+                                                        data-bs-target="#modalStudentDocumentsInfo">
                                                         <option label="&nbsp;"></option>
                                                         @foreach ($studentFileTypes as $fileType)
                                                             @if ($fileType->studentFile === null)
@@ -2010,8 +2025,8 @@ $title = $student->user->name;
     </div>
 
     <!-- Modal Student Document Info -->
-    <div class="modal fade" id="modalStudentDocumentsInfo" data-bs-backdrop="static"
-    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalStudentDocumentsInfo" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-0">

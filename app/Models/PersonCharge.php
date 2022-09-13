@@ -39,4 +39,8 @@ class PersonCharge extends CastCreateModel
     {
         return $this->belongsTo(kinship::class);
     }
+    public function residenceCity()
+    {
+        return $this->belongsTo(City::class, 'residence_city_id');
+    }
 }
