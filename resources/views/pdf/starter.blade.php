@@ -14,7 +14,7 @@
         }
 
         @page {
-            margin: 1em;
+            margin: 3em;
         }
 
         .w-70p {
@@ -120,7 +120,7 @@
         }
 
         .mt-1 {
-            margin-top: 5px;
+            margin-top: 2em;
         }
         .mt-2 {
             margin-top: 10px;
