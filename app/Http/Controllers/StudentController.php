@@ -1067,7 +1067,7 @@ class StudentController extends Controller
         $tutor = PersonCharge::select('id', 'name')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
 
 
-        $pdf = Pdf::loadView('pdf.starter', [
+        $pdf = Pdf::loadView('logro.pdf.matriculate', [
             'school' => $school,
             'date' => $date,
             'student' => $student,

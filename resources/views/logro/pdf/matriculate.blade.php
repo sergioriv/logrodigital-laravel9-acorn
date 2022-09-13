@@ -202,9 +202,9 @@
                     HOJA DE MATRÍCULA - FECHA: {{ $date }}
                 </p>
                 <p>
-                    Creado mediante acuerdo No. 033 de Octubre de 1996 resolución de Reconocimiento No.
-                    4657 de Noviembre de 2003, resolución No. 006319 de Noviembre 17 de 2006, resolución No. 0011778 de
-                    Diciembre de 2007 resolución No. 005850 del 10 de Julio de 2009.
+                    Creado mediante acuerdo No. 033 de Octubre de 1996 Resolución de Reconocimiento No.
+                    4657 de Noviembre de 2003, Resolución No. 006319 de Noviembre 17 de 2006, Resolución No. 0011778 de
+                    Diciembre de 2007 Resolución No. 005850 del 10 de Julio de 2009.
                 </p>
             </td>
             <td class="h-70p w-70p"></td>
@@ -217,7 +217,7 @@
                 <td class="p-1 p-tb-0">
                     <div class="form-control">
                         <b>Fecha de Matrícula:</b>
-                        {{ $student->enrolled_date }}
+                        {{ $student->enrolled_date ?? 'no matriculado' }}
                     </div>
                 </td>
                 <td class="p-1 p-tb-0">
