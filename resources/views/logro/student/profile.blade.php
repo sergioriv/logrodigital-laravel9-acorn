@@ -11,7 +11,6 @@ $title = $student->user->name;
 
 @section('js_vendor')
     <script src="/js/cs/responsivetab.js"></script>
-    <script src="/js/vendor/singleimageupload.js"></script>
     <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
     <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
@@ -22,7 +21,6 @@ $title = $student->user->name;
 
 @section('js_page')
     @can('students.info')
-        <script src="/js/forms/change-avatar.js"></script>
         <script src="/js/forms/student-profile.js"></script>
         <script src="/js/forms/person-charge.js"></script>
         <script src="/js/forms/signature.js"></script>
@@ -83,7 +81,7 @@ $title = $student->user->name;
                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
                         <!-- Download Matriculate Button -->
                         <a class="btn btn-outline-info" href="{{ route('student.pdf.matriculate') }}">
-                            {{ __("Download enrollment sheet") }}
+                            {{ __('Download enrollment sheet') }}
                         </a>
                     </div>
                 @endhasrole
@@ -115,14 +113,7 @@ $title = $student->user->name;
                             <div class="mb-5 d-flex align-items-center flex-column">
 
                                 <!-- Avatar Form Start -->
-                                <form method="POST" id="formAvatar"
-                                    action="{{ route('user.profile.avatar', $student->user) }}"
-                                    enctype="multipart/form-data" class="tooltip-label-end" novalidate>
-                                    @csrf
-                                    @method('PUT')
-
-                                    <x-avatar-profile-edit :avatar="$student->user->avatar" :inclusive="$student->inclusive" class="mb-3" />
-                                </form>
+                                <x-avatar-profile :avatar="$student->user->avatar" :inclusive="$student->inclusive" class="mb-3" />
                                 <!-- Avatar Form End -->
 
                                 <div class="h5">{{ $student->getFullName() }}</div>

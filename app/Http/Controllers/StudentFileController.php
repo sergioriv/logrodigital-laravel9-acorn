@@ -34,6 +34,14 @@ class StudentFileController extends Controller
                 ->where('student_file_type_id', $request->file_type)
                 ->first();
 
+        /* Update Student Avatar */
+        if ($request->file_type == 9 && $path_file !== NULL) // 9 => foto para documento
+        {
+            $student->user->update([
+                'avatar' => $path_file
+            ]);
+        }
+
         if ( $student_file === NULL )
         {
             StudentFile::create([
