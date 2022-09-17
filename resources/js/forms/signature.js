@@ -47,11 +47,17 @@ class SignaturesInput {
 
     _initSignature(canvas, canvaName) {
 
+
         // Set up the UI
         var sigText = document.getElementById("sig-dataUrl-" + canvaName);
         var sigImage = document.getElementById("sig-image-" + canvaName);
         var clearBtn = document.getElementById("sig-clearBtn-" + canvaName);
         var submitBtn = document.getElementById("sig-submitBtn-" + canvaName);
+
+        var change = false;
+        // var changeContentImg = $('#sig-img-' + canvaName);
+        var changeContentImg = document.getElementById("sig-img-" + canvaName);
+        var changeInputImg = document.getElementById("fileSigLoad-" + canvaName);
 
         dataUrlNull();
 
@@ -59,6 +65,11 @@ class SignaturesInput {
             sigText.value = null;
             sigImage.parentElement.classList.add("d-none");
             sigImage.setAttribute("src", "");
+            changeContentImg.setAttribute("src", "");
+            changeInputImg.value = '';
+
+            canvas.classList.remove('d-none');
+            changeContentImg.parentElement.classList.add('d-none');
         }
 
         (function() {
@@ -84,6 +95,13 @@ class SignaturesInput {
               y: 0
             };
             var lastPos = mousePos;
+
+            jQuery('#fileSigLoad-' + canvaName).on("change", function() {
+                changeContentImg.parentElement.classList.remove('d-none');
+                canvas.classList.add('d-none');
+                change = true;
+                writing = false;
+            });
 
             canvas.addEventListener("mousedown", function(e) {
               drawing = true;
@@ -176,16 +194,27 @@ class SignaturesInput {
             function clearCanvas() {
               canvas.width = canvas.width;
               writing = false;
+              change = false;
             }
 
 
             clearBtn.addEventListener("click", function(e) {
+                // changeContentImg.addClass('d-none');
+                changeContentImg.parentElement.classList.add('d-none');
+                // canvas.removeClass('d-none');
+                canvas.classList.remove('d-none');
+
               dataUrlNull();
               clearCanvas();
             }, false);
             submitBtn.addEventListener("click", function(e) {
               if (writing === true) {
                   var dataUrl = canvas.toDataURL();
+                  sigText.value = dataUrl;
+                  sigImage.setAttribute("src", dataUrl);
+                  sigImage.parentElement.classList.remove("d-none");
+              } else if(change === true) {
+                  var dataUrl = changeContentImg.getAttribute('src');
                   sigText.value = dataUrl;
                   sigImage.setAttribute("src", dataUrl);
                   sigImage.parentElement.classList.remove("d-none");

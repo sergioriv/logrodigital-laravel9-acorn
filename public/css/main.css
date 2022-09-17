@@ -179,6 +179,9 @@ input[type="file"] {
 .object-fit-fill {
     object-fit: fill;
 }
+.object-scale-down {
+    object-fit: scale-down;
+}
 
 html[data-dimension="desktop"] .logro-badge-right-bottom {
     border-bottom-left-radius: 0;

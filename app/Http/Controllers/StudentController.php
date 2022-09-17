@@ -568,7 +568,7 @@ class StudentController extends Controller
                 return redirect()->back()->withErrors(["custom" => __("documents are missing to upload")]);
             }
 
-            self::signatures($student, $request->signature_tutor, $request->signature_student);
+            self::signatures($student, $request);
         } else {
             $request->validate([
                 'institutional_email' => ['required', 'email', 'max:191', Rule::unique('users', 'email')->ignore($student->id)]
@@ -1009,17 +1009,28 @@ class StudentController extends Controller
 
 
     /* tratamiento de firmas */
-    private function signatures(Student $student, $sigTutor, $sigStudent)
+    private function signatures(Student $student, $request)
     {
-        if (NULL !== $sigTutor) {
-            $sigPath = self::signature_upload($student->id, $sigTutor);
+        if (NULL !== $request->signature_tutor) {
+
+            if ($request->hasFile('fileSigLoad-tutor')) {
+                $sigPath = self::signature_image_upload($student->id, $request->file('fileSigLoad-tutor'));
+            } else {
+                $sigPath = self::signature_upload($student->id, $request->signature_tutor);
+            }
+
             $student->forceFill([
                 'signature_tutor' => $sigPath
             ])->save();
         }
 
-        if (NULL !== $sigStudent) {
-            $sigPath = self::signature_upload($student->id, $sigStudent);
+        if (NULL !== $request->signature_student) {
+
+            if ($request->hasFile('fileSigLoad-student')) {
+                $sigPath = self::signature_image_upload($student->id, $request->file('fileSigLoad-student'));
+            } else {
+                $sigPath = self::signature_upload($student->id, $request->signature_student);
+            }
             $student->forceFill([
                 'signature_student' => $sigPath
             ])->save();
@@ -1039,8 +1050,21 @@ class StudentController extends Controller
         $sig = str_replace('data:image/png;base64,', '', $sig);
         $sig = str_replace(' ', '+', $sig);
 
-        File::put(public_path($sigUrl), base64_decode($sig));
-        return $sigUrl;
+        $save = File::put(public_path($sigUrl), base64_decode($sig));
+        if ($save)
+            return $sigUrl;
+
+        return null;
+    }
+
+    private function signature_image_upload($student_id, $imageSignature)
+    {
+
+        $path = $imageSignature->store('students/'.$student_id.'/signatures', 'public');
+        if ($path)
+            return config('filesystems.disks.public.url') . '/' . $path;
+
+        return null;
     }
 
 
