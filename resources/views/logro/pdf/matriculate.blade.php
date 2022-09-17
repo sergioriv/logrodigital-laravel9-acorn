@@ -179,7 +179,8 @@
             text-transform: uppercase;
         }
         .signature img {
-            width: 220px;
+            max-width: 220px;
+            height: 70px;
         }
     </style>
 </head>

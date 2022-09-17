@@ -10,6 +10,7 @@ $title = __('Personal Information');
 @endsection
 
 @section('js_vendor')
+    <script src="/js/vendor/singleimageupload.js"></script>
     <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
     <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
@@ -23,6 +24,9 @@ $title = __('Personal Information');
     <script src="/js/forms/student-profile.js"></script>
     <script src="/js/forms/signature.js"></script>
     <script>
+        new SingleImageUpload(document.getElementById('sigLoadStudent'))
+        new SingleImageUpload(document.getElementById('sigLoadTutor'))
+
         jQuery("#confirm_save").click(function() {
             if ($(this).is(':checked')) {
                 $("#save_personal_info").prop('disabled', false);
@@ -660,43 +664,47 @@ $title = __('Personal Information');
                                                 <div class="col-md-6">
                                                     <x-label>{{ __('signature tutor') }}</x-label>
                                                     @if (null === $student->signature_tutor)
-                                                        <div class="mb-1">
+                                                        <div class="mb-2">
                                                             <button type="button" id="openSigTutor"
-                                                                class="btn btn-outline-secondary mb-1"
-                                                                data-bs-toggle="modal" data-bs-target="#modalSigTutor">
+                                                                class="btn btn-outline-alternate" data-bs-toggle="modal"
+                                                                data-bs-target="#modalSigTutor">
                                                                 {{ __('Make signature') }}
                                                             </button>
                                                         </div>
-                                                        <input type="hidden" id="sig-dataUrl-tutor"
-                                                            name="signature_tutor" class="form-control">
-                                                        <div class="d-none mb-3 mb-md-0">
-                                                            <img id="sig-image-tutor" src=""
-                                                                class="w-100 border rounded-md" alt="signature">
+                                                        <input type="hidden" id="sig-dataUrl-tutor" name="signature_tutor"
+                                                            class="form-control">
+                                                        <div class="text-center border rounded-md mb-3 mb-md-0 d-none">
+                                                            <img id="sig-image-tutor" src="" class="max-w-100 sh-19"
+                                                                alt="signature" />
                                                         </div>
                                                     @else
-                                                        <img src="{{ env('APP_URL') . '/' . $student->signature_tutor }}"
-                                                            class="w-100 mb-3 mb-md-0 border rounded-md" alt="signature">
+                                                        <div class="text-center border rounded-md mb-3 mb-md-0">
+                                                            <img src="{{ env('APP_URL') . '/' . $student->signature_tutor }}"
+                                                                class="max-w-100 sh-19" alt="signature" />
+                                                        </div>
                                                     @endif
                                                 </div>
                                                 <div class="col-md-6">
                                                     <x-label>{{ __('signature student') }}</x-label>
                                                     @if (null === $student->signature_student)
-                                                        <div>
+                                                        <div class="mb-2">
                                                             <button type="button" id="openSigStudent"
-                                                                class="btn btn-outline-secondary mb-1"
-                                                                data-bs-toggle="modal" data-bs-target="#modalSigStudent">
+                                                                class="btn btn-outline-alternate" data-bs-toggle="modal"
+                                                                data-bs-target="#modalSigStudent">
                                                                 {{ __('Make signature') }}
                                                             </button>
                                                         </div>
-                                                        <input type="hidden" id="sig-dataUrl-student"
-                                                            name="signature_student" class="form-control">
-                                                        <div class="d-none">
-                                                            <img id="sig-image-student" src=""
-                                                                class="w-100 border rounded-md" alt="signature">
+                                                        <input type="hidden" id="sig-dataUrl-student" name="signature_student"
+                                                            class="form-control">
+                                                        <div class="text-center border rounded-md d-none">
+                                                            <img id="sig-image-student" src="" class="max-w-100 sh-19"
+                                                                alt="signature" />
                                                         </div>
                                                     @else
-                                                        <img src="{{ env('APP_URL') . '/' . $student->signature_student }}"
-                                                            class="w-100 border rounded-md" alt="signature">
+                                                        <div class="text-center border rounded-md">
+                                                            <img src="{{ env('APP_URL') . '/' . $student->signature_student }}"
+                                                                class="max-w-100 sh-19" alt="signature" />
+                                                        </div>
                                                     @endif
                                                 </div>
                                             </div>
@@ -704,23 +712,40 @@ $title = __('Personal Information');
                                             @if (null === $student->signature_tutor)
                                                 <!-- Signature Tutor modal-->
                                                 <div class="modal fade" id="modalSigTutor" tabindex="-1" role="dialog"
-                                                    aria-labelledby="SigTutorLabel" aria-hidden="true">
+                                                    aria-labelledby="SigTutorLabel" data-bs-backdrop="static"
+                                                    data-bs-keyboard="false" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title logro-label" id="SigTutorLabel">
                                                                     {{ __('signature tutor') }}</h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                    aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <div class="text-center">
-                                                                    <canvas id="sig-canvas-tutor"
-                                                                        class="sig-canvas form-signature">
+                                                                <div id="sigLoadTutor" class="text-center">
+                                                                    <div class="border rounded-md mb-2 d-none">
+                                                                        <img src="" id="sig-img-tutor"
+                                                                            class="form-signature rounded-0 max-w-100 sh-19 object-scale-down" />
+                                                                    </div>
+                                                                    <canvas id="sig-canvas-tutor" class="sig-canvas form-signature mb-1">
                                                                     </canvas>
+                                                                    <button title="{{ __('load signature') }}"
+                                                                        class="btn w-100 btn-icon btn-separator-light rounded-xl"
+                                                                        type="button">
+                                                                        <i data-acorn-icon="upload"></i>
+                                                                        <span>{{ __('upload signature') }}</span>
+                                                                    </button>
+                                                                    <input name="fileSigLoad-tutor" id="fileSigLoad-tutor"
+                                                                        class="file-upload d-none" type="file"
+                                                                        accept="image/jpg, image/jpeg, image/png, image/webp" />
+
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
+                                                                <a href="#" class="btn btn-start btn-icon btn-icon-only btn-link">
+                                                                    <i class="icon bi-question-circle"></i>
+                                                                </a>
                                                                 <button type="button" id="sig-clearBtn-tutor"
                                                                     class="btn btn-outline-danger">{{ __('Clear signature') }}</button>
                                                                 <button type="button" id="sig-submitBtn-tutor"
@@ -734,24 +759,41 @@ $title = __('Personal Information');
 
                                             @if (null === $student->signature_student)
                                                 <!-- Signature Student modal-->
-                                                <div class="modal fade" id="modalSigStudent" tabindex="-1"
-                                                    role="dialog" aria-labelledby="SigStudentLabel" aria-hidden="true">
+                                                <div class="modal fade" id="modalSigStudent" tabindex="-1" role="dialog"
+                                                    aria-labelledby="SigStudentLabel" data-bs-backdrop="static"
+                                                    data-bs-keyboard="false" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title logro-label" id="SigStudentLabel">
                                                                     {{ __('signature student') }}</h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                    aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <div class="text-center">
-                                                                    <canvas id="sig-canvas-student"
-                                                                        class="sig-canvas form-signature">
+                                                                <div id="sigLoadStudent" class="text-center">
+                                                                    <div class="border rounded-md mb-2 d-none">
+                                                                        <img src="" id="sig-img-student"
+                                                                            class="form-signature rounded-0 max-w-100 sh-19 object-scale-down" />
+                                                                    </div>
+                                                                    <canvas id="sig-canvas-student" class="sig-canvas form-signature mb-1">
                                                                     </canvas>
+                                                                    <button title="{{ __('load signature') }}"
+                                                                        class="btn w-100 btn-icon btn-separator-light rounded-xl"
+                                                                        type="button">
+                                                                        <i data-acorn-icon="upload"></i>
+                                                                        <span>{{ __('upload signature') }}</span>
+                                                                    </button>
+                                                                    <input name="fileSigLoad-student" id="fileSigLoad-student"
+                                                                        class="file-upload d-none" type="file"
+                                                                        accept="image/jpg, image/jpeg, image/png, image/webp" />
+
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
+                                                                <a href="#" class="btn btn-start btn-icon btn-icon-only btn-link">
+                                                                    <i class="icon bi-question-circle"></i>
+                                                                </a>
                                                                 <button type="button" id="sig-clearBtn-student"
                                                                     class="btn btn-outline-danger">{{ __('Clear signature') }}</button>
                                                                 <button type="button" id="sig-submitBtn-student"

@@ -22,6 +22,7 @@ $title = $student->user->name;
 
 @section('js_page')
     @can('students.info')
+        <script src="/js/forms/select2.js"></script>
         <script src="/js/forms/student-profile.js"></script>
         <script src="/js/forms/person-charge.js"></script>
         <script src="/js/forms/signature.js"></script>
@@ -29,15 +30,6 @@ $title = $student->user->name;
         <script>
             new SingleImageUpload(document.getElementById('sigLoadStudent'))
             new SingleImageUpload(document.getElementById('sigLoadTutor'))
-
-            // this.element.getElementsByTagName('button')[0];
-            // jQuery('#fileSigLoad-student').on("change", function() {
-            //     var img = $('#sig-img-student');
-            //     var canvas = $('#sig-canvas-student');
-
-            //     img.removeClass('d-none');
-            //     canvas.addClass('d-none');
-            // });
         </script>
     @endcan
 @endsection
