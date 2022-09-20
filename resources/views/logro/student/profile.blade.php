@@ -1929,30 +1929,6 @@ $title = $student->user->name;
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row g-3">
-                                        <div class="col-md-12">
-                                            <div class="mb-3 position-relative form-group">
-                                                <x-label>{{ __('Psychosocial Evaluation') }}</x-label>
-                                                <textarea name="psyc_evaluation" rows="10" class="form-control">{{ $student->psyc_evaluation }}</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-md-12">
-                                            <div class="mb-3 position-relative form-group">
-                                                <x-label>{{ __('recommendations') }}</x-label>
-                                                <textarea name="psyc_recommendations" rows="3" class="form-control">{{ $student->psyc_recommendations }}</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-md-12">
-                                            <div class="position-relative form-group">
-                                                <x-label>{{ __('student and family action plan') }}</x-label>
-                                                <textarea name="psyc_student_family" rows="3" class="form-control">{{ $student->psyc_student_family }}</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </section>
                             <!--  Psychosocial Assessment Section End -->

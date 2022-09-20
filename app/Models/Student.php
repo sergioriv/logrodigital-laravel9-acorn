@@ -95,9 +95,6 @@ class Student extends Model
 
         'simat', // (Si, No)
         'inclusive', // (Si, No)
-        'psyc_evaluation',
-        'psyc_recommendations',
-        'psyc_student_family',
 
         'school_year_create',
         'headquarters_id',

@@ -734,10 +734,7 @@ class StudentController extends Controller
             'sleepwalking' => ['nullable', 'boolean'],
             'nervous_tics' => ['nullable', 'boolean'],
             'simat' => ['nullable', 'boolean'],
-            'inclusive' => ['nullable', 'boolean'],
-            'psyc_evaluation' => ['nullable', 'string'],
-            'psyc_recommendations' => ['nullable', 'string'],
-            'psyc_student_family' => ['nullable', 'string']
+            'inclusive' => ['nullable', 'boolean']
         ]);
 
         $student->update([
@@ -787,10 +784,7 @@ class StudentController extends Controller
 
             /* evaluación psicosocial */
             'simat' => $request->simat,
-            'inclusive' => $request->inclusive,
-            'psyc_evaluation' => $request->psyc_evaluation,
-            'psyc_recommendations' => $request->psyc_recommendations,
-            'psyc_student_family' => $request->psyc_student_family
+            'inclusive' => $request->inclusive
         ]);
 
         Notify::success(__('Student updated!'));
