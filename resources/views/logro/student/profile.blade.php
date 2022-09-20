@@ -25,7 +25,7 @@ $title = $student->user->name;
         <script src="/js/forms/select2.js"></script>
         <script src="/js/forms/student-profile.js"></script>
         <script src="/js/forms/person-charge.js"></script>
-        <script src="/js/forms/signature.js"></script>
+        <script src="/js/forms/signature.js?v=0.2"></script>
 
         <script>
             new SingleImageUpload(document.getElementById('sigLoadStudent'))
