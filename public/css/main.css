@@ -210,6 +210,12 @@ html[data-dimension="mobile"] .logro-badge-right-bottom {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+.ps-spacing-sm {
+    padding-left: var(--card-spacing-sm);
+}
+.pe-spacing-sm {
+    padding-left: var(--card-spacing-sm);
+}
 .pointer-events-none{pointer-events:none}
 .color-hover-default:hover{color:initial !important}
 .p-gutter {

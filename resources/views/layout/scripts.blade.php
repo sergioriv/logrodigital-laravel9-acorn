@@ -16,11 +16,11 @@
 <script src="/js/base/settings.js"></script>
 <!-- Template Base Scripts End -->
 <!-- Page Specific Scripts Start -->
-<script src="/js/app.js?v=0.2"></script>
+<script src="/js/app.js?v=0.3"></script>
 @auth
 <x-notify-errors />
 @endauth
 @yield('js_page')
 <script src="/js/common.js?v=0.2"></script>
-<script src="/js/scripts.js?v=0.2"></script>
+<script src="/js/scripts.js?v=0.3"></script>
 <!-- Page Specific Scripts End -->

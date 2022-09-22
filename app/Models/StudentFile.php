@@ -20,8 +20,8 @@ class StudentFile extends CastCreateModel
         'creation_user_id'
     ];
 
-    /* public function studentFileType()
+    public function studentFileType()
     {
         return $this->belongsTo(StudentFileType::class);
-    } */
+    }
 }

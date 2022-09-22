@@ -93,6 +93,7 @@ $title = __('Students') .' '. __('no-enrolled');
                     <table id="datatable_students" class="data-table nowrap w-100" logro="datatable">
                         <thead>
                             <tr>
+                                <th class="empty ps-spacing-sm pe-0">&nbsp;</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('last names') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('email') }}</th>
@@ -105,6 +106,11 @@ $title = __('Students') .' '. __('no-enrolled');
                         <tbody>
                             @foreach ($students as $student)
                             <tr>
+                                <td class="ps-spacing-sm pe-0">
+                                    @if ($countFileTypes > $student->filesRequired()->count())
+                                        <i title="{{ __("documents required") }}" class="icon bi-file-earmark-excel text-danger"></i>
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="{{ route('students.show', $student) }}"
                                         class="list-item-heading body">

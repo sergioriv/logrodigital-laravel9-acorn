@@ -121,7 +121,12 @@ class StudentController extends Controller
         $students->orderBy('first_last_name')
             ->orderBy('second_last_name');
 
-        return view('logro.student.noenrolled')->with('students', $students->get());
+        $countFileTypes = StudentFileType::where('required', 1)->count();
+
+        return view('logro.student.noenrolled', [
+            'students' => $students->get(),
+            'countFileTypes' => $countFileTypes
+        ]);
     }
 
     public function create()

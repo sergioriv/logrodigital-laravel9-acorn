@@ -11,6 +11,7 @@ use App\Http\Controllers\ResourceSubjectController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\SecretariatController;
+use App\Http\Controllers\StudentAdviceController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFileController;
 use App\Http\Controllers\StudyTimeController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
+use App\Models\StudentAdvice;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -169,6 +171,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('students/{student}/download/matriculate', 'pdf_matriculate')->name('students.pdf.matriculate');
 
     });
+    /* ADVICES */
+    Route::resource('students/{student}/advice', StudentAdviceController::class)->names('students.advice');
 
 
     Route::put('persons_charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');

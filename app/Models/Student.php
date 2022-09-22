@@ -227,6 +227,12 @@ class Student extends Model
     {
         return $this->hasOne(PersonCharge::class,'student_id')->where('kinship_id', '>', 2);
     }
+    public function filesRequired()
+    {
+        return $this->hasMany(StudentFile::class, 'student_id', 'id')
+            ->with(['studentFileType' => fn($fileType) => $fileType->where('required', 1)])
+            ->whereHas('studentFileType', fn($fileType) => $fileType->where('required', 1));
+    }
 
 
 

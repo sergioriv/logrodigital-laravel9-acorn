@@ -47,12 +47,25 @@ if (jQuery().select2) {
 }
 
 if (jQuery().datepicker) {
-    jQuery("[logro='datePicker']").datepicker({
-        language: 'es',
-        format: 'yyyy-mm-dd',
-        endDate: '-1y',
-        autoclose: true,
-    });
+    if (jQuery("[logro='datePicker']"))
+    {
+        jQuery("[logro='datePicker']").datepicker({
+            language: 'es',
+            format: 'yyyy-mm-dd',
+            endDate: '-1y',
+            autoclose: true,
+        });
+    }
+
+    if (jQuery("[logro='datePickerToday']"))
+    {
+        jQuery("[logro='datePickerToday']").datepicker({
+            language: 'es',
+            format: 'yyyy-mm-dd',
+            startDate: new Date(),
+            autoclose: true,
+        });
+    }
 }
 
 function DataTableInterval(datatable) {

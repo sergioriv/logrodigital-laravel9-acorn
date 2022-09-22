@@ -1,5 +1,5 @@
 @php
-$title = $student->user->name;
+$title = $student->getFullName();
 @endphp
 @extends('layout', ['title' => $title])
 
@@ -96,18 +96,6 @@ $title = $student->user->name;
             </div>
         </section>
         <!-- Title and Top Buttons End -->
-
-        <!-- Validation Errors -->
-        {{-- @error('custom')
-            <x-validation-errors class="mb-4" :errors="$errors" />
-        @else
-            @error('disability_certificate')
-            <x-validation-errors class="mb-4" :message="$message" />
-            @else
-            <x-validation-errors-empty class="mb-4" />
-            @enderror
-        @enderror --}}
-
 
         <section class="row">
             <!-- Left Side Start -->
@@ -1703,7 +1691,7 @@ $title = $student->user->name;
                                     </div>
                                     <div class="row g-3">
                                         <div class="position-relative form-group">
-                                            {{-- <x-label class="d-block">{{ __('insomnia') }}</x-label> --}}
+                                            <x-label class="d-block">{{ __('exogenous Factors') }}</x-label>
                                             <div class="form-check d-inline-block w-50">
                                                 <label class="form-check-label logro-label">
                                                     <input class="form-check-input" type="checkbox" name="insomnia"
@@ -1940,6 +1928,34 @@ $title = $student->user->name;
                         </form>
                     </div>
                     <!-- Psychosocial Information Tab End -->
+
+                    <!-- Advices Tab Start -->
+                    <div class="tab-pane fade " id="advicesTab" role="tabpanel">
+                        <div class="card mt-5">
+                            <div class="card-header">
+                                <!-- Top Advice Tab Start -->
+                                <div class="row">
+                                    <div class="col-12 col-md-7">
+                                        <h1 class="mb-1 pb-0 display-6">{{ __("Advices") }}</h1>
+                                    </div>
+                                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                                        <!-- Add New Button Start -->
+                                        <a href="{{ route('students.advice.create', $student) }}"
+                                            class="btn btn-outline-secondary btn-icon btn-icon-start w-100 w-md-auto">
+                                            <i data-acorn-icon="plus"></i>
+                                            <span>{{ __('Add New') }}</span>
+                                        </a>
+                                        <!-- Add New Button End -->
+                                    </div>
+                                </div>
+                                <!-- Top Advice Tab Start -->
+                            </div>
+                            <div class="card-body">
+                                table
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Advices Tab End -->
 
                     <!-- PIAR Tab Start -->
                     @if (1 === $student->inclusive)

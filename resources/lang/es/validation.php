@@ -225,7 +225,16 @@ return [
         'study_time' => 'jornada',
         'study_year' => 'año de estudio',
         'name' => 'nombre',
-        'group_director' => 'director de grupo'
+        'group_director' => 'director de grupo',
+
+        'attendance' => 'asistencia',
+        'type_advice' => 'tipo de asesoría',
+        'evolution' => 'evolución',
+        'recommendations_teachers' => 'recomendaciones para docentes',
+        'date_limite' => 'fecha límite',
+        'recommendations_family' => 'recomendaciones para la familia',
+        'entity_remit' => 'entidad a remitir',
+        'observations_for_entity' => 'observaciones para la entidad',
     ],
 
 ];
