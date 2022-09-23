@@ -5,18 +5,41 @@
 class StudentAdviceForm {
     constructor() {
         // Initialization of the page
-        this.form = document.getElementById("studentAdviceCreateForm");
-        if (!this.form) {
-            console.log("studentAdviceCreateForm is null");
-            return;
-        }
-
         this._initAdviceCreate();
-        this._initActionsForm();
+        this._initAdviceEdit();
     }
 
     _initAdviceCreate() {
         const _this = this;
+        const form = document.getElementById("studentAdviceCreateForm");
+
+        if (!form) {
+            console.log("studentAdviceCreateForm is null");
+            return;
+        }
+
+        const validateOptions = {
+            rules: {
+                date: {
+                    required: true,
+                },
+                time: {
+                    required: true,
+                },
+            }
+        }
+
+        _this._validate(form, validateOptions);
+    }
+
+    _initAdviceEdit() {
+        const _this = this;
+        const form = document.getElementById("studentAdviceEditForm");
+
+        if (!form) {
+            console.log("studentAdviceEditForm is null");
+            return;
+        }
 
         const validateOptions = {
             rules: {
@@ -45,10 +68,11 @@ class StudentAdviceForm {
             },
         };
 
-        _this.validate(_this.form, validateOptions);
+        _this._actionsEditForm();
+        _this._validate(form, validateOptions);
     }
 
-    _initActionsForm(){
+    _actionsEditForm(){
         let attendanceSelect = $('#attendance-content select');
         let attendanceTextarea = $('#attendance-content textarea:not(#observations_for_entity)');
 
@@ -94,7 +118,7 @@ class StudentAdviceForm {
         });
     }
 
-    validate(form, validateOptions) {
+    _validate(form, validateOptions) {
         jQuery(form).validate(validateOptions);
         form.addEventListener("submit", (event) => {
             if (!jQuery(form).valid()) {

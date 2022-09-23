@@ -11,13 +11,23 @@ $title = $student->getFullName();
 
 @section('js_vendor')
     <script src="/js/cs/responsivetab.js"></script>
-    <script src="/js/vendor/singleimageupload.js"></script>
     <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
     <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
     <script src="/js/vendor/select2.full.min.js"></script>
     <script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
     <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
+
+    @hasrole('STUDENT')
+    @if (NULL === $student->signature_student || NULL === $student->signature_tutor)
+    <script src="/js/vendor/singleimageupload.js"></script>
+    @endif
+    @endhasrole
+
+    <!-- DataTable -->
+    @can('students.psychosocial')
+        <script src="/js/vendor/datatables.min.js"></script>
+    @endcan
 @endsection
 
 @section('js_page')
@@ -26,11 +36,26 @@ $title = $student->getFullName();
         <script src="/js/forms/student-profile.js"></script>
         <script src="/js/forms/person-charge.js"></script>
         <script src="/js/forms/signature.js?v=0.2"></script>
+        <script src="/js/cs/datatable.extend.js"></script>
 
+        @hasrole('STUDENT')
+        @if (NULL === $student->signature_student)
         <script>
             new SingleImageUpload(document.getElementById('sigLoadStudent'))
+        </script>
+        @endif
+
+        @if (NULL === $student->signature_tutor)
+        <script>
             new SingleImageUpload(document.getElementById('sigLoadTutor'))
         </script>
+        @endif
+        @endhasrole
+    @endcan
+
+    <!-- DataTable -->
+    @can('students.psychosocial')
+        <script src="/js/plugins/datatable/datatables_boxed.js"></script>
     @endcan
 @endsection
 
@@ -151,32 +176,36 @@ $title = $student->getFullName();
 
                         <div class="nav flex-column mb-5" role="tablist">
                             @can('students.info')
-                                <a class="nav-link active logro-toggle px-0 border-bottom border-separator-light"
+                                <a class="nav-link @empty(session('tab')) active @endempty logro-toggle px-0 border-bottom border-separator-light"
                                     data-bs-toggle="tab" href="#informationTab" role="tab">
                                     <span class="align-middle">{{ __('Information') }}</span>
                                 </a>
-                                <a class="nav-link logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
+                                <a class="nav-link @if(session('tab') === 'personsCharge') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
                                     href="#personsChargeTab" role="tab">
                                     <span class="align-middle">{{ __('Persons in Charge') }}</span>
                                 </a>
                             @endcan
                             @can('students.documents.edit')
-                                <a class="nav-link logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
+                                <a class="nav-link @if(session('tab') === 'documents') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
                                     href="#documentsTab" role="tab">
                                     <span class="align-middle">{{ __('Documents') }}</span>
                                 </a>
                             @endcan
                             @can('students.psychosocial')
-                                <a class="nav-link logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
+                                <a class="nav-link @if(session('tab') === 'psychosocial') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
                                     href="#psychosocialTab" role="tab">
                                     <span class="align-middle">{{ __('Psychosocial Information') }}</span>
                                 </a>
-                                @if (1 === $student->inclusive)
+                                <a class="nav-link @if(session('tab') === 'advices') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
+                                    href="#advicesTab" role="tab">
+                                    <span class="align-middle">{{ __('Advices') }}</span>
+                                </a>
+                                {{-- @if (1 === $student->inclusive)
                                     <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
                                         data-bs-toggle="tab" href="#piarTab" role="tab">
                                         <span class="align-middle">PIAR</span>
                                     </a>
-                                @endif
+                                @endif --}}
                             @endcan
                         </div>
 
@@ -197,7 +226,7 @@ $title = $student->getFullName();
 
                 @can('students.info')
                     <!-- Information Tab Start -->
-                    <div class="tab-pane fade active show" id="informationTab" role="tabpanel">
+                    <div class="tab-pane fade @empty(session('tab')) active show @endempty" id="informationTab" role="tabpanel">
 
                         <form method="POST" action="{{ route('students.update', $student) }}" class="tooltip-label-end"
                             enctype="multipart/form-data"
@@ -957,16 +986,30 @@ $title = $student->getFullName();
                             @endhasrole
 
 
+                            @can('students.delete')
+                                @if ($student->groupStudents()->count() === 0)
+                                <div class="border-0 pt-0 d-flex justify-content-between align-items-center">
+                                    <x-button class="btn-outline-danger" type="button"
+                                    data-bs-toggle="modal" data-bs-target="#deleteStudentModal">{{ __('Delete student') }}</x-button>
+                                    <x-button class="btn-primary" type="submit">{{ __('Save information') }}</x-button>
+                                </div>
+                                @else
+                                <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                                    <x-button class="btn-primary" type="submit">{{ __('Save information') }}</x-button>
+                                </div>
+                                @endif
+                            @else
                             <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
                                 <x-button class="btn-primary" type="submit">{{ __('Save information') }}</x-button>
                             </div>
+                            @endcan
 
                         </form>
                     </div>
                     <!-- Information Tab End -->
 
                     <!-- Persons In Charge Tab Start -->
-                    <div class="tab-pane fade " id="personsChargeTab" role="tabpanel">
+                    <div class="tab-pane fade @if(session('tab') === 'personsCharge') active show @endif" id="personsChargeTab" role="tabpanel">
 
                         <form method="POST" action="{{ route('personsCharge', $student) }}" id="studentPersonChargeForm">
                             @csrf
@@ -1365,7 +1408,7 @@ $title = $student->getFullName();
 
                 @can('students.documents.edit')
                     <!-- Documents Tab Start -->
-                    <div class="tab-pane fade " id="documentsTab" role="tabpanel">
+                    <div class="tab-pane fade @if(session('tab') === 'documents') active show @endif" id="documentsTab" role="tabpanel">
                         <h2 class="small-title">{{ __('Documents') }}</h2>
                         <section class="card mb-5">
                             @can('students.documents.edit')
@@ -1507,7 +1550,7 @@ $title = $student->getFullName();
 
                 @can('students.psychosocial')
                     <!-- Psychosocial Information Tab Start -->
-                    <div class="tab-pane fade " id="psychosocialTab" role="tabpanel">
+                    <div class="tab-pane fade @if(session('tab') === 'psychosocial') active show @endif" id="psychosocialTab" role="tabpanel">
                         <form method="POST" action="{{ route('students.psychosocial.update', $student) }}"
                             class="tooltip-label-end">
                             @csrf
@@ -1930,7 +1973,7 @@ $title = $student->getFullName();
                     <!-- Psychosocial Information Tab End -->
 
                     <!-- Advices Tab Start -->
-                    <div class="tab-pane fade " id="advicesTab" role="tabpanel">
+                    <div class="tab-pane fade @if(session('tab') === 'advices') active show @endif" id="advicesTab" role="tabpanel">
                         <div class="card mt-5">
                             <div class="card-header">
                                 <!-- Top Advice Tab Start -->
@@ -1951,7 +1994,44 @@ $title = $student->getFullName();
                                 <!-- Top Advice Tab Start -->
                             </div>
                             <div class="card-body">
-                                table
+                                <!-- Table Start -->
+                                <div class="">
+                                    <table logro="dataTableBoxed"
+                                        class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                        data-order='[[ 2, "desc" ]]'>
+                                        <thead>
+                                            <tr>
+                                                <th class="empty">&nbsp;</th>
+                                                <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __("status") }}</th>
+                                                <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __("date") }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($student->advices as $studentAdvice)
+                                                <tr>
+                                                    <td>
+                                                        @if ('done' === $studentAdvice->attendance)
+                                                        <a href="{{ route('students.advice.show', [$student,$studentAdvice]) }}"
+                                                            class="btn btn-sm btn-outline-info text-capitalize">
+                                                            {{ __("summary") }}
+                                                        </a>
+                                                        @endif
+
+                                                        @if ('scheduled' === $studentAdvice->attendance)
+                                                        <a href="{{ route('students.advice.edit', [$student,$studentAdvice]) }}"
+                                                            class="btn btn-sm btn-outline-info text-capitalize">
+                                                            {{ __("evolve") }}
+                                                        </a>
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-capitalize">{{ __($studentAdvice->attendance) }}</td>
+                                                    <td class="text-small">{{ $studentAdvice->dateFull() }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Table End -->
                             </div>
                         </div>
                     </div>
@@ -2073,4 +2153,37 @@ $title = $student->getFullName();
             </div>
         </div>
     </div>
+
+    @can('students.delete')
+    <!-- Modal Delete Student -->
+    <div class="modal fade" id="deleteStudentModal" aria-labelledby="modalDeleteStudent" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDeleteStudent">{{ __("Delete student") }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        ¿Está seguro de eliminar al estudiante?
+                    </p>
+                    <p>
+                        Se eliminará permanentemente, este cambio es irreversible
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <form action="{{ route('students.delete', $student) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">{{ __("Close") }}</button>
+                        <button type="submit" class="btn btn-danger">{{ __("Delete") }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endcan
+
 @endsection

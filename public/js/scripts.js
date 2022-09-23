@@ -140,6 +140,9 @@ class Scripts {
         if ("undefined" !== typeof DatatableStandard) {
             new DatatableStandard;
         }
+        if ("undefined" !== typeof DatatablesBoxed) {
+            new DatatablesBoxed;
+        }
         if ("undefined" !== typeof boxedStudentsMatriculate) {
             new boxedStudentsMatriculate;
         }

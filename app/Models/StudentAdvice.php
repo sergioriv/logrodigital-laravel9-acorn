@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,7 +33,6 @@ class StudentAdvice extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'time' => 'datetime:h:i',
         'created_at' => 'datetime:Y-m-d h:i:s',
     ];
 
@@ -44,6 +44,18 @@ class StudentAdvice extends Model
     public function student()
     {
         return $this->belongsTo(Student::class, 'id');
+    }
+
+
+    public function dateFull()
+    {
+        return "{$this->date} {$this->time}";
+    }
+    protected function attendance(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => strtolower($value),
+        );
     }
 
 

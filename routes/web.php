@@ -24,6 +24,7 @@ use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Models\StudentAdvice;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Permission;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('permissions-reset', function() {
             app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
             return redirect()->back();
+        });
+        Route::get('add-permission', function () {
+            Permission::create([ 'name' => 'students.delete', ]);
         });
 
         /* SEND MAIL VERIFICATION FOR EMAIL */
@@ -149,6 +153,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('students/no-enrolled', 'store')->name('students.store');
         Route::get('students/{student}/edit', 'show')->name('students.show');
         Route::put('students/{student}', 'update')->name('students.update');
+        Route::delete('students/{student}', 'delete')->name('students.delete');
+
         Route::put('students/{student}/psychosocial', 'psychosocial_update')->name('students.psychosocial.update');
         Route::get('students/{student}/transfer', 'transfer')->name('students.transfer');
         Route::post('students/{student}/transfer', 'transfer_store')->name('students.transfer.store');
@@ -180,5 +186,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
 
 });
+
+
 
 require __DIR__.'/auth.php';

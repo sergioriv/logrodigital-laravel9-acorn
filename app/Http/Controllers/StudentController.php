@@ -41,6 +41,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
@@ -1120,5 +1121,41 @@ class StudentController extends Controller
                 $message->send();
             }
         }
+    }
+
+    public function delete(Student $student)
+    {
+        if ($student->groupStudents()->count() === 0)
+        {
+            $student->files()->delete();
+            $pathStudent = public_path('app/students/'.$student->id.'/');
+            if (File::isDirectory($pathStudent)) {
+                File::deleteDirectory($pathStudent);
+            }
+
+            if (NULL !== $student->mother)
+            {
+                UserController::delete_user($student->mother->id);
+            }
+
+            if (NULL !== $student->father)
+            {
+                UserController::delete_user($student->father->id);
+            }
+
+            if (NULL !== $student->tutor)
+            {
+                UserController::delete_user($student->tutor->id);
+            }
+
+            $student->user()->delete();
+            $student->delete();
+
+            Notify::success(__('Student deleted!'));
+            return redirect()->route('students.no_enrolled');
+        }
+
+        Notify::fail(__('Not allowed'));
+        return redirect()->back();
     }
 }

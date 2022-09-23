@@ -19,8 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('student_id');
             $table->date('date');
             $table->time('time');
-            $table->enum('attendance', ['DONE', 'NOT DONE', 'SCHEDULED']);
-            $table->enum('type_advice', ['INDIVIDUAL', 'GROUP', 'FAMILY']);
+            $table->enum('attendance', ['DONE', 'NOT DONE', 'SCHEDULED'])->nullable();
+            $table->enum('type_advice', ['INDIVIDUAL', 'GROUP', 'FAMILY'])->nullable();
             $table->text('evolution')->nullable();
             $table->text('recommendations_teachers')->nullable();
             $table->date('date_limit_teacher')->nullable();
