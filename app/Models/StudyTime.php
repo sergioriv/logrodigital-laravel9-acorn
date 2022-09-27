@@ -10,10 +10,12 @@ class StudyTime extends CastCreateModel
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = [
-        'name'
+        'name',
+        'conceptual',
+        'procedural',
+        'attitudinal',
+        'missing_areas',
     ];
 
 

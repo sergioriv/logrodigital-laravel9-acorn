@@ -318,6 +318,12 @@
     "Student deleted!": "Estudiante eliminado!",
     "evolve": "evolucionar",
     "summary": "resumen",
+    "evaluation components": "componentes de evaluación",
+    "conceptual": "conceptual",
+    "procedural": "procedimental",
+    "attitudinal": "actitudinal",
+    "Missing areas": "Áreas perdidas",
+    "evaluation components is not equal to 100%": "componentes de evaluación no es igual al 100%",
 
     "full name": "nombre completo",
     "new": "nuevo",

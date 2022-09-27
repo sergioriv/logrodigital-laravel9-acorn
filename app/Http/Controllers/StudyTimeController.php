@@ -41,10 +41,24 @@ class StudyTimeController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', Rule::unique('study_times')],
+            'missing_areas_check' => ['nullable', 'boolean'],
+            'missing_areas' => ['required_with:missing_areas_check', 'numeric', 'min:1', 'max:10'],
+            'conceptual' => ['required', 'numeric', 'min:0', 'max:100'],
+            'procedural' => ['required', 'numeric', 'min:0', 'max:100'],
+            'attitudinal' => ['required', 'numeric', 'min:0', 'max:100'],
         ]);
 
+        if ( ($request->conceptual + $request->procedural + $request->attitudinal) !== 100 )
+        {
+            return redirect()->back()->withErrors(__("evaluation components is not equal to 100%"));
+        }
+
         StudyTime::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'conceptual' => $request->conceptual,
+            'procedural' => $request->procedural,
+            'attitudinal' => $request->attitudinal,
+            'missing_areas' => $request->missing_areas
         ]);
 
         Notify::success(__('Study time created!'));
