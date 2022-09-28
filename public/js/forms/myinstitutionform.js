@@ -16,9 +16,12 @@ class MyInstitutionForm {
         }
 
         this._initMyInstitutionForm();
+        this._initSegurityEmailForm();
+        this._initSendConfirmationEmail();
     }
 
     _initMyInstitutionForm() {
+        const _this = this;
         const form = document.getElementById("myInstitutionForm");
         if (!form) {
             console.log("myInstitutionForm is null");
@@ -54,6 +57,58 @@ class MyInstitutionForm {
             },
         };
 
+        _this.formValidate(form, validateOptions);
+    }
+
+    _initSegurityEmailForm() {
+        const _this = this;
+        const form = document.getElementById("mySecurityEmailForm");
+        if (!form) {
+            console.log("mySecurityEmailForm is null");
+            return;
+        }
+
+        const validateOptions = {
+            rules: {
+                security_email: {
+                    required: true,
+                    email: true,
+                    maxlength: 191,
+                },
+                code: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 6,
+                },
+            }
+        }
+
+        _this.formValidate(form, validateOptions);
+    }
+
+    _initSendConfirmationEmail()
+    {
+        let btnSendConfirmation = jQuery('#btn-sendConfirmation');
+        btnSendConfirmation.click(function () {
+            var newEmailSecurity = $('#inputSecurityEmail').val().trim();
+
+            if (newEmailSecurity == '') {
+                return;
+            }
+
+            btnSendConfirmation.prop('disabled', true);
+
+            $.get("myinstitution/send-confirmation", {
+                email: newEmailSecurity
+            }, function (data) {
+                callNotify(data.message);
+                btnSendConfirmation.prop('disabled', false);
+            });
+        });
+    }
+
+    formValidate(form, validateOptions)
+    {
         jQuery(form).validate(validateOptions);
         form.addEventListener("submit", (event) => {
             if (!jQuery(form).valid()) {

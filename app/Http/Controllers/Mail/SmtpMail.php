@@ -94,6 +94,21 @@ class SmtpMail extends Controller
         }
     }
 
+    public static function sendCodeSecurityEmail($email, $code)
+    {
+        static::$subject = Lang::get("Security Code");
+        static::$userName = SchoolController::name();
+        static::$userEmail = $email;
+
+        $content = (new ContentMail)
+            ->title(Lang::get('Hi') . ', ' . static::$userName)
+            ->line(Lang::get('Here is the code you need:'))
+            ->line('<b>'.$code.'</b>')
+            ->line(Lang::get('This email was generated because the request was made for the activation of this email for the security of your platform.'));
+
+        return static::send_email($content->toContent());
+    }
+
     private static function send_email($contentEmail)
     {
 

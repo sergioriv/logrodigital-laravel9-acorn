@@ -32,7 +32,7 @@ return new class extends Migration
             $table->unsignedMediumInteger('number_students');
             $table->string('institutional_email')->nullable();
             $table->text('handbook_coexistence')->nullable();
-            $table->unsignedBigInteger('country')->nullable();
+            $table->string('security_email')->nullable();
             $table->timestamps();
         });
 

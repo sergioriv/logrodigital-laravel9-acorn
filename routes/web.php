@@ -92,6 +92,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /* My Institution */
     Route::get('myinstitution', [SchoolController::class, 'show'])->name('myinstitution');
     Route::put('myinstitution', [SchoolController::class, 'update'])->name('myinstitution.update');
+    Route::get('myinstitution/send-confirmation', [SchoolController::class, 'sendConfirmationEmail']);
+    Route::patch('myinstitution', [SchoolController::class, 'security_email'])->name('myinstitution.security.email');
 
     /* Route School Year */
     Route::resource('school_years', SchoolYearController::class)->except('destroy','edit','update')->names('schoolYear');

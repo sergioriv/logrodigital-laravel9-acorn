@@ -4,10 +4,6 @@ $title = $school->name;
 @extends('layout', ['title' => $title])
 
 @section('css')
-    {{-- <link rel="stylesheet" href="/css/vendor/select2.min.css" /> --}}
-    {{-- <link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" /> --}}
-    {{-- <link rel="stylesheet" href="/css/vendor/bootstrap-datepicker3.standalone.min.css" /> --}}
-
     <!-- DataTable -->
     <link rel="stylesheet" href="/css/vendor/datatables.min.css" />
 @endsection
@@ -18,16 +14,13 @@ $title = $school->name;
     <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
     <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
-    {{-- <script src="/js/vendor/select2.full.min.js"></script> --}}
-    {{-- <script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script> --}}
-    {{-- <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script> --}}
 
     <!-- DataTable -->
     <script src="/js/vendor/datatables.min.js"></script>
 @endsection
 
 @section('js_page')
-    <script src="/js/forms/myinstitutionform.js"></script>
+    <script src="/js/forms/myinstitutionform.js?v=0.2"></script>
 
     <!-- DataTable -->
     <script src="/js/cs/datatable.extend.js"></script>
@@ -73,6 +66,10 @@ $title = $school->name;
                                     <span class="align-middle">{{ __('Secretariat') }}</span>
                                 </a>
                             @endcan
+                            <a class="nav-link @if(session('tab') === 'security') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#securityTab" role="tab">
+                                <span class="align-middle">{{ __('Security') }}</span>
+                            </a>
                         </div>
 
                     </div>
@@ -192,11 +189,32 @@ $title = $school->name;
                                             id="inputHandbook" :hasError="true" required />
                                     </div>
                                 </div>
-                                <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
-                                    <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
-                                </div>
                             </div>
                         </section>
+
+                        @if ($daysToUpdate > 0)
+                        <section class="mb-5">
+                            <div class="alert alert-info">
+                                <i data-acorn-icon="warning-circle"></i>
+                                Podrás cambiar la información de la institución en {{ $daysToUpdate }} días.
+                            </div>
+                        </section>
+
+                        <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                            <x-button class="btn-primary" type="submit" disabled>{{ __('Save') }}</x-button>
+                        </div>
+                        @else
+                        <section class="mb-5">
+                            <div class="alert alert-warning">
+                                <i data-acorn-icon="warning-circle"></i>
+                                Despues de guardar, lo podrá volver hacer dentro de 60 días.
+                            </div>
+                        </section>
+
+                        <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                            <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                        </div>
+                        @endif
                         <!-- My Institution Content End -->
 
                     </form>
@@ -390,6 +408,76 @@ $title = $school->name;
 
                 </div>
                 <!-- Secretariat Tab End -->
+
+                <!-- Security Tab Start -->
+                <div class="tab-pane fade @if(session('tab') === 'security') active show @endif" id="securityTab">
+                    <form method="POST" action="{{ route('myinstitution.security.email') }}" class="tooltip-end-bottom"
+                        id="mySecurityEmailForm" novalidate>
+                        @csrf
+                        @method('PATCH')
+
+                        <!-- Security Email Start -->
+                        <h2 class="small-title">{{ __('Security Email') }}</h2>
+                        <section class="card mb-5">
+                            <div class="card-body">
+                                <p>
+                                    Texto de información
+                                </p>
+                                <div class="row mb-3">
+                                    <label for="inputSecurityEmail" class="col-sm-3 col-form-label logro-label">
+                                        {{ __('security email') }} <x-required />
+                                    </label>
+                                    <div class="col-sm-9 position-relative">
+                                        <x-input :value="$school->security_email" name="security_email" id="inputSecurityEmail"
+                                            :hasError="true" />
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputSecurityCode" class="col-sm-3 col-form-label">
+                                        {{ __('Code') }} <x-required />
+                                    </label>
+                                    <div class="col-sm-3 position-relative">
+                                        <x-input name="code" id="inputSecurityCode"
+                                            :hasError="true" disabled />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <span class="col-sm-3"></span>
+                                    <div class="col-sm-9">
+                                        <x-button class="btn-outline-primary" id="btn-sendConfirmation" type="button">
+                                            {{ __('Send confirmation email') }}
+                                        </x-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        @if ($daysToUpdate > 0 && $school->security_email !== NULL)
+                        <section class="mb-5">
+                            <div class="alert alert-info">
+                                <i data-acorn-icon="warning-circle"></i>
+                                Podrás cambiar la información de la institución en {{ $daysToUpdate }} días.
+                            </div>
+                        </section>
+
+                        <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                            <x-button class="btn-primary" type="submit" disabled>{{ __('Save') }}</x-button>
+                        </div>
+                        @else
+                        <section class="mb-5">
+                            <div class="alert alert-warning">
+                                <i data-acorn-icon="warning-circle"></i>
+                                Despues de guardar, lo podrá volver hacer dentro de 60 días.
+                            </div>
+                        </section>
+
+                        <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                            <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                        </div>
+                        @endif
+                    </form>
+                </div>
+                <!-- Security Tab End -->
 
 
             </div>

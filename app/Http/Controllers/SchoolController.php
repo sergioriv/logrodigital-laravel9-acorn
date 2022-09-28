@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
 use App\Models\School;
 use App\Models\Secretariat;
+use App\Models\SecurityCode;
 use App\Models\Student;
 use App\Models\Teacher;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class SchoolController extends Controller
 {
@@ -26,10 +30,10 @@ class SchoolController extends Controller
 
     public function show()
     {
-
         return view('logro.school.show', [
             'studentsCount' => Student::count(),
             'school' => $this->myschool(),
+            'daysToUpdate' => self::daysToUpdate(),
             'teachers' => Teacher::all(),
             'secretariats' => Secretariat::all()
         ]);
@@ -37,6 +41,11 @@ class SchoolController extends Controller
 
     public function update(Request $request)
     {
+        if (self::daysToUpdate() > 0)
+        {
+            return redirect()->back()->withErrors(__('Not allowed'));
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:191'],
             'nit' => ['required', 'string', 'max:20'],
@@ -86,6 +95,16 @@ class SchoolController extends Controller
         } else return null;
     }
 
+    private function daysToUpdate()
+    {
+        $updatedAt = static::myschool()->updated_at;
+
+        if ($updatedAt > now()->format('Y-m-d'))
+            return Carbon::now()->diffInDays($updatedAt);
+
+        return 0;
+    }
+
     public static function all()
     {
         return static::myschool();
@@ -103,6 +122,10 @@ class SchoolController extends Controller
         return static::myschool()->institutional_email ?? null;
     }
     public static function handbook()
+    {
+        return static::myschool()->handbook_coexistence ?? null;
+    }
+    public static function securityEmail()
     {
         return static::myschool()->handbook_coexistence ?? null;
     }
@@ -135,5 +158,66 @@ class SchoolController extends Controller
         Notify::success( __('Saved!') );
         return redirect()->back();
 
+    }
+
+    /* Security Email */
+    public function security_email(Request $request)
+    {
+        if (self::daysToUpdate() > 0 && self::myschool()->security_email !== NULL)
+        {
+            return redirect()->back()->withErrors(__('Not allowed'));
+        }
+
+        $request->validate([
+            'security_email' => ['required', 'email'],
+            'code' => ['required']
+        ]);
+
+        Str::lower($request->email);
+
+        $oldSecurityEmail = self::myschool()->security_email;
+        if ($oldSecurityEmail === $request->security_email)
+        {
+            Notify::fail(__("Unchanged!"));
+            return redirect()->back();
+        }
+
+        $checkCode = SecurityCode::where('email', $request->security_email)
+            ->where('code', $request->code)
+            ->first();
+        if ( $checkCode !== NULL )
+        {
+            self::myschool()->forceFill([
+                'security_email' => $request->security_email
+            ])->save();
+        }
+
+        session()->flash('tab', 'security');
+        Notify::success(__("Security email changed!"));
+        return redirect()->back();
+    }
+
+    public function sendConfirmationEmail(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email']
+        ]);
+
+        if (self::daysToUpdate() > 0 && self::myschool()->security_email !== NULL)
+        {
+            return ['status' => false, 'message' => 'fail|' . __('Not allowed')];
+        }
+
+        if ($request->email === self::myschool()->security_email)
+        {
+            return ['status' => false, 'message' => 'fail|' . __('Unchanged!')];
+        }
+
+        $generateCodeSecurity = SecurityCodeController::generate($request->email);
+
+        if ($generateCodeSecurity === TRUE)
+            return ['status' => true, 'message' => 'info|' . __("A code was sent to the registered email")];
+        else
+            return ['status' => false, 'message' => 'fail|' . $generateCodeSecurity];
     }
 }

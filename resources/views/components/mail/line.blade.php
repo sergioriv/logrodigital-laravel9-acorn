@@ -6,5 +6,5 @@
     margin-top: 0;
     text-align: left;"
 >
-    {{ $slot }}
+    {!! $slot !!}
 </p>

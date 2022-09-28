@@ -235,6 +235,9 @@ return [
         'recommendations_family' => 'recomendaciones para la familia',
         'entity_remit' => 'entidad a remitir',
         'observations_for_entity' => 'observaciones para la entidad',
+
+        'security_email' => 'correo de seguridad',
+        'code' => 'código'
     ],
 
 ];
