@@ -196,7 +196,7 @@ $title = $school->name;
                         <section class="mb-5">
                             <div class="alert alert-info">
                                 <i data-acorn-icon="warning-circle"></i>
-                                Podrás cambiar la información de la institución en {{ $daysToUpdate }} días.
+                                Podrás cambiar la información de la institución después de {{ $daysToUpdate }} días.
                             </div>
                         </section>
 
@@ -423,7 +423,7 @@ $title = $school->name;
                                 <p>
                                     Texto de información
                                 </p>
-                                <div class="row mb-3">
+                                <div class="row">
                                     <label for="inputSecurityEmail" class="col-sm-3 col-form-label logro-label">
                                         {{ __('security email') }} <x-required />
                                     </label>
@@ -432,7 +432,8 @@ $title = $school->name;
                                             :hasError="true" />
                                     </div>
                                 </div>
-                                <div class="row mb-3">
+                                @if ($daysToUpdate === 0)
+                                <div class="row mt-3 mb-3">
                                     <label for="inputSecurityCode" class="col-sm-3 col-form-label">
                                         {{ __('Code') }} <x-required />
                                     </label>
@@ -449,6 +450,7 @@ $title = $school->name;
                                         </x-button>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </section>
 
@@ -456,7 +458,7 @@ $title = $school->name;
                         <section class="mb-5">
                             <div class="alert alert-info">
                                 <i data-acorn-icon="warning-circle"></i>
-                                Podrás cambiar la información de la institución en {{ $daysToUpdate }} días.
+                                Podrás cambiar la información de la institución después de {{ $daysToUpdate }} días.
                             </div>
                         </section>
 

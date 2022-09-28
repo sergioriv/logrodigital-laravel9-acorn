@@ -190,6 +190,11 @@ class SchoolController extends Controller
             self::myschool()->forceFill([
                 'security_email' => $request->security_email
             ])->save();
+        } else
+        {
+            session()->flash('tab', 'security');
+            Notify::fail(__("Code invalid!"));
+            return redirect()->back();
         }
 
         session()->flash('tab', 'security');
