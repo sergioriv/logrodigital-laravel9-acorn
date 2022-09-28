@@ -438,7 +438,7 @@ $title = $school->name;
                                     </label>
                                     <div class="col-sm-3 position-relative">
                                         <x-input name="code" id="inputSecurityCode"
-                                            :hasError="true" disabled />
+                                            :hasError="true" />
                                     </div>
                                 </div>
                                 <div class="row">
