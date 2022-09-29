@@ -1145,7 +1145,8 @@ class StudentController extends Controller
         $securityEmail = SchoolController::securityEmail();
         if ($securityEmail === NULL)
         {
-            return ['status' => false, 'message' => 'fail|' . __('No security email exists')];
+            Notify::fail(__('No security email exists'));
+            return redirect()->back();
         }
 
         if ($student->groupStudents()->count() === 0)
