@@ -34,6 +34,7 @@ use App\Models\Sisben;
 use App\Models\Student;
 use App\Models\StudentFile;
 use App\Models\StudentFileType;
+use App\Models\StudentRemovalCode;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -41,7 +42,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
@@ -75,6 +75,7 @@ class StudentController extends Controller
             'create_parents_filter');
         $this->middleware('can:students.info')->only('show', 'update', 'pdf_matriculate');
         $this->middleware('can:students.psychosocial')->only('psychosocial_update', 'piar_update');
+        $this->middleware('can:students.delete')->only('send_delete_code', 'delete');
 
         $this->middleware(YearCurrentMiddleware::class)->only('matriculate', 'matriculate_update');
         $this->middleware(CheckStudentCountMiddleware::class)->only('create', 'store', 'import', 'import_store');
@@ -1123,10 +1124,42 @@ class StudentController extends Controller
         }
     }
 
-    public function delete(Student $student)
+    public function send_delete_code(Student $student, Request $request)
     {
+        $securityEmail = SchoolController::securityEmail();
+        if ($securityEmail === NULL)
+        {
+            return ['status' => false, 'message' => 'fail|' . __('No security email exists')];
+        }
+
+        $generateCodeRemoval = StudentRemovalCodeController::generate($student);
+
+        if ($generateCodeRemoval === TRUE)
+            return ['status' => true, 'message' => 'info|' . __("A code was sent to the security email")];
+        else
+            return ['status' => false, 'message' => 'fail|' . $generateCodeRemoval];
+    }
+
+    public function delete(Student $student, Request $request)
+    {
+        $securityEmail = SchoolController::securityEmail();
+        if ($securityEmail === NULL)
+        {
+            return ['status' => false, 'message' => 'fail|' . __('No security email exists')];
+        }
+
         if ($student->groupStudents()->count() === 0)
         {
+
+            $confirmRemove = StudentRemovalCode::where('student_id', $student->id)
+                ->where('code', $request->code_confirm)->first();
+            if ( $confirmRemove === NULL )
+            {
+                Notify::fail(__('Code invalid'));
+                return redirect()->back();
+            }
+
+
             $student->files()->delete();
             $pathStudent = public_path('app/students/'.$student->id.'/');
             if (File::isDirectory($pathStudent)) {

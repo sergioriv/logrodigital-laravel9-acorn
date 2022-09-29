@@ -262,6 +262,11 @@ class Student extends Model
         return "{$this->first_last_name} {$this->second_last_name}";
     }
 
+    public function getCompleteNames()
+    {
+        return "{$this->first_name} {$this->second_name} {$this->first_last_name} {$this->second_last_name}";
+    }
+
     public function age()
     {
         if (NULL !== $this->birthdate)

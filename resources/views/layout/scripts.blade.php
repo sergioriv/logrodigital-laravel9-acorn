@@ -22,5 +22,5 @@
 @endauth
 @yield('js_page')
 <script src="/js/common.js?v=0.2"></script>
-<script src="/js/scripts.js?v=0.4"></script>
+<script src="/js/scripts.js?v=0.5"></script>
 <!-- Page Specific Scripts End -->

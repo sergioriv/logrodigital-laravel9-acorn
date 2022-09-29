@@ -19,9 +19,9 @@ $title = $student->getFullName();
     <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
 
     @hasrole('STUDENT')
-    @if (NULL === $student->signature_student || NULL === $student->signature_tutor)
-    <script src="/js/vendor/singleimageupload.js"></script>
-    @endif
+        @if (null === $student->signature_student || null === $student->signature_tutor)
+            <script src="/js/vendor/singleimageupload.js"></script>
+        @endif
     @endhasrole
 
     <!-- DataTable -->
@@ -38,18 +38,20 @@ $title = $student->getFullName();
         <script src="/js/forms/signature.js?v=0.2"></script>
         <script src="/js/cs/datatable.extend.js"></script>
 
-        @hasrole('STUDENT')
-        @if (NULL === $student->signature_student)
-        <script>
-            new SingleImageUpload(document.getElementById('sigLoadStudent'))
-        </script>
-        @endif
+        <script src="/js/forms/student-delete.js"></script>
 
-        @if (NULL === $student->signature_tutor)
-        <script>
-            new SingleImageUpload(document.getElementById('sigLoadTutor'))
-        </script>
-        @endif
+        @hasrole('STUDENT')
+            @if (null === $student->signature_student)
+                <script>
+                    new SingleImageUpload(document.getElementById('sigLoadStudent'))
+                </script>
+            @endif
+
+            @if (null === $student->signature_tutor)
+                <script>
+                    new SingleImageUpload(document.getElementById('sigLoadTutor'))
+                </script>
+            @endif
         @endhasrole
     @endcan
 
@@ -180,24 +182,24 @@ $title = $student->getFullName();
                                     data-bs-toggle="tab" href="#informationTab" role="tab">
                                     <span class="align-middle">{{ __('Information') }}</span>
                                 </a>
-                                <a class="nav-link @if(session('tab') === 'personsCharge') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
-                                    href="#personsChargeTab" role="tab">
+                                <a class="nav-link @if (session('tab') === 'personsCharge') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                    data-bs-toggle="tab" href="#personsChargeTab" role="tab">
                                     <span class="align-middle">{{ __('Persons in Charge') }}</span>
                                 </a>
                             @endcan
                             @can('students.documents.edit')
-                                <a class="nav-link @if(session('tab') === 'documents') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
-                                    href="#documentsTab" role="tab">
+                                <a class="nav-link @if (session('tab') === 'documents') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                    data-bs-toggle="tab" href="#documentsTab" role="tab">
                                     <span class="align-middle">{{ __('Documents') }}</span>
                                 </a>
                             @endcan
                             @can('students.psychosocial')
-                                <a class="nav-link @if(session('tab') === 'psychosocial') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
-                                    href="#psychosocialTab" role="tab">
+                                <a class="nav-link @if (session('tab') === 'psychosocial') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                    data-bs-toggle="tab" href="#psychosocialTab" role="tab">
                                     <span class="align-middle">{{ __('Psychosocial Information') }}</span>
                                 </a>
-                                <a class="nav-link @if(session('tab') === 'advices') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
-                                    href="#advicesTab" role="tab">
+                                <a class="nav-link @if (session('tab') === 'advices') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                    data-bs-toggle="tab" href="#advicesTab" role="tab">
                                     <span class="align-middle">{{ __('Advices') }}</span>
                                 </a>
                                 {{-- @if (1 === $student->inclusive)
@@ -226,7 +228,8 @@ $title = $student->getFullName();
 
                 @can('students.info')
                     <!-- Information Tab Start -->
-                    <div class="tab-pane fade @empty(session('tab')) active show @endempty" id="informationTab" role="tabpanel">
+                    <div class="tab-pane fade @empty(session('tab')) active show @endempty" id="informationTab"
+                        role="tabpanel">
 
                         <form method="POST" action="{{ route('students.update', $student) }}" class="tooltip-label-end"
                             enctype="multipart/form-data"
@@ -891,7 +894,8 @@ $title = $student->getFullName();
                                                                     <img src="" id="sig-img-tutor"
                                                                         class="form-signature rounded-0 max-w-100 sh-19 object-scale-down" />
                                                                 </div>
-                                                                <canvas id="sig-canvas-tutor" class="sig-canvas form-signature mb-1">
+                                                                <canvas id="sig-canvas-tutor"
+                                                                    class="sig-canvas form-signature mb-1">
                                                                 </canvas>
                                                                 <button title="{{ __('load signature') }}"
                                                                     class="btn w-100 btn-icon btn-separator-light rounded-xl"
@@ -906,7 +910,8 @@ $title = $student->getFullName();
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <a href="#" class="btn btn-start btn-icon btn-icon-only btn-link">
+                                                            <a href="#"
+                                                                class="btn btn-start btn-icon btn-icon-only btn-link">
                                                                 <i class="icon bi-question-circle"></i>
                                                             </a>
                                                             <button type="button" id="sig-clearBtn-tutor"
@@ -939,7 +944,8 @@ $title = $student->getFullName();
                                                                     <img src="" id="sig-img-student"
                                                                         class="form-signature rounded-0 max-w-100 sh-19 object-scale-down" />
                                                                 </div>
-                                                                <canvas id="sig-canvas-student" class="sig-canvas form-signature mb-1">
+                                                                <canvas id="sig-canvas-student"
+                                                                    class="sig-canvas form-signature mb-1">
                                                                 </canvas>
                                                                 <button title="{{ __('load signature') }}"
                                                                     class="btn w-100 btn-icon btn-separator-light rounded-xl"
@@ -954,7 +960,8 @@ $title = $student->getFullName();
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <a href="#" class="btn btn-start btn-icon btn-icon-only btn-link">
+                                                            <a href="#"
+                                                                class="btn btn-start btn-icon btn-icon-only btn-link">
                                                                 <i class="icon bi-question-circle"></i>
                                                             </a>
                                                             <button type="button" id="sig-clearBtn-student"
@@ -988,20 +995,20 @@ $title = $student->getFullName();
 
                             @can('students.delete')
                                 @if ($student->groupStudents()->count() === 0)
-                                <div class="border-0 pt-0 d-flex justify-content-between align-items-center">
-                                    <x-button class="btn-outline-danger" type="button"
-                                    data-bs-toggle="modal" data-bs-target="#deleteStudentModal">{{ __('Delete student') }}</x-button>
-                                    <x-button class="btn-primary" type="submit">{{ __('Save information') }}</x-button>
-                                </div>
+                                    <div class="border-0 pt-0 d-flex justify-content-between align-items-center">
+                                        <x-button class="btn-outline-danger" type="button" data-bs-toggle="modal"
+                                            data-bs-target="#deleteStudentModal">{{ __('Delete student') }}</x-button>
+                                        <x-button class="btn-primary" type="submit">{{ __('Save information') }}</x-button>
+                                    </div>
                                 @else
+                                    <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                                        <x-button class="btn-primary" type="submit">{{ __('Save information') }}</x-button>
+                                    </div>
+                                @endif
+                            @else
                                 <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
                                     <x-button class="btn-primary" type="submit">{{ __('Save information') }}</x-button>
                                 </div>
-                                @endif
-                            @else
-                            <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
-                                <x-button class="btn-primary" type="submit">{{ __('Save information') }}</x-button>
-                            </div>
                             @endcan
 
                         </form>
@@ -1009,7 +1016,8 @@ $title = $student->getFullName();
                     <!-- Information Tab End -->
 
                     <!-- Persons In Charge Tab Start -->
-                    <div class="tab-pane fade @if(session('tab') === 'personsCharge') active show @endif" id="personsChargeTab" role="tabpanel">
+                    <div class="tab-pane fade @if (session('tab') === 'personsCharge') active show @endif" id="personsChargeTab"
+                        role="tabpanel">
 
                         <form method="POST" action="{{ route('personsCharge', $student) }}" id="studentPersonChargeForm">
                             @csrf
@@ -1408,7 +1416,8 @@ $title = $student->getFullName();
 
                 @can('students.documents.edit')
                     <!-- Documents Tab Start -->
-                    <div class="tab-pane fade @if(session('tab') === 'documents') active show @endif" id="documentsTab" role="tabpanel">
+                    <div class="tab-pane fade @if (session('tab') === 'documents') active show @endif" id="documentsTab"
+                        role="tabpanel">
                         <h2 class="small-title">{{ __('Documents') }}</h2>
                         <section class="card mb-5">
                             @can('students.documents.edit')
@@ -1550,7 +1559,8 @@ $title = $student->getFullName();
 
                 @can('students.psychosocial')
                     <!-- Psychosocial Information Tab Start -->
-                    <div class="tab-pane fade @if(session('tab') === 'psychosocial') active show @endif" id="psychosocialTab" role="tabpanel">
+                    <div class="tab-pane fade @if (session('tab') === 'psychosocial') active show @endif" id="psychosocialTab"
+                        role="tabpanel">
                         <form method="POST" action="{{ route('students.psychosocial.update', $student) }}"
                             class="tooltip-label-end">
                             @csrf
@@ -1835,15 +1845,17 @@ $title = $student->getFullName();
                                             </div>
                                             <div class="form-check d-inline-block w-50">
                                                 <label class="form-check-label logro-label">
-                                                    <input class="form-check-input" type="checkbox" name="see_strange_things"
-                                                        value="1" @checked($student->see_strange_things)>
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="see_strange_things" value="1"
+                                                        @checked($student->see_strange_things)>
                                                     {{ __('see strange things') }}
                                                 </label>
                                             </div>
                                             <div class="form-check d-inline-block w-40">
                                                 <label class="form-check-label logro-label">
-                                                    <input class="form-check-input" type="checkbox" name="learning_problems"
-                                                        value="1" @checked($student->learning_problems)>
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="learning_problems" value="1"
+                                                        @checked($student->learning_problems)>
                                                     {{ __('learning problems') }}
                                                 </label>
                                             </div>
@@ -1973,13 +1985,14 @@ $title = $student->getFullName();
                     <!-- Psychosocial Information Tab End -->
 
                     <!-- Advices Tab Start -->
-                    <div class="tab-pane fade @if(session('tab') === 'advices') active show @endif" id="advicesTab" role="tabpanel">
+                    <div class="tab-pane fade @if (session('tab') === 'advices') active show @endif" id="advicesTab"
+                        role="tabpanel">
                         <div class="card mt-5">
                             <div class="card-header">
                                 <!-- Top Advice Tab Start -->
                                 <div class="row">
                                     <div class="col-12 col-md-7">
-                                        <h1 class="mb-1 pb-0 display-6">{{ __("Advices") }}</h1>
+                                        <h1 class="mb-1 pb-0 display-6">{{ __('Advices') }}</h1>
                                     </div>
                                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
                                         <!-- Add New Button Start -->
@@ -2002,8 +2015,10 @@ $title = $student->getFullName();
                                         <thead>
                                             <tr>
                                                 <th class="empty">&nbsp;</th>
-                                                <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __("status") }}</th>
-                                                <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __("date") }}</th>
+                                                <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                    {{ __('status') }}</th>
+                                                <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                    {{ __('date') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -2011,17 +2026,17 @@ $title = $student->getFullName();
                                                 <tr>
                                                     <td>
                                                         @if ('done' === $studentAdvice->attendance)
-                                                        <a href="{{ route('students.advice.show', [$student,$studentAdvice]) }}"
-                                                            class="btn btn-sm btn-outline-info text-capitalize">
-                                                            {{ __("summary") }}
-                                                        </a>
+                                                            <a href="{{ route('students.advice.show', [$student, $studentAdvice]) }}"
+                                                                class="btn btn-sm btn-outline-info text-capitalize">
+                                                                {{ __('summary') }}
+                                                            </a>
                                                         @endif
 
                                                         @if ('scheduled' === $studentAdvice->attendance)
-                                                        <a href="{{ route('students.advice.edit', [$student,$studentAdvice]) }}"
-                                                            class="btn btn-sm btn-outline-info text-capitalize">
-                                                            {{ __("evolve") }}
-                                                        </a>
+                                                            <a href="{{ route('students.advice.edit', [$student, $studentAdvice]) }}"
+                                                                class="btn btn-sm btn-outline-info text-capitalize">
+                                                                {{ __('evolve') }}
+                                                            </a>
                                                         @endif
                                                     </td>
                                                     <td class="text-capitalize">{{ __($studentAdvice->attendance) }}</td>
@@ -2120,7 +2135,6 @@ $title = $student->getFullName();
                                     @endforeach
                                 </div>
                             </section>
-
                         </div>
                     @endif
                     <!-- PIAR Tab End -->
@@ -2155,35 +2169,73 @@ $title = $student->getFullName();
     </div>
 
     @can('students.delete')
-    <!-- Modal Delete Student -->
-    <div class="modal fade" id="deleteStudentModal" aria-labelledby="modalDeleteStudent" data-bs-backdrop="static" data-bs-keyboard="false"
-        tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalDeleteStudent">{{ __("Delete student") }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        ¿Está seguro de eliminar al estudiante?
-                    </p>
-                    <p>
-                        Se eliminará permanentemente, este cambio es irreversible
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <form action="{{ route('students.delete', $student) }}" method="POST">
+        <!-- Modal Delete Student -->
+        <div class="modal fade" id="deleteStudentModal" aria-labelledby="modalDeleteStudent" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDeleteStudent">{{ __('Delete student') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('students.delete', $student) }}" id="studentDeleteForm" method="POST">
                         @csrf
                         @method('DELETE')
 
-                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">{{ __("Close") }}</button>
-                        <button type="submit" class="btn btn-danger">{{ __("Delete") }}</button>
+                        <div class="modal-body">
+                            @if (\App\Http\Controllers\SchoolController::securityEmail() === null)
+                                <div class="alert alert-info mb-0" role="alert">
+                                    <h4 class="alert-heading">{{ __('No security email exists') }}.</h4>
+                                    <hr>
+                                    <div>
+                                        {{ __("You must set up a security email to be able to delete students.") }}
+                                    </div>
+                                </div>
+                            @else
+                                <p>
+                                    ¿Está seguro de eliminar al estudiante? Tenga en cuenta que el estudiante se eliminará
+                                    permanentemente.
+                                </p>
+                                <p>
+                                <div class="alert alert-warning">
+                                    <div class="mb-3">
+                                        <i data-acorn-icon="warning-circle"></i>
+                                        Por seguridad, es necesario generar un código de confirmación que le será enviado al correo
+                                        electónico de seguridad.
+                                    </div>
+                                    <div class="text-center">
+                                        <x-button class="btn-warning" id="btn-sendCodeConfirmation" type="button">
+                                            {{ __('Generate confirmation code') }}
+                                        </x-button>
+                                    </div>
+                                </div>
+                                </p>
+                                <p>
+                                <div class="row mb-3">
+                                    <span class="col-sm-3"></span>
+
+                                </div>
+                                <div class="row">
+                                    <label for="inputSecurityCode" class="col-sm-3 col-form-label">
+                                        {{ __('Code') }}
+                                        <x-required />
+                                    </label>
+                                    <div class="col-sm-9 position-relative">
+                                        <x-input name="code_confirm" id="inputSecurityCode" :hasError="true" />
+                                    </div>
+                                </div>
+                                </p>
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary"
+                                data-bs-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" id="btn-confirmDelete" class="btn btn-danger" disabled>{{ __('Confirm deletion') }}</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
     @endcan
 
 @endsection

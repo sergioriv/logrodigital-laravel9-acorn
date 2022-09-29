@@ -127,7 +127,7 @@ class SchoolController extends Controller
     }
     public static function securityEmail()
     {
-        return static::myschool()->handbook_coexistence ?? null;
+        return static::myschool()->security_email ?? null;
     }
 
     /*  */
@@ -163,7 +163,7 @@ class SchoolController extends Controller
     /* Security Email */
     public function security_email(Request $request)
     {
-        if (self::daysToUpdate() > 0 && self::myschool()->security_email !== NULL)
+        if (self::daysToUpdate() > 0 && self::securityEmail() !== NULL)
         {
             return redirect()->back()->withErrors(__('Not allowed'));
         }
@@ -175,7 +175,7 @@ class SchoolController extends Controller
 
         Str::lower($request->email);
 
-        $oldSecurityEmail = self::myschool()->security_email;
+        $oldSecurityEmail = self::securityEmail();
         if ($oldSecurityEmail === $request->security_email)
         {
             Notify::fail(__("Unchanged!"));
@@ -193,7 +193,7 @@ class SchoolController extends Controller
         } else
         {
             session()->flash('tab', 'security');
-            Notify::fail(__("Code invalid!"));
+            Notify::fail(__("Code invalid"));
             return redirect()->back();
         }
 
@@ -208,12 +208,12 @@ class SchoolController extends Controller
             'email' => ['required', 'email']
         ]);
 
-        if (self::daysToUpdate() > 0 && self::myschool()->security_email !== NULL)
+        if (self::daysToUpdate() > 0 && self::securityEmail() !== NULL)
         {
             return ['status' => false, 'message' => 'fail|' . __('Not allowed')];
         }
 
-        if ($request->email === self::myschool()->security_email)
+        if ($request->email === self::securityEmail())
         {
             return ['status' => false, 'message' => 'fail|' . __('Unchanged!')];
         }

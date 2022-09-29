@@ -432,7 +432,7 @@ $title = $school->name;
                                             :hasError="true" />
                                     </div>
                                 </div>
-                                @if ($daysToUpdate === 0)
+                                @if ($school->security_email === NULL)
                                 <div class="row mt-3 mb-3">
                                     <label for="inputSecurityCode" class="col-sm-3 col-form-label">
                                         {{ __('Code') }} <x-required />

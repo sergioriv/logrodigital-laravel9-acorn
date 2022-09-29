@@ -101,10 +101,28 @@ class SmtpMail extends Controller
         static::$userEmail = $email;
 
         $content = (new ContentMail)
-            ->title(Lang::get('Hi') . ', ' . static::$userName)
+            ->title(Lang::get('Dear') . ' ' . static::$userName)
             ->line(Lang::get('Here is the code you need:'))
             ->line('<b>'.$code.'</b>')
             ->line(Lang::get('This email was generated because the request was made for the activation of this email for the security of your platform.'));
+
+        return static::send_email($content->toContent());
+    }
+
+    public static function sendStudentRemovalCode(Student $student, $code)
+    {
+        $security = new SchoolController();
+        static::$subject = Lang::get("Student Removal Code");
+        static::$userName = $security::name();
+        static::$userEmail = $security::securityEmail();
+
+        $content = (new ContentMail)
+            ->title(Lang::get('Dear') . ' ' . static::$userName)
+            ->line('<hr>')
+            ->line(Lang::get('Here is the code you need:'))
+            ->line('<b>'.$code.'</b>')
+            ->line(Lang::get('This code has been generated for the deletion of Student:'))
+            ->line(Lang::get('names') .': <b>' . $student->getCompleteNames() . '</b><br />' . Lang::get('document') .': <b>' . $student->document_type_code .' '. $student->document . '</b>');
 
         return static::send_email($content->toContent());
     }

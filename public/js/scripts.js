@@ -108,6 +108,9 @@ class Scripts {
       if ("undefined" !== typeof StudentAdviceForm) {
         new StudentAdviceForm;
       }
+      if ("undefined" !== typeof StudentDeleteForm) {
+        new StudentDeleteForm;
+      }
     }
 
     // Plugin pages initialization
