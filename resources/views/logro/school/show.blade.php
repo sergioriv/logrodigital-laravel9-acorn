@@ -45,7 +45,7 @@ $title = $school->name;
             <!-- Left Side Start -->
             <div class="col-12 col-xl-3 col-xxl-2">
                 <!-- Biography Start -->
-                <h2 class="small-title text-muted">{{ __('Falta un titulo') }}</h2>
+                <h2 class="small-title text-muted">&nbsp;</h2>
                 <div class="card mb-5">
                     <div class="card-body">
                         <div class="nav flex-column" role="tablist">

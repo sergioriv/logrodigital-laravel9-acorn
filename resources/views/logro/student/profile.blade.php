@@ -38,8 +38,6 @@ $title = $student->getFullName();
         <script src="/js/forms/signature.js?v=0.2"></script>
         <script src="/js/cs/datatable.extend.js"></script>
 
-        <script src="/js/forms/student-delete.js"></script>
-
         @hasrole('STUDENT')
             @if (null === $student->signature_student)
                 <script>
@@ -54,6 +52,12 @@ $title = $student->getFullName();
             @endif
         @endhasrole
     @endcan
+
+    @unlessrole('STUDENT')
+        @can('students.delete')
+            <script src="/js/forms/student-delete.js"></script>
+        @endcan
+    @endunlessrole
 
     <!-- DataTable -->
     @can('students.psychosocial')
@@ -1579,7 +1583,7 @@ $title = $student->getFullName();
                                                     @foreach ($ethnicGroups as $ethnicGroup)
                                                         <option value="{{ $ethnicGroup->id }}"
                                                             @if ($student->ethnic_group_id !== null) @selected(old('ethnic_group', $student->ethnic_group_id) == $ethnicGroup->id) @endif>
-                                                            {{ __($ethnicGroup->name) }}
+                                                            {{ $ethnicGroup->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -2168,74 +2172,78 @@ $title = $student->getFullName();
         </div>
     </div>
 
-    @can('students.delete')
-        <!-- Modal Delete Student -->
-        <div class="modal fade" id="deleteStudentModal" aria-labelledby="modalDeleteStudent" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalDeleteStudent">{{ __('Delete student') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    @unlessrole('STUDENT')
+        @can('students.delete')
+            <!-- Modal Delete Student -->
+            <div class="modal fade" id="deleteStudentModal" aria-labelledby="modalDeleteStudent" data-bs-backdrop="static"
+                data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalDeleteStudent">{{ __('Delete student') }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('students.delete', $student) }}" id="studentDeleteForm" method="POST">
+                            @csrf
+                            @method('DELETE')
+
+                            <div class="modal-body">
+                                @if (\App\Http\Controllers\SchoolController::securityEmail() === null)
+                                    <div class="alert alert-info mb-0" role="alert">
+                                        <h4 class="alert-heading">{{ __('No security email exists') }}.</h4>
+                                        <hr>
+                                        <div>
+                                            {{ __('You must set up a security email to be able to delete students.') }}
+                                        </div>
+                                    </div>
+                                @else
+                                    <p>
+                                        ¿Está seguro de eliminar al estudiante? Tenga en cuenta que el estudiante se eliminará
+                                        permanentemente.
+                                    </p>
+                                    <p>
+                                    <div class="alert alert-warning">
+                                        <div class="mb-3">
+                                            <i data-acorn-icon="warning-circle"></i>
+                                            Por seguridad, es necesario generar un código de confirmación que le será enviado al
+                                            correo
+                                            electónico de seguridad.
+                                        </div>
+                                        <div class="text-center">
+                                            <x-button class="btn-warning" id="btn-sendCodeConfirmation" type="button">
+                                                {{ __('Generate confirmation code') }}
+                                            </x-button>
+                                        </div>
+                                    </div>
+                                    </p>
+                                    <p>
+                                    <div class="row mb-3">
+                                        <span class="col-sm-3"></span>
+
+                                    </div>
+                                    <div class="row">
+                                        <label for="inputSecurityCode" class="col-sm-3 col-form-label">
+                                            {{ __('Code') }}
+                                            <x-required />
+                                        </label>
+                                        <div class="col-sm-9 position-relative">
+                                            <x-input name="code_confirm" id="inputSecurityCode" :hasError="true" />
+                                        </div>
+                                    </div>
+                                    </p>
+                                @endif
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-primary"
+                                    data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                <button type="submit" id="btn-confirmDelete" class="btn btn-danger"
+                                    disabled>{{ __('Confirm deletion') }}</button>
+                            </div>
+                        </form>
                     </div>
-                    <form action="{{ route('students.delete', $student) }}" id="studentDeleteForm" method="POST">
-                        @csrf
-                        @method('DELETE')
-
-                        <div class="modal-body">
-                            @if (\App\Http\Controllers\SchoolController::securityEmail() === null)
-                                <div class="alert alert-info mb-0" role="alert">
-                                    <h4 class="alert-heading">{{ __('No security email exists') }}.</h4>
-                                    <hr>
-                                    <div>
-                                        {{ __("You must set up a security email to be able to delete students.") }}
-                                    </div>
-                                </div>
-                            @else
-                                <p>
-                                    ¿Está seguro de eliminar al estudiante? Tenga en cuenta que el estudiante se eliminará
-                                    permanentemente.
-                                </p>
-                                <p>
-                                <div class="alert alert-warning">
-                                    <div class="mb-3">
-                                        <i data-acorn-icon="warning-circle"></i>
-                                        Por seguridad, es necesario generar un código de confirmación que le será enviado al correo
-                                        electónico de seguridad.
-                                    </div>
-                                    <div class="text-center">
-                                        <x-button class="btn-warning" id="btn-sendCodeConfirmation" type="button">
-                                            {{ __('Generate confirmation code') }}
-                                        </x-button>
-                                    </div>
-                                </div>
-                                </p>
-                                <p>
-                                <div class="row mb-3">
-                                    <span class="col-sm-3"></span>
-
-                                </div>
-                                <div class="row">
-                                    <label for="inputSecurityCode" class="col-sm-3 col-form-label">
-                                        {{ __('Code') }}
-                                        <x-required />
-                                    </label>
-                                    <div class="col-sm-9 position-relative">
-                                        <x-input name="code_confirm" id="inputSecurityCode" :hasError="true" />
-                                    </div>
-                                </div>
-                                </p>
-                            @endif
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-primary"
-                                data-bs-dismiss="modal">{{ __('Close') }}</button>
-                            <button type="submit" id="btn-confirmDelete" class="btn btn-danger" disabled>{{ __('Confirm deletion') }}</button>
-                        </div>
-                    </form>
                 </div>
             </div>
-        </div>
-    @endcan
+        @endcan
+    @endunlessrole
 
 @endsection
