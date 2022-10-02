@@ -344,6 +344,7 @@
     "Student Removal Code": "Código para Eliminación de Estudiante",
     "This code has been generated for the deletion of Student:": "Este código se ha generado para la eliminación del Estudiante:",
     "Code invalid": "Código no valido",
+    "missing required documents": "faltan documentos requeridos",
 
     "full name": "nombre completo",
     "new": "nuevo",

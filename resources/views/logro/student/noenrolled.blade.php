@@ -108,7 +108,7 @@ $title = __('Students') .' '. __('no-enrolled');
                             <tr>
                                 <td class="ps-spacing-sm pe-0">
                                     @if ($countFileTypes > $student->filesRequired()->count())
-                                        <i title="{{ __("documents required") }}" class="icon bi-file-earmark-excel text-danger"></i>
+                                        <i title="{{ __("missing required documents") }}" class="icon bi-file-earmark-excel text-danger"></i>
                                     @endif
                                 </td>
                                 <td>
