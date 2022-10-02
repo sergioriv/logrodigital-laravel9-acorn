@@ -97,7 +97,7 @@ $title = $student->getFullName();
                                             {{ __('Observaciones para la entidad') }}
                                         </label>
                                         <div class="col-sm-9">
-                                            {{ $advice->observations_entity }}
+                                            {{ $advice->observations_for_entity }}
                                         </div>
                                     </div>
                                     @endif
