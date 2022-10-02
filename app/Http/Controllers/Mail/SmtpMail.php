@@ -122,7 +122,7 @@ class SmtpMail extends Controller
             ->line(Lang::get('Here is the code you need:'))
             ->line('<b>'.$code.'</b>')
             ->line(Lang::get('This code has been generated for the deletion of Student:'))
-            ->line(Lang::get('names') .': <b>' . $student->getCompleteNames() . '</b><br />' . Lang::get('document') .': <b>' . $student->document_type_code .' '. $student->document . '</b>');
+            ->line(Lang::get('names') .': <b>' . $student->getCompleteNames() . '</b><br />' . Lang::get('Document') .': <b>' . $student->document_type_code .' '. $student->document . '</b>');
 
         return static::send_email($content->toContent());
     }
