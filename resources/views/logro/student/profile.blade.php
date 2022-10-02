@@ -2003,7 +2003,7 @@ $title = $student->getFullName();
                                         <a href="{{ route('students.advice.create', $student) }}"
                                             class="btn btn-outline-secondary btn-icon btn-icon-start w-100 w-md-auto">
                                             <i data-acorn-icon="plus"></i>
-                                            <span>{{ __('Add New') }}</span>
+                                            <span>{{ __('To Create') }}</span>
                                         </a>
                                         <!-- Add New Button End -->
                                     </div>
