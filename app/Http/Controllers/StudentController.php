@@ -28,6 +28,7 @@ use App\Models\LinkageProcess;
 use App\Models\PersonCharge;
 use App\Models\Piar;
 use App\Models\Religion;
+use App\Models\Reservation;
 use App\Models\Rh;
 use App\Models\School;
 use App\Models\Sisben;
@@ -37,6 +38,7 @@ use App\Models\StudentFileType;
 use App\Models\StudentRemovalCode;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
+use App\Models\TypesConflict;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -293,18 +295,25 @@ class StudentController extends Controller
         if ('STUDENT' === UserController::role_auth()) {
 
             return view('logro.student.wizard-personal-info')->with([
-                'student' => $student,
-                'documentType' => DocumentType::orderBy('foreigner')->get(),
-                'cities' => City::all(),
-                'countries' => Country::all(),
-                'genders' => Gender::all(),
-                'rhs' => Rh::all(),
+                'student'       => $student,
+                'documentType'  => DocumentType::orderBy('foreigner')->get(),
+                'cities'        => City::all(),
+                'countries'     => Country::all(),
+                'genders'       => Gender::all(),
+                'rhs'           => Rh::all(),
                 'healthManager' => HealthManager::all(),
-                'sisbenes' => Sisben::all(),
+                'sisbenes'      => Sisben::all(),
                 'dwellingTypes' => DwellingType::all(),
-                'disabilities' => Disability::all(),
-                'handbook' => SchoolController::handbook(),
-                'nationalCountry' => NationalCountry::country()
+                'disabilities'  => Disability::all(),
+                'handbook'      => SchoolController::handbook(),
+                'nationalCountry' => NationalCountry::country(),
+                'ethnicGroups'  => EthnicGroup::all(),
+                'reservations'  => Reservation::all(),
+                'typesConflict' => TypesConflict::all(),
+                'icbfProtections' => IcbfProtectionMeasure::all(),
+                'linkageProcesses' => LinkageProcess::all(),
+                'religions'     => Religion::all(),
+                'economicDependences' => EconomicDependence::all(),
             ]);
         }
 
@@ -544,19 +553,20 @@ class StudentController extends Controller
             'countries' => Country::all(),
             'genders' => Gender::all(),
             'rhs' => Rh::all(),
-            'healthManager' => HealthManager::all(),
-            'sisbenes' => Sisben::all(),
-            'ethnicGroups' => EthnicGroup::all(),
             'dwellingTypes' => DwellingType::all(),
-            'disabilities' => Disability::all(),
+            'healthManager' => HealthManager::all(),
+            'sisbenes'      => Sisben::all(),
+            'disabilities'  => Disability::all(),
+            'ethnicGroups'  => EthnicGroup::all(),
+            'reservations'  => Reservation::all(),
+            'typesConflict' => TypesConflict::all(),
             'icbfProtections' => IcbfProtectionMeasure::all(),
             'linkageProcesses' => LinkageProcess::all(),
-            'religions' => Religion::all(),
+            'religions'     => Religion::all(),
             'economicDependences' => EconomicDependence::all(),
-            'kinships' => Kinship::all(),
+            'kinships'      => Kinship::all(),
             'studentFileTypes' => $studentFileTypes->get(),
             'groupsStudent' => $groupsStudent,
-            'handbook' => (new SchoolController)->handbook(),
             'nationalCountry' => NationalCountry::country()
         ]);
     }
@@ -620,6 +630,16 @@ class StudentController extends Controller
             'sisben' => [$required, Rule::exists('sisben', 'id')],
             'disability' => [$required, Rule::exists('disabilities', 'id')],
             'disability_certificate' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'ethnic_group' => ['nullable', Rule::exists('ethnic_groups', 'id')],
+            'reservation' => ['nullable', Rule::exists('reservations', 'id')],
+            'type_conflic' => ['nullable', Rule::exists('types_conflict', 'id')],
+            'origin_school' => ['nullable', 'string'],
+            'type_origin_school' => ['nullable'],
+            'icbf_protection' => ['nullable', Rule::exists('icbf_protection_measures', 'id')],
+            'foundation_beneficiary' => ['nullable', 'boolean'],
+            'linked_process' => ['nullable', Rule::exists('linkage_processes', 'id')],
+            'religion' => ['nullable', Rule::exists('religions', 'id')],
+            'economic_dependence' => ['nullable', Rule::exists('economic_dependences', 'id')],
             'data_treatment' => ['nullable', 'boolean']
         ]);
 
@@ -680,6 +700,18 @@ class StudentController extends Controller
             'school_insurance' => $request->school_insurance,
             'disability_id' => $request->disability,
 
+            /* informacion complementaria */
+            'ethnic_group_id' => $request->ethnic_group,
+            'reservation_id' => $request->reservation,
+            'type_conflic_id' => $request->type_conflic,
+            'origin_school' => $request->origin_school,
+            'type_origin_school' => $request->type_origin_school,
+            'ICBF_protection_measure_id' => $request->icbf_protection,
+            'foundation_beneficiary' => $request->foundation_beneficiary,
+            'linked_to_process_id' => $request->linked_process,
+            'religion_id' => $request->religion,
+            'economic_dependence_id' => $request->economic_dependence,
+
             /* politica de tratamiento de datos */
             'data_treatment' => $data_treatment
         ]);
@@ -700,14 +732,6 @@ class StudentController extends Controller
     public function psychosocial_update(Request $request, Student $student)
     {
         $request->validate([
-            'ethnic_group' => ['nullable', Rule::exists('ethnic_groups', 'id')],
-            'conflict_victim' => ['nullable', 'boolean'],
-            'origin_school' => ['nullable', 'string'],
-            'icbf_protection' => ['nullable', Rule::exists('icbf_protection_measures', 'id')],
-            'foundation_beneficiary' => ['nullable', 'boolean'],
-            'linked_process' => ['nullable', Rule::exists('linkage_processes', 'id')],
-            'religion' => ['nullable', Rule::exists('religions', 'id')],
-            'economic_dependence' => ['nullable', Rule::exists('economic_dependences', 'id')],
             'plays_sports' => ['nullable', 'boolean'],
             'freetime_activity' => ['nullable', 'string', 'max:191'],
             'allergies' => ['nullable', 'string', 'max:191'],
@@ -728,7 +752,7 @@ class StudentController extends Controller
             'drug_consumption' => ['nullable', 'boolean'],
             'head_blows' => ['nullable', 'boolean'],
             'desire_to_die' => ['nullable', 'boolean'],
-            'see_strange_things' => ['nullable', 'boolean'],
+            'see_shadows' => ['nullable', 'boolean'],
             'learning_problems' => ['nullable', 'boolean'],
             'dizziness_fainting' => ['nullable', 'boolean'],
             'school_repetition' => ['nullable', 'boolean'],
@@ -740,20 +764,17 @@ class StudentController extends Controller
             'hands_sweating' => ['nullable', 'boolean'],
             'sleepwalking' => ['nullable', 'boolean'],
             'nervous_tics' => ['nullable', 'boolean'],
+            'sexual_abuse' => ['nullable', 'boolean'],
+            'unmotivated_crying' => ['nullable', 'boolean'],
+            'chest_pain' => ['nullable', 'boolean'],
+            'bullying' => ['nullable', 'boolean'],
             'simat' => ['nullable', 'boolean'],
-            'inclusive' => ['nullable', 'boolean']
+            'inclusive' => ['nullable', 'boolean'],
+            'medical_diagnosis' => ['nullable', 'max:1000'],
+            'medical_prediagnosis' => ['nullable', 'max:1000']
         ]);
 
         $student->update([
-            /* informacion complementaria */
-            'ethnic_group_id' => $request->ethnic_group,
-            'conflict_victim' => $request->conflict_victim,
-            'origin_school' => $request->origin_school,
-            'ICBF_protection_measure_id' => $request->icbf_protection,
-            'foundation_beneficiary' => $request->foundation_beneficiary,
-            'linked_to_process_id' => $request->linked_process,
-            'religion_id' => $request->religion,
-            'economic_dependence_id' => $request->economic_dependence,
 
             /* informacion psicosocial */
             'plays_sports' => $request->plays_sports,
@@ -776,7 +797,7 @@ class StudentController extends Controller
             'drug_consumption' => $request->drug_consumption,
             'head_blows' => $request->head_blows,
             'desire_to_die' => $request->desire_to_die,
-            'see_strange_things' => $request->see_strange_things,
+            'see_shadows' => $request->see_shadows,
             'learning_problems' => $request->learning_problems,
             'dizziness_fainting' => $request->dizziness_fainting,
             'school_repetition' => $request->school_repetition,
@@ -788,10 +809,16 @@ class StudentController extends Controller
             'hands_sweating' => $request->hands_sweating,
             'sleepwalking' => $request->sleepwalking,
             'nervous_tics' => $request->nervous_tics,
+            'sexual_abuse' => $request->sexual_abuse,
+            'unmotivated_crying' => $request->unmotivated_crying,
+            'chest_pain' => $request->chest_pain,
+            'bullying' => $request->bullying,
 
             /* evaluación psicosocial */
             'simat' => $request->simat,
-            'inclusive' => $request->inclusive
+            'inclusive' => $request->inclusive,
+            'medical_diagnosis' => $request->medical_diagnosis,
+            'medical_prediagnosis' => $request->medical_prediagnosis
         ]);
 
         Notify::success(__('Student updated!'));

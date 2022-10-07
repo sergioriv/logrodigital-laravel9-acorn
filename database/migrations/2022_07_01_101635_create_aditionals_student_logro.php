@@ -124,6 +124,8 @@ return new class extends Migration
                 'repeat'
             ])->nullable();
             $table->boolean('inclusive')->nullable();
+            $table->text('medical_diagnosis')->nullable();
+            $table->text('medical_prediagnosis')->nullable();
             $table->boolean('person_charge')->nullable();
             $table->boolean('data_treatment')->nullable();
             $table->string('signature_tutor')->nullable();

@@ -52,8 +52,10 @@ class Student extends Model
         'disability_id', //cambiar por lista de seleccion
 
         'ethnic_group_id',
-        'conflict_victim',
+        'reservation_id',
+        'type_conflic_id',
         'origin_school',
+        'type_origin_school',
         'ICBF_protection_measure_id', //* (Ninguna, Hogar sustituto, Medio abierto, Menor infractor)
         'foundation_beneficiary', //* (Si, No)
         'linked_to_process_id', //* (Ninguna, ICBF, Comisaria de familia, Fiscalia, Inspeccion de policia)
@@ -80,7 +82,7 @@ class Student extends Model
         'drug_consumption',
         'head_blows',
         'desire_to_die',
-        'see_strange_things',
+        'see_shadows',
         'learning_problems',
         'dizziness_fainting',
         'school_repetition',
@@ -92,9 +94,15 @@ class Student extends Model
         'hands_sweating',
         'sleepwalking',
         'nervous_tics',
+        'sexual_abuse',
+        'unmotivated_crying',
+        'chest_pain',
+        'bullying',
 
         'simat', // (Si, No)
         'inclusive', // (Si, No)
+        'medical_diagnosis',
+        'medical_prediagnosis',
 
         'school_year_create',
         'headquarters_id',
@@ -120,6 +128,14 @@ class Student extends Model
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i:s'
     ];
+
+
+    /* ADICIONALES */
+    public function enumTypeSchoolOrigin()
+    {
+        return ['Public', 'Private'];
+    }
+
 
     public function user()
     {
@@ -192,6 +208,10 @@ class Student extends Model
     public function rh()
     {
         return $this->belongsTo(Rh::class, 'rh_id');
+    }
+    public function typeConflic()
+    {
+        return $this->belongsTo(TypesConflict::class, 'type_conflic_id');
     }
 
 

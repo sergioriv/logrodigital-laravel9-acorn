@@ -694,11 +694,161 @@ $title = $student->getFullName();
                             </section>
                             <!-- Social Safety Section End -->
 
+                            <!-- Additional Information Section Start -->
+                            <h2 class="small-title">{{ __('Additional Information') }}</h2>
+                            <section class="card mb-5">
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('ethnic group') }}</x-label>
+                                                <select name="ethnic_group" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($ethnicGroups as $ethnicGroup)
+                                                        <option value="{{ $ethnicGroup->id }}"
+                                                            @if ($student->ethnic_group_id !== null) @selected(old('ethnic_group', $student->ethnic_group_id) == $ethnicGroup->id) @endif>
+                                                            {{ $ethnicGroup->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('reservation') }}</x-label>
+                                                <select name="reservation" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($reservations as $reservation)
+                                                        <option value="{{ $reservation->id }}"
+                                                            @if ($student->reservation_id !== null) @selected(old('reservation', $student->reservation_id) == $reservation->id) @endif>
+                                                            {{ $reservation->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 position-relative form-group">
+                                                <x-label>{{ __('educational institution of origin') }}</x-label>
+                                                <x-input :value="$student->origin_school" name="origin_school" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('type of educational institution') }}</x-label>
+                                                <select name="type_origin_school" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($student->enumTypeSchoolOrigin() as $typeSchoolOrigin)
+                                                        <option value="{{ $typeSchoolOrigin }}"
+                                                        @selected(old('type_origin_school', $student->type_origin_school) == $typeSchoolOrigin)>
+                                                        {{ __($typeSchoolOrigin) }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label class="text-t-none">{{ __('ICBF protection measure') }}</x-label>
+                                                <select name="icbf_protection" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($icbfProtections as $icbfProtection)
+                                                        <option value="{{ $icbfProtection->id }}"
+                                                            @if ($student->ICBF_protection_measure_id !== null) @selected(old('icbf_protection', $student->ICBF_protection_measure_id) == $icbfProtection->id) @endif>
+                                                            {{ $icbfProtection->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('conflict victim') }}</x-label>
+                                                <select name="type_conflic" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($typesConflict as $typeConflict)
+                                                        <option value="{{ $typeConflict->id }}"
+                                                            @if ($student->type_conflic_id !== null) @selected(old('type_conflic', $student->type_conflic_id) == $typeConflict->id) @endif>
+                                                            {{ $typeConflict->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('foundation beneficiary') }}</x-label>
+                                                <select name="foundation_beneficiary" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    <option value="0" @selected(old('foundation_beneficiary', 0) == $student->foundation_beneficiary)>
+                                                        {{ __('No') }}
+                                                    </option>
+                                                    <option value="1" @selected(old('foundation_beneficiary', 1) == $student->foundation_beneficiary)>
+                                                        {{ __('Yes') }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('linked to a process') }}</x-label>
+                                                <select name="linked_process" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($linkageProcesses as $linkageProcess)
+                                                        <option value="{{ $linkageProcess->id }}"
+                                                            @if ($student->linked_to_process_id !== null) @selected(old('linked_process', $student->linked_to_process_id) == $linkageProcess->id) @endif>
+                                                            {{ __($linkageProcess->name) }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('religion') }}</x-label>
+                                                <select name="religion" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($religions as $religion)
+                                                        <option value="{{ $religion->id }}"
+                                                            @if ($student->religion_id !== null) @selected(old('religion', $student->religion_id) == $religion->id) @endif>
+                                                            {{ $religion->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('economic dependence') }}</x-label>
+                                                <select name="economic_dependence" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($economicDependences as $economicDependence)
+                                                        <option value="{{ $economicDependence->id }}"
+                                                            @if ($student->economic_dependence_id !== null) @selected(old('economic_dependence', $student->economic_dependence_id) == $economicDependence->id) @endif>
+                                                            {{ __($economicDependence->name) }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <!-- Additional Information Section End -->
+
                             @unlessrole('STUDENT')
                                 @if (1 !== $student->data_treatment)
                                     <section class="card mb-5">
                                         <div class="card-body">
-                                            <b>{{ __('The student did not accept the data treatment policy.') }}</b>
+                                            <b>{{ __('The student did not authorize the permissions of image use.') }}</b>
                                         </div>
                                     </section>
                                 @endif
@@ -1570,127 +1720,6 @@ $title = $student->getFullName();
                             @csrf
                             @method('PUT')
 
-                            <!-- Additional Information Section Start -->
-                            <h2 class="small-title">{{ __('Additional Information') }}</h2>
-                            <section class="card mb-5">
-                                <div class="card-body">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('ethnic group') }}</x-label>
-                                                <select name="ethnic_group" logro="select2">
-                                                    <option label="&nbsp;"></option>
-                                                    @foreach ($ethnicGroups as $ethnicGroup)
-                                                        <option value="{{ $ethnicGroup->id }}"
-                                                            @if ($student->ethnic_group_id !== null) @selected(old('ethnic_group', $student->ethnic_group_id) == $ethnicGroup->id) @endif>
-                                                            {{ $ethnicGroup->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('conflict victim') }}</x-label>
-                                                <select name="conflict_victim" logro="select2">
-                                                    <option label="&nbsp;"></option>
-                                                    <option value="0" @selected(old('conflict_victim', 0) == $student->conflict_victim)>
-                                                        {{ __('No') }}
-                                                    </option>
-                                                    <option value="1" @selected(old('conflict_victim', 1) == $student->conflict_victim)>
-                                                        {{ __('Yes') }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="mb-3 position-relative form-group">
-                                                <x-label>{{ __('origin school') }}</x-label>
-                                                <x-input :value="$student->origin_school" name="origin_school" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label class="text-t-none">{{ __('ICBF protection measure') }}</x-label>
-                                                <select name="icbf_protection" logro="select2">
-                                                    <option label="&nbsp;"></option>
-                                                    @foreach ($icbfProtections as $icbfProtection)
-                                                        <option value="{{ $icbfProtection->id }}"
-                                                            @if ($student->ICBF_protection_measure_id !== null) @selected(old('icbf_protection', $student->ICBF_protection_measure_id) == $icbfProtection->id) @endif>
-                                                            {{ __($icbfProtection->name) }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('foundation beneficiary') }}</x-label>
-                                                <select name="foundation_beneficiary" logro="select2">
-                                                    <option label="&nbsp;"></option>
-                                                    <option value="0" @selected(old('foundation_beneficiary', 0) == $student->foundation_beneficiary)>
-                                                        {{ __('No') }}
-                                                    </option>
-                                                    <option value="1" @selected(old('foundation_beneficiary', 1) == $student->foundation_beneficiary)>
-                                                        {{ __('Yes') }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('linked to a process') }}</x-label>
-                                                <select name="linked_process" logro="select2">
-                                                    <option label="&nbsp;"></option>
-                                                    @foreach ($linkageProcesses as $linkageProcess)
-                                                        <option value="{{ $linkageProcess->id }}"
-                                                            @if ($student->linked_to_process_id !== null) @selected(old('linked_process', $student->linked_to_process_id) == $linkageProcess->id) @endif>
-                                                            {{ __($linkageProcess->name) }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('religion') }}</x-label>
-                                                <select name="religion" logro="select2">
-                                                    <option label="&nbsp;"></option>
-                                                    @foreach ($religions as $religion)
-                                                        <option value="{{ $religion->id }}"
-                                                            @if ($student->religion_id !== null) @selected(old('religion', $student->religion_id) == $religion->id) @endif>
-                                                            {{ __($religion->name) }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('economic dependence') }}</x-label>
-                                                <select name="economic_dependence" logro="select2">
-                                                    <option label="&nbsp;"></option>
-                                                    @foreach ($economicDependences as $economicDependence)
-                                                        <option value="{{ $economicDependence->id }}"
-                                                            @if ($student->economic_dependence_id !== null) @selected(old('economic_dependence', $student->economic_dependence_id) == $economicDependence->id) @endif>
-                                                            {{ __($economicDependence->name) }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                            <!-- Additional Information Section End -->
-
                             <!-- Psychosocial Information Section Start -->
                             <h2 class="small-title">{{ __('Psychosocial Information') }}</h2>
                             <section class="card mb-5">
@@ -1850,9 +1879,9 @@ $title = $student->getFullName();
                                             <div class="form-check d-inline-block w-50">
                                                 <label class="form-check-label logro-label">
                                                     <input class="form-check-input" type="checkbox"
-                                                        name="see_strange_things" value="1"
-                                                        @checked($student->see_strange_things)>
-                                                    {{ __('see strange things') }}
+                                                        name="see_shadows" value="1"
+                                                        @checked($student->see_shadows)>
+                                                    {{ __('see shadows') }}
                                                 </label>
                                             </div>
                                             <div class="form-check d-inline-block w-40">
@@ -1936,6 +1965,34 @@ $title = $student->getFullName();
                                                     {{ __('nervous tics') }}
                                                 </label>
                                             </div>
+                                            <div class="form-check d-inline-block w-50">
+                                                <label class="form-check-label logro-label">
+                                                    <input class="form-check-input" type="checkbox" name="sexual_abuse"
+                                                        value="1" @checked($student->sexual_abuse)>
+                                                    {{ __('sexual abuse') }}
+                                                </label>
+                                            </div>
+                                            <div class="form-check d-inline-block w-40">
+                                                <label class="form-check-label logro-label">
+                                                    <input class="form-check-input" type="checkbox" name="unmotivated_crying"
+                                                        value="1" @checked($student->unmotivated_crying)>
+                                                    {{ __('unmotivated crying') }}
+                                                </label>
+                                            </div>
+                                            <div class="form-check d-inline-block w-50">
+                                                <label class="form-check-label logro-label">
+                                                    <input class="form-check-input" type="checkbox" name="chest_pain"
+                                                        value="1" @checked($student->chest_pain)>
+                                                    {{ __('chest pain') }}
+                                                </label>
+                                            </div>
+                                            <div class="form-check d-inline-block w-40">
+                                                <label class="form-check-label logro-label">
+                                                    <input class="form-check-input" type="checkbox" name="bullying"
+                                                        value="1" @checked($student->bullying)>
+                                                    {{ __('bullying') }}
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1947,6 +2004,20 @@ $title = $student->getFullName();
                             <section class="card mb-5">
                                 <div class="card-body">
                                     <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-3 w-100 position-relative form-group">
+                                                <x-label>{{ __('student inclusive') }}</x-label>
+                                                <select name="inclusive" logro="select2">
+                                                    <option label="&nbsp;"></option>
+                                                    <option value="0" @selected(old('inclusive', 0) == $student->inclusive)>
+                                                        {{ __('No') }}
+                                                    </option>
+                                                    <option value="1" @selected(old('inclusive', 1) == $student->inclusive)>
+                                                        {{ __('Yes') }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="mb-3 w-100 position-relative form-group">
                                                 <x-label class="text-uppercase">SIMAT</x-label>
@@ -1961,18 +2032,20 @@ $title = $student->getFullName();
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3 w-100 position-relative form-group">
-                                                <x-label>{{ __('student inclusive') }}</x-label>
-                                                <select name="inclusive" logro="select2">
-                                                    <option label="&nbsp;"></option>
-                                                    <option value="0" @selected(old('inclusive', 0) == $student->inclusive)>
-                                                        {{ __('No') }}
-                                                    </option>
-                                                    <option value="1" @selected(old('inclusive', 1) == $student->inclusive)>
-                                                        {{ __('Yes') }}
-                                                    </option>
-                                                </select>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <div class="mb-3 position-relative form-group">
+                                                <x-label>{{ __('medical diagnosis') }}</x-label>
+                                                <textarea name="medical_diagnosis" rows="5" class="form-control">{{ $student->medical_diagnosis }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <div class="mb-3 position-relative form-group">
+                                                <x-label>{{ __('medical prediagnosis') }}</x-label>
+                                                <textarea name="medical_prediagnosis" rows="5" class="form-control">{{ $student->medical_prediagnosis }}</textarea>
                                             </div>
                                         </div>
                                     </div>
