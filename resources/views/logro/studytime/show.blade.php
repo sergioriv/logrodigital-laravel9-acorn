@@ -117,11 +117,11 @@ $title = $studyTime->name;
                                 <div class="card-body">
                                     <h2 class="small-title">{{ __('Period') . ' ' . $period->ordering }}</h2>
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-4">
                                             <x-input name="period[{{ $period->ordering }}][name]"
                                                 placeholder="{{ __('Name') }}" value="{{ $period->name }}" />
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <div class="input-daterange input-group datePickerRange">
                                                 <x-input name="period[{{ $period->ordering }}][start]"
                                                     placeholder="{{ __('Start') }}" value="{{ $period->start }}" />
@@ -130,7 +130,11 @@ $title = $studyTime->name;
                                                     placeholder="{{ __('End') }}" value="{{ $period->end }}" />
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-2">
+                                            <x-input type="number" name="period[{{ $period->ordering }}][workload]"
+                                                placeholder="{{ __('Academic workload') }}" value="{{ $period->workload }}" />
+                                        </div>
+                                        <div class="col-2">
                                             <x-input type="number" name="period[{{ $period->ordering }}][days]"
                                                 placeholder="{{ __('Deadline days') }}" value="{{ $period->days }}" />
                                         </div>
@@ -144,11 +148,11 @@ $title = $studyTime->name;
                                 <div class="card-body">
                                     <h2 class="small-title">{{ __('Period') . ' ' . $i }}</h2>
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-4">
                                             <x-input name="period[{{ $i }}][name]"
                                                 placeholder="{{ __('Name') }}" disabled="disabled" />
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <div class="input-daterange input-group datePickerRange">
                                                 <x-input name="period[{{ $i }}][start]"
                                                     placeholder="{{ __('Start') }}" disabled="disabled" />
@@ -157,7 +161,11 @@ $title = $studyTime->name;
                                                     placeholder="{{ __('End') }}" disabled="disabled" />
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-2">
+                                            <x-input type="number" name="period[{{ $i }}][workload]"
+                                                placeholder="{{ __('Academic workload') }}" disabled="disabled" />
+                                        </div>
+                                        <div class="col-2">
                                             <x-input type="number" name="period[{{ $i }}][days]"
                                                 placeholder="{{ __('Deadline days') }}" disabled="disabled" />
                                         </div>

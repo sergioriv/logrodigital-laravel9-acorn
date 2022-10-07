@@ -27,6 +27,7 @@ class PeriodController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
+        $workloadTotal = 0;
         DB::beginTransaction();
 
         foreach ($request->period as $key => $period) {
@@ -43,10 +44,11 @@ class PeriodController extends Controller
 
                 if (NULL !== $updatePeriod) {
                     $updatePeriod->update([
-                        'name' => $period['name'],
+                        'name'  => $period['name'],
                         'start' => $period['start'],
-                        'end' => $period['end'],
-                        'days' => $period['days']
+                        'end'   => $period['end'],
+                        'workload' => $period['workload'],
+                        'days'  => $period['days']
                     ]);
                 } else {
                     DB::rollBack();
@@ -58,12 +60,24 @@ class PeriodController extends Controller
                     'study_time_id' => $studyTime->id,
                     'period_type_id' => 1,
                     'ordering' => $key,
-                    'name' => $period['name'],
+                    'name'  => $period['name'],
                     'start' => $period['start'],
-                    'end' => $period['end'],
-                    'days' => $period['days']
+                    'end'   => $period['end'],
+                    'workload' => $period['workload'],
+                    'days'  => $period['days']
                 ]);
             }
+
+            $workloadTotal += $period['workload'];
+        }
+
+        if ($workloadTotal === 100) {
+            DB::commit();
+            Notify::success(__('Periods updated!'));
+            return redirect()->route('studyTime.index');
+        } else {
+            DB::rollBack();
+            return redirect()->back()->withErrors(__("workload not is 100%"));
         }
 
         DB::commit();

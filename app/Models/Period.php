@@ -17,6 +17,7 @@ class Period extends CastCreateModel
         'name',
         'start',
         'end',
+        'workload',
         'days'
     ];
 
