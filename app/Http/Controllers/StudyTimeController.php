@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\Period;
+use App\Models\ResourceStudyYear;
 use App\Models\StudyTime;
+use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -23,13 +25,7 @@ class StudyTimeController extends Controller
 
     public function index()
     {
-        return view('logro.studytime.index');
-    }
-
-    public function data()
-    {
-        $Y = SchoolYearController::current_year();
-        return ['data' => StudyTime::withCount(['periods' => fn($p) => $p->where('school_year_id', $Y->id)])->get()];
+        return view('logro.studytime.index', ['studyTimes' => StudyTime::orderByDesc('created_at')->get()]);
     }
 
     public function create()
@@ -53,7 +49,7 @@ class StudyTimeController extends Controller
             return redirect()->back()->withErrors(__("evaluation components is not equal to 100%"));
         }
 
-        StudyTime::create([
+        $studyTime = StudyTime::create([
             'name' => $request->name,
             'conceptual' => $request->conceptual,
             'procedural' => $request->procedural,
@@ -61,28 +57,29 @@ class StudyTimeController extends Controller
             'missing_areas' => $request->missing_areas
         ]);
 
-        Notify::success(__('Study time created!'));
-        return redirect()->route('studyTime.index');
+
+        return redirect()->route('studyTime.periods', $studyTime);
     }
 
     public function show(StudyTime $studyTime)
     {
-        $Y = SchoolYearController::current_year();
+        // $Y = SchoolYearController::current_year();
 
-        $periods = Period::where('school_year_id', $Y->id)->where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
+        // $periods = Period::where('school_year_id', $Y->id)->where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
+        $periods = Period::where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
+        // $studyYears = StudyYear::where('study_time_id', $studyTime->id)->get();
         return view('logro.studytime.show')->with([
-            'Y' => $Y,
             'studyTime' => $studyTime,
             'periods' => $periods
         ]);
     }
 
-    public function edit(StudyTime $studyTime)
+    /* public function edit(StudyTime $studyTime)
     {
         return view('logro.studytime.edit')->with('studyTime', $studyTime);
-    }
+    } */
 
-    public function update(Request $request, StudyTime $studyTime)
+    /* public function update(Request $request, StudyTime $studyTime)
     {
         $request->validate([
             'name' => ['required', 'string', Rule::unique('study_times')->ignore($studyTime->id)]
@@ -94,9 +91,16 @@ class StudyTimeController extends Controller
 
         Notify::success(__('Study time updated!'));
         return redirect()->route('studyTime.show', $studyTime);
+    } */
+
+    public function periods_create(StudyTime $studyTime)
+    {
+        return view('logro.studytime.wizard-periods')->with([
+            'studyTime' => $studyTime,
+        ]);
     }
 
-    public function periods_update(Request $request, StudyTime $studyTime)
+    public function periods_store(Request $request, StudyTime $studyTime)
     {
 
         $request->validate([
@@ -104,8 +108,23 @@ class StudyTimeController extends Controller
             'period.*.*' => ['required'],
             'period.*.start' => ['date'],
             'period.*.end' => ['date'],
+            'period.*.workload' => ['numeric'],
             'period.*.days' => ['numeric']
         ]);
-        return PeriodController::update($request, $studyTime);
+        return PeriodController::create($request, $studyTime);
+    }
+
+    /*
+     * study times that did not complete the creation process are eliminated.
+     */
+    public static function deleteNotActive()
+    {
+        $noActive = StudyTime::whereNull('active')->get();
+        if ($noActive->count() > 0) {
+            foreach ($noActive as $st) {
+                $st->periods()->delete();
+                $st->delete();
+            }
+        }
     }
 }

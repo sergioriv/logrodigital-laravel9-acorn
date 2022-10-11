@@ -71,7 +71,7 @@ $title = $student->getFullName();
         <section class="page-title-container">
             <div class="row">
                 <!-- Title Start -->
-                <div class="col-12 col-md-7">
+                <div class="col-12 col-md-9">
                     <h1 class="mb-1 pb-0 display-4" id="title">
                         {{ __('Student') . ' | ' . $student->getNames() . ' ' . $student->getLastNames() }}</h1>
                 </div>
@@ -80,7 +80,7 @@ $title = $student->getFullName();
                 @can('students.matriculate')
                     @if (null !== $Y->available)
                         <!-- Top Buttons Start -->
-                        <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                        <div class="col-12 col-md-3 d-flex align-items-start justify-content-end">
                             <!-- Matriculate Button Start -->
                             <a class="btn btn-outline-info" href="{{ route('students.matriculate', $student) }}">
                                 @if (null === $student->group_id)
@@ -216,7 +216,7 @@ $title = $student->getFullName();
                         </div>
 
                         <div class="d-flex flex-column">
-                            <text class="text-muted text-small">Fecha creación:</text>
+                            <text class="text-muted text-small">{{ __('created at') }}:</text>
                             <text class="text-muted text-small">{{ $student->created_at }}</text>
                         </div>
 

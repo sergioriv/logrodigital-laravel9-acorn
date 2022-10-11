@@ -1,5 +1,5 @@
 @php
-$title = $studyYear->name;
+$title = $studyYear->studyTime->name;
 @endphp
 @extends('layout',['title'=>$title])
 
@@ -22,7 +22,7 @@ $title = $studyYear->name;
                 <div class="row">
                     <!-- Title Start -->
                     <div class="col-12 col-md-7">
-                        <h1 class="mb-1 pb-0 display-4">{{ $title .' | '. __('Subjects') .' '. $Y->name }}</h1>
+                        <h1 class="mb-1 pb-0 display-4">{{ $studyYear->studyTime->name .' | '. $studyYear->resourceStudyYear->name . ' | ' . __('Subjects') .' '. $Y->name }}</h1>
                     </div>
                     <!-- Title End -->
 

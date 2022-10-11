@@ -1,88 +1,76 @@
 @php
 $title = __('Study times list');
 @endphp
-@extends('layout',['title'=>$title])
+@extends('layout', ['title' => $title])
 
 @section('css')
-<link rel="stylesheet" href="/css/vendor/datatables.min.css" />
 @endsection
 
 @section('js_vendor')
-<script src="/js/vendor/bootstrap-submenu.js"></script>
-<script src="/js/vendor/datatables.min.js"></script>
-<script src="/js/vendor/mousetrap.min.js"></script>
 @endsection
 
 @section('js_page')
-<script src="/js/cs/datatable.extend.js"></script>
-<script src="/js/plugins/datatable/study_times_datatable.ajax.js"></script>
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <!-- Title and Top Buttons Start -->
-            <div class="page-title-container">
-                <div class="row">
-                    <!-- Title Start -->
-                    <div class="col-12 col-md-7">
-                        <h1 class="mb-1 pb-0 display-4" id="title">{{ $title }}</h1>
-                    </div>
-                    <!-- Title End -->
-
-                    <!-- Top Buttons Start -->
-                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-                        <!-- Add New Button Start -->
-                        <a href="{{ route('studyTime.create') }}"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
-                            <i data-acorn-icon="plus"></i>
-                            <span>{{ __('Add New') }}</span>
-                        </a>
-                        <!-- Add New Button End -->
-                    </div>
-                    <!-- Top Buttons End -->
-                </div>
-            </div>
-            <!-- Title and Top Buttons End -->
-
-            <!-- Content Start -->
-            <div class="data-table-rows slim">
-                <!-- Controls Start -->
-                <div class="row">
-                    <!-- Search Start -->
-                    <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
-                        <div
-                            class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
-                            <input class="form-control datatable-search" placeholder="Search"
-                                data-datatable="#datatable_study_times" />
-                            <span class="search-magnifier-icon">
-                                <i data-acorn-icon="search"></i>
-                            </span>
-                            <span class="search-delete-icon d-none">
-                                <i data-acorn-icon="close"></i>
-                            </span>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- Title and Top Buttons Start -->
+                <div class="page-title-container">
+                    <div class="row">
+                        <!-- Title Start -->
+                        <div class="col-12 col-md-7">
+                            <h1 class="mb-1 pb-0 display-4" id="title">{{ $title }}</h1>
                         </div>
-                    </div>
-                    <!-- Search End -->
-                </div>
-                <!-- Controls End -->
+                        <!-- Title End -->
 
-                <!-- Table Start -->
-                <div class="data-table-responsive-wrapper">
-                    <table id="datatable_study_times" class="data-table nowrap w-100">
-                        <thead>
-                            <tr>
-                                <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
-                                <th class="text-muted text-small text-uppercase">{{ __('Periods') }}</th>
-                            </tr>
-                        </thead>
-                    </table>
+                        <!-- Top Buttons Start -->
+                        <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                            <!-- Add New Button Start -->
+                            <a href="{{ route('studyTime.create') }}"
+                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                <i data-acorn-icon="plus"></i>
+                                <span>{{ __('Add New') }}</span>
+                            </a>
+                            <!-- Add New Button End -->
+                        </div>
+                        <!-- Top Buttons End -->
+                    </div>
                 </div>
-                <!-- Table End -->
+                <!-- Title and Top Buttons End -->
+
+                <!-- Content Start -->
+                <section class="scroll-section">
+                    <div class="row g-3 row-cols-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6">
+                        @foreach ($studyTimes as $studyTime)
+                            <div class="col small-gutter-col">
+                                <div class="card hover-border-primary">
+                                    <a href="{{ route('studyTime.show', $studyTime->id) }}">
+                                        <div class="card-body text-center d-flex flex-column">
+                                            <h4>{{ $studyTime->name }}</h4>
+                                            <div class="row text-capitalize">
+                                                <div class="col-8 text-start text-small text-muted">{{ __('conceptual') }}</div>
+                                                <div class="col-4 text-small text-muted">{{ $studyTime->conceptual }}%</div>
+                                            </div>
+                                            <div class="row text-capitalize">
+                                                <div class="col-8 text-start text-small text-muted">{{ __('procedural') }}</div>
+                                                <div class="col-4 text-small text-muted">{{ $studyTime->procedural }}%</div>
+                                            </div>
+                                            <div class="row text-capitalize">
+                                                <div class="col-8 text-start text-small text-muted">{{ __('attitudinal') }}</div>
+                                                <div class="col-4 text-small text-muted">{{ $studyTime->attitudinal }}%</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+                <!-- Content End -->
+
             </div>
-            <!-- Content End -->
         </div>
     </div>
-</div>
 @endsection

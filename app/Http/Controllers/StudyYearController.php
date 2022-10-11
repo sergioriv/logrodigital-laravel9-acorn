@@ -9,6 +9,7 @@ use App\Models\StudyYear;
 use App\Models\StudyYearSubject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class StudyYearController extends Controller
 {
@@ -29,24 +30,69 @@ class StudyYearController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $studyYears = StudyYear::withCount([
-            'studyYearSubject' =>
-            fn ($subjects) => $subjects->where('school_year_id', $Y->id)
-        ])
-            ->withCount([
-                'groups' =>
-                fn ($groups) => $groups->where('school_year_id', $Y->id)
-            ])
-            ->withSum([
-                'groups' =>
-                fn ($groups) => $groups->where('school_year_id', $Y->id)
-            ], 'student_quantity')
-            ->get();
+        // $studyYears = StudyYear::withCount([
+        //     'studyYearSubject' =>
+        //     fn ($subjects) => $subjects->where('school_year_id', $Y->id)
+        // ])
+        //     ->withCount([
+        //         'groups' =>
+        //         fn ($groups) => $groups->where('school_year_id', $Y->id)
+        //     ])
+        //     ->withSum([
+        //         'groups' =>
+        //         fn ($groups) => $groups->where('school_year_id', $Y->id)
+        //     ], 'student_quantity')
+        //     ->get();
 
         return view('logro.studyyear.index')->with([
             'Y' => $Y->name,
-            'studyYears' => $studyYears
+            'studyYears' => StudyYear::all()
         ]);
+    }
+
+    public function create()
+    {
+        return view('logro.studyyear.create', ['studyYears' => StudyYear::all()]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', Rule::unique('study_years', 'name')],
+            'next_year' => ['nullable'],
+            'next_year.*' => [Rule::exists('study_years','id')]
+        ]);
+
+        $studyYear = StudyYear::create([
+            'name' => $request->name,
+            'next_year' => $request->next_year
+        ]);
+
+        return redirect()->route('studyYear.subject.show', $studyYear);
+    }
+
+    public function edit(StudyYear $studyYear)
+    {
+        return view('logro.studyyear.edit', [
+            'studyYear' => $studyYear,
+            'studyYears' => StudyYear::whereNot('id', $studyYear->id)->get()
+        ]);
+    }
+
+    public function update(StudyYear $studyYear, Request $request)
+    {
+        $request->validate([
+            'name' => ['required', Rule::unique('study_years', 'name')->ignore($studyYear->id)],
+            'next_year' => ['nullable'],
+            'next_year.*' => [Rule::exists('study_years','id')]
+        ]);
+
+        $studyYear->update([
+            'name' => $request->name,
+            'next_year' => $request->next_year
+        ]);
+
+        return redirect()->route('studyYear.index');
     }
 
     public function subjects(StudyYear $studyYear)
@@ -65,6 +111,7 @@ class StudyYearController extends Controller
             ])->get();
 
             return view('logro.studyyear.subjects')->with([
+                'Y' => $Y,
                 'studyYear' => $studyYear,
                 'areas' => $areas,
             ]);
@@ -103,14 +150,13 @@ class StudyYearController extends Controller
 
         $fn_subjects = fn ($s) =>
         $s->where('school_year_id', $Y->id)
-            // ->whereHas('studyYearSubject', $fn_study_year)
             ->with(['studyYearSubject' => $fn_study_year]);
 
         $areas = ResourceArea::with(['subjects' => $fn_subjects])
-            // ->whereHas('subjects', $fn_subjects)
             ->get();
 
         return view('logro.studyyear.subjects_edit')->with([
+            'Y' => $Y,
             'studyYear' => $studyYear,
             'areas' => $areas,
         ]);
@@ -132,7 +178,6 @@ class StudyYearController extends Controller
 
         foreach ($request->subjects as $area_subject) {
 
-            // [$area, $subject, $exist] = explode('~', @$area_subject);
             $explode = explode('~', $area_subject);
             $area = $explode[0];
             $subject = $explode[1];
@@ -157,8 +202,8 @@ class StudyYearController extends Controller
 
             if ('null' !== $exist && isset($exist)) {
                 /*
-                     * StudyYearSubject modified
-                     */
+                 * StudyYearSubject modified
+                */
                 $sy_subject = StudyYearSubject::where('id', $exist)
                     ->where('school_year_id', $Y->id)
                     ->where('study_year_id', $studyYear->id)
@@ -176,8 +221,8 @@ class StudyYearController extends Controller
                 }
             } else {
                 /*
-                     * StudyYearSubject Created
-                     */
+                 * StudyYearSubject Created
+                */
                 StudyYearSubject::create([
                     'school_year_id' => $Y->id,
                     'study_year_id' => $studyYear->id,
@@ -192,7 +237,7 @@ class StudyYearController extends Controller
 
         if ($total_course_load === $areas_total) {
             DB::commit();
-            Notify::success($studyYear->name . ' ' . __('updated!'));
+            Notify::success(__('Updated!'));
             return redirect()->route('studyYear.subject.show', $studyYear);
         } else {
             DB::rollBack();

@@ -55,9 +55,6 @@ class SchoolYearController extends Controller
             'name' => ['required', 'string', Rule::unique('school_years')],
         ]);
 
-        /* school years available = false */
-        // SchoolYear::query()->update(['available' => FALSE]);
-
         SchoolYear::create([
             'name' => $request->name,
             'available' => FALSE

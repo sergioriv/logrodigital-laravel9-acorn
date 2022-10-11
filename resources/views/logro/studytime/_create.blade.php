@@ -7,14 +7,41 @@ $title = __('Create Study Time');
 @endsection
 
 @section('js_vendor')
-<script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
-<script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
-<script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
-<script src="/js/vendor/imask.js"></script>
+    <script src="/js/vendor/imask.js"></script>
 @endsection
 
 @section('js_page')
-    <script src="/js/forms/studytime-create.js"></script>
+    <script>
+        IMask(document.querySelector('#conceptual'), {
+            mask: Number,
+            min: 0,
+            max: 100,
+        });
+        IMask(document.querySelector('#procedural'), {
+            mask: Number,
+            min: 0,
+            max: 100,
+        });
+        IMask(document.querySelector('#attitudinal'), {
+            mask: Number,
+            min: 0,
+            max: 100,
+        });
+        IMask(document.querySelector('#missingAreas'), {
+            mask: Number,
+            min: 1,
+            max: 10,
+        });
+
+        jQuery('#checkMissingAreas').change(function() {
+            let checked = $(this).prop('checked');
+            if (1 == checked) {
+                $('#missingAreas').prop('disabled', false);
+            } else {
+                $('#missingAreas').prop('disabled', true);
+            }
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -30,32 +57,10 @@ $title = __('Create Study Time');
                 <!-- Title End -->
 
                 <section class="scroll-section">
-                    <div class="mb-5 wizard">
-                        <div class="border-0 pb-0">
-                            <ul class="nav nav-tabs justify-content-center disabled" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-center active" role="tab">
-                                        <div class="mb-1 title d-none d-sm-block">{{ __('Main Information') }}</div>
-                                        <div class="text-small description d-none d-md-block"></div>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-center" role="tab">
-                                        <div class="mb-1 text-muted title d-none d-sm-block">{{ __('Periods') }}</div>
-                                        <div class="text-small description d-none d-md-block"></div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
 
-                <section class="scroll-section">
-
-                    <form method="POST" id="studyTimeCreateForm" action="{{ route('studyTime.store') }}" class="tooltip-end-bottom" novalidate>
+                    <form method="POST" action="{{ route('studyTime.store') }}" class="tooltip-end-bottom" novalidate>
                         @csrf
 
-                        <!-- Info primary -->
                         <div class="card mb-5">
                             <div class="card-body">
 
@@ -72,7 +77,7 @@ $title = __('Create Study Time');
 
                                     <!-- Missing Areas -->
                                     <div class="col-md-6 form-group position-relative">
-                                        <x-label>{{ __('Is it lost by learning area?') }} {{ __('how many?') }}</x-label>
+                                        <x-label>{{ __('Missing areas') }}</x-label>
                                         <div class="input-group">
                                             <div class="input-group-text">
                                                 <input name="missing_areas_check" id="checkMissingAreas"
@@ -118,13 +123,7 @@ $title = __('Create Study Time');
                         </div>
                         <!-- Evaluation Components End -->
 
-                        <div class="text-center">
-                            <x-button type="submit" class="btn-primary btn-icon btn-icon-end">
-                                <span>{{ __('Continue') }}</span>
-                                <i data-acorn-icon="chevron-right" class="icon" data-acorn-size="18"></i>
-                            </x-button>
-                        </div>
-
+                        <x-button type="submit" class="btn-primary">{{ __('Save Study Time') }}</x-button>
                     </form>
 
 

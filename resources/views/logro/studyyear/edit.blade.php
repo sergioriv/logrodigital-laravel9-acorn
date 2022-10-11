@@ -1,54 +1,79 @@
 @php
-$title = $studyYear->name
+$title = $studyYear->name;
 @endphp
-@extends('layout',['title'=>$title])
+@extends('layout', ['title' => $title])
 
 @section('css')
+    <link rel="stylesheet" href="/css/vendor/select2.min.css" />
+    <link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" />
 @endsection
 
 @section('js_vendor')
+    <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
+    <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
+    <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
+    <script src="/js/vendor/select2.full.min.js"></script>
 @endsection
 
 @section('js_page')
+    <script src="/js/forms/select2.js"></script>
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <!-- Title Start -->
-            <section class="scroll-section" id="title">
-                <div class="page-title-container">
-                    <h1 class="mb-1 pb-0 display-4">{{ $title . ' | ' . __('Edit') }}</h1>
-                </div>
-            </section>
-            <!-- Title End -->
-
-            <section class="scroll-section">
-                <div class="card mb-5">
-                    <div class="card-body">
-
-                        <!-- Validation Errors -->
-                        {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
-
-                        <form method="POST" action="{{ route('studyYear.update', $studyYear) }}" class="tooltip-end-bottom" novalidate>
-                            @csrf
-                            @method('PUT')
-
-                            <!-- Name -->
-                            <div class="mb-3">
-                                <x-label>{{ __('Name') }}</x-label>
-                                <x-input id="name" name="name" value="{{ $studyYear->name }}" required autofocus />
-                            </div>
-
-                            <x-button type="submit" class="btn-primary">{{ __('Save Study Year') }}</x-button>
-
-                        </form>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- Title Start -->
+                <section class="scroll-section" id="title">
+                    <div class="page-title-container">
+                        <h1 class="mb-1 pb-0 display-4">{{ $title . ' | ' . __('Edit') }}</h1>
                     </div>
-                </div>
-            </section>
+                </section>
+                <!-- Title End -->
 
+                <section class="scroll-section">
+
+                    <form method="POST" action="{{ route('studyYear.update', $studyYear) }}" class="tooltip-end-bottom"
+                        novalidate>
+                        @csrf
+                        @method('PUT')
+
+                        <div class="card mb-3">
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-md-0 mb-3">
+                                        <!-- Name -->
+                                        <div class="form-group position-relative">
+                                            <x-label>{{ __('Name') }}</x-label>
+                                            <x-input name="name" :value="old('name', $studyYear->name)" required autofocus />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Next year -->
+                                        <div class="w-100 form-group position-relative">
+                                            <x-label>{{ __('Next year') }}</x-label>
+                                            <select name="next_year[]" logro="select2" multiple required>
+                                                <option label="&nbsp;"></option>
+                                                @foreach ($studyYears as $sy)
+                                                    <option value="{{ $sy->id }}"
+                                                        @selected(in_array($sy->id, $studyYear->next_year))>{{ $sy->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <x-button type="submit" class="btn-primary">{{ __('Update') }}</x-button>
+
+                    </form>
+
+                </section>
+
+            </div>
         </div>
     </div>
-</div>
 @endsection

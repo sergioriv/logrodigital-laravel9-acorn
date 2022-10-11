@@ -17,11 +17,14 @@ use App\Http\Controllers\StudentFileController;
 use App\Http\Controllers\StudyTimeController;
 use App\Http\Controllers\StudyYearController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\support\ResolveUUID;
 use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
+use App\Models\ResourceStudyYear;
 use App\Models\StudentAdvice;
+use App\Models\StudyYear;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
@@ -50,17 +53,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('permissions-reset', function() {
             app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
             return redirect()->back();
-        });
-        Route::get('add-permission', function () {
-            Permission::create([ 'name' => 'students.delete', ]);
-        });
-
-        /* SEND MAIL VERIFICATION FOR EMAIL */
-        Route::get('verification/{user}', function (User $user) {
-            SmtpMail::sendEmailVerificationNotification($user);
-            return redirect()->back()->with(
-                ['notify' => 'success', 'title' => __('Email send!')],
-            );
         });
 
         /* Route Users */
@@ -97,7 +89,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route School Year */
     Route::resource('school_years', SchoolYearController::class)->except('destroy','edit','update')->names('schoolYear');
-    // Route::get('school_years.json', [SchoolYearController::class, 'data']);
+    //⛔ Route::get('school_years.json', [SchoolYearController::class, 'data']);
     Route::put('school_years', [SchoolYearController::class, 'choose'])->name('schoolYear.selected');
 
     /* Route Headquarters */
@@ -105,12 +97,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('headquarters.json', [HeadquartersController::class, 'data']);
 
     /* Route StudyTime */
-    Route::resource('study_times', StudyTimeController::class)->except('destroy')->names('studyTime');
-    Route::get('study_times.json', [StudyTimeController::class, 'data']);
-    Route::put('study_times/{study_time}/periods', [StudyTimeController::class, 'periods_update'])->name('periods.update');
+    Route::resource('study_times', StudyTimeController::class)->except('destroy','edit','update')->names('studyTime');
+    Route::get('study_times/{study_time}/periods', [StudyTimeController::class, 'periods_create'])->name('studyTime.periods');
+    Route::post('study_times/{study_time}/periods', [StudyTimeController::class, 'periods_store'])->name('studyTime.periods.store');
+    Route::get('study_times/{study_time}/study_years', [StudyTimeController::class, 'studyYear_create'])->name('studyTime.studyYear');
+    Route::post('study_times/{study_time}/study_years', [StudyTimeController::class, 'studyYear_store'])->name('studyTime.studyYear.store');
 
     /* Route StudyYear */
-    Route::resource('study_years', StudyYearController::class)->only('index')->names('studyYear');
+    Route::resource('study_years', StudyYearController::class)->except('destroy')->names('studyYear');
+    Route::get('study_years.filter.study_time', [StudyYearController::class, 'filterStudyTime']);
     Route::get('study_years/{study_year}/subjects', [StudyYearController::class, 'subjects'])->name('studyYear.subject.show');
     Route::post('study_years/{study_year}/subjects', [StudyYearController::class, 'subjects_store'])->name('studyYear.subject.store');
     Route::get('study_years/{study_year}/subjects/edit', [StudyYearController::class, 'subjects_edit'])->name('studyYear.subject.edit');

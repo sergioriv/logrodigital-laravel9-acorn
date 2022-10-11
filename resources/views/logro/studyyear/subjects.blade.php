@@ -32,7 +32,7 @@ $title = $studyYear->name;
                 <!-- Title Start -->
                 <section class="scroll-section" id="title">
                     <div class="page-title-container">
-                        <h1 class="mb-1 pb-0 display-4">{{ $title . ' | ' . __('Subjects') }}</h1>
+                        <h1 class="mb-1 pb-0 display-4">{{ $title . ' | ' . __('Subjects') .' '. $Y->name }}</h1>
                     </div>
                 </section>
                 <!-- Title End -->
@@ -54,7 +54,7 @@ $title = $studyYear->name;
                                             <tbody>
                                                 @foreach ($area->subjects as $subject)
                                                     <tr>
-                                                        <td class="w-40">
+                                                        <td class="col-6">
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
                                                                     <input type="checkbox" name="subjects[]"
@@ -65,13 +65,13 @@ $title = $studyYear->name;
                                                                 </label>
                                                             </div>
                                                         </td>
-                                                        <td class="w-30">
+                                                        <td class="col-3">
                                                             <input type="number" disabled max="20" min="0"
                                                                 placeholder="{{ __('Hours week') }}"
                                                                 subject="{{ $subject->id }}" class="form-control"
                                                                 name="{{ $subject->id }}~hours_week" required>
                                                         </td>
-                                                        <td class="w-30">
+                                                        <td class="col-3">
                                                             <div class="input-group">
                                                                 <span class="input-group-text logro-input-disabled">%</span>
                                                                 <input type="number" disabled max="100" min="0"

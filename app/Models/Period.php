@@ -10,7 +10,6 @@ class Period extends CastCreateModel
     use HasFactory;
 
     protected $fillable = [
-        'school_year_id',
         'study_time_id',
         'period_type_id',
         'ordering',
@@ -24,11 +23,6 @@ class Period extends CastCreateModel
     /*
     * PARENTS
     */
-    public function schoolYear()
-    {
-        return $this->belongsTo(SchoolYear::class);
-    }
-
     public function studyTime()
     {
         return $this->belongsTo(StudyTime::class);

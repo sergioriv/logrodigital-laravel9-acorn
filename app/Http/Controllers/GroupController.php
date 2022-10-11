@@ -90,7 +90,7 @@ class GroupController extends Controller
 
         $headquarters = Headquarters::where('available', TRUE)->get();
         $studyTime = StudyTime::all();
-        $studyYear = StudyYear::where('available', TRUE)->get();
+        $studyYear = StudyYear::all();
         $teachers = Teacher::select('id', 'first_name', 'first_last_name')->get();
 
         return view('logro.group.create')->with([
@@ -150,7 +150,7 @@ class GroupController extends Controller
     {
         $headquarters = Headquarters::where('available', TRUE)->get();
         $studyTime = StudyTime::all();
-        $studyYear = StudyYear::where('available', TRUE)->get();
+        $studyYear = StudyYear::all();
         $teachers = Teacher::select('id', 'first_name', 'first_last_name')->get();
 
         return view('logro.group.edit')->with([

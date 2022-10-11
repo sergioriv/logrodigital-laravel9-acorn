@@ -23,10 +23,8 @@ class PeriodController extends Controller
      * @param  \App\Models\Period  $period
      * @return \Illuminate\Http\Response
      */
-    public static function update(Request $request, StudyTime $studyTime)
+    public static function create(Request $request, StudyTime $studyTime)
     {
-        $Y = SchoolYearController::current_year();
-
         $workloadTotal = 0;
         DB::beginTransaction();
 
@@ -38,7 +36,6 @@ class PeriodController extends Controller
 
             if (isset($period['id'])) {
                 $updatePeriod = Period::where('id', $period['id'])
-                    ->where('school_year_id', $Y->id)
                     ->where('study_time_id', $studyTime->id)
                     ->where('ordering', $key)->first();
 
@@ -56,7 +53,6 @@ class PeriodController extends Controller
                 }
             } else {
                 Period::create([
-                    'school_year_id' => $Y->id,
                     'study_time_id' => $studyTime->id,
                     'period_type_id' => 1,
                     'ordering' => $key,
@@ -73,16 +69,16 @@ class PeriodController extends Controller
 
         if ($workloadTotal === 100) {
             DB::commit();
-            Notify::success(__('Periods updated!'));
-            return redirect()->route('studyTime.index');
+
+            $studyTime->forceFill(['active' => TRUE])->save();
+            StudyTimeController::deleteNotActive();
+
+            Notify::success(__('Study time created!'));
+            return redirect()->route('studyTime.show', [$studyTime]);
         } else {
             DB::rollBack();
             return redirect()->back()->withErrors(__("workload not is 100%"));
         }
 
-        DB::commit();
-
-        Notify::success(__('Periods updated!'));
-        return redirect()->route('studyTime.index');
     }
 }

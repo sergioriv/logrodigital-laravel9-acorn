@@ -1,4 +1,5 @@
 const lang = $('html').attr('lang');
+const HOST = window.location.origin;
 
 // function callNotify(type = "success", title, message = "") {
 function callNotify(notify) {

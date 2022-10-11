@@ -111,6 +111,9 @@ class Scripts {
       if ("undefined" !== typeof StudentDeleteForm) {
         new StudentDeleteForm;
       }
+      if ("undefined" !== typeof StudyTimeCreateForm) {
+        new StudyTimeCreateForm;
+      }
     }
 
     // Plugin pages initialization

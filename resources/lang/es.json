@@ -70,7 +70,7 @@
     "second name": "segundo nombre",
     "institutional email": "Correo electrónico institucional",
 
-    "created at": "fecha creación",
+    "created at": "creado en",
 
     "Assign": "Asignar",
     "contact": "contacto",
@@ -360,6 +360,10 @@
     "medical prediagnosis": "prediagnóstico médico",
     "Academic workload": "Carga académica",
     "workload not is 100%": "la carga académica no es del 100%",
+    "Main Information": "Información Principal",
+    "Is it lost by learning area?": "¿Se pierde por área de aprendizaje?",
+    "how many?": "¿cuántas?",
+    "New Year of Study": "Nuevo Año de Estudio",
 
     "full name": "nombre completo",
     "new": "nuevo",
