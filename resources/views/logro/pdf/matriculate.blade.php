@@ -24,6 +24,7 @@
         .w-50 {
             width: 50%;
         }
+
         .w-100 {
             width: 100%;
         }
@@ -122,14 +123,21 @@
         .mt-1 {
             margin-top: 2em;
         }
+
         .mt-2 {
             margin-top: 10px;
         }
+
         .mt-3 {
             margin-top: 15px;
         }
+
         .mt-4 {
             margin-top: 20px;
+        }
+
+        .align-sub {
+            vertical-align: sub;
         }
 
         .form-control {
@@ -144,8 +152,8 @@
         }
 
         .badge {
-            width: 70px;
-            height: 70px;
+            max-width: 70px;
+            max-height: 70px;
         }
 
         .table {
@@ -175,12 +183,18 @@
         .signature {
             height: 75px;
         }
+
         .signature_name {
             text-transform: uppercase;
         }
+
         .signature img {
             max-width: 220px;
             height: 70px;
+        }
+
+        .text-center {
+            text-align: center;
         }
     </style>
 </head>
@@ -190,7 +204,7 @@
 
     <table class="table w-100" border="0">
         <tr>
-            <td class="h-70p w-70p">
+            <td class="h-70p w-70p text-center align-sub">
                 @if ($school->badge)
                     <img class="badge" src="{{ $school->badge }}" alt="badge">
                 @endif
@@ -208,7 +222,11 @@
                     Diciembre de 2007 Resolución No. 005850 del 10 de Julio de 2009.
                 </p>
             </td>
-            <td class="h-70p w-70p"></td>
+            <td class="h-70p w-70p align-sub text-center">
+                @if ($student->user->avatar)
+                    <img class="badge" src="{{ $student->user->avatar }}" alt="badge">
+                @endif
+            </td>
         </tr>
     </table>
 
@@ -282,9 +300,9 @@
                         <div class="label">Ciudad de expedición</div>
                         <div class="form-control">
                             @if ($student->expedition_city_id != null)
-                            {{ $student->expeditionCity->department->name . ' | ' . $student->expeditionCity->name }}
+                                {{ $student->expeditionCity->department->name . ' | ' . $student->expeditionCity->name }}
                             @else
-                            --
+                                --
                             @endif
                         </div>
                     </td>
@@ -297,12 +315,12 @@
                         <div class="form-control">
                             @if ($student->country_id == $nationalCountry->id)
                                 @if ($student->birth_city_id != null)
-                                {{ $student->birthCity->department->name . ' | ' . $student->birthCity->name }}
+                                    {{ $student->birthCity->department->name . ' | ' . $student->birthCity->name }}
                                 @else
-                                --
+                                    --
                                 @endif
                             @else
-                            --
+                                --
                             @endif
                         </div>
                     </td>
@@ -320,9 +338,9 @@
                         <div class="label">Ciudad de residencia</div>
                         <div class="form-control">
                             @if ($student->residence_city_id != null)
-                            {{ $student->residenceCity->department->name . ' | ' . $student->residenceCity->name }}
+                                {{ $student->residenceCity->department->name . ' | ' . $student->residenceCity->name }}
                             @else
-                            --
+                                --
                             @endif
                         </div>
                     </td>
@@ -368,7 +386,9 @@
     <section class="card mt-1">
         <div class="card-header">
             Datos de la Madre
-            @if ($student->person_charge == 1) (Acudiente) @endif
+            @if ($student->person_charge == 1)
+                (Acudiente)
+            @endif
         </div>
         <div class="card-content">
             <table class="table w-100">
@@ -391,9 +411,9 @@
                         <div class="label">Ciudad de residencia</div>
                         <div class="form-control">
                             @if ($student->mother != null && $student->mother->residence_city_id != null)
-                            {{ $student->mother->residenceCity->department->name . ' | ' . $student->mother->residenceCity->name }}
+                                {{ $student->mother->residenceCity->department->name . ' | ' . $student->mother->residenceCity->name }}
                             @else
-                            --
+                                --
                             @endif
                         </div>
                     </td>
@@ -413,7 +433,9 @@
     <section class="card mt-1">
         <div class="card-header">
             Datos de Padre
-            @if ($student->person_charge == 2) (Acudiente) @endif
+            @if ($student->person_charge == 2)
+                (Acudiente)
+            @endif
         </div>
         <div class="card-content">
             <table class="table w-100">
@@ -436,9 +458,9 @@
                         <div class="label">Ciudad de residencia</div>
                         <div class="form-control">
                             @if ($student->father != null && $student->father->residence_city_id != null)
-                            {{ $student->father->residenceCity->department->name . ' | ' . $student->father->residenceCity->name }}
+                                {{ $student->father->residenceCity->department->name . ' | ' . $student->father->residenceCity->name }}
                             @else
-                            --
+                                --
                             @endif
                         </div>
                     </td>
@@ -456,48 +478,56 @@
     </section>
 
     @if (null !== $student->tutor)
-    <section class="card mt-1">
-        <div class="card-header">Datos del Acudiente</div>
-        <div class="card-content">
-            <table class="table w-100">
-                <tr>
-                    <td colspan="4" class="p-1">
-                        <div class="label">Nombre completo</div>
-                        <div class="form-control">{{ $student->tutor->name ?? '--' }}</div>
-                    </td>
-                    <td colspan="3" class="p-1">
-                        <div class="label">Correo electrónico</div>
-                        <div class="form-control">{{ $student->tutor->email ?? '--' }}</div>
-                    </td>
-                    <td class="p-1">
-                        <div class="label">Teléfono</div>
-                        <div class="form-control">{{ $student->tutor->telephone ?? '--' }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="p-1">
-                        <div class="label">Ciudad de residencia</div>
-                        <div class="form-control">
-                            @if ($student->tutor != null && $student->tutor->residence_city_id != null)
-                            {{ $student->tutor->residenceCity->department->name . ' | ' . $student->tutor->residenceCity->name }}
-                            @else
-                            --
-                            @endif
-                        </div>
-                    </td>
-                    <td colspan="4" class="p-1">
-                        <div class="label">Dirección</div>
-                        <div class="form-control">{{ $student->tutor->address ?? '--' }}</div>
-                    </td>
-                    <td class="p-1">
-                        <div class="label">Celular</div>
-                        <div class="form-control">{{ $student->tutor->cellphone ?? '--' }}</div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </section>
+        <section class="card mt-1">
+            <div class="card-header">Datos del Acudiente</div>
+            <div class="card-content">
+                <table class="table w-100">
+                    <tr>
+                        <td colspan="4" class="p-1">
+                            <div class="label">Nombre completo</div>
+                            <div class="form-control">{{ $student->tutor->name ?? '--' }}</div>
+                        </td>
+                        <td colspan="3" class="p-1">
+                            <div class="label">Correo electrónico</div>
+                            <div class="form-control">{{ $student->tutor->email ?? '--' }}</div>
+                        </td>
+                        <td class="p-1">
+                            <div class="label">Teléfono</div>
+                            <div class="form-control">{{ $student->tutor->telephone ?? '--' }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="p-1">
+                            <div class="label">Ciudad de residencia</div>
+                            <div class="form-control">
+                                @if ($student->tutor != null && $student->tutor->residence_city_id != null)
+                                    {{ $student->tutor->residenceCity->department->name . ' | ' . $student->tutor->residenceCity->name }}
+                                @else
+                                    --
+                                @endif
+                            </div>
+                        </td>
+                        <td colspan="4" class="p-1">
+                            <div class="label">Dirección</div>
+                            <div class="form-control">{{ $student->tutor->address ?? '--' }}</div>
+                        </td>
+                        <td class="p-1">
+                            <div class="label">Celular</div>
+                            <div class="form-control">{{ $student->tutor->cellphone ?? '--' }}</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </section>
     @endif
+
+    <section class="mt-4">
+        Yo, {{ $student-> ?? '___________________________________' }} identificado/a con cédula
+        {{ $student->tutor->document ?? '_________________' }}, acudiente del estudiante autorizo al
+        {{ $school->name }}, para qie según lo dispuesto en la ley de protección de datos 1581 de 2012 y en
+        concordancia con el decreto 1377 de 2013, haga uso de los datos de mi acudido con fines institucionales y
+        siguiendo alineamientos del mismo.
+    </section>
 
     <section class="card mt-4">
         <table class="table w-100">
@@ -520,7 +550,7 @@
                         @endif
                     </div>
                     <div class="signature_name">
-                        {{ $student->getLastNames() .' '. $student->getNames() }}
+                        {{ $student->getLastNames() . ' ' . $student->getNames() }}
                     </div>
                     <div>Estudiante</div>
                 </td>
