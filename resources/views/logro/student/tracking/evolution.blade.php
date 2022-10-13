@@ -53,8 +53,8 @@ $title = $student->getFullName();
                                     </label>
                                     <div class="col-sm-9">
                                         <x-select name="attendance" id="attendance" logro="select2" required>
-                                            <option value="done" @selected(old('attendance') == 'done')>{{ __('done') }}</option>
-                                            <option value="not done" @selected(old('attendance') == 'not done')>{{ __('not done') }}
+                                            <option value="done" @selected(old('attendance') == 'done')>{{ __('Done') }}</option>
+                                            <option value="not done" @selected(old('attendance') == 'not done')>{{ __('Not done') }}
                                             </option>
                                         </x-select>
                                     </div>

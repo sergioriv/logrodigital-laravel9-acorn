@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
 use App\Models\Student;
-use App\Models\StudentAdvice;
 use App\Models\StudentTracking;
 use App\Models\StudentTrackingAdvice;
+use App\Models\StudentTrackingFamily;
 use App\Models\StudentTrackingRemit;
 use App\Models\StudentTrackingTeacher;
 use Illuminate\Http\Request;
@@ -91,7 +91,7 @@ class StudentTrackingController extends Controller
             'recommendations_family' => ['required', 'min:10', 'max:1000']
         ]);
 
-        StudentTrackingTeacher::create([
+        StudentTrackingFamily::create([
             'user_id' => Auth::user()->id,
             'student_id' => $student->id,
             'type_tracking' => 'FAMILY',
@@ -106,10 +106,19 @@ class StudentTrackingController extends Controller
 
     public function tracking_evolution(Student $student, StudentTrackingAdvice $advice)
     {
-        return view('logro.student.tracking.evolution', [
-            'student' => $student,
-            'advice' => $advice
-        ]);
+        if ( $advice->type_tracking !== 'advice' ) {
+            Notify::fail(__('Not allowed'));
+            return redirect()->back();
+        } elseif ( $advice->evolution === NULL ) {
+            return view('logro.student.tracking.evolution', [
+                'student' => $student,
+                'advice' => $advice
+            ]);
+        } else {
+            return redirect()->back()->withErrors(__('Advice has already evolved'));
+        }
+
+
     }
     public function tracking_evolution_update(Student $student, StudentTrackingAdvice $advice, Request $request)
     {
@@ -159,11 +168,11 @@ class StudentTrackingController extends Controller
 
             case 'advice':
                 $title = __('advice');
-                $content = '<p><b class="label-logro">'.__('date').':</b><br />'.$tracking->dateFull().'</p>'
-                            .'<p><b class="label-logro">'.__('Attendance').':</b><br />'.__($tracking->attendance).'</p>'
-                            .'<p><b class="label-logro">'.__('Type advice').':</b><br />'.__($tracking->type_advice).'</p>'
+                $content = '<div class="logro-label font-weight-bold">'.__('date').':</div>'.$tracking->dateFull().'<br />'
+                            .'<div class="logro-label font-weight-bold mt-2">'.__('Attendance').':</div>'.__($tracking->attendance).'<br />'
+                            .'<div class="logro-label font-weight-bold mt-2">'.__('Type advice').':</div>'.__($tracking->type_advice).'<br />'
                             .'<hr>'
-                            .'<p>'.$tracking->evolution.'</p>';
+                            .'<p class="m-0">'.$tracking->evolution.'</p>';
                 break;
 
             default:
