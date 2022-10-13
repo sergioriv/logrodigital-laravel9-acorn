@@ -14,6 +14,7 @@ use App\Http\Controllers\SecretariatController;
 use App\Http\Controllers\StudentAdviceController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFileController;
+use App\Http\Controllers\StudentTrackingController;
 use App\Http\Controllers\StudyTimeController;
 use App\Http\Controllers\StudyYearController;
 use App\Http\Controllers\SubjectController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Models\ResourceStudyYear;
+use App\Models\Student;
 use App\Models\StudentAdvice;
 use App\Models\StudyYear;
 use App\Models\User;
@@ -176,7 +178,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     });
     /* ADVICES */
-    Route::resource('students/{student}/advice', StudentAdviceController::class)->names('students.advice');
+    // Route::resource('students/{student}/advice', StudentAdviceController::class)->names('students.advice');
+
+    /*
+     *
+     * TRACKING
+     *
+     * */
+    Route::controller(StudentTrackingController::class)->group( function () {
+        Route::post('students/{student}/add-advice', 'advice_store')->name('students.tracking.advice.store');
+        Route::post('students/{student}/add-remit', 'remit_store')->name('students.tracking.remit.store');
+        Route::post('students/{student}/add-recom-teacher', 'teachers_store')->name('students.tracking.teachers.store');
+        Route::post('students/{student}/add-recom-family', 'family_store')->name('students.tracking.family.store');
+        Route::get('students/{student}/tracking/{advice}', 'tracking_evolution')->name('students.tracking.evolution');
+        Route::put('students/{student}/tracking/{advice}', 'tracking_evolution_update')->name('students.tracking.evolution.store');
+        Route::get('students/tracking', 'tracking_view');
+    });
 
 
     Route::put('persons_charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');

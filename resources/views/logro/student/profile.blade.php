@@ -24,9 +24,10 @@ $title = $student->getFullName();
         @endif
     @endhasrole
 
-    <!-- DataTable -->
+    <!-- PSYCHOSOCIAL -->
     @can('students.psychosocial')
         <script src="/js/vendor/datatables.min.js"></script>
+        <script src="/js/vendor/timepicker.js"></script>
     @endcan
 @endsection
 
@@ -59,9 +60,31 @@ $title = $student->getFullName();
         @endcan
     @endunlessrole
 
-    <!-- DataTable -->
+    <!-- PSYCHOSOCIAL -->
     @can('students.psychosocial')
         <script src="/js/plugins/datatable/datatables_boxed.js"></script>
+        <script src="/js/forms/student-advices.js"></script>
+        <script>
+            new TimePicker(document.querySelector('#timeAdvice'));
+
+            // jQuery('[tracking="view"]').on('click', function () {
+            //     $.get(HOST + "student/tracking", {
+            //         tracking: $(this).prop('tracking-id');
+            //     }, function (data) {
+            //         $('#viewTracking').modal('show');
+            //     });
+            // });
+            jQuery("[tracking='view']").click(function () {
+                var trackingId = $(this).attr('tracking-id');
+                $.get(HOST + '/students/tracking', {
+                    tracking: trackingId
+                }, function (data) {
+                    $('#modalViewTracking').html(data.title);
+                    $('#modalContentViewTracking').html(data.content);
+                    $('#viewTracking').modal('show');
+                })
+            });
+        </script>
     @endcan
 @endsection
 
@@ -202,9 +225,9 @@ $title = $student->getFullName();
                                     data-bs-toggle="tab" href="#psychosocialTab" role="tab">
                                     <span class="align-middle">{{ __('Psychosocial Information') }}</span>
                                 </a>
-                                <a class="nav-link @if (session('tab') === 'advices') active @endif logro-toggle px-0 border-bottom border-separator-light"
-                                    data-bs-toggle="tab" href="#advicesTab" role="tab">
-                                    <span class="align-middle">{{ __('Advices') }}</span>
+                                <a class="nav-link @if (session('tab') === 'tracking') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                    data-bs-toggle="tab" href="#trackingTab" role="tab">
+                                    <span class="align-middle">{{ __('Tracking') }}</span>
                                 </a>
                                 {{-- @if (1 === $student->inclusive)
                                     <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
@@ -2062,23 +2085,42 @@ $title = $student->getFullName();
                     <!-- Psychosocial Information Tab End -->
 
                     <!-- Advices Tab Start -->
-                    <div class="tab-pane fade @if (session('tab') === 'advices') active show @endif" id="advicesTab"
+                    <div class="tab-pane fade @if (session('tab') === 'tracking') active show @endif" id="trackingTab"
                         role="tabpanel">
                         <div class="card mt-5">
                             <div class="card-header">
                                 <!-- Top Advice Tab Start -->
                                 <div class="row">
                                     <div class="col-12 col-md-7">
-                                        <h1 class="mb-1 pb-0 display-6">{{ __('Advices') }}</h1>
+                                        <h1 class="mb-1 pb-0 display-6">{{ __('Tracking') }}</h1>
                                     </div>
                                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-                                        <!-- Add New Button Start -->
-                                        <a href="{{ route('students.advice.create', $student) }}"
-                                            class="btn btn-outline-secondary btn-icon btn-icon-start w-100 w-md-auto">
-                                            <i data-acorn-icon="plus"></i>
-                                            <span>{{ __('To Create') }}</span>
-                                        </a>
-                                        <!-- Add New Button End -->
+                                        <!-- Dropdown Button Start -->
+                                        <div class="">
+                                            <button type="button" class="btn btn-outline-info btn-icon btn-icon-only" data-bs-offset="0,3"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
+                                                <i data-acorn-icon="more-horizontal"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                                <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#addAdviceModal">
+                                                    <span>{{ __('Add advice') }}</span>
+                                                </x-dropdown-item>
+                                                <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#addRemitModal">
+                                                    <span>{{ __('Remit') }}</span>
+                                                </x-dropdown-item>
+                                                <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#addTeacherModal">
+                                                    <span>{{ __('Add teacher referral') }}</span>
+                                                </x-dropdown-item>
+                                                <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#addFamilyModal">
+                                                    <span>{{ __('Add referral to family') }}</span>
+                                                </x-dropdown-item>
+                                            </div>
+                                        </div>
+                                        <!-- Dropdown Button End -->
                                     </div>
                                 </div>
                                 <!-- Top Advice Tab Start -->
@@ -2087,37 +2129,51 @@ $title = $student->getFullName();
                                 <!-- Table Start -->
                                 <div class="">
                                     <table logro="dataTableBoxed"
-                                        class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
-                                        data-order='[[ 2, "desc" ]]'>
+                                        class="data-table w-100 responsive nowrap stripe dataTable no-footer dtr-inline"
+                                        data-order='[[ 1, "desc" ]]'>
                                         <thead>
                                             <tr>
-                                                <th class="empty">&nbsp;</th>
                                                 <th class="text-muted text-small text-uppercase p-0 pb-2">
-                                                    {{ __('status') }}</th>
+                                                    {{ __('type') }}</th>
                                                 <th class="text-muted text-small text-uppercase p-0 pb-2">
                                                     {{ __('date') }}</th>
+                                                <th class="empty">&nbsp;</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($student->advices as $studentAdvice)
+                                            @foreach ($student->tracking as $studentTracking)
                                                 <tr>
                                                     <td>
-                                                        @if ('done' === $studentAdvice->attendance)
-                                                            <a href="{{ route('students.advice.show', [$student, $studentAdvice]) }}"
-                                                                class="btn btn-sm btn-outline-info text-capitalize">
-                                                                {{ __('summary') }}
-                                                            </a>
-                                                        @endif
-
-                                                        @if ('scheduled' === $studentAdvice->attendance)
-                                                            <a href="{{ route('students.advice.edit', [$student, $studentAdvice]) }}"
-                                                                class="btn btn-sm btn-outline-info text-capitalize">
-                                                                {{ __('evolve') }}
-                                                            </a>
+                                                        @if ($studentTracking->type_tracking === 'advice')
+                                                            <div class="logro-label">{{ __('advice') }}</div>
+                                                        @elseif ($studentTracking->type_tracking === 'remit')
+                                                            <div class="d-inline-block">{{ __('Referral to') }}: {{ $studentTracking->entity_remit }}</div>
+                                                        @elseif ($studentTracking->type_tracking === 'family')
+                                                            <div class="logro-label">{{ __('recommendation to the family') }}</div>
+                                                        @elseif ($studentTracking->type_tracking === 'teachers')
+                                                            <div class="logro-label">{{ __('Recommendation for teachers') }}</div>
                                                         @endif
                                                     </td>
-                                                    <td class="text-capitalize">{{ __($studentAdvice->attendance) }}</td>
-                                                    <td class="text-small">{{ $studentAdvice->dateFull() }}</td>
+                                                    <td class="text-small">
+                                                        @if ($studentTracking->type_tracking === 'advice')
+                                                            {{ $studentTracking->dateFull() }}
+                                                        @else
+                                                            {{ $studentTracking->created_at }}
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-end">
+                                                        @if ($studentTracking->type_tracking === 'advice'
+                                                            && $studentTracking->evolution === NULL)
+                                                        <a class="btn btn-sm btn-link" href="{{ route('students.tracking.evolution', [$student, $studentTracking]) }}">
+                                                        {{ __('Evolve') }}
+                                                        </a>
+                                                        @else
+                                                        <div class="btn btn-sm btn-link" tracking="view" tracking-id="{{ $studentTracking->id }}">
+                                                        {{ __('See') }}
+                                                        </div>
+                                                        @endif
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -2318,5 +2374,81 @@ $title = $student->getFullName();
             </div>
         @endcan
     @endunlessrole
+
+    @can('students.psychosocial')
+        <!-- Modal Add Advice -->
+        <div class="modal fade" id="addAdviceModal" aria-labelledby="modalAddAdvice" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddAdvice">{{ __('Add advice') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    @include('logro.student.tracking.advice')
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Add Remit -->
+        <div class="modal fade" id="addRemitModal" aria-labelledby="modalAddRemit" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddRemit">{{ __('Remit') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    @include('logro.student.tracking.remit')
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Add Teachers -->
+        <div class="modal fade" id="addTeacherModal" aria-labelledby="modalAddTeacher" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddTeacher">{{ __('Recommendation for teachers') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    @include('logro.student.tracking.teacher')
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Add Family -->
+        <div class="modal fade" id="addFamilyModal" aria-labelledby="modalAddFamily" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddFamily">{{ __('recommendation to the family') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    @include('logro.student.tracking.family')
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal View Info Tracking -->
+        <div class="modal fade" id="viewTracking" aria-labelledby="modalViewTracking" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title logro-label" id="modalViewTracking"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalContentViewTracking"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
 
 @endsection

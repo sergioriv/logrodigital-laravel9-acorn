@@ -257,9 +257,9 @@ class Student extends Model
             ->with(['studentFileType' => fn($fileType) => $fileType->where('required', 1)])
             ->whereHas('studentFileType', fn($fileType) => $fileType->where('required', 1));
     }
-    public function advices()
+    public function tracking()
     {
-        return $this->hasMany(StudentAdvice::class, 'student_id', 'id');
+        return $this->hasMany(StudentTracking::class, 'student_id', 'id');
     }
 
 

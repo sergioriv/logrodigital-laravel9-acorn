@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class StudentTrackingRemit extends Model
+{
+    use HasFactory;
+
+    protected $table = 'student_tracking';
+
+    public $fillable = [
+        'user_id',
+        'student_id',
+        'type_tracking',
+        'entity_remit',
+        'reason_entity'
+    ];
+
+
+    /* MUTADORES Y ACCESORES */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id');
+    }
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'id');
+    }
+
+
+    protected function typeTracking(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => strtoupper($value),
+            get: fn ($value) => strtolower($value),
+        );
+    }
+}

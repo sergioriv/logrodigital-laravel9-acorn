@@ -76,7 +76,9 @@ class StudentController extends Controller
             'matriculate_update',
             'create_parents_filter');
         $this->middleware('can:students.info')->only('show', 'update', 'pdf_matriculate');
-        $this->middleware('can:students.psychosocial')->only('psychosocial_update', 'piar_update');
+        $this->middleware('can:students.psychosocial')->only(
+            'psychosocial_update',
+            'piar_update');
         $this->middleware('can:students.delete')->only('send_delete_code', 'delete');
 
         $this->middleware(YearCurrentMiddleware::class)->only('matriculate', 'matriculate_update');
@@ -729,6 +731,14 @@ class StudentController extends Controller
         }
     }
 
+
+    /*
+     *
+     *
+     * INFO PHYCOSOCIAL
+     *
+     *
+     * */
     public function psychosocial_update(Request $request, Student $student)
     {
         $request->validate([
@@ -916,7 +926,13 @@ class StudentController extends Controller
     }
 
 
-    /* TRANSFER */
+    /*
+     *
+     *
+     * TRANSFER
+     *
+     *
+     * */
     public function transfer(Student $student)
     {
         $Y = SchoolYearController::current_year();
