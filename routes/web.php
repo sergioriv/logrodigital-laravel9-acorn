@@ -58,7 +58,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         /* Route Users */
-        Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');
         Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');
         Route::get('users.json', [UserController::class, 'data']);
 
@@ -70,6 +69,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('number_students', [SchoolController::class, 'number_students_show'])->name('support.number_students');
         Route::put('number_students', [SchoolController::class, 'number_students_update'])->name('support.number_students');
     });
+
+    /* Asigna la contraseña luego de confirmar el correo */
+    Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');
 
 
     /* Route Profile */

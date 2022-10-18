@@ -37,7 +37,7 @@ class SecretariatController extends Controller
         $request->validate([
             'name'          => ['required', 'string', 'max:191'],
             'last_names'    => ['required', 'string', 'max:191'],
-            'email'         => ['required', 'email', 'max:191', Rule::unique('users')],
+            'email'         => ['required', 'email', 'max:191', Rule::unique('users', 'email')],
             'telephone'     => ['nullable', 'string', 'max:20']
         ]);
 

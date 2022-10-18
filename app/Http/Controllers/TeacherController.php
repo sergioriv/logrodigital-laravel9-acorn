@@ -45,7 +45,7 @@ class TeacherController extends Controller
         $request->validate([
             'names' => ['required', 'string', 'max:191'],
             'lastNames' => ['required', 'string', 'max:191'],
-            'institutional_email' => ['required', 'email', 'max:191', Rule::unique('users','email')],
+            'institutional_email' => ['required', 'email', Rule::unique('users', 'email')],
             'date_entry' => ['required', 'date'],
             'type_appointment' => ['required', new TypeAppointmentRule],
             'type_admin_act' => ['required', new TypeAdminActRule],
@@ -58,10 +58,10 @@ class TeacherController extends Controller
         ]);
 
         $user_name = $request->names . ' ' . $request->lastNames;
-        $user = UserController::_create($user_name, $request->email, RoleUser::TEACHER);
+        $user = UserController::_create($user_name, $request->institutional_email, RoleUser::TEACHER);
 
         if (!$user) {
-            Notify::fail(__('Invalid email (:email)', ['email' => $request->email]));
+            Notify::fail(__('Invalid email (:email)', ['email' => $request->institutional_email]));
             return redirect()->back();
         }
 

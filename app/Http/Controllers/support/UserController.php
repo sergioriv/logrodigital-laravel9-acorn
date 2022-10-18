@@ -5,6 +5,7 @@ namespace App\Http\Controllers\support;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\ProviderUser;
+use App\Models\Data\RoleUser;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -59,7 +60,7 @@ class UserController extends Controller
             'email' => $email,
         ])->assignRole($role);
 
-        if ($role === 7)
+        if ($role === RoleUser::STUDENT)
             $user->forceFill(['email_verified_at' => now()])->save();
         elseif (NULL !== $email) {
 
@@ -68,7 +69,7 @@ class UserController extends Controller
             $countEmail = User::where('email', $email)->count();
             if ( $countEmail == 1 )
             {
-                // $sendmail = SmtpMail::sendEmailVerificationNotification($user);
+                $sendmail = SmtpMail::sendEmailVerificationNotification($user);
             }
 
             /* si el mail de verificación rebota, el usuario es eliminado

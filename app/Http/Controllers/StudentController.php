@@ -12,6 +12,7 @@ use App\Http\Middleware\YearCurrentMiddleware;
 use App\Imports\StudentsImport;
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Data\RoleUser;
 use App\Models\Disability;
 use App\Models\DocumentType;
 use App\Models\DwellingType;
@@ -182,7 +183,7 @@ class StudentController extends Controller
         ]);
 
         $user_name = $request->firstName . ' ' . $request->firstLastName;
-        $user = UserController::_create($user_name, $request->institutional_email, 7);
+        $user = UserController::_create($user_name, $request->institutional_email, RoleUser::STUDENT);
 
         $Y = SchoolYearController::current_year();
 

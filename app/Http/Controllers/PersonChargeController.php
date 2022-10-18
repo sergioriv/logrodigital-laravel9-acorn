@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
+use App\Models\Data\RoleUser;
 use App\Models\PersonCharge;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -109,7 +110,7 @@ class PersonChargeController extends Controller
          */
         if (NULL !== $request->mother_name) {
             if ($mother === NULL) {
-                $user_mother = UserController::_create($request->mother_name, $request->mother_email, 8);
+                $user_mother = UserController::_create($request->mother_name, $request->mother_email, RoleUser::PARENT);
 
                 if (!$user_mother) {
                     Notify::fail(__('Invalid email (:email)', ['email' => $request->mother_email]));
@@ -152,7 +153,7 @@ class PersonChargeController extends Controller
          */
         if (NULL !== $request->father_name) {
             if ($father === NULL) {
-                $user_father = UserController::_create($request->father_name, $request->father_email, 8);
+                $user_father = UserController::_create($request->father_name, $request->father_email, RoleUser::PARENT);
 
                 if (!$user_father) {
                     Notify::fail(__('Invalid email (:email)', ['email' => $request->father_email]));
@@ -196,7 +197,7 @@ class PersonChargeController extends Controller
         if ($request->person_charge > 2) {
             if (NULL !== $request->tutor_name) {
                 if ($tutor === NULL) {
-                    $user_tutor = UserController::_create($request->tutor_name, $request->tutor_email, 8);
+                    $user_tutor = UserController::_create($request->tutor_name, $request->tutor_email, RoleUser::PARENT);
 
                     if (!$user_tutor) {
                         Notify::fail(__('Invalid email (:email)', ['email' => $request->tutor_email]));
