@@ -68,7 +68,7 @@ class UserController extends Controller
             $countEmail = User::where('email', $email)->count();
             if ( $countEmail == 1 )
             {
-                $sendmail = SmtpMail::sendEmailVerificationNotification($user);
+                // $sendmail = SmtpMail::sendEmailVerificationNotification($user);
             }
 
             /* si el mail de verificación rebota, el usuario es eliminado

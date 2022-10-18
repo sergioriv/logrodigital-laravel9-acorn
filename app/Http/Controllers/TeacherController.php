@@ -7,6 +7,10 @@ use App\Exports\TeachersInstructuveExport;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Imports\TeachersImport;
+use App\Models\City;
+use App\Models\Data\MaritalStatus;
+use App\Models\Data\TypeAdministrativeAct;
+use App\Models\Data\TypeAppointment;
 use App\Models\SchoolYear;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -24,16 +28,19 @@ class TeacherController extends Controller
 
     public function create()
     {
-        return view('logro.teacher.create');
+        return view('logro.teacher.create', [
+            'cities' => City::all(),
+            'maritalStatus' => MaritalStatus::data(),
+            'typesAppointment' => TypeAppointment::data(),
+            'typesAdministrativeAct' => TypeAdministrativeAct::data()
+        ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'firstName' => ['required', 'string', 'max:191'],
-            'secondName' => ['nullable', 'string', 'max:191'],
-            'firstLastName' => ['required', 'string', 'max:191'],
-            'secondLastName' => ['nullable', 'string', 'max:191'],
+            'names' => ['required', 'string', 'max:191'],
+            'lastNames' => ['required', 'string', 'max:191'],
             'phone' => ['required', 'string', 'max:20'],
             'email' => ['required', 'email', 'max:191', Rule::unique('users')]
         ]);

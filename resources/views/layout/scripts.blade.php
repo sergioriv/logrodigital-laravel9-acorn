@@ -16,7 +16,7 @@
 <script src="/js/base/settings.js"></script>
 <!-- Template Base Scripts End -->
 <!-- Page Specific Scripts Start -->
-<script src="/js/app.js?v=0.3"></script>
+<script src="/js/app.js?d=1665787647135"></script>
 @auth
 <x-notify-errors />
 @endauth

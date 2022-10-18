@@ -53,7 +53,7 @@ if (jQuery().datepicker) {
         jQuery("[logro='datePicker']").datepicker({
             language: 'es',
             format: 'yyyy-mm-dd',
-            endDate: '-1y',
+            endDate: new Date(),
             autoclose: true,
         });
     }

@@ -242,13 +242,13 @@
                 <td class="p-1 p-tb-0">
                     <div class="form-control">
                         <b>Grado:</b>
-                        {{ $student->studyYear->name }}
+                        {{ $student->studyYear->name ?? '' }}
                     </div>
                 </td>
                 <td class="p-1 p-tb-0">
                     <div class="form-control">
                         <b>Sede:</b>
-                        {{ $student->headquarters->name }}
+                        {{ $student->headquarters->name ?? '' }}
                     </div>
                 </td>
             </tr>
@@ -308,7 +308,7 @@
                     </td>
                     <td colspan="2" class="p-1">
                         <div class="label">País de origen</div>
-                        <div class="form-control">{{ $student->country->name }}</div>
+                        <div class="form-control">{{ $student->country->name ?? '' }}</div>
                     </td>
                     <td colspan="2" class="p-1">
                         <div class="label">Ciudad de nacimiento</div>
@@ -360,7 +360,7 @@
                 <tr>
                     <td colspan="2" class="p-1">
                         <div class="label">Tipo de vivienda</div>
-                        <div class="form-control">{{ $student->dwellingType->name }}</div>
+                        <div class="form-control">{{ $student->dwellingType->name ?? '' }}</div>
                     </td>
                     <td colspan="3" class="p-1">
                         <div class="label">Barrio</div>
@@ -372,11 +372,11 @@
                     </td>
                     <td class="p-1">
                         <div class="label">Género</div>
-                        <div class="form-control">{{ $student->gender->name }}</div>
+                        <div class="form-control">{{ $student->gender->name ?? '' }}</div>
                     </td>
                     <td class="p-1">
                         <div class="label">RH</div>
-                        <div class="form-control">{{ $student->rh->name }}</div>
+                        <div class="form-control">{{ $student->rh->name ?? '' }}</div>
                     </td>
                 </tr>
             </table>
@@ -522,11 +522,17 @@
     @endif
 
     <section class="mt-4">
-        Yo, {{ $student-> ?? '___________________________________' }} identificado/a con cédula
-        {{ $student->tutor->document ?? '_________________' }}, acudiente del estudiante autorizo al
-        {{ $school->name }}, para qie según lo dispuesto en la ley de protección de datos 1581 de 2012 y en
+        Yo, {{ $student->tutor->name ?? '___________________________________' }} identificado/a con cédula
+        {{ $student->tutor->document ?? '_________________' }}, acudiente del estudiante, autorizo al
+        {{ $school->name }}, para que según lo dispuesto en la ley de protección de datos 1581 de 2012 y en
         concordancia con el decreto 1377 de 2013, haga uso de los datos de mi acudido con fines institucionales y
         siguiendo alineamientos del mismo.
+    </section>
+    <section class="mt-4">
+        Yo, {{ $student->tutor->name ?? '___________________________________' }} identificado/a con cédula
+        {{ $student->tutor->document ?? '_________________' }}, acudiente del estudiante, @if ($student->data_treatment !== 1) no @endif autorizo al
+        {{ $school->name }}, para que según lo dispuesto en la ley de protección de datos 1581 de 2012 y en
+        concordancia con el decreto 1377 de 2013, haga uso con fines institucionales de las fotografías en las que aparezca mi acudido.
     </section>
 
     <section class="card mt-4">
