@@ -307,13 +307,13 @@ $title = $school->name;
                                                 <td>
                                                     <a href="{{ route('teacher.show', $teacher) }}"
                                                         class="list-item-heading body">
-                                                        {{ $teacher->getLastNames() }}
+                                                        {{ $teacher->last_names }}
                                                     </a>
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('teacher.show', $teacher) }}"
                                                         class="list-item-heading body">
-                                                        {{ $teacher->getNames() }}
+                                                        {{ $teacher->names }}
                                                     </a>
                                                 </td>
                                                 <td>{{ $teacher->institutional_email }}</td>

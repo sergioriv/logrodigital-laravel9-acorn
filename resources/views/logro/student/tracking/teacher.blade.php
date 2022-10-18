@@ -7,7 +7,7 @@
 
             <div class="mb-2 form-group position-relative">
                 <x-label>{{ __('Alert due date') }}</x-label>
-                <x-input name="date_limit_teachers" logro="datePickerToday" />
+                <x-input name="date_limit_teachers" logro="datePickerAfter" />
             </div>
             <div class="form-group position-relative">
                 <x-label>{{ __('Recommendation for teachers') }}</x-label>

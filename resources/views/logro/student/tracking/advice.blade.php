@@ -7,8 +7,7 @@
             <div class="col-md-6">
                 <div class="position-relative form-group">
                     <x-label>{{ __('date') }}</x-label>
-                    <x-input name="date" :value="old('date')" logro="datePickerToday" />
-                    <div class="form-text">Min: {{ date('Y-m-d') }}</div>
+                    <x-input name="date" :value="old('date')" logro="datePickerAll" />
                 </div>
             </div>
             <div class="col-md-6">

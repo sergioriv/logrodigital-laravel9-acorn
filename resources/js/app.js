@@ -48,9 +48,9 @@ if (jQuery().select2) {
 }
 
 if (jQuery().datepicker) {
-    if (jQuery("[logro='datePicker']"))
+    if (jQuery("[logro='datePickerBefore']"))
     {
-        jQuery("[logro='datePicker']").datepicker({
+        jQuery("[logro='datePickerBefore']").datepicker({
             language: 'es',
             format: 'yyyy-mm-dd',
             endDate: new Date(),
@@ -58,12 +58,21 @@ if (jQuery().datepicker) {
         });
     }
 
-    if (jQuery("[logro='datePickerToday']"))
+    if (jQuery("[logro='datePickerAfter']"))
     {
-        jQuery("[logro='datePickerToday']").datepicker({
+        jQuery("[logro='datePickerAfter']").datepicker({
             language: 'es',
             format: 'yyyy-mm-dd',
             startDate: new Date(),
+            autoclose: true,
+        });
+    }
+
+    if (jQuery("[logro='datePickerAll']"))
+    {
+        jQuery("[logro='datePickerAll']").datepicker({
+            language: 'es',
+            format: 'yyyy-mm-dd',
             autoclose: true,
         });
     }

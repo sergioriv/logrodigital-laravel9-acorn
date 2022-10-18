@@ -399,7 +399,10 @@
     "Resolution": "Resolución",
     "appointment number": "número de nombramiento",
     "number of the possession certificate": "número de acta de posesión",
-    "transfer number": "número de traslado",
+    "transfer resolution number": "número de resolución de traslado",
+    "possession certificate number": "número de acta de posesión",
+    "date of entry into the institution": "fecha de entrada a la institución",
+    "No Subjects": "Sin asignaturas",
 
     "full name": "nombre completo",
     "new": "nuevo",

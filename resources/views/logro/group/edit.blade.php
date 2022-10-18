@@ -92,9 +92,9 @@ $title = $group->name;
                                         <select id="select2Teacher" name="group_director">
                                             <option label="&nbsp;"></option>
                                             @foreach ($teachers as $tc)
-                                            <option value="{{ $tc->id }}"
+                                            <option value="{{ $tc->uuid }}"
                                                 @if ($group->teacher_id !== null) @selected(old('group_director', $group->teacher_id) == $tc->id) @endif>
-                                                {{ $tc->getFullName() }}
+                                                {{ $tc->fullName() }}
                                             </option>
                                             @endforeach
                                         </select>

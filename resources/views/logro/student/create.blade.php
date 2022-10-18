@@ -178,7 +178,7 @@ $title = __('Create') . ' ' . __('Student');
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('birthdate') }}</x-label>
-                                            <x-input :value="old('birthdate')" logro="datePicker" name="birthdate" />
+                                            <x-input :value="old('birthdate')" logro="datePickerBefore" name="birthdate" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">

@@ -9,13 +9,17 @@ use App\Http\Controllers\support\UserController;
 use App\Imports\TeachersImport;
 use App\Models\City;
 use App\Models\Data\MaritalStatus;
+use App\Models\Data\RoleUser;
 use App\Models\Data\TypeAdministrativeAct;
 use App\Models\Data\TypeAppointment;
 use App\Models\SchoolYear;
 use App\Models\Teacher;
+use App\Rules\TypeAdminActRule;
+use App\Rules\TypeAppointmentRule;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class TeacherController extends Controller
 {
@@ -41,12 +45,20 @@ class TeacherController extends Controller
         $request->validate([
             'names' => ['required', 'string', 'max:191'],
             'lastNames' => ['required', 'string', 'max:191'],
-            'phone' => ['required', 'string', 'max:20'],
-            'email' => ['required', 'email', 'max:191', Rule::unique('users')]
+            'institutional_email' => ['required', 'email', 'max:191', Rule::unique('users','email')],
+            'date_entry' => ['required', 'date'],
+            'type_appointment' => ['required', new TypeAppointmentRule],
+            'type_admin_act' => ['required', new TypeAdminActRule],
+            'appointment_number' => ['nullable', 'max:20'],
+            'date_appointment' => ['nullable', 'date'],
+            'possession_certificate' => ['nullable', 'max:20'],
+            'date_possession_certificate' => ['nullable', 'date'],
+            'transfer_resolution' => ['nullable', 'max:20'],
+            'date_transfer_resolution' => ['nullable', 'date'],
         ]);
 
-        $user_name = $request->firstName . ' ' . $request->firstLastName;
-        $user = UserController::_create($user_name, $request->email, 6);
+        $user_name = $request->names . ' ' . $request->lastNames;
+        $user = UserController::_create($user_name, $request->email, RoleUser::TEACHER);
 
         if (!$user) {
             Notify::fail(__('Invalid email (:email)', ['email' => $request->email]));
@@ -55,12 +67,22 @@ class TeacherController extends Controller
 
         Teacher::create([
             'id' => $user->id,
-            'first_name' => $request->firstName,
-            'second_name' => $request->secondName,
-            'first_last_name' => $request->firstLastName,
-            'second_last_name' => $request->secondLastName,
-            'telephone' => $request->phone,
-            'institutional_email' => $request->email
+            'uuid' => Str::uuid()->toString(),
+            'names' => $request->names,
+            'last_names' => $request->lastNames,
+            'institutional_email' => $request->institutional_email,
+            'date_entry' => $request->date_entry,
+
+            'type_appointment' => $request->type_appointment,
+            'type_admin_act' => $request->type_admin_act,
+            'appointment_number' => $request->appointment_number,
+            'date_appointment' => $request->date_appointment,
+            'possession_certificate' => $request->possession_certificate,
+            'date_possession_certificate' => $request->date_possession_certificate,
+            'transfer_resolution' => $request->transfer_resolution,
+            'date_transfer_resolution' => $request->date_transfer_resolutionm,
+
+            'active' => TRUE
         ]);
 
         Notify::success(__('Teacher created!'));
@@ -70,9 +92,12 @@ class TeacherController extends Controller
 
     public function show(Teacher $teacher)
     {
-        $schoolYear = SchoolYear::whereHas('teacherSubjectGroups', function ($subject) use ($teacher) {
+        $schoolYear = SchoolYear::whereHas('teacherSubjectGroups',
+            fn ($subject) => $subject->where('teacher_id', $teacher->id))
+        /* $schoolYear = SchoolYear::whereHas('teacherSubjectGroups', function ($subject) use ($teacher) {
             $subject->where('teacher_id', $teacher->id);
-        })->orderByDesc('id')->get();
+        }) */
+        ->orderByDesc('id')->get();
 
         return view('logro.teacher.show')->with([
             'teacher' => $teacher,

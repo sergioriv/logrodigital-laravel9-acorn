@@ -151,7 +151,7 @@ class GroupController extends Controller
         $headquarters = Headquarters::where('available', TRUE)->get();
         $studyTime = StudyTime::all();
         $studyYear = StudyYear::all();
-        $teachers = Teacher::select('id', 'first_name', 'first_last_name')->get();
+        $teachers = Teacher::select('id', 'uuid', 'names', 'last_names')->get();
 
         return view('logro.group.edit')->with([
             'group' => $group,
@@ -168,20 +168,22 @@ class GroupController extends Controller
             'headquarters' => ['required', Rule::exists('headquarters', 'id')],
             'study_time' => ['required', Rule::exists('study_times', 'id')],
             'study_year' => ['required', Rule::exists('study_years', 'id')],
-            'group_director' => ['nullable', Rule::exists('teachers', 'id')],
+            'group_director' => ['nullable', Rule::exists('teachers', 'uuid')],
             'name' => ['required', 'string']
         ]);
+
+        $uuidTeacher = Teacher::select('id')->find($request->group_director);
 
         $group->update([
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->study_time,
             'study_year_id' => $request->study_year,
-            'teacher_id' => $request->group_director,
+            'teacher_id' => $uuidTeacher->id,
             'name' => $request->name,
         ]);
 
         Notify::success(__('Group updated!'));
-        return redirect()->route('group.index');
+        return redirect()->route('group.show', $group);
     }
 
     public function matriculate(Group $group)
@@ -287,10 +289,12 @@ class GroupController extends Controller
 
                 [$create, $subject, $teacher] = explode('~', $teacher_subject);
 
+                $uuidTeacher = Teacher::select('id')->find($teacher);
+
                 if ('null' === $create) {
                     TeacherSubjectGroup::create([
                         'school_year_id' => $Y->id,
-                        'teacher_id' => $teacher,
+                        'teacher_id' => $uuidTeacher->id,
                         'subject_id' => $subject,
                         'group_id' => $group->id
                     ]);
@@ -298,7 +302,7 @@ class GroupController extends Controller
                     echo 'update | ';
                     $teacherGroup = TeacherSubjectGroup::find($create);
                     $teacherGroup->update([
-                        'teacher_id' => $teacher
+                        'teacher_id' => $uuidTeacher->id
                     ]);
                 }
             }

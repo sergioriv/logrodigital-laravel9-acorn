@@ -211,7 +211,7 @@ $title = __('Persons in Charge');
                                                             <x-label>{{ __('birthdate') }}</x-label>
                                                             <x-input-error
                                                                 value="{{ old('mother_birthdate', $student->mother->birthdate ?? null) }}"
-                                                                logro="datePicker" name="mother_birthdate"
+                                                                logro="datePickerBefore" name="mother_birthdate"
                                                                 :hasError="'mother_birthdate'" />
                                                         </div>
                                                     </div>
@@ -339,7 +339,7 @@ $title = __('Persons in Charge');
                                                             <x-label>{{ __('birthdate') }}</x-label>
                                                             <x-input-error
                                                                 value="{{ old('father_birthdate', $student->father->birthdate ?? null) }}"
-                                                                logro="datePicker" name="father_birthdate"
+                                                                logro="datePickerBefore" name="father_birthdate"
                                                                 :hasError="'father_birthdate'" />
                                                         </div>
                                                     </div>
@@ -475,7 +475,7 @@ $title = __('Persons in Charge');
                                                                 <x-label>{{ __('birthdate') }}</x-label>
                                                                 <x-input-error
                                                                     value="{{ old('tutor_birthdate', $student->tutor->birthdate ?? null) }}"
-                                                                    logro="datePicker" name="tutor_birthdate"
+                                                                    logro="datePickerBefore" name="tutor_birthdate"
                                                                     :hasError="'tutor_birthdate'" />
                                                             </div>
                                                         </div>

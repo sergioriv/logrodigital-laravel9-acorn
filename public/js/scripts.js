@@ -114,6 +114,9 @@ class Scripts {
       if ("undefined" !== typeof StudyTimeCreateForm) {
         new StudyTimeCreateForm;
       }
+      if ("undefined" !== typeof TeacherCreateForm) {
+        new TeacherCreateForm;
+      }
     }
 
     // Plugin pages initialization

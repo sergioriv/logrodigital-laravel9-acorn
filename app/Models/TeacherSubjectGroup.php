@@ -26,7 +26,7 @@ class TeacherSubjectGroup extends CastCreateModel
 
     public function teacher()
     {
-        return $this->belongsTo(Teacher::class)->select('id','first_name','first_last_name');
+        return $this->belongsTo(Teacher::class, 'teacher_id', 'id')->select('id', 'uuid', 'names', 'last_names');
     }
 
     public function subject()

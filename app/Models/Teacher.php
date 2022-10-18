@@ -10,15 +10,29 @@ class Teacher extends CastCreateModel
 {
     use HasFactory;
 
+    protected $primaryKey = 'uuid';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
         'id',
-        'telephone',
-        'document',
+        'uuid',
         'names',
         'last_names',
-        'bonding_type',
-        'latest_degree',
         'institutional_email',
+        'date_entry',
+
+        'type_appointment',
+        'type_admin_act',
+        'appointment_number',
+        'date_appointment',
+        'possession_certificate',
+        'date_possession_certificate',
+        'transfer_resolution',
+        'date_transfer_resolution',
+
+        'telephone',
+        'document',
         'personal_email',
         'birthdate',
         'whatsapp'
@@ -34,7 +48,7 @@ class Teacher extends CastCreateModel
      */
     public function teacherSubjectGroups()
     {
-        return $this->hasMany(TeacherSubjectGroup::class);
+        return $this->hasMany(TeacherSubjectGroup::class, 'teacher_id', 'id');
     }
 
     public function director_groups()
@@ -43,39 +57,9 @@ class Teacher extends CastCreateModel
     }
 
 
-    /*
-     * Accesores
-     */
-    public function getFullName()
+    /* Accesores */
+    public function fullName()
     {
-        return "{$this->first_name} {$this->first_last_name}";
-    }
-    public function getNames()
-    {
-        return "{$this->first_name} {$this->second_name}";
-    }
-    public function getLastNames()
-    {
-        return "{$this->first_last_name} {$this->second_last_name}";
-    }
-
-    protected function bondingType(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => ucfirst(strtolower($value)),
-        );
-    }
-
-    protected function secondName(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value !== NULL ? $value : ''
-        );
-    }
-    protected function secondLastName(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value !== NULL ? $value : ''
-        );
+        return "{$this->names} {$this->last_names}";
     }
 }

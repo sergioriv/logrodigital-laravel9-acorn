@@ -237,7 +237,10 @@ return [
         'observations_for_entity' => 'observaciones para la entidad',
 
         'security_email' => 'correo de seguridad',
-        'code' => 'código'
+        'code' => 'código',
+
+        'type_appointment' => 'tipo de nombramiento',
+        'type_admin_act' => 'tipo de acto administrativo'
     ],
 
 ];

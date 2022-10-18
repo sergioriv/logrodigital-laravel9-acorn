@@ -48,8 +48,7 @@ $title = $group->name;
                                     $selected = 'null~'. $subject->id;
                                     @endphp
                                     <tr>
-                                        <td scope="row" class="col-4">{{ $subject->resourceSubject->name
-                                            }}</td>
+                                        <td scope="row" class="col-4">{{ $subject->resourceSubject->name }}</td>
                                         <td class="col-6">
                                             <div class="w-100">
                                                 <select name="teachers[]" data-placeholder="{{ __(" Choose") .' '. __("Teacher") }}" class="logro-select2">
@@ -76,9 +75,9 @@ $title = $group->name;
                                                     @endif
                                                 @endif
                                                 @endforeach
-                                                value="{{ $selected .'~'. $teacher->id }}"
+                                                value="{{ $selected .'~'. $teacher->uuid }}"
                                                     >
-                                                    {{ $teacher->getFullName() }}
+                                                    {{ $teacher->fullName() }}
                                                     </option>
                                                     @endforeach
                                                 </select>

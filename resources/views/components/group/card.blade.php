@@ -1,0 +1,27 @@
+@props(['group' => null])
+
+@if ($group)
+    <div class="col small-gutter-col">
+        <div class="card h-100 hover-border-primary border-0">
+            <a href="{{ route('group.show', $group) }}">
+                <div class="card-body text-center d-flex flex-column">
+                    <h5 class="text-primary font-weight-bold">{{ $group->name }}</h5>
+                    <small class="text-muted">{{ $group->headquarters->name }}</small>
+                    <small class="text-muted">{{ $group->studyTime->name }}</small>
+                    <small class="text-muted">{{ $group->studyYear->name }}</small>
+                    <small class="text-muted">
+                        @if (null !== $group->teacher_id)
+                            <i class="icon icon-15 bi-award text-muted"></i>
+                            <span>
+                                {{ $group->teacher->fullName() }}
+                            </span>
+                        @else
+                            <span>&nbsp;</span>
+                        @endif
+                    </small>
+                    {{ $slot }}
+                </div>
+            </a>
+        </div>
+    </div>
+@endif

@@ -118,7 +118,10 @@ $title = __('Groups');
                     <!-- Cards Start -->
                     <section class="row g-2 row-cols-3 row-cols-md-4 row-cols-lg-6" id="groupsList">
                         @foreach ($groups as $group)
-                            <div class="col small-gutter-col">
+                        <x-group.card :group="$group">
+                            <small class="mt-2 text-muted">{{ $group->student_quantity .' '. __("students") }}</small>
+                        </x-group.card>
+                            {{-- <div class="col small-gutter-col">
                                 <div class="card h-100">
 
                                     <a href="{{ route('group.show', $group) }}">
@@ -131,7 +134,7 @@ $title = __('Groups');
                                                 @if (NULL !== $group->teacher_id)
                                                     <i class="icon icon-15 bi-award text-muted"></i>
                                                     <span>
-                                                        {{ $group->teacher->getFullName() }}
+                                                        {{ $group->teacher->fullName() }}
                                                     </span>
                                                 @else
                                                 <span>&nbsp;</span>
@@ -141,7 +144,7 @@ $title = __('Groups');
                                         </div>
                                     </a>
                                 </div>
-                            </div>
+                            </div> --}}
                         @endforeach
                     </section>
                     <!-- Cards End -->
