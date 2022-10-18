@@ -20,7 +20,7 @@ function groups_filter()
 
 function template_card_group(group)
 {
-    var template = `<div class="col small-gutter-col"><div class="card h-100">`
+    var template = `<div class="col small-gutter-col"><div class="card h-100 hover-border-primary border-0">`
         template += `<a href="groups/` + group.id + `">`
         template += `<div class="card-body text-center d-flex flex-column">`
         template += `<h5 class="text-primary font-weight-bold">` + group.name +`</h5>`
@@ -30,7 +30,7 @@ function template_card_group(group)
         template += `<small class="btn-icon-start text-muted">`
         if (group.teacher) {
             template += `<i class="icon icon-15 bi-award text-muted"></i> `
-            template += `<span>` + group.teacher.first_name + ` ` + group.teacher.first_last_name + `</span>`
+            template += `<span>` + group.teacher.names + ` ` + group.teacher.last_names + `</span>`
         } else {
             template += `<span>&nbsp;</span>`
         }
