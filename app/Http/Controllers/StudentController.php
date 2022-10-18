@@ -1145,7 +1145,7 @@ class StudentController extends Controller
         $pdf->setPaper('letter', 'portrait');
         $pdf->setOption('dpi', 72);
 
-        return $pdf->stream($student->getFullName() .'.pdf');
+        return $pdf->download($student->getFullName() .'.pdf');
     }
 
     private function send_msg($student, $group)
