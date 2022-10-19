@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
@@ -52,12 +53,17 @@ class ProfileController extends Controller
 
             case 'SUPPORT':
                 $support = User::findOrFail(Auth::user()->id);
-                return view('profile.support-edit')->with('support', $support);
+                return view('profile.support-edit', ['support' => $support]);
                 break;
 
             case 'SECRETARY':
                 $support = User::findOrFail(Auth::user()->id);
-                return view('profile.support-edit')->with('support', $support);
+                return view('profile.support-edit', ['support' => $support]);
+                break;
+
+            case 'TEACHER':
+                $teacher = Teacher::where('id', Auth::user()->id)->first();
+                return (new TeacherController)->profile($teacher);
                 break;
 
             case 'STUDENT':
@@ -107,16 +113,17 @@ class ProfileController extends Controller
                 UserController::profile_update($request, $support);
                 break;
 
+            case 'TEACHER':
+                $teacher = Teacher::where('id', Auth::user()->id)->first();
+                return (new TeacherController)->profile_update($teacher, $request);
+                break;
+
             case 'STUDENT':
                 $student = Student::findOrFail(Auth::user()->id);
                 $update = new StudentController();
                 $update->update($request, $student);
                 break;
 
-                /* case 'Restaurant':
-                $restaurant = Restaurant::findOrFail(Auth::user()->id);
-                RestaurantController::profile_update($request, $restaurant);
-                break; */
 
             default:
                 return $this->not_found();

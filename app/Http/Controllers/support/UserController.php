@@ -118,28 +118,40 @@ class UserController extends Controller
     {
         $user = User::findOrFail($user_id);
 
-        /* tratamiento para el username */
-        $name = static::_username($name);
-
-        $user->update([
-            'name' => $name,
-        ]);
 
         if ($email != null) {
 
             /* convertir email in lower */
             $email = Str::lower($email);
 
-            $user->update([
-                'email' => $email,
-            ]);
+            if ( $user->email !== $email ) {
+
+                $sendmail = SmtpMail::sendEmailVerificationNotification($user);
+
+                /* comprueba que el correo fué enviado y permite la actualización del correo */
+                if (!$sendmail) {
+                    return false;
+                }
+
+                $user->forceFill([
+                    'email' => $email,
+                    'email_verified_at' => null,
+                    'password' => null,
+                    'remember_token' => null
+                    ])->save();
+
+            }
+
         }
 
-        if ($avatar != null) {
-            $user->update([
-                'avatar' => $avatar
-            ]);
-        }
+        /* tratamiento para el username */
+        $name = static::_username($name);
+        $user->update([
+            'name' => $name,
+        ]);
+
+
+        return true;
     }
 
     public static function _update_avatar(Request $request, User $user)

@@ -14,6 +14,7 @@ use App\Models\Data\TypeAdministrativeAct;
 use App\Models\Data\TypeAppointment;
 use App\Models\SchoolYear;
 use App\Models\Teacher;
+use App\Rules\MaritalStatusRule;
 use App\Rules\TypeAdminActRule;
 use App\Rules\TypeAppointmentRule;
 use Illuminate\Http\Request;
@@ -33,8 +34,6 @@ class TeacherController extends Controller
     public function create()
     {
         return view('logro.teacher.create', [
-            'cities' => City::all(),
-            'maritalStatus' => MaritalStatus::data(),
             'typesAppointment' => TypeAppointment::data(),
             'typesAdministrativeAct' => TypeAdministrativeAct::data()
         ]);
@@ -103,6 +102,90 @@ class TeacherController extends Controller
             'teacher' => $teacher,
             'schoolYear' => $schoolYear
         ]);
+    }
+
+    public function profile(Teacher $teacher)
+    {
+        return view('logro.teacher.profile.edit', [
+            'teacher' => $teacher,
+            'cities' => City::all(),
+            'maritalStatus' => MaritalStatus::data(),
+        ]);
+    }
+
+    public function profile_update(Teacher $teacher, Request $request)
+    {
+        $request->validate([
+            'names' => ['required', 'string', 'max:191'],
+            'lastNames' => ['required', 'string', 'max:191'],
+            'document' => ['nullable', 'max:20', Rule::unique('teachers', 'document')],
+            'expedition_city' => ['nullable', Rule::exists('cities', 'id')],
+            'birth_city' => ['nullable', Rule::exists('cities', 'id')],
+            'birthdate' => ['nullable', 'date', 'before:today'],
+            'residence_city' => ['nullable', Rule::exists('cities', 'id')],
+            'address' => ['nullable', 'max:100'],
+            'telephone' => ['nullable', 'max:30'],
+            'cellphone' => ['nullable', 'max:30'],
+            'institutional_email' => ['required', 'email', Rule::unique('users', 'email')->ignore($teacher->id)],
+            'marital_status' => ['nullable', new MaritalStatusRule],
+
+            'appointment_number' => ['nullable', 'max:20'],
+            'date_appointment' => ['nullable', 'date', 'before:today'],
+            'possession_certificate' => ['nullable', 'max:20'],
+            'date_possession_certificate' => ['nullable', 'date', 'before:today'],
+            'transfer_resolution' => ['nullable', 'max:20'],
+            'date_transfer_resolution' => ['nullable', 'date', 'before:today'],
+
+            'hierarchy_grade' => ['nullable', 'max:20'],
+            'resolution_hierarchy' => ['nullable', 'max:20'],
+            'date_resolution_hierarchy' => ['nullable', 'date', 'before:today'],
+
+            'last_diploma' => ['nullable', 'max:191'],
+            'institution_last_diploma' => ['nullable', 'max:191'],
+            'date_last_diploma' => ['nullable', 'date', 'before:today']
+        ]);
+
+        $user_name = $request->names . ' ' . $request->lastNames;
+        $user = UserController::_update($teacher->id, $user_name, $request->institutional_email);
+
+        if (!$user) {
+            Notify::fail(__('Invalid email (:email)', ['email' => $request->institutional_email]));
+            return redirect()->back();
+        }
+
+        $teacher->update([
+            'names' => $request->names,
+            'last_names' => $request->lastNames,
+            'institutional_email' => $request->institutional_email,
+
+            'document' => $request->document,
+            'expedition_city' => $request->expedition_city,
+            'birth_city' => $request->birth_city,
+            'birthdate' => $request->birthdate,
+            'residence_city' => $request->residence_city,
+            'address' => $request->address,
+            'telephone' => $request->telephone,
+            'cellphone' => $request->cellphone,
+            'marital_status' => $request->marital_status,
+
+            'appointment_number' => $request->appointment_number,
+            'date_appointment' => $request->date_appointment,
+            'possession_certificate' => $request->possession_certificate,
+            'date_possession_certificate' => $request->date_possession_certificate,
+            'transfer_resolution' => $request->transfer_resolution,
+            'date_transfer_resolution' => $request->date_transfer_resolution,
+
+            'hierarchy_grade' => $request->hierarchy_grade,
+            'resolution_hierarchy' => $request->resolution_hierarchy,
+            'date_resolution_hierarchy' => $request->date_resolution_hierarchy,
+
+            'last_diploma' => $request->last_diploma,
+            'institution_last_diploma' => $request->institution_last_diploma,
+            'date_last_diploma' => $request->date_last_diploma
+        ]);
+
+        Notify::success(__('Updated profile!'));
+        return redirect()->route('user.profile.edit');
     }
 
     public function edit(Teacher $teacher)

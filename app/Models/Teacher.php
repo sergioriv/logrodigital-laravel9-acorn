@@ -22,6 +22,16 @@ class Teacher extends CastCreateModel
         'institutional_email',
         'date_entry',
 
+        'document',
+        'expedition_city',
+        'birth_city',
+        'birthdate',
+        'residence_city',
+        'address',
+        'telephone',
+        'cellphone',
+        'marital_status',
+
         'type_appointment',
         'type_admin_act',
         'appointment_number',
@@ -31,11 +41,13 @@ class Teacher extends CastCreateModel
         'transfer_resolution',
         'date_transfer_resolution',
 
-        'telephone',
-        'document',
-        'personal_email',
-        'birthdate',
-        'whatsapp'
+        'hierarchy_grade',
+        'resolution_hierarchy',
+        'date_resolution_hierarchy',
+
+        'last_diploma',
+        'institution_last_diploma',
+        'date_last_diploma'
     ];
 
     public function user()
