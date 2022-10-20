@@ -247,6 +247,26 @@ class Student extends Model
     {
         return $this->hasOne(PersonCharge::class,'student_id')->where('kinship_id', '>', 2);
     }
+    public function myTutorIs()
+    {
+        switch ($this->person_charge) {
+            case 1:
+                return $this->mother();
+                break;
+
+            case 2:
+                return $this->father();
+                break;
+
+            default:
+                return $this->tutor();
+                break;
+        }
+
+
+
+        return $this->hasOne(PersonCharge::class,'student_id')->where('kinship_id', '>', 2);
+    }
     public function files()
     {
         return $this->hasMany(StudentFile::class, 'student_id', 'id');

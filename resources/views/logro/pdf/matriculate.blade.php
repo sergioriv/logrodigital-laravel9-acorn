@@ -522,15 +522,15 @@
     @endif
 
     <section class="mt-4">
-        Yo, {{ $student->tutor->name ?? '___________________________________' }} identificado/a con cédula
-        {{ $student->tutor->document ?? '_________________' }}, acudiente del estudiante, autorizo al
+        Yo, {{ $student->myTutorIs->name ?? '___________________________________' }} identificado/a con cédula
+        {{ $student->myTutorIs->document ?? '_________________' }}, acudiente del estudiante, autorizo al
         {{ $school->name }}, para que según lo dispuesto en la ley de protección de datos 1581 de 2012 y en
         concordancia con el decreto 1377 de 2013, haga uso de los datos de mi acudido con fines institucionales y
         siguiendo alineamientos del mismo.
     </section>
     <section class="mt-4">
-        Yo, {{ $student->tutor->name ?? '___________________________________' }} identificado/a con cédula
-        {{ $student->tutor->document ?? '_________________' }}, acudiente del estudiante, @if ($student->data_treatment !== 1) no @endif autorizo al
+        Yo, {{ $student->myTutorIs->name ?? '___________________________________' }} identificado/a con cédula
+        {{ $student->myTutorIs->document ?? '_________________' }}, acudiente del estudiante, @if ($student->data_treatment !== 1) no @endif autorizo al
         {{ $school->name }}, para que según lo dispuesto en la ley de protección de datos 1581 de 2012 y en
         concordancia con el decreto 1377 de 2013, haga uso con fines institucionales de las fotografías en las que aparezca mi acudido.
     </section>
