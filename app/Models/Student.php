@@ -167,7 +167,7 @@ class Student extends Model
     }
     public function documentTypeCode()
     {
-        return $this->belongsTo(DocumentType::class, 'code');
+        return $this->belongsTo(DocumentType::class, 'document_type_code', 'code');
     }
     public function healthManager()
     {
@@ -183,31 +183,31 @@ class Student extends Model
     }
     public function expeditionCity()
     {
-        return $this->belongsTo(City::class, 'expedition_city_id');
+        return $this->belongsTo(City::class, 'expedition_city_id', 'id');
     }
     public function country()
     {
-        return $this->belongsTo(Country::class, 'country_id');
+        return $this->belongsTo(Country::class, 'country_id', 'id');
     }
     public function birthCity()
     {
-        return $this->belongsTo(City::class, 'birth_city_id');
+        return $this->belongsTo(City::class, 'birth_city_id', 'id');
     }
     public function residenceCity()
     {
-        return $this->belongsTo(City::class, 'residence_city_id');
+        return $this->belongsTo(City::class, 'residence_city_id', 'id');
     }
     public function dwellingType()
     {
-        return $this->belongsTo(DwellingType::class, 'dwelling_type_id');
+        return $this->belongsTo(DwellingType::class, 'dwelling_type_id', 'id');
     }
     public function gender()
     {
-        return $this->belongsTo(Gender::class, 'gender_id');
+        return $this->belongsTo(Gender::class, 'gender_id', 'id');
     }
     public function rh()
     {
-        return $this->belongsTo(Rh::class, 'rh_id');
+        return $this->belongsTo(Rh::class, 'rh_id', 'id');
     }
     public function typeConflic()
     {

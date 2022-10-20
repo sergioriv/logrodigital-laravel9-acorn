@@ -129,14 +129,18 @@
                                                         @foreach ($studentsGroup as $studentG)
                                                             <tr>
                                                                 <td scope="row">
-                                                                    {{-- @hasrole('TEACHER') --}}
-                                                                    {{-- {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }} --}}
-                                                                    {{-- @else --}}
-                                                                        <a href="{{ route('students.show', $studentG) }}"
-                                                                            class="list-item-heading body">
-                                                                            {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
-                                                                        </a>
-                                                                    {{-- @endhasrole --}}
+                                                                    @can('students.info')
+                                                                    <a href="{{ route('students.show', $studentG) }}"
+                                                                        class="list-item-heading body">
+                                                                        {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
+                                                                    </a>
+                                                                    @else
+                                                                    <a href="{{ route('students.view', $studentG) }}"
+                                                                        class="list-item-heading body">
+                                                                        {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
+                                                                    </a>
+                                                                    @endcan
+
                                                                     @if (1 === $studentG->inclusive)
                                                                         <span
                                                                             class="badge bg-outline-warning">{{ __('inclusive') }}</span>

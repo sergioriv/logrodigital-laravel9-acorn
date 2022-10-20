@@ -8,6 +8,7 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\support\WAController;
 use App\Http\Middleware\CheckStudentCountMiddleware;
+use App\Http\Middleware\StudentActionRoleMiddleware;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Imports\StudentsImport;
 use App\Models\City;
@@ -40,6 +41,7 @@ use App\Models\StudentRemovalCode;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
 use App\Models\TypesConflict;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -60,6 +62,7 @@ class StudentController extends Controller
     {
         $this->middleware('can:students.index')->except(
             'show',
+            'view',
             'update',
             'wizard_documents_request',
             'wizard_person_charge_request',
@@ -76,7 +79,11 @@ class StudentController extends Controller
             'matriculate',
             'matriculate_update',
             'create_parents_filter');
-        $this->middleware('can:students.info')->only('show', 'update', 'pdf_matriculate');
+        $this->middleware('can:students.info')->only(
+            'show',
+            'update',
+            'pdf_matriculate');
+        $this->middleware('can:students.view')->only('view');
         $this->middleware('can:students.psychosocial')->only(
             'psychosocial_update',
             'piar_update');
@@ -84,6 +91,7 @@ class StudentController extends Controller
 
         $this->middleware(YearCurrentMiddleware::class)->only('matriculate', 'matriculate_update');
         $this->middleware(CheckStudentCountMiddleware::class)->only('create', 'store', 'import', 'import_store');
+        // $this->middleware(StudentActionRoleMiddleware::class)->only('show');
     }
 
     /*
@@ -510,6 +518,16 @@ class StudentController extends Controller
         }
     }
 
+
+
+
+    /*
+     *
+     *
+     * EDIT STUDENT
+     *
+     *
+     *  */
     public function show(Student $student)
     {
         $Y = SchoolYearController::current_year();
@@ -573,6 +591,19 @@ class StudentController extends Controller
             'nationalCountry' => NationalCountry::country()
         ]);
     }
+
+    /*
+     *
+     *
+     * VIEW STUDENT
+     *
+     *
+     *  */
+    public function view(Student $student)
+    {
+        return view('logro.student.profile-view', ['student' => $student]);
+    }
+
 
     public function update(Request $request, Student $student, $wizard = false)
     {

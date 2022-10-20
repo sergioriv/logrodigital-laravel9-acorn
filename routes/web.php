@@ -160,6 +160,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('students/create', 'create')->name('students.create');
         Route::post('students/no-enrolled', 'store')->name('students.store');
         Route::get('students/{student}/edit', 'show')->name('students.show');
+        Route::get('students/{student}/view', 'view')->name('students.view');
         Route::put('students/{student}', 'update')->name('students.update');
         Route::delete('students/{student}', 'delete')->name('students.delete');
         Route::get('students/{student}/code-confirmation', 'send_delete_code');
