@@ -262,10 +262,6 @@ class Student extends Model
                 return $this->tutor();
                 break;
         }
-
-
-
-        return $this->hasOne(PersonCharge::class,'student_id')->where('kinship_id', '>', 2);
     }
     public function files()
     {
