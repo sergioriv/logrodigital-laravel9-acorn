@@ -1,5 +1,5 @@
 @php
-$title = $group->name;
+    $title = $group->name;
 @endphp
 @extends('layout', ['title' => $title])
 
@@ -50,17 +50,19 @@ $title = $group->name;
                             </div>
                             <!-- Title End -->
 
-                            <!-- Top Buttons Start -->
-                            <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-                                <!-- Edit Name Button Start -->
-                                <a href="{{ route('group.edit', $group) }}"
-                                    class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
-                                    <i data-acorn-icon="edit-square"></i>
-                                    <span>{{ __('Edit') }}</span>
-                                </a>
-                                <!-- Edit Name Button End -->
-                            </div>
-                            <!-- Top Buttons End -->
+                            @can('groups.create')
+                                <!-- Top Buttons Start -->
+                                <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                                    <!-- Edit Name Button Start -->
+                                    <a href="{{ route('group.edit', $group) }}"
+                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                        <i data-acorn-icon="edit-square"></i>
+                                        <span>{{ __('Edit') }}</span>
+                                    </a>
+                                    <!-- Edit Name Button End -->
+                                </div>
+                                <!-- Top Buttons End -->
+                            @endcan
                         </div>
 
                     </div>
@@ -86,10 +88,10 @@ $title = $group->name;
                                             aria-selected="true">{{ __('Subjects') . ' & ' . __('Teachers') }}</a>
                                     </li>
                                 @endcan
-                                <li class="nav-item" role="presentation">
+                                {{-- <li class="nav-item" role="presentation">
                                     <a class="nav-link" data-bs-toggle="tab" href="#otherTab" role="tab"
                                         aria-selected="false">{{ __('Other') }}</a>
-                                </li>
+                                </li> --}}
                             </ul>
                             <!-- Title Tabs End -->
 
@@ -98,8 +100,8 @@ $title = $group->name;
                                 <!-- Students Tab Start -->
                                 <div class="tab-pane fade active show" id="studentsTab" role="tabpanel">
 
-                                    <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
-                                        @can('groups.students.matriculate')
+                                    @can('groups.students.matriculate')
+                                        <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
                                             @if (null !== $Y->available)
                                                 @if ($count_studentsNoEnrolled > 0)
                                                     <!-- Groups Buttons Start -->
@@ -115,8 +117,8 @@ $title = $group->name;
                                                     <!-- Groups Buttons End -->
                                                 @endif
                                             @endif
-                                        @endcan
-                                    </div>
+                                        </div>
+                                    @endcan
 
                                     <!-- Students Content Tab Start -->
                                     <section class="scroll-section">
@@ -127,10 +129,14 @@ $title = $group->name;
                                                         @foreach ($studentsGroup as $studentG)
                                                             <tr>
                                                                 <td scope="row">
-                                                                    <a href="{{ route('students.show', $studentG) }}"
-                                                                        class="list-item-heading body">
-                                                                        {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
-                                                                    </a>
+                                                                    {{-- @hasrole('TEACHER') --}}
+                                                                    {{-- {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }} --}}
+                                                                    {{-- @else --}}
+                                                                        <a href="{{ route('students.show', $studentG) }}"
+                                                                            class="list-item-heading body">
+                                                                            {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
+                                                                        </a>
+                                                                    {{-- @endhasrole --}}
                                                                     @if (1 === $studentG->inclusive)
                                                                         <span
                                                                             class="badge bg-outline-warning">{{ __('inclusive') }}</span>
@@ -227,11 +233,11 @@ $title = $group->name;
                                 </div>
                                 <!-- Groups Tab End -->
 
-                                <!-- Branches Tab Start -->
+                                <!-- Other Tab Start
                                 <div class="tab-pane fade" id="otherTab" role="tabpanel">
                                     other
                                 </div>
-                                <!-- Branches Tab End -->
+                                 Other Tab End -->
                             </div>
                         </div>
                         <!-- Right Side End -->

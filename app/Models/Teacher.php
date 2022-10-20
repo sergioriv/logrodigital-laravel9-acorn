@@ -47,7 +47,9 @@ class Teacher extends CastCreateModel
 
         'last_diploma',
         'institution_last_diploma',
-        'date_last_diploma'
+        'date_last_diploma',
+
+        'active'
     ];
 
     public function user()

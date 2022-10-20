@@ -157,6 +157,15 @@
             </li>
             @endcan
 
+            @hasrole('TEACHER')
+            <li>
+                <a href="{{ route('teacher.my.subjects') }}" data-href="/myinstitution">
+                    <i class="icon icon-18 bi-journals"></i>
+                    <span class="label">{{ __('Subjects') }}</span>
+                </a>
+            </li>
+            @endhasrole
+
 
             <div class="separator-light"></div>
 

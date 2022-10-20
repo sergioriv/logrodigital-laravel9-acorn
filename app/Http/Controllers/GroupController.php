@@ -22,7 +22,7 @@ class GroupController extends Controller
 {
     function __construct()
     {
-        $this->middleware('can:groups.index');
+        $this->middleware('can:groups.index')->only('index');
         $this->middleware('can:groups.create')->only('create', 'store', 'edit', 'update');
         // $this->middleware('can:groups.students');
         $this->middleware('can:groups.students.matriculate')->only('matriculate', 'matriculate_update');

@@ -57,6 +57,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->back();
         });
 
+        Route::get('add-permission', function () {
+            Permission::create(['name' => 'students.view']);
+        });
+
         /* Route Users */
         Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');
         Route::get('users.json', [UserController::class, 'data']);
@@ -133,7 +137,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('teachers/import', 'import_store')->name('teacher.import');
         Route::get('teachers/instructive', 'export_instructive')->name('teachers.instructive');
     });
-    Route::resource('teachers', TeacherController::class)->except('destroy','index')->names('teacher');
+    Route::resource('teachers', TeacherController::class)->except('destroy','index','edit','update')->names('teacher');
     Route::resource('secretariat', SecretariatController::class)->only('create','store')->names('secreatariat');
 
     /* Route Groups */
@@ -146,6 +150,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route TeacherSubjectGroups */
     Route::resource('teachers/{teacher}/subjects', TeacherSubjectGroupController::class)->names('teacher.subjects');
+
+    /* Route Teacher User */
+    Route::get('mysubjects', [TeacherController::class, 'mysubjects'])->name('teacher.my.subjects');
 
     /* Route Students */
     Route::controller(StudentController::class)->group( function () {

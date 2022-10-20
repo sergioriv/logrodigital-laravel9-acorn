@@ -116,7 +116,7 @@ $title = __('Groups');
                     <!-- Controls End -->
 
                     <!-- Cards Start -->
-                    <section class="row g-2 row-cols-3 row-cols-md-4 row-cols-lg-6" id="groupsList">
+                    <section class="row g-3 row-cols-3 row-cols-md-4 row-cols-lg-6" id="groupsList">
                         @foreach ($groups as $group)
                         <x-group.card :group="$group">
                             <small class="mt-2 text-muted">{{ $group->student_quantity .' '. __("students") }}</small>
