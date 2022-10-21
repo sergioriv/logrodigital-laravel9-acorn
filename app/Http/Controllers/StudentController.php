@@ -8,8 +8,10 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\support\WAController;
 use App\Http\Middleware\CheckStudentCountMiddleware;
+use App\Http\Middleware\StudentAccessTeacherMiddleware;
 use App\Http\Middleware\StudentActionRoleMiddleware;
 use App\Http\Middleware\YearCurrentMiddleware;
+use App\Http\Requests\TeacherAccessStudent;
 use App\Imports\StudentsImport;
 use App\Models\City;
 use App\Models\Country;
@@ -40,6 +42,7 @@ use App\Models\StudentFileType;
 use App\Models\StudentRemovalCode;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
+use App\Models\Teacher;
 use App\Models\TypesConflict;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -91,7 +94,6 @@ class StudentController extends Controller
 
         $this->middleware(YearCurrentMiddleware::class)->only('matriculate', 'matriculate_update');
         $this->middleware(CheckStudentCountMiddleware::class)->only('create', 'store', 'import', 'import_store');
-        // $this->middleware(StudentActionRoleMiddleware::class)->only('show');
     }
 
     /*
@@ -601,6 +603,25 @@ class StudentController extends Controller
      *  */
     public function view(Student $student)
     {
+
+        /*
+         * Para que el Rol TEACHER solo pueda ver estudiantes que esten en sus listados en el año actual
+         *  */
+        if (UserController::role_auth() === 'TEACHER') {
+            $subjectsTeacher = TeacherController::subjects()->select('group_id')->get();
+
+            $groups = [];
+            foreach ($subjectsTeacher as $subjects) {
+                array_push($groups, $subjects->group_id);
+            }
+
+            array_unique($groups);
+
+            if ( !in_array($student->group_id, $groups) ) {
+                return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
+            }
+        }
+
         return view('logro.student.profile-view', ['student' => $student]);
     }
 

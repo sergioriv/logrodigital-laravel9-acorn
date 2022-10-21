@@ -88,6 +88,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('profile/personal_info', [StudentController::class, 'wizard_personal_info_request'])->name('student.wizard.personal-info');
     Route::put('profile/edit', [StudentController::class, 'wizard_complete_request'])->name('student.wizard.complete');
     Route::get('profile/download/matriculate', [StudentController::class, 'pdf_matriculate'])->name('student.pdf.matriculate');
+    Route::get('profile/avatar/edit', [ProfileController::class, 'auth_avatar_edit'])->name('profile.auth.avatar.edit');
+    Route::put('profile/avatar/edit', [ProfileController::class, 'auth_avatar_edit_update'])->name('profile.auth.avatar.update');
 
     /* My Institution */
     Route::get('myinstitution', [SchoolController::class, 'show'])->name('myinstitution');

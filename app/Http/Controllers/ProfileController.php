@@ -134,6 +134,27 @@ class ProfileController extends Controller
         return redirect()->route('user.profile.edit');
     }
 
+    public function auth_avatar_edit()
+    {
+        return view('profile.avatar-edit', ['user' => Auth::user()]);
+    }
+
+    public function auth_avatar_edit_update(Request $request)
+    {
+        $request->validate([
+            'avatar' => ['required', 'file', 'mimes:jpg,jpeg,png,webp','max:2048']
+        ]);
+
+        $user = Auth::user();
+
+        UserController::_update_avatar($request, $user);
+
+        Notify::success( __('Avatar Updated!') );
+        return redirect()->route('user.profile.edit');
+    }
+
+
+
     public function update_avatar(Request $request, User $user)
     {
         $request->validate([

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
+use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\Group;
 use App\Models\GroupStudent;
@@ -128,6 +129,26 @@ class GroupController extends Controller
 
     public function show(Group $group)
     {
+
+        /*
+         * Para que el Rol TEACHER solo pueda acceder a sus grupos de el año actual
+         *  */
+        if (UserController::role_auth() === 'TEACHER') {
+            $subjectsTeacher = TeacherController::subjects()->select('group_id')->get();
+
+            $groups = [];
+            foreach ($subjectsTeacher as $subjects) {
+                array_push($groups, $subjects->group_id);
+            }
+
+            array_unique($groups);
+
+            if ( !in_array($group->id, $groups) ) {
+                return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
+            }
+        }
+
+
         $Y = SchoolYearController::current_year();
 
         $sy = $group->study_year_id;

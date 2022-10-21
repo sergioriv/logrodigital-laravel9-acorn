@@ -39,13 +39,32 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <!-- Title Start -->
-                <section class="scroll-section" id="title">
-                    <div class="page-title-container">
-                        <h1 class="mb-1 pb-0 display-4">{{ $title }}</h1>
+                <!-- Title and Top Buttons Start -->
+                <section class="page-title-container">
+                    <div class="row">
+                        <!-- Title Start -->
+                        <div class="col-12 col-md-7">
+                            <h1 class="mb-1 pb-0 display-4" id="title">{{ $title }}</h1>
+                        </div>
+                        <!-- Title End -->
+
+                        <!-- Top Buttons Start -->
+                        <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+
+                            <!-- Add New Button Start -->
+                            <a href="{{ route('profile.auth.avatar.edit') }}"
+                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                <i data-acorn-icon="edit-square"></i>
+                                <span>{{ __('Edit avatar') }}</span>
+                            </a>
+                            <!-- Add New Button End -->
+
+
+                        </div>
+                        <!-- Top Buttons End -->
                     </div>
                 </section>
-                <!-- Title End -->
+                <!-- Title and Top Buttons End -->
 
                 <!-- Content Start -->
                 <section class="scroll-section">
@@ -244,8 +263,7 @@
                                 <div class="col-md-4">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('date') }}</x-label>
-                                        <x-input :value="old('date_last_diploma', $teacher)" logro="datePickerBefore"
-                                            name="date_last_diploma" />
+                                        <x-input :value="old('date_last_diploma', $teacher)" logro="datePickerBefore" name="date_last_diploma" />
                                     </div>
                                 </div>
                             </div>

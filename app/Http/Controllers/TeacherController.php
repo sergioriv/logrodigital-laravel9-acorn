@@ -204,13 +204,28 @@ class TeacherController extends Controller
 
     public function mysubjects()
     {
-        $Y = SchoolYearController::available_year();
-        $teacher_id = Auth::user()->id;
+        return view('logro.teacher.profile.subjects', ['subjects' => self::subjects()->get()]);
+    }
 
-        $subjects = TeacherSubjectGroup::where('school_year_id', $Y->id)
-                    ->where('teacher_id', $teacher_id);
 
-        return view('logro.teacher.profile.subjects', ['subjects' => $subjects->get()]);
+    /*
+     *
+     * Extrae las materias del User Teacher
+     *
+     *  */
+    public static function subjects()
+    {
+        if ( 'TEACHER' === UserController::role_auth() ) {
+            $Y = SchoolYearController::available_year();
+            $teacher_id = Auth::user()->id;
+
+            $subjects = TeacherSubjectGroup::where('school_year_id', $Y->id)
+                        ->where('teacher_id', $teacher_id);
+
+            return $subjects;
+        }
+
+        return [];
     }
 
 
