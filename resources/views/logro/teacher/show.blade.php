@@ -43,17 +43,9 @@ $title = $teacher->names;
                                     <div class="d-flex align-items-center flex-column mb-3">
                                         <div class="mb-5 d-flex align-items-center flex-column">
 
-                                            @if ($teacher->user->avatar != null)
-                                                <div class="sw-13 position-relative mb-3">
-                                                    <img src="{{ $teacher->user->avatar }}" class="img-fluid rounded-xl"
-                                                        alt="thumb" />
-                                                </div>
-                                            @else
-                                                <div
-                                                    class="sw-13 sh-13 mb-3 d-inline-block bg-separator d-flex justify-content-center align-items-center rounded-xl">
-                                                    <i class="bi-person-circle icon icon-24" class="icon"></i>
-                                                </div>
-                                            @endif
+                                            <!-- Avatar Form Start -->
+                                            <x-avatar-profile :avatar="$teacher->user->avatar" class="mb-3" />
+                                            <!-- Avatar Form End -->
 
                                             <div class="h5">{{ $teacher->fullName() }}</div>
                                             <div class="text-muted">{{ __($teacher->type_appointment) }}</div>
