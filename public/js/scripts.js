@@ -117,6 +117,9 @@ class Scripts {
       if ("undefined" !== typeof TeacherCreateForm) {
         new TeacherCreateForm;
       }
+      if ("undefined" !== typeof TeacherPermitCreateForm) {
+        new TeacherPermitCreateForm;
+      }
     }
 
     // Plugin pages initialization

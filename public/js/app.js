@@ -76,6 +76,16 @@ if (jQuery().datepicker) {
             autoclose: true,
         });
     }
+
+    if (jQuery('[datePickerRange]'))
+    {
+        jQuery('[datePickerRange]').datepicker({
+            weekStart: 1,
+            language: 'es',
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+    }
 }
 
 function DataTableInterval(datatable) {

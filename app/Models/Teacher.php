@@ -70,6 +70,11 @@ class Teacher extends CastCreateModel
         return $this->hasMany(Group::class);
     }
 
+    public function permits()
+    {
+        return $this->hasMany(TeacherPermit::class, 'teacher_id', 'id');
+    }
+
 
     /* Accesores */
     public function fullName()

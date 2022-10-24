@@ -251,7 +251,7 @@ $title = $school->name;
 
                                     <!-- Add New Button Start -->
                                     <a href="{{ route('teacher.create') }}"
-                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
                                         <i data-acorn-icon="plus"></i>
                                         <span>{{ __('Add New') }}</span>
                                     </a>
@@ -259,7 +259,7 @@ $title = $school->name;
 
                                     <!-- Dropdown Button Start -->
                                     <div class="ms-1">
-                                        <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only"
+                                        <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
                                             data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="false" data-submenu>
                                             <i data-acorn-icon="more-horizontal"></i>
@@ -361,7 +361,7 @@ $title = $school->name;
 
                                     <!-- Add New Button Start -->
                                     <a href="{{ route('secreatariat.create') }}"
-                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
                                         <i data-acorn-icon="plus"></i>
                                         <span>{{ __('Add New') }}</span>
                                     </a>

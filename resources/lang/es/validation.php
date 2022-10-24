@@ -240,7 +240,11 @@ return [
         'code' => 'código',
 
         'type_appointment' => 'tipo de nombramiento',
-        'type_admin_act' => 'tipo de acto administrativo'
+        'type_admin_act' => 'tipo de acto administrativo',
+        'short_description' => 'descripción breve',
+        'support_document' => 'documento soporte',
+        'permit_date_end' => 'fecha fin',
+        'permit_date_start' => 'fecha inicio'
     ],
 
 ];

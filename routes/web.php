@@ -22,6 +22,7 @@ use App\Http\Controllers\support\ResolveUUID;
 use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Models\ResourceStudyYear;
 use App\Models\Student;
@@ -140,6 +141,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('teachers/instructive', 'export_instructive')->name('teachers.instructive');
     });
     Route::resource('teachers', TeacherController::class)->except('destroy','index','edit','update')->names('teacher');
+    Route::post('teachers/{teacher}/permit', [TeacherPermitController::class, 'store'])->name('teachers.permits.store');
+
+    /* Route Secretariat */
     Route::resource('secretariat', SecretariatController::class)->only('create','store')->names('secreatariat');
 
     /* Route Groups */
