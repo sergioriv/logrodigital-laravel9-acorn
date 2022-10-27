@@ -70,12 +70,12 @@ $title = __('Students') .' '. __('enrolled');
 
                 <!-- Table Start -->
                 <div class="data-table-responsive-wrapper">
-                    <table id="datatable_students" class="data-table nowrap w-100" logro="datatable">
+                    <table id="datatable_students" class="data-table" logro="datatable">
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>
-                                <th class="text-muted text-small text-uppercase">{{ __('last names') }}</th>
-                                <th class="text-muted text-small text-uppercase">{{ __('email') }}</th>
+                                {{-- <th class="text-muted text-small text-uppercase">{{ __('last names') }}</th> --}}
+                                {{-- <th class="text-muted text-small text-uppercase">{{ __('email') }}</th> --}}
                                 <th class="text-muted text-small text-uppercase">{{ __('headquarters') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study time') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study year') }}</th>
@@ -88,7 +88,7 @@ $title = __('Students') .' '. __('enrolled');
                                 <td>
                                     <a href="{{ route('students.show', $student) }}"
                                         class="list-item-heading body">
-                                        {{ $student->getNames() }}
+                                        {{ $student->getCompleteNames() }}
                                     </a>
                                     @if (1 === $student->inclusive)
                                     <i class="icon icon-12 bi-circle-fill logro-inclusive-color"></i>
@@ -99,8 +99,8 @@ $title = __('Students') .' '. __('enrolled');
                                         <span class="badge bg-outline-danger">{{ __($student->status) }}</span>
                                     @endif
                                 </td>
-                                <td>{{ $student->getLastNames() }}</td>
-                                <td>{{ $student->institutional_email }}</td>
+                                {{-- <td>{{ $student->getLastNames() }}</td> --}}
+                                {{-- <td>{{ $student->institutional_email }}</td> --}}
                                 <td>{{ $student->groupYear->group->headquarters->name ?? null }}</td>
                                 <td>{{ $student->groupYear->group->studyTime->name ?? null }}</td>
                                 <td>{{ $student->groupYear->group->studyYear->name ?? null }}</td>

@@ -11,20 +11,30 @@
     constructor() {
         // Initialization of the page plugins
 
+        this._initMissingAreas();
+        this._initIMask();
+        this._initPerformance();
         this._initPrimaryTab();
     }
 
-    _initPrimaryTab()
+    _initMissingAreas()
     {
-        const _this = this;
-        const form = document.getElementById("studyTimeCreateForm");
-        if (!form) {
-            console.log("studyTimeCreateForm is null");
-            return;
-        }
-
         let missingAreas = $('#missingAreas');
 
+        jQuery('#checkMissingAreas').change(function() {
+            let checked = $(this).prop('checked');
+            if (1 == checked) {
+                missingAreas.prop('disabled', false);
+                missingAreas.prop('required', true);
+            } else {
+                missingAreas.prop('disabled', true);
+                missingAreas.prop('required', false);
+            }
+        });
+    }
+
+    _initIMask()
+    {
         IMask(document.querySelector('#conceptual'), {
             mask: Number,
             min: 0,
@@ -45,17 +55,44 @@
             min: 1,
             max: 10,
         });
+    }
 
-        jQuery('#checkMissingAreas').change(function() {
-            let checked = $(this).prop('checked');
-            if (1 == checked) {
-                missingAreas.prop('disabled', false);
-                missingAreas.prop('required', true);
-            } else {
-                missingAreas.prop('disabled', true);
-                missingAreas.prop('required', false);
-            }
+    _initPerformance()
+    {
+        var minGrade = jQuery('#minimum_grade');
+        var lowPerformance = jQuery('#low_performance');
+        var acceptablePerformance = jQuery('#acceptable_performance');
+        var highPerformance = jQuery('#high_performance');
+        var maxGrade = jQuery('#maximum_grade');
+
+        minGrade.on('change', function() {
+            lowPerformance.attr('min', $(this).val())
         });
+        lowPerformance.on('change', function() {
+            minGrade.attr('max', $(this).val())
+            acceptablePerformance.attr('min', $(this).val())
+        });
+        acceptablePerformance.on('change', function() {
+            lowPerformance.attr('max', $(this).val())
+            highPerformance.attr('min', $(this).val())
+        });
+        highPerformance.on('change', function() {
+            acceptablePerformance.attr('max', $(this).val())
+            maxGrade.attr('min', $(this).val())
+        });
+        maxGrade.on('change', function() {
+            highPerformance.attr('max', $(this).val())
+        });
+    }
+
+    _initPrimaryTab()
+    {
+        const _this = this;
+        const form = document.getElementById("studyTimeCreateForm");
+        if (!form) {
+            console.log("studyTimeCreateForm is null");
+            return;
+        }
 
         const validateOptions = {
             rules: {
@@ -84,7 +121,27 @@
                     number: true,
                     max: 100,
                     min: 0,
-                }
+                },
+                minimum_grade: {
+                    required: true,
+                    number: true,
+                },
+                low_performance: {
+                    required: true,
+                    number: true,
+                },
+                medium_performance: {
+                    required: true,
+                    number: true,
+                },
+                high_performance: {
+                    required: true,
+                    number: true,
+                },
+                maximum_grade: {
+                    required: true,
+                    number: true,
+                },
             }
         }
 

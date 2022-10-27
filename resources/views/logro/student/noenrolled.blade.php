@@ -90,13 +90,13 @@ $title = __('Students') .' '. __('no-enrolled');
 
                 <!-- Table Start -->
                 <div class="data-table-responsive-wrapper">
-                    <table id="datatable_students" class="data-table nowrap w-100" logro="datatable">
+                    <table id="datatable_students" class="data-table " logro="datatable"> {{-- nowrapw-100 --}}
                         <thead>
                             <tr>
                                 <th class="empty ps-spacing-sm pe-0">&nbsp;</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>
-                                <th class="text-muted text-small text-uppercase">{{ __('last names') }}</th>
-                                <th class="text-muted text-small text-uppercase">{{ __('email') }}</th>
+                                {{-- <th class="text-muted text-small text-uppercase">{{ __('last names') }}</th> --}}
+                                {{-- <th class="text-muted text-small text-uppercase">{{ __('email') }}</th> --}}
                                 <th class="text-muted text-small text-uppercase">{{ __('headquarters') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study time') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study year') }}</th>
@@ -114,7 +114,7 @@ $title = __('Students') .' '. __('no-enrolled');
                                 <td>
                                     <a href="{{ route('students.show', $student) }}"
                                         class="list-item-heading body">
-                                        {{ $student->getNames() }}
+                                        {{ $student->getCompleteNames() }}
                                     </a>
                                     @if (1 === $student->inclusive)
                                     <i class="icon icon-12 bi-circle-fill logro-inclusive-color"></i>
@@ -125,8 +125,8 @@ $title = __('Students') .' '. __('no-enrolled');
                                         <span class="badge bg-outline-danger">{{ __($student->status) }}</span>
                                     @endif
                                 </td>
-                                <td>{{ $student->getLastNames() }}</td>
-                                <td>{{ $student->institutional_email }}</td>
+                                {{-- <td>{{ $student->getLastNames() }}</td> --}}
+                                {{-- <td>{{ $student->institutional_email }}</td> --}}
                                 <td>{{ $student->headquarters->name }}</td>
                                 <td>{{ $student->studyTime->name }}</td>
                                 <td>{{ $student->studyYear->name }}</td>

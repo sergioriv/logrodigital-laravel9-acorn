@@ -300,7 +300,7 @@ class Student extends Model
 
     public function getCompleteNames()
     {
-        return "{$this->first_name} {$this->second_name} {$this->first_last_name} {$this->second_last_name}";
+        return "{$this->first_last_name} {$this->second_last_name} {$this->first_name} {$this->second_name}";
     }
 
     public function age()

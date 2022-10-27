@@ -1,5 +1,5 @@
 @php
-$title = __('Create Study Time');
+    $title = __('Create Study Time');
 @endphp
 @extends('layout', ['title' => $title])
 
@@ -7,10 +7,10 @@ $title = __('Create Study Time');
 @endsection
 
 @section('js_vendor')
-<script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
-<script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
-<script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
-<script src="/js/vendor/imask.js"></script>
+    <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
+    <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
+    <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
+    <script src="/js/vendor/imask.js"></script>
 @endsection
 
 @section('js_page')
@@ -52,8 +52,10 @@ $title = __('Create Study Time');
 
                 <section class="scroll-section">
 
-                    <form method="POST" id="studyTimeCreateForm" action="{{ route('studyTime.store') }}" class="tooltip-end-bottom" novalidate>
+                    <form method="POST" id="studyTimeCreateForm" action="{{ route('studyTime.store') }}"
+                        class="tooltip-end-bottom" novalidate>
                         @csrf
+
 
                         <!-- Info primary -->
                         <div class="card mb-5">
@@ -87,27 +89,34 @@ $title = __('Create Study Time');
                             </div>
                         </div>
 
+
                         <!-- Evaluation Components Start -->
-                        <h2 class="small-title text-capitalize">{{ __('evaluation components') }}</h2>
+                        <h2 class="small-title logro-label">{{ __('evaluation components') }}</h2>
                         <div class="card mb-5">
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-4 form-group position-relative">
-                                        <x-label>{{ __('conceptual') }} <x-required /></x-label>
+                                        <x-label>{{ __('conceptual') }}
+                                            <x-required />
+                                        </x-label>
                                         <div class="input-group">
                                             <x-input name="conceptual" id="conceptual" :value="old('conceptual', 40)" required />
                                             <span class="input-group-text logro-input-disabled">%</span>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group position-relative">
-                                        <x-label>{{ __('procedural') }} <x-required /></x-label>
+                                        <x-label>{{ __('procedural') }}
+                                            <x-required />
+                                        </x-label>
                                         <div class="input-group">
                                             <x-input name="procedural" id="procedural" :value="old('procedural', 40)" required />
                                             <span class="input-group-text logro-input-disabled">%</span>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group position-relative">
-                                        <x-label>{{ __('attitudinal') }} <x-required /></x-label>
+                                        <x-label>{{ __('attitudinal') }}
+                                            <x-required />
+                                        </x-label>
                                         <div class="input-group">
                                             <x-input name="attitudinal" id="attitudinal" :value="old('attitudinal', 20)" required />
                                             <span class="input-group-text logro-input-disabled">%</span>
@@ -117,6 +126,60 @@ $title = __('Create Study Time');
                             </div>
                         </div>
                         <!-- Evaluation Components End -->
+
+
+                        <!-- Performance Start -->
+                        <h2 class="small-title logro-label">{{ __('performance range') }}</h2>
+                        <div class="card mb-5">
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-2">
+                                        <div class="position-relative form-group">
+                                            <x-label required>{{ __('minimun grade') }}</x-label>
+                                            <x-input name="minimum_grade" id="minimum_grade"
+                                                type="number" min="0.00" max="2.99" step="0.01"
+                                                value="0.00" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">&nbsp;</div>
+                                    <div class="col-md-2">
+                                        <div class="position-relative form-group">
+                                            <x-label required>{{ __('low performance') }}</x-label>
+                                            <x-input name="low_performance" id="low_performance"
+                                                type="number" min="0.00" max="3.99" step="0.01"
+                                                value="2.99" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="position-relative form-group">
+                                            <x-label required>{{ __('acceptable performance') }}</x-label>
+                                            <x-input name="acceptable_performance" id="acceptable_performance"
+                                                type="number" min="2.99" max="4.59" step="0.01"
+                                                value="3.99" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="position-relative form-group">
+                                            <x-label required>{{ __('high performance') }}</x-label>
+                                            <x-input name="high_performance" id="high_performance"
+                                                type="number" min="3.99" max="5.00" step="0.01"
+                                                value="4.59" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">&nbsp;</div>
+                                    <div class="col-md-2">
+                                        <div class="position-relative form-group">
+                                            <x-label required>{{ __('maximum grade') }}</x-label>
+                                            <x-input name="maximum_grade" id="maximum_grade"
+                                                type="number" min="4.59" step="0.01"
+                                                value="5.00" required />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Performance End -->
+
 
                         <div class="text-center">
                             <x-button type="submit" class="btn-primary btn-icon btn-icon-end">

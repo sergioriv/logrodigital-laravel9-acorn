@@ -42,21 +42,52 @@ class StudyTimeController extends Controller
             'conceptual' => ['required', 'numeric', 'min:0', 'max:100'],
             'procedural' => ['required', 'numeric', 'min:0', 'max:100'],
             'attitudinal' => ['required', 'numeric', 'min:0', 'max:100'],
+            'minimum_grade' => ['required', 'numeric', 'min:0'],
+            'low_performance' => ['required', 'numeric', 'min:0'],
+            'acceptable_performance' => ['required', 'numeric', 'min:0'],
+            'high_performance' => ['required', 'numeric', 'min:0'],
+            'maximum_grade' => ['required', 'numeric', 'min:0'],
         ]);
 
         if ( ($request->conceptual + $request->procedural + $request->attitudinal) !== 100 )
-        {
             return redirect()->back()->withErrors(__("evaluation components is not equal to 100%"));
-        }
+
+        if ($request->minimum_grade > $request->low_performance)
+            return redirect()->back()->withErrors(__(':min cannot be less than the :max', [
+                        'max' => __('low performance'),
+                        'min' => __('minimun grade')
+                    ]));
+
+        if ($request->low_performance > $request->acceptable_performance)
+            return redirect()->back()->withErrors(__(':min cannot be less than the :max', [
+                        'max' => __('acceptable performance'),
+                        'min' => __('low performance')
+                    ]));
+
+        if ($request->acceptable_performance > $request->high_performance)
+            return redirect()->back()->withErrors(__(':min cannot be less than the :max', [
+                        'max' => __('high performance'),
+                        'min' => __('acceptable performance')
+                    ]));
+
+        if ($request->high_performance > $request->maximum_grade)
+            return redirect()->back()->withErrors(__(':min cannot be less than the :max', [
+                        'max' => __('maximum grade'),
+                        'min' => __('high performance')
+                    ]));
 
         $studyTime = StudyTime::create([
             'name' => $request->name,
             'conceptual' => $request->conceptual,
             'procedural' => $request->procedural,
             'attitudinal' => $request->attitudinal,
-            'missing_areas' => $request->missing_areas
+            'missing_areas' => $request->missing_areas,
+            'minimum_grade' => $request->minimum_grade,
+            'low_performance' => $request->low_performance,
+            'acceptable_performance' => $request->acceptable_performance,
+            'high_performance' => $request->high_performance,
+            'maximum_grade' => $request->maximum_grade
         ]);
-
 
         return redirect()->route('studyTime.periods', $studyTime);
     }

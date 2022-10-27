@@ -65,7 +65,7 @@ $title = $studyTime->name;
 
                         <!-- Primary Tab Start -->
                         <div class="tab-pane fade active show" id="primaryTab" role="tabpanel">
-                            <div class="row g-3 row-cols-3">
+                            <div class="row g-3 row-cols-3 mb-5">
                                 <div class="col small-gutter-col">
                                     <div class="card">
                                         <div class="card-body text-center">
@@ -87,6 +87,42 @@ $title = $studyTime->name;
                                         <div class="card-body text-center">
                                             <h4 class="text-capitalize">{{ __('attitudinal') }}</h4>
                                             <span class="display-1 text-primary">{{ $studyTime->attitudinal }}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h2 class="small-title">{{ __('Performance ranges') }}</h2>
+                            <div class="row g-3 row-cols-4">
+                                <div class="col small-gutter-col">
+                                    <div class="card border-2 border-danger">
+                                        <div class="card-body text-center">
+                                            <h5 class="text-capitalize">{{ __('low') }}</h5>
+                                            <h4 class="font-weight-bold">{{ '('. $studyTime->lowRange() .')' }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col small-gutter-col">
+                                    <div class="card border-2 border-warning">
+                                        <div class="card-body text-center">
+                                            <h5 class="text-capitalize">{{ __('acceptable') }}</h5>
+                                            <h4 class="font-weight-bold">{{ '('. $studyTime->acceptableRange() .')' }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col small-gutter-col">
+                                    <div class="card border-2 border-primary">
+                                        <div class="card-body text-center">
+                                            <h5 class="text-capitalize">{{ __('high') }}</h5>
+                                            <h4 class="font-weight-bold">{{ '('. $studyTime->highRange() .')' }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col small-gutter-col">
+                                    <div class="card border-2 border-success">
+                                        <div class="card-body text-center">
+                                            <h5 class="text-capitalize">{{ __('superior') }}</h5>
+                                            <h4 class="font-weight-bold">{{ '('. $studyTime->superiorRange() .')' }}</h4>
                                         </div>
                                     </div>
                                 </div>

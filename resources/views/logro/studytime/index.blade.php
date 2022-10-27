@@ -61,6 +61,10 @@ $title = __('Study times list');
                                                 <div class="col-8 text-start text-small text-muted">{{ __('attitudinal') }}</div>
                                                 <div class="col-4 text-small text-muted">{{ $studyTime->attitudinal }}%</div>
                                             </div>
+                                            <div class="row mt-3 text-capitalize">
+                                                <div class="col-8 text-start text-small text-muted">{{ __('maximum grade') }}</div>
+                                                <div class="col-4 text-small text-muted">{{ $studyTime->maximum_grade }}</div>
+                                            </div>
                                         </div>
                                     </a>
                                 </div>

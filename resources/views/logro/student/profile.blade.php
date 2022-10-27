@@ -96,7 +96,7 @@ $title = $student->getFullName();
                 <!-- Title Start -->
                 <div class="col-12 col-md-9">
                     <h1 class="mb-1 pb-0 display-4" id="title">
-                        {{ __('Student') . ' | ' . $student->getNames() . ' ' . $student->getLastNames() }}</h1>
+                        {{ __('Student') . ' | ' . $student->getCompleteNames() }}</h1>
                 </div>
                 <!-- Title End -->
 
