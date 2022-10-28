@@ -31,16 +31,20 @@ html[data-color^="dark-"] .logo .img-logro {
 /*
  * Logo Lobby Logro
  */
-html[data-color^="light-"] .logo-default.img-logro {
+html[data-color^="light-"] .logo-lobby .logo-default {
     background-image: url("../img/logo/logo-logro-lobby-light.svg") !important;
 }
-html[data-color^="dark-"] .logo-default.img-logro {
+html[data-color^="dark-"] .logo-lobby .logo-default {
     background-image: url("../img/logo/logo-logro-lobby-dark.svg") !important;
 }
-html[data-color=] .logo-default.img-logro {
+html[data-color=] .logo-lobby .logo-default {
     background-image: url("../img/logo/logo-logro-lobby-light.svg") !important;
 }
-.logo-default.img-logro {
+.logo-default {
+    width: 64px;
+    min-height: 104px;
+}
+.logo-lobby img.logo-institution {
     width: 64px;
     min-height: 104px;
 }
