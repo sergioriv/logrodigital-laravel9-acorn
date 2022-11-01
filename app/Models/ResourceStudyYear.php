@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ResourceStudyYear extends Model
 {
-    use Uuid;
-
     public $timestamps = false;
+
+    protected $fillable = ['uuid', 'name', 'next_year'];
 
     protected $hidden = ['id'];
 
