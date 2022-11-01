@@ -536,7 +536,7 @@ class StudentController extends Controller
         $YAvailable = SchoolYearController::available_year();
 
         /* Group x Subjects [teacher, piar] START */
-        if (1 === $student->inclusive) {
+        /* if (1 === $student->inclusive) {
             $groupsStudent = Group::whereHas(
                 'groupStudents',
                 fn ($groupStudents) => $groupStudents->where('student_id', $student->id)
@@ -555,7 +555,7 @@ class StudentController extends Controller
             ])->orderByDesc('id')->get();
         } else {
             $groupsStudent = [];
-        }
+        } */
         /* Group x Subjects [teacher, piar] END */
 
         $studentFileTypes = StudentFileType::with([
@@ -589,7 +589,7 @@ class StudentController extends Controller
             'economicDependences' => EconomicDependence::all(),
             'kinships'      => Kinship::all(),
             'studentFileTypes' => $studentFileTypes->get(),
-            'groupsStudent' => $groupsStudent,
+            // 'groupsStudent' => $groupsStudent,
             'nationalCountry' => NationalCountry::country()
         ]);
     }

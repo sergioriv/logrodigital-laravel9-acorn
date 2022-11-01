@@ -97,6 +97,28 @@ $title = $student->getFullName();
                 <div class="col-12 col-md-9">
                     <h1 class="mb-1 pb-0 display-4" id="title">
                         {{ __('Student') . ' | ' . $student->getCompleteNames() }}</h1>
+                    <div aria-label="breadcrumb">
+                        <div class="breadcrumb">
+                            <span class="breadcrumb-item text-muted">
+                                <div class="text-muted d-inline-block">
+                                    <i data-acorn-icon="building-large" class="me-1" data-acorn-size="12"></i>
+                                    <span class="align-middle">{{ $student->headquarters->name }}</span>
+                                </div>
+                            </span>
+                            <span class="breadcrumb-item text-muted">
+                                <div class="text-muted d-inline-block">
+                                    <i data-acorn-icon="clock" class="me-1" data-acorn-size="12"></i>
+                                    <span class="align-middle">{{ $student->studyTime->name }}</span>
+                                </div>
+                            </span>
+                            <span class="breadcrumb-item text-muted">
+                                <div class="text-muted d-inline-block">
+                                    <i data-acorn-icon="calendar" class="me-1" data-acorn-size="12"></i>
+                                    <span class="align-middle">{{ $student->studyYear->name }}</span>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 <!-- Title End -->
 
@@ -170,29 +192,6 @@ $title = $student->getFullName();
                                     <span class="mb-2 text-muted">{{ $student->age() . ' ' . __('years') }}</span>
                                 @endif
 
-                                <div class="text-muted">
-                                    <i data-acorn-icon="email" class="me-1" data-acorn-size="17"></i>
-                                    <span class="align-middle">{{ $student->institutional_email }}</span>
-                                </div>
-                                @if (null !== $student->telephone)
-                                    <div class="text-muted">
-                                        <i data-acorn-icon="phone" class="me-1" data-acorn-size="17"></i>
-                                        <span class="align-middle">{{ $student->telephone }}</span>
-                                    </div>
-                                @endif
-                                <div class="text-muted">
-                                    <i data-acorn-icon="building-large" class="me-1" data-acorn-size="17"></i>
-                                    <span class="align-middle">{{ $student->headquarters->name }}</span>
-                                </div>
-                                <div class="text-muted">
-                                    <i data-acorn-icon="clock" class="me-1" data-acorn-size="17"></i>
-                                    <span class="align-middle">{{ $student->studyTime->name }}</span>
-                                </div>
-                                <div class="text-muted">
-                                    <i data-acorn-icon="calendar" class="me-1" data-acorn-size="17"></i>
-                                    <span class="align-middle">{{ $student->studyYear->name }}</span>
-                                </div>
-
                                 @if (null !== $student->group_id)
                                     <div class="mt-2 text-center">
                                         <h5 class="text-primary font-weight-bold mb-0">{{ $student->group->name }}</h5>
@@ -218,6 +217,10 @@ $title = $student->getFullName();
                                 <a class="nav-link @if (session('tab') === 'documents') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                     data-bs-toggle="tab" href="#documentsTab" role="tab">
                                     <span class="align-middle">{{ __('Documents') }}</span>
+                                </a>
+                                <a class="nav-link @if (session('tab') === 'reportBook') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                    data-bs-toggle="tab" href="#reportBookTab" role="tab">
+                                    <span class="align-middle">{{ __('Report book') }}</span>
                                 </a>
                             @endcan
                             @can('students.psychosocial')
@@ -1732,6 +1735,23 @@ $title = $student->getFullName();
                         </section>
                     </div>
                     <!-- Documents Tab End -->
+
+                    <div class="tab-pane fade @if (session('tab') === 'reportBook') active show @endif" id="reportBookTab"
+                    role="tabpanel">
+                        <h2 class="small-title">{{ __('Documents') }}</h2>
+                        <section class="card mb-5">
+                            @can('students.documents.edit')
+                                <div class="card-header">
+                                    <form method="POST" action="{{ route('studentFile', $student) }}"
+                                        enctype="multipart/form-data" class="tooltip-label-end" novalidate>
+                                        @csrf
+                                        @method('PUT')
+
+                                    </form>
+                                </div>
+                            @endcan
+                        </section>
+                    </div>
                 @endcan
 
                 @can('students.psychosocial')
