@@ -50,14 +50,14 @@ $title = $studyYear->name;
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <!-- Next year -->
+                                        <!-- Belongs to -->
                                         <div class="w-100 form-group position-relative">
-                                            <x-label>{{ __('Next year') }}</x-label>
-                                            <select name="next_year[]" logro="select2" multiple required>
+                                            <x-label>{{ __('belongs to') }}</x-label>
+                                            <select name="study_year" logro="select2" required>
                                                 <option label="&nbsp;"></option>
-                                                @foreach ($studyYears as $sy)
-                                                    <option value="{{ $sy->id }}"
-                                                        @selected(in_array($sy->id, $studyYear->next_year))>{{ $sy->name }}</option>
+                                                @foreach ($resourceStudyYears as $resource)
+                                                    <option value="{{ $resource->uuid }}"
+                                                        @selected($resource->id == $studyYear->resource_study_year_id)>{{ __($resource->name) }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

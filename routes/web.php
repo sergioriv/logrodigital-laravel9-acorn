@@ -29,6 +29,7 @@ use App\Models\Student;
 use App\Models\StudentAdvice;
 use App\Models\StudyYear;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
 
@@ -60,6 +61,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('add-permission', function () {
             Permission::create(['name' => 'students.view']);
+        });
+
+        Route::get('add-resource-study-years', function() {
+            $seed = new \Database\Seeders\resourceStudyYear();
+            $seed->run();
+            dd('hecho');
+        });
+
+        Route::get('study-years-resource-foreing', function() {
+            $sy = StudyYear::all();
+            foreach ($sy as $s) {
+                $s->resource_study_year_id = $s->id;
+                $s->save();
+            }
+            dd('hecho');
         });
 
         /* Route Users */

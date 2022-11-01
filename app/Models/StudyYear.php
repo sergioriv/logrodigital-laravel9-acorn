@@ -13,12 +13,14 @@ class StudyYear extends Model
 
     protected $fillable = [
         'name',
-        'next_year'
+        'resource_study_year_id'
     ];
 
-    protected $casts = [
-        'next_year' => 'array'
-    ];
+
+    public function resource()
+    {
+        return $this->belongsTo(ResourceStudyYear::class, 'resource_study_year_id', 'id');
+    }
 
 
     /*
@@ -32,21 +34,6 @@ class StudyYear extends Model
     public function studyYearSubject()
     {
         return $this->hasMany(StudyYearSubject::class);
-    }
-
-
-
-    public function countNextYear()
-    {
-        return count($this->next_year);
-    }
-    public function nextYears()
-    {
-        $nextYears = [];
-        foreach ($this->next_year as $value) {
-            array_push($nextYears, StudyYear::find($value));
-        }
-        return $nextYears;
     }
 
 }

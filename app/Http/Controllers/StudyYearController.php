@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\ResourceArea;
+use App\Models\ResourceStudyYear;
 use App\Models\StudyYear;
 use App\Models\StudyYearSubject;
 use Illuminate\Http\Request;
@@ -52,20 +53,21 @@ class StudyYearController extends Controller
 
     public function create()
     {
-        return view('logro.studyyear.create', ['studyYears' => StudyYear::all()]);
+        return view('logro.studyyear.create', ['resourceStudyYears' => ResourceStudyYear::all()]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => ['required', Rule::unique('study_years', 'name')],
-            'next_year' => ['nullable'],
-            'next_year.*' => [Rule::exists('study_years','id')]
+            'study_year' => ['required', Rule::exists('resource_study_years', 'uuid')]
         ]);
+
+        $resource = ResourceStudyYear::where('uuid', $request->study_year)->first();
 
         $studyYear = StudyYear::create([
             'name' => $request->name,
-            'next_year' => $request->next_year
+            'resource_study_year_id' => $resource->id
         ]);
 
         return redirect()->route('studyYear.subject.show', $studyYear);
@@ -75,7 +77,7 @@ class StudyYearController extends Controller
     {
         return view('logro.studyyear.edit', [
             'studyYear' => $studyYear,
-            'studyYears' => StudyYear::whereNot('id', $studyYear->id)->get()
+            'resourceStudyYears' => ResourceStudyYear::all()
         ]);
     }
 
@@ -83,13 +85,14 @@ class StudyYearController extends Controller
     {
         $request->validate([
             'name' => ['required', Rule::unique('study_years', 'name')->ignore($studyYear->id)],
-            'next_year' => ['nullable'],
-            'next_year.*' => [Rule::exists('study_years','id')]
+            'study_year' => ['required', Rule::exists('resource_study_years','uuid')]
         ]);
+
+        $resource = ResourceStudyYear::where('uuid', $request->study_year)->first();
 
         $studyYear->update([
             'name' => $request->name,
-            'next_year' => $request->next_year
+            'resource_study_year_id' => $resource->id
         ]);
 
         return redirect()->route('studyYear.index');

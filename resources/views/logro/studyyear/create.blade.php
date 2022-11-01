@@ -47,13 +47,13 @@ $title = __('New Year of Study');
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <!-- Next year -->
+                                        <!-- Belongs to -->
                                         <div class="w-100 form-group position-relative">
-                                            <x-label>{{ __('Next year') }}</x-label>
-                                            <select name="next_year[]" logro="select2" multiple required>
+                                            <x-label>{{ __('belongs to') }}</x-label>
+                                            <select name="study_year" logro="select2" required>
                                                 <option label="&nbsp;"></option>
-                                                @foreach ($studyYears as $studyYear)
-                                                    <option value="{{ $studyYear->id }}">{{ $studyYear->name }}</option>
+                                                @foreach ($resourceStudyYears as $resource)
+                                                    <option value="{{ $resource->uuid }}">{{ __($resource->name) }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

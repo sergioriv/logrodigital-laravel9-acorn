@@ -1,5 +1,5 @@
 @php
-$title = __('Study years list');
+    $title = __('Study years list');
 @endphp
 @extends('layout', ['title' => $title])
 
@@ -54,25 +54,17 @@ $title = __('Study years list');
                             <div class="col small-gutter-col">
                                 <div class="card">
                                     <div class="card-body text-center d-flex flex-column">
-                                        <h4 class="mb-0">{{ $studyYear->name }}</h4>
-                                        <hr />
-                                        <div class="text-muted text-small d-flex flex-column">
-                                            <a class="font-weight-bold muted-link text-uppercase"
-                                            href="{{ route('studyYear.edit', $studyYear) }}">
-                                                <span class="me-1">{{ __('next year') }}</span>
+                                        <h4 class="mb-0 d-inline-block">{{ $studyYear->name }}
+                                            <a class="font-weight-bold ms-1"
+                                                href="{{ route('studyYear.edit', $studyYear) }}">
                                                 <i data-acorn-icon="pen" data-acorn-size="11"></i>
                                             </a>
-                                            @if ($studyYear->next_year !== NULL)
-                                            @foreach ($studyYear->nextYears() as $nextYear)
-                                            @if (!$loop->first) | @endif
-                                            {{ $nextYear->name }}
-                                            @endforeach
-                                            @else
-                                            {{ __('None') }}
-                                            @endif
-                                        </div>
+                                        </h4>
+                                        <div class="text-small text-muted">{{ __($studyYear->resource->name) }}</div>
+
                                         <hr />
-                                        <a href="{{ route('studyYear.subject.show', $studyYear) }}">{{ __('Subjects') .' '. $Y }}</a>
+                                        <a
+                                            href="{{ route('studyYear.subject.show', $studyYear) }}">{{ __('Subjects') . ' ' . $Y }}</a>
                                     </div>
                                 </div>
                             </div>
