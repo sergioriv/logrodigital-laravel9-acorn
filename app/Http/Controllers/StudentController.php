@@ -33,6 +33,7 @@ use App\Models\PersonCharge;
 use App\Models\Piar;
 use App\Models\Religion;
 use App\Models\Reservation;
+use App\Models\ResourceStudyYear;
 use App\Models\Rh;
 use App\Models\School;
 use App\Models\Sisben;
@@ -40,6 +41,7 @@ use App\Models\Student;
 use App\Models\StudentFile;
 use App\Models\StudentFileType;
 use App\Models\StudentRemovalCode;
+use App\Models\StudentReportBook;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
 use App\Models\Teacher;
@@ -567,6 +569,12 @@ class StudentController extends Controller
             $studentFileTypes->where('inclusive', 0);
         }
 
+        /* Años de estudio igual e inferior al año de estudio actual del estudiante */
+        $resourceStudyYears = ResourceStudyYear::where('id', '<=', $student->studyYear->resource_study_year_id)
+            ->with([
+                'studentReportBook' => fn ($reportBooks) => $reportBooks->where('student_id', $student->id)
+            ]);
+
         return view('logro.student.profile')->with([
             'Y' => $Y,
             'YAvailable' => $YAvailable->id,
@@ -589,6 +597,7 @@ class StudentController extends Controller
             'economicDependences' => EconomicDependence::all(),
             'kinships'      => Kinship::all(),
             'studentFileTypes' => $studentFileTypes->get(),
+            'resourceStudyYears' => $resourceStudyYears->get(),
             // 'groupsStudent' => $groupsStudent,
             'nationalCountry' => NationalCountry::country()
         ]);

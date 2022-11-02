@@ -1738,16 +1738,76 @@ $title = $student->getFullName();
 
                     <div class="tab-pane fade @if (session('tab') === 'reportBook') active show @endif" id="reportBookTab"
                     role="tabpanel">
-                        <h2 class="small-title">{{ __('Documents') }}</h2>
+                        <h2 class="small-title">{{ __('Report books') }}</h2>
                         <section class="card mb-5">
                             @can('students.documents.edit')
                                 <div class="card-header">
-                                    <form method="POST" action="{{ route('studentFile', $student) }}"
+                                    <form method="POST" action="{{ route('students.reportBook', $student) }}"
                                         enctype="multipart/form-data" class="tooltip-label-end" novalidate>
                                         @csrf
                                         @method('PUT')
 
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="w-100 position-relative form-group">
+                                                    <select data-placeholder="Boletín a subir" name="reportbook"
+                                                        logro="select2">
+                                                        <option label="&nbsp;"></option>
+                                                        @foreach ($resourceStudyYears as $resourceSY)
+                                                            <option value="{{ $resourceSY->id }}">{{ __($resourceSY->name) }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="position-relative form-group">
+                                                    <x-input type="file" name="file_reportbook"
+                                                        accept="image/jpg, image/jpeg, image/png, image/webp" class="d-block" />
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-md-2 col-md-2 border-0 pt-0 d-flex justify-content-end align-items-start">
+                                                <x-button class="btn-primary" type="submit">{{ __('Upload') }}
+                                                </x-button>
+                                            </div>
+                                        </div>
+
                                     </form>
+                                </div>
+                                <div class="card-body">
+
+                                    @can('students.documents.checked')
+                                    <form method="POST" action="{{ route('studentFile.checked', $student) }}"
+                                        class="tooltip-label-end" novalidate>
+                                        @csrf
+                                        @method('PUT')
+                                    @endcan
+
+                                    <div class="row g-2 row-cols-3 row-cols-md-5">
+                                        @foreach ($resourceStudyYears as $resourceSYview)
+                                            <div class="col small-gutter-col">
+                                                <div class="h-100">
+                                                    <div class="text-center d-flex flex-column">
+                                                        <div>
+                                                            @if ($resourceSYview->studentReportBook ?? null !== null)
+                                                            <i class="icon bi-file-earmark-fill icon-70 text-info cursor-pointer"
+                                                                logro="studentDocument"
+                                                                data-image="{{ $resourceSYview->studentReportBook->url ?? null }}"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#modalStudentDocuments"></i>
+                                                            @else
+                                                            <i class="icon bi-file-earmark icon-70 text-muted"></i>
+                                                            @endif
+                                                        </div>
+                                                        <div>
+                                                            {{ __($resourceSYview->name) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
                                 </div>
                             @endcan
                         </section>

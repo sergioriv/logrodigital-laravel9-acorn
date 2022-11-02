@@ -14,6 +14,7 @@ use App\Http\Controllers\SecretariatController;
 use App\Http\Controllers\StudentAdviceController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFileController;
+use App\Http\Controllers\StudentReportBookController;
 use App\Http\Controllers\StudentTrackingController;
 use App\Http\Controllers\StudyTimeController;
 use App\Http\Controllers\StudyYearController;
@@ -87,8 +88,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('roles.json', [RoleController::class, 'data']);
 
         /* Route Number Students */
-        Route::get('number_students', [SchoolController::class, 'number_students_show'])->name('support.number_students');
-        Route::put('number_students', [SchoolController::class, 'number_students_update'])->name('support.number_students');
+        Route::get('number-students', [SchoolController::class, 'number_students_show'])->name('support.number_students');
+        Route::put('number-students', [SchoolController::class, 'number_students_update'])->name('support.number_students');
     });
 
     /* Asigna la contraseña luego de confirmar el correo */
@@ -115,27 +116,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('myinstitution', [SchoolController::class, 'security_email'])->name('myinstitution.security.email');
 
     /* Route School Year */
-    Route::resource('school_years', SchoolYearController::class)->except('destroy','edit','update')->names('schoolYear');
-    //⛔ Route::get('school_years.json', [SchoolYearController::class, 'data']);
-    Route::put('school_years', [SchoolYearController::class, 'choose'])->name('schoolYear.selected');
+    Route::resource('school-years', SchoolYearController::class)->except('destroy','edit','update')->names('schoolYear');
+    // ⛔ Route::get('school_years.json', [SchoolYearController::class, 'data']);
+    Route::put('school-years', [SchoolYearController::class, 'choose'])->name('schoolYear.selected');
 
     /* Route Headquarters */
     Route::resource('headquarters', HeadquartersController::class)->except('destroy')->names('headquarters');
     Route::get('headquarters.json', [HeadquartersController::class, 'data']);
 
     /* Route StudyTime */
-    Route::resource('study_times', StudyTimeController::class)->except('destroy','edit','update')->names('studyTime');
-    Route::get('study_times/{study_time}/periods', [StudyTimeController::class, 'periods_create'])->name('studyTime.periods');
-    Route::post('study_times/{study_time}/periods', [StudyTimeController::class, 'periods_store'])->name('studyTime.periods.store');
-    Route::get('study_times/{study_time}/study_years', [StudyTimeController::class, 'studyYear_create'])->name('studyTime.studyYear');
-    Route::post('study_times/{study_time}/study_years', [StudyTimeController::class, 'studyYear_store'])->name('studyTime.studyYear.store');
+    Route::resource('study-times', StudyTimeController::class)->except('destroy','edit','update')->names('studyTime');
+    Route::get('study-times/{study_time}/periods', [StudyTimeController::class, 'periods_create'])->name('studyTime.periods');
+    Route::post('study-times/{study_time}/periods', [StudyTimeController::class, 'periods_store'])->name('studyTime.periods.store');
+    Route::get('study-times/{study_time}/study-years', [StudyTimeController::class, 'studyYear_create'])->name('studyTime.studyYear');
+    Route::post('study-times/{study_time}/study-years', [StudyTimeController::class, 'studyYear_store'])->name('studyTime.studyYear.store');
 
     /* Route StudyYear */
-    Route::resource('study_years', StudyYearController::class)->except('destroy')->names('studyYear');
-    Route::get('study_years.filter.study_time', [StudyYearController::class, 'filterStudyTime']);
-    Route::get('study_years/{study_year}/subjects', [StudyYearController::class, 'subjects'])->name('studyYear.subject.show');
-    Route::post('study_years/{study_year}/subjects', [StudyYearController::class, 'subjects_store'])->name('studyYear.subject.store');
-    Route::get('study_years/{study_year}/subjects/edit', [StudyYearController::class, 'subjects_edit'])->name('studyYear.subject.edit');
+    Route::resource('study-years', StudyYearController::class)->except('destroy')->names('studyYear');
+    // ⛔ Route::get('study_years.filter.study_time', [StudyYearController::class, 'filterStudyTime']);
+    Route::get('study-years/{study_year}/subjects', [StudyYearController::class, 'subjects'])->name('studyYear.subject.show');
+    Route::post('study-years/{study_year}/subjects', [StudyYearController::class, 'subjects_store'])->name('studyYear.subject.store');
+    Route::get('study-years/{study_year}/subjects/edit', [StudyYearController::class, 'subjects_edit'])->name('studyYear.subject.edit');
 
     /* Route Resource areas */
     Route::resource('areas', ResourceAreaController::class)->except('destroy')->names('resourceArea');
@@ -146,7 +147,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('subjects.json', [ResourceSubjectController::class, 'data']);
 
     /* Route Areas & subjects */
-    Route::resource('areas_subjects', SubjectController::class)->except('destroy','show')->names('subject');
+    Route::resource('areas-subjects', SubjectController::class)->except('destroy','show')->names('subject');
 
     /* Route Teachers */
     Route::controller(TeacherController::class)->group( function () {
@@ -170,11 +171,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('groups/{group}/matriculate', [GroupController::class, 'matriculate'])->name('group.matriculate');
     Route::put('groups/{group}/matriculate', [GroupController::class, 'matriculate_update'])->name('group.matriculate.update');
 
+
+
+
+
     /* Route TeacherSubjectGroups */
     Route::resource('teachers/{teacher}/subjects', TeacherSubjectGroupController::class)->names('teacher.subjects');
 
+
+
+
+
     /* Route Teacher User */
     Route::get('mysubjects', [TeacherController::class, 'mysubjects'])->name('teacher.my.subjects');
+
+
+
 
     /* Route Students */
     Route::controller(StudentController::class)->group( function () {
@@ -209,8 +221,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('students/{student}/download/matriculate', 'pdf_matriculate')->name('students.pdf.matriculate');
 
     });
-    /* ADVICES */
-    // Route::resource('students/{student}/advice', StudentAdviceController::class)->names('students.advice');
+
+
+    Route::put('persons-charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');
+    Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
+    Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
+
+
+    Route::put('students/{student}/report-book', [StudentReportBookController::class, 'update'])->name('students.reportBook');
+
+
+
+
 
     /*
      *
@@ -228,9 +250,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
 
-    Route::put('persons_charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');
-    Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
-    Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
+
 
 });
 

@@ -14,6 +14,14 @@ class ResourceStudyYear extends Model
 
     protected $hidden = ['id'];
 
+
+
+
+    public function studentReportBook()
+    {
+        return $this->hasOne(StudentReportBook::class,'resource_study_year_id', 'id');
+    }
+
     public function study_years()
     {
         return $this->hasMany(StudyYear::class, 'id', 'resource_study_year_id');
