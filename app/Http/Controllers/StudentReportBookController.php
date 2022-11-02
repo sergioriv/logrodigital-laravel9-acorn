@@ -61,6 +61,7 @@ class StudentReportBookController extends Controller
         $reportBook->save();
 
 
+        static::tab();
         Notify::success(__('File upload!'));
         return redirect()->back();
     }
@@ -73,35 +74,44 @@ class StudentReportBookController extends Controller
         } else return null;
     }
 
-    public function checked(Request $request, Student $student)
+    public function checked(Student $student, Request $request)
     {
-        if (!empty($request->student_files)) {
-            $files = StudentFile::where('student_id', $student->id)
-                ->where('checked', null)
-                ->orWhere('checked', 0)->get();
+        $request->validate([
+            'reportbooks_checked' => ['nullable', Rule::exists('student_report_books','id')->where('student_id',$student->id)]
+        ]);
 
-            foreach ($files as $file) :
-                if (in_array($file->id, $request->student_files)) {
-                    StudentFile::find($file->id)->update([
-                        'checked' => TRUE,
-                        'approval_user_id' => Auth::user()->id,
-                        'approval_date' => now()
-                    ]);
-                } else {
-                    StudentFile::find($file->id)->update([
-                        'checked' => FALSE,
-                        'approval_user_id' => NULL,
-                        'approval_date' => NULL
-                    ]);
-                }
-            endforeach;
-        } else {
-            $files = StudentFile::where('student_id', $student->id)
-                ->where('checked', null)
-                ->orWhere('checked', 0)->update(['checked' => FALSE]);
+        $reportBooks = $student->reportBooks->whereNull('checked');
+
+        foreach ($reportBooks as $book) {
+            if ( in_array($book->id, $request->reportbooks_checked ?? []) ) {
+
+                $book->checked = TRUE;
+                $book->approval_user_id = Auth::user()->id;
+                $book->approval_date = now()->format('Y-m-d');
+                $book->save();
+
+            } else {
+
+                $this->delete_reportBook($book);
+
+            }
         }
 
+        static::tab();
         Notify::success(__('Files updated!'));
         return redirect()->back();
     }
+
+    private function delete_reportBook($book)
+    {
+        File::delete(public_path($book->url_absolute));
+
+        $book->delete();
+    }
+
+    private static function tab()
+    {
+        session()->flash('tab', 'reportBook');
+    }
+
 }

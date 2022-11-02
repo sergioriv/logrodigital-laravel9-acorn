@@ -44,8 +44,8 @@ return [
     'distinct'             => ':attribute contiene un valor duplicado.',
     'email'                => ':attribute no es un correo válido.',
     'ends_with'            => ':attribute debe finalizar con uno de los siguientes valores: :values',
-    'enum'                 => 'El :attribute seleccionado es inválido.',
-    'exists'               => 'El :attribute seleccionado es inválido.',
+    'enum'                 => ':attribute seleccionado es inválido.',
+    'exists'               => ':attribute seleccionado es inválido.',
     'file'                 => ':attribute debe ser un archivo.',
     'filled'               => ':attribute es obligatorio.',
     'gt'                   => [
@@ -244,7 +244,8 @@ return [
         'short_description' => 'descripción breve',
         'support_document' => 'documento soporte',
         'permit_date_end' => 'fecha fin',
-        'permit_date_start' => 'fecha inicio'
+        'permit_date_start' => 'fecha inicio',
+        'reportbooks_checked' => 'boletines aprobados'
     ],
 
 ];

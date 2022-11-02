@@ -454,6 +454,8 @@
     "Sixth cycle": "Sexto ciclo",
     "Report books": "Boletines",
     "An error occurred while uploading the file, please try again.": "Se ha producido un error al cargar el archivo, por favor, inténtelo de nuevo.",
+    "Save approved report books": "Guardar boletines aprobados",
+    "Unapproved report books will be deleted": "Los boletines no aprobados serán eliminados",
 
     "full name": "nombre completo",
     "new": "nuevo",

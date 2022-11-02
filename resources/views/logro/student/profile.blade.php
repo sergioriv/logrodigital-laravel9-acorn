@@ -1,5 +1,5 @@
 @php
-$title = $student->getFullName();
+    $title = $student->getFullName();
 @endphp
 @extends('layout', ['title' => $title])
 
@@ -74,11 +74,11 @@ $title = $student->getFullName();
             //         $('#viewTracking').modal('show');
             //     });
             // });
-            jQuery("[tracking='view']").click(function () {
+            jQuery("[tracking='view']").click(function() {
                 var trackingId = $(this).attr('tracking-id');
                 $.get(HOST + '/students/tracking', {
                     tracking: trackingId
-                }, function (data) {
+                }, function(data) {
                     $('#modalViewTracking').html(data.title);
                     $('#modalContentViewTracking').html(data.content);
                     $('#viewTracking').modal('show');
@@ -769,8 +769,8 @@ $title = $student->getFullName();
                                                     <option label="&nbsp;"></option>
                                                     @foreach ($student->enumTypeSchoolOrigin() as $typeSchoolOrigin)
                                                         <option value="{{ $typeSchoolOrigin }}"
-                                                        @selected(old('type_origin_school', $student->type_origin_school) == $typeSchoolOrigin)>
-                                                        {{ __($typeSchoolOrigin) }}</option>
+                                                            @selected(old('type_origin_school', $student->type_origin_school) == $typeSchoolOrigin)>
+                                                            {{ __($typeSchoolOrigin) }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -1737,7 +1737,7 @@ $title = $student->getFullName();
                     <!-- Documents Tab End -->
 
                     <div class="tab-pane fade @if (session('tab') === 'reportBook') active show @endif" id="reportBookTab"
-                    role="tabpanel">
+                        role="tabpanel">
                         <h2 class="small-title">{{ __('Report books') }}</h2>
                         <section class="card mb-5">
                             @can('students.documents.edit')
@@ -1750,11 +1750,16 @@ $title = $student->getFullName();
                                         <div class="row g-3">
                                             <div class="col-md-6">
                                                 <div class="w-100 position-relative form-group">
-                                                    <select data-placeholder="Boletín a subir" name="reportbook"
-                                                        logro="select2">
+                                                    <select data-placeholder="Boletín a subir" name="reportbook" logro="select2">
                                                         <option label="&nbsp;"></option>
                                                         @foreach ($resourceStudyYears as $resourceSY)
+                                                        @if ($resourceSY->studentReportBook === null)
                                                             <option value="{{ $resourceSY->id }}">{{ __($resourceSY->name) }}</option>
+                                                        @else
+                                                            @if ($resourceSY->studentReportBook->checked != 1)
+                                                            <option value="{{ $resourceSY->id }}">{{ __($resourceSY->name) }}</option>
+                                                            @endif
+                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -1774,42 +1779,68 @@ $title = $student->getFullName();
 
                                     </form>
                                 </div>
+                            @endcan
+
                                 <div class="card-body">
 
                                     @can('students.documents.checked')
-                                    <form method="POST" action="{{ route('studentFile.checked', $student) }}"
-                                        class="tooltip-label-end" novalidate>
-                                        @csrf
-                                        @method('PUT')
+                                        <div class="text-center">
+                                            <div class="alert alert-warning" role="alert">{{ __('Unapproved report books will be deleted') }}</div>
+                                        </div>
+
+                                        <form method="POST" action="{{ route('students.reportBooks.checked', $student) }}"
+                                            class="tooltip-label-end" novalidate>
+                                            @csrf
+                                            @method('PUT')
                                     @endcan
 
-                                    <div class="row g-2 row-cols-3 row-cols-md-5">
-                                        @foreach ($resourceStudyYears as $resourceSYview)
-                                            <div class="col small-gutter-col">
-                                                <div class="h-100">
-                                                    <div class="text-center d-flex flex-column">
-                                                        <div>
-                                                            @if ($resourceSYview->studentReportBook ?? null !== null)
-                                                            <i class="icon bi-file-earmark-fill icon-70 text-info cursor-pointer"
-                                                                logro="studentDocument"
-                                                                data-image="{{ $resourceSYview->studentReportBook->url ?? null }}"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#modalStudentDocuments"></i>
-                                                            @else
-                                                            <i class="icon bi-file-earmark icon-70 text-muted"></i>
-                                                            @endif
-                                                        </div>
-                                                        <div>
-                                                            {{ __($resourceSYview->name) }}
+                                            <div class="row g-2 row-cols-3 row-cols-md-5">
+                                                @foreach ($resourceStudyYears as $resourceSYview)
+                                                    <div class="col small-gutter-col">
+                                                        <div class="h-100">
+                                                            <div class="text-center d-flex flex-column">
+                                                                <div>
+                                                                    @if ($resourceSYview->studentReportBook ?? null !== null)
+                                                                        <i class="icon icon-70 cursor-pointer
+                                                                        @if ($resourceSYview->studentReportBook->checked == 1) bi-file-earmark-check-fill text-muted
+                                                                        @else bi-file-earmark-fill text-info @endif"
+                                                                            logro="studentDocument"
+                                                                            data-image="{{ $resourceSYview->studentReportBook->url ?? null }}"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#modalStudentDocuments"></i>
+                                                                    @else
+                                                                        <i class="icon bi-file-earmark icon-70 text-muted"></i>
+                                                                    @endif
+                                                                </div>
+                                                                <div>
+                                                                    {{ __($resourceSYview->name) }}
+                                                                </div>
+                                                                @can('students.documents.checked')
+                                                                    @if ($resourceSYview->studentReportBook ?? null !== null)
+                                                                        @if ($resourceSYview->studentReportBook->checked != 1)
+                                                                            <div class="form-switch">
+                                                                                <input class="form-check-input" name="reportbooks_checked[]"
+                                                                                    value="{{ $resourceSYview->studentReportBook->id }}"
+                                                                                    type="checkbox" />
+                                                                            </div>
+                                                                        @endif
+                                                                    @endif
+                                                                @endcan
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @endforeach
                                             </div>
-                                        @endforeach
-                                    </div>
+
+                                    @can('students.documents.checked')
+                                            <div class="mt-3 d-flex justify-content-end">
+                                                <x-button class="btn-primary" type="submit">{{ __('Save approved report books') }}</x-button>
+                                            </div>
+                                        </form>
+                                    @endcan
 
                                 </div>
-                            @endcan
+
                         </section>
                     </div>
                 @endcan
@@ -1960,8 +1991,9 @@ $title = $student->getFullName();
                                             </div>
                                             <div class="form-check d-inline-block w-40">
                                                 <label class="form-check-label logro-label">
-                                                    <input class="form-check-input" type="checkbox" name="drug_consumption"
-                                                        value="1" @checked($student->drug_consumption)>
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="drug_consumption" value="1"
+                                                        @checked($student->drug_consumption)>
                                                     {{ __('drug consumption') }}
                                                 </label>
                                             </div>
@@ -1981,9 +2013,8 @@ $title = $student->getFullName();
                                             </div>
                                             <div class="form-check d-inline-block w-50">
                                                 <label class="form-check-label logro-label">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        name="see_shadows" value="1"
-                                                        @checked($student->see_shadows)>
+                                                    <input class="form-check-input" type="checkbox" name="see_shadows"
+                                                        value="1" @checked($student->see_shadows)>
                                                     {{ __('see shadows') }}
                                                 </label>
                                             </div>
@@ -2077,8 +2108,9 @@ $title = $student->getFullName();
                                             </div>
                                             <div class="form-check d-inline-block w-40">
                                                 <label class="form-check-label logro-label">
-                                                    <input class="form-check-input" type="checkbox" name="unmotivated_crying"
-                                                        value="1" @checked($student->unmotivated_crying)>
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="unmotivated_crying" value="1"
+                                                        @checked($student->unmotivated_crying)>
                                                     {{ __('unmotivated crying') }}
                                                 </label>
                                             </div>
@@ -2177,8 +2209,9 @@ $title = $student->getFullName();
                                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
                                         <!-- Dropdown Button Start -->
                                         <div class="">
-                                            <button type="button" class="btn btn-outline-info btn-icon btn-icon-only" data-bs-offset="0,3"
-                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
+                                            <button type="button" class="btn btn-outline-info btn-icon btn-icon-only"
+                                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false" data-submenu>
                                                 <i data-acorn-icon="more-horizontal"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end">
@@ -2227,11 +2260,14 @@ $title = $student->getFullName();
                                                         @if ($studentTracking->type_tracking === 'advice')
                                                             <div class="logro-label">{{ __('advice') }}</div>
                                                         @elseif ($studentTracking->type_tracking === 'remit')
-                                                            <div class="d-inline-block">{{ __('Referral to') }}: {{ $studentTracking->entity_remit }}</div>
+                                                            <div class="d-inline-block">{{ __('Referral to') }}:
+                                                                {{ $studentTracking->entity_remit }}</div>
                                                         @elseif ($studentTracking->type_tracking === 'family')
-                                                            <div class="logro-label">{{ __('recommendation to the family') }}</div>
+                                                            <div class="logro-label">
+                                                                {{ __('recommendation to the family') }}</div>
                                                         @elseif ($studentTracking->type_tracking === 'teachers')
-                                                            <div class="logro-label">{{ __('Recommendation for teachers') }}</div>
+                                                            <div class="logro-label">{{ __('Recommendation for teachers') }}
+                                                            </div>
                                                         @endif
                                                     </td>
                                                     <td class="text-small">
@@ -2242,120 +2278,121 @@ $title = $student->getFullName();
                                                         @endif
                                                     </td>
                                                     <td class="text-end">
-                                                        @if ($studentTracking->type_tracking === 'advice'
-                                                            && $studentTracking->evolution === NULL)
-                                                        <a class="btn btn-sm btn-link" href="{{ route('students.tracking.evolution', [$student, $studentTracking]) }}">
-                                                        {{ __('Evolve') }}
-                                                        </a>
+                                                        @if ($studentTracking->type_tracking === 'advice' && $studentTracking->evolution === null)
+                                                            <a class="btn btn-sm btn-link"
+                                                                href="{{ route('students.tracking.evolution', [$student, $studentTracking]) }}">
+                                                                {{ __('Evolve') }}
+                                                            </a>
                                                         @else
-                                                        <div class="btn btn-sm btn-link" tracking="view" tracking-id="{{ $studentTracking->id }}">
-                                                        {{ __('See') }}
-                                                        </div>
+                                                            <div class="btn btn-sm btn-link" tracking="view"
+                                                                tracking-id="{{ $studentTracking->id }}">
+                                                                {{ __('See') }}
+                                                            </div>
                                                         @endif
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
                                 </div>
-                                <!-- Table End -->
+                                </td>
+                                </tr>
+                                @endforeach
+                                </tbody>
+                                </table>
                             </div>
+                            <!-- Table End -->
                         </div>
                     </div>
-                    <!-- Advices Tab End -->
+                </div>
+                <!-- Advices Tab End -->
 
-                    <!-- PIAR Tab Start -->
-                    @if (1 === $student->inclusive)
-                        <div class="tab-pane fade " id="piarTab" role="tabpanel">
-                            <section class="scroll-section">
-                                <h2 class="small-title">PIAR</h2>
-                                <div class="mb-n2" id="accordionCardsSubjects">
-                                    @foreach ($groupsStudent as $groupS)
-                                        <div class="card d-flex mb-2 card-color-background">
-                                            <div class="d-flex flex-grow-1" role="button" data-bs-toggle="collapse"
-                                                data-bs-target="#year-{{ $groupS->schoolYear->name }}"
-                                                aria-expanded="true" aria-controls="year-{{ $groupS->schoolYear->name }}">
-                                                <div class="card-body py-3 border-bottom">
-                                                    <div class="btn btn-link list-item-heading p-0">
-                                                        {{ $groupS->schoolYear->name }} -
-                                                        {{ '(' . $groupS->studyYear->name . ' - ' . $groupS->name . ')' }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="year-{{ $groupS->schoolYear->name }}"
-                                                class="collapse @if ($loop->first) show @endif"
-                                                data-bs-parent="#accordionCardsSubjects">
-                                                <div class="card mt-3 accordion-content">
-                                                    <div class="card-body pb-3">
-
-                                                        @if ($YAvailable === $groupS->school_year_id)
-                                                            <form
-                                                                method="POST"action="{{ route('students.piar', $student) }}"
-                                                                novalidate>
-                                                                @csrf
-                                                                @method('PUT')
-                                                        @endif
-                                                        @php $groupSubjects = '' @endphp
-
-                                                        @foreach ($groupS->studyYear->studyYearSubject as $studyYearSubject)
-                                                            @if ($groupS->school_year_id === $studyYearSubject->school_year_id)
-                                                                <div class="mb-3">
-                                                                    <h2 class="small-title">
-                                                                        {{ $studyYearSubject->subject->resourceSubject->name }}
-                                                                        -
-
-                                                                        @foreach ($studyYearSubject->subject->teacherSubjectGroups as $groupTSG)
-                                                                            @if ($groupS->id === $groupTSG->group_id && $groupS->school_year_id === $groupTSG->school_year_id)
-                                                                                {{ '(' . $groupTSG->teacher->getFullName() . ')' }}
-                                                                            @endif
-                                                                        @endforeach
-
-                                                                    </h2>
-                                                                    <div class="w-100 position-relative form-group">
-                                                                        @if ($YAvailable === $studyYearSubject->subject->school_year_id)
-                                                                            <textarea
-                                                                                name="{{ $studyYearSubject->subject->piarOne->id ?? 'null' }}~{{ $studyYearSubject->subject->id }}~annotation"
-                                                                                class="form-control" cols="2">{{ $studyYearSubject->subject->piarOne->annotation ?? null }}</textarea>
-                                                                        @else
-                                                                            <span
-                                                                                class="form-control">{{ $studyYearSubject->subject->piarOne->annotation ?? null }}</span>
-                                                                        @endif
-                                                                    </div>
-                                                                </div>
-                                                                @php
-                                                                    $groupSubjects .= $studyYearSubject->subject->id . '~';
-                                                                @endphp
-                                                            @endif
-                                                        @endforeach
-
-                                                        @if ($YAvailable === $groupS->school_year_id)
-                                                            <input type="hidden" name="groupSubjects"
-                                                                value="{{ $groupSubjects }}">
-                                                            <div
-                                                                class="border-0 pt-0 d-flex justify-content-end align-items-center">
-                                                                <x-button class="btn-primary" type="submit">
-                                                                    {{ __('Save') }} PIAR</x-button>
-                                                            </div>
-                                                            </form>
-                                                        @endif
-
-
-                                                    </div>
+                <!-- PIAR Tab Start -->
+                @if (1 === $student->inclusive)
+                    <div class="tab-pane fade " id="piarTab" role="tabpanel">
+                        <section class="scroll-section">
+                            <h2 class="small-title">PIAR</h2>
+                            <div class="mb-n2" id="accordionCardsSubjects">
+                                @foreach ($groupsStudent as $groupS)
+                                    <div class="card d-flex mb-2 card-color-background">
+                                        <div class="d-flex flex-grow-1" role="button" data-bs-toggle="collapse"
+                                            data-bs-target="#year-{{ $groupS->schoolYear->name }}" aria-expanded="true"
+                                            aria-controls="year-{{ $groupS->schoolYear->name }}">
+                                            <div class="card-body py-3 border-bottom">
+                                                <div class="btn btn-link list-item-heading p-0">
+                                                    {{ $groupS->schoolYear->name }} -
+                                                    {{ '(' . $groupS->studyYear->name . ' - ' . $groupS->name . ')' }}
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
-                                </div>
-                            </section>
-                        </div>
-                    @endif
-                    <!-- PIAR Tab End -->
-                @endcan
+                                        <div id="year-{{ $groupS->schoolYear->name }}"
+                                            class="collapse @if ($loop->first) show @endif"
+                                            data-bs-parent="#accordionCardsSubjects">
+                                            <div class="card mt-3 accordion-content">
+                                                <div class="card-body pb-3">
 
-            </div>
-            <!-- Right Side End -->
-        </section>
+                                                    @if ($YAvailable === $groupS->school_year_id)
+                                                        <form
+                                                            method="POST"action="{{ route('students.piar', $student) }}"
+                                                            novalidate>
+                                                            @csrf
+                                                            @method('PUT')
+                                                    @endif
+                                                    @php $groupSubjects = '' @endphp
+
+                                                    @foreach ($groupS->studyYear->studyYearSubject as $studyYearSubject)
+                                                        @if ($groupS->school_year_id === $studyYearSubject->school_year_id)
+                                                            <div class="mb-3">
+                                                                <h2 class="small-title">
+                                                                    {{ $studyYearSubject->subject->resourceSubject->name }}
+                                                                    -
+
+                                                                    @foreach ($studyYearSubject->subject->teacherSubjectGroups as $groupTSG)
+                                                                        @if ($groupS->id === $groupTSG->group_id && $groupS->school_year_id === $groupTSG->school_year_id)
+                                                                            {{ '(' . $groupTSG->teacher->getFullName() . ')' }}
+                                                                        @endif
+                                                                    @endforeach
+
+                                                                </h2>
+                                                                <div class="w-100 position-relative form-group">
+                                                                    @if ($YAvailable === $studyYearSubject->subject->school_year_id)
+                                                                        <textarea
+                                                                            name="{{ $studyYearSubject->subject->piarOne->id ?? 'null' }}~{{ $studyYearSubject->subject->id }}~annotation"
+                                                                            class="form-control" cols="2">{{ $studyYearSubject->subject->piarOne->annotation ?? null }}</textarea>
+                                                                    @else
+                                                                        <span
+                                                                            class="form-control">{{ $studyYearSubject->subject->piarOne->annotation ?? null }}</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            @php
+                                                                $groupSubjects .= $studyYearSubject->subject->id . '~';
+                                                            @endphp
+                                                        @endif
+                                                    @endforeach
+
+                                                    @if ($YAvailable === $groupS->school_year_id)
+                                                        <input type="hidden" name="groupSubjects"
+                                                            value="{{ $groupSubjects }}">
+                                                        <div
+                                                            class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                                                            <x-button class="btn-primary" type="submit">
+                                                                {{ __('Save') }} PIAR</x-button>
+                                                        </div>
+                                                        </form>
+                                                    @endif
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </section>
+                    </div>
+                @endif
+                <!-- PIAR Tab End -->
+            @endcan
+
+    </div>
+    <!-- Right Side End -->
+    </section>
 
     </div>
 
