@@ -120,6 +120,7 @@ class Student extends Model
         'signature_tutor',
         'signature_student',
         'wizard_documents',
+        'wizard_report_books',
         'wizard_person_charge',
         'wizard_personal_info',
         'wizard_complete'

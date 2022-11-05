@@ -70,6 +70,7 @@ class StudentController extends Controller
             'view',
             'update',
             'wizard_documents_request',
+            'wizard_report_books_request',
             'wizard_person_charge_request',
             'wizard_personal_info_request',
             'wizard_complete_request',
@@ -267,6 +268,41 @@ class StudentController extends Controller
 
             $student->forceFill([
                 'wizard_documents' => TRUE
+            ])->save();
+
+            return redirect()->back()->with('student', $student);
+        }
+
+        Notify::fail(__('Unauthorized!'));
+        return redirect()->route('dashboard');
+    }
+    public function wizard_reportBooks(Student $student)
+    {
+        if ('STUDENT' === UserController::role_auth()) {
+            /* Años de estudio igual e inferior al año de estudio actual del estudiante */
+            $resourceStudyYears = ResourceStudyYear::where('id', '<=', $student->studyYear->resource_study_year_id)
+                ->with([
+                    'studentReportBook' => fn ($reportBooks) => $reportBooks->where('student_id', $student->id)
+                ]);
+
+
+            return view('logro.student.wizard-report-books')->with([
+                'student' => $student,
+                'resourceStudyYears' => $resourceStudyYears->get()
+            ]);
+        }
+
+        Notify::fail(__('Unauthorized!'));
+        return redirect()->route('dashboard');
+    }
+    public function wizard_report_books_request(Request $request)
+    {
+        if ('STUDENT' === UserController::role_auth()) {
+
+            $student = Student::findOrFail(Auth::user()->id);
+
+            $student->forceFill([
+                'wizard_report_books' => TRUE
             ])->save();
 
             return redirect()->back()->with('student', $student);
@@ -536,29 +572,6 @@ class StudentController extends Controller
     {
         $Y = SchoolYearController::current_year();
         $YAvailable = SchoolYearController::available_year();
-
-        /* Group x Subjects [teacher, piar] START */
-        /* if (1 === $student->inclusive) {
-            $groupsStudent = Group::whereHas(
-                'groupStudents',
-                fn ($groupStudents) => $groupStudents->where('student_id', $student->id)
-            )->with([
-                'studyYear' =>
-                fn ($groupSY) => $groupSY->with([
-                    'studyYearSubject' =>
-                    fn ($groupSYS) => $groupSYS->with([
-                        'subject' =>
-                        fn ($groupSJ) => $groupSJ->with('teacherSubjectGroups')->with([
-                            'piarOne' =>
-                            fn ($studentPiar) => $studentPiar->where('student_id', $student->id)
-                        ])
-                    ])
-                ])
-            ])->orderByDesc('id')->get();
-        } else {
-            $groupsStudent = [];
-        } */
-        /* Group x Subjects [teacher, piar] END */
 
         $studentFileTypes = StudentFileType::with([
             'studentFile' => function ($files) use ($student) {

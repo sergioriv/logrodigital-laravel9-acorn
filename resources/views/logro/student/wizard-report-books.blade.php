@@ -52,13 +52,13 @@
                         <div class="card-header border-0 pb-0">
                             <ul class="nav nav-tabs justify-content-center disabled" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-center active" role="tab">
+                                    <a class="nav-link text-center done" role="tab">
                                         <div class="mb-1 title d-none d-sm-block">{{ __('Documents') }}</div>
                                         <div class="text-small description d-none d-md-block"></div>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-center" role="tab">
+                                    <a class="nav-link text-center active" role="tab">
                                         <div class="mb-1 title d-none d-sm-block">{{ __('Report books') }}</div>
                                         <div class="text-small description d-none d-md-block"></div>
                                     </a>
@@ -85,7 +85,7 @@
                                 <div class="tab-pane fade active show" role="tabpanel">
 
                                     <div class="card-header">
-                                        <form method="POST" action="{{ route('students.file', $student) }}"
+                                        <form method="POST" action="{{ route('students.reportBook', $student) }}"
                                             enctype="multipart/form-data" class="tooltip-label-end" novalidate>
                                             @csrf
                                             @method('PUT')
@@ -93,29 +93,17 @@
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <div class="w-100 position-relative form-group">
-                                                        <select data-placeholder="Seleccione documento" name="file_type"
-                                                            logro="select2" id="selectStudentDocument">
+                                                        <select data-placeholder="Boletín a subir" name="reportbook"
+                                                            logro="select2">
                                                             <option label="&nbsp;"></option>
-                                                            @foreach ($studentFileTypes as $fileType)
-                                                                @if ($fileType->studentFile === null)
-                                                                    <option value="{{ $fileType->id }}"
-                                                                        fileInfo="{{ $fileType->description }}"
-                                                                        @selected(old('file_type') == $fileType->id)>
-                                                                        {{ $fileType->name }}
-                                                                        @if (1 === $fileType->required)
-                                                                            *
-                                                                        @endif
-                                                                    </option>
+                                                            @foreach ($resourceStudyYears as $resourceSY)
+                                                                @if ($resourceSY->studentReportBook === null)
+                                                                    <option value="{{ $resourceSY->id }}">
+                                                                        {{ __($resourceSY->name) }}</option>
                                                                 @else
-                                                                    @if ($fileType->studentFile->checked !== 1)
-                                                                        <option value="{{ $fileType->id }}"
-                                                                            fileInfo="{{ $fileType->description }}"
-                                                                            @selected(old('file_type') == $fileType->id)>
-                                                                            {{ $fileType->name }}
-                                                                            @if (1 === $fileType->required)
-                                                                                *
-                                                                            @endif
-                                                                        </option>
+                                                                    @if ($resourceSY->studentReportBook->checked != 1)
+                                                                        <option value="{{ $resourceSY->id }}">
+                                                                            {{ __($resourceSY->name) }}</option>
                                                                     @endif
                                                                 @endif
                                                             @endforeach
@@ -124,7 +112,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="position-relative form-group">
-                                                        <x-input type="file" name="file_upload"
+                                                        <x-input type="file" name="file_reportbook"
                                                             accept="image/jpg, image/jpeg, image/png, image/webp"
                                                             class="d-block" />
                                                     </div>
@@ -143,17 +131,17 @@
                                     <div class="card-body">
 
                                         <div class="row g-2 row-cols-3 row-cols-md-5">
-                                            @foreach ($studentFileTypes as $studentFile)
+                                            @foreach ($resourceStudyYears as $resourceSYview)
                                                 <div class="col small-gutter-col">
                                                     <div class="h-100">
                                                         <div class="text-center d-flex flex-column">
                                                             <div>
-                                                                @if ($studentFile->studentFile ?? null !== null)
+                                                                @if ($resourceSYview->studentReportBook ?? null !== null)
                                                                     <i class="icon icon-70 cursor-pointer
-                                                                            @if ($studentFile->studentFile->checked == 1) bi-file-earmark-check-fill text-muted
-                                                                            @else bi-file-earmark-fill text-info @endif"
+                                                                @if ($resourceSYview->studentReportBook->checked == 1) bi-file-earmark-check-fill text-muted
+                                                                @else bi-file-earmark-fill text-info @endif"
                                                                         logro="studentDocument"
-                                                                        data-image="{{ $studentFile->studentFile->url }}"
+                                                                        data-image="{{ $resourceSYview->studentReportBook->url ?? null }}"
                                                                         data-bs-toggle="modal"
                                                                         data-bs-target="#modalStudentDocuments"></i>
                                                                 @else
@@ -161,10 +149,7 @@
                                                                 @endif
                                                             </div>
                                                             <div>
-                                                                {{ $studentFile->name }}
-                                                                @if (1 === $studentFile->required)
-                                                                    <x-required />
-                                                                @endif
+                                                                {{ __($resourceSYview->name) }}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -178,21 +163,9 @@
                             </div>
                         </div>
                         <div class="card-footer text-center">
-                            <form action="{{ route('student.wizard.documents') }}" method="POST">
+                            <form action="{{ route('student.wizard.reportBooks') }}" method="POST">
                                 @csrf
                                 @method('PUT')
-
-                                <!-- Documents Required Start -->
-                                <section>
-                                    @php $fileFails = 0 @endphp
-                                    @foreach ($studentFileTypes as $studentFileRequired)
-                                        @if (1 === $studentFileRequired->required && null === $studentFileRequired->studentFile)
-                                            @php ++$fileFails @endphp
-                                        @endif
-                                    @endforeach
-                                    <input type="hidden" name="docsFails" value="{{ $fileFails }}">
-                                </section>
-                                <!-- Documents Required End -->
 
                                 <button class="btn btn-icon btn-icon-end btn-outline-primary btn-next" type="submit">
                                     <span>{{ __('Continue') }}</span>

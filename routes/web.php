@@ -31,6 +31,7 @@ use App\Models\StudentAdvice;
 use App\Models\StudyYear;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
 
@@ -102,6 +103,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('profile', [ProfileController::class, 'update'])->name('user.profile.update');
     Route::put('profile/{user}/avatar', [ProfileController::class, 'update_avatar'])->name('user.profile.avatar');
     Route::put('profile/documents', [StudentController::class, 'wizard_documents_request'])->name('student.wizard.documents');
+    Route::put('profile/report-books', [StudentController::class, 'wizard_report_books_request'])->name('student.wizard.reportBooks');
     Route::put('profile/person_charge', [StudentController::class, 'wizard_person_charge_request'])->name('student.wizard.person-charge');
     Route::put('profile/personal_info', [StudentController::class, 'wizard_personal_info_request'])->name('student.wizard.personal-info');
     Route::put('profile/edit', [StudentController::class, 'wizard_complete_request'])->name('student.wizard.complete');
@@ -224,8 +226,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::put('persons-charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');
-    Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('studentFile');
-    Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('studentFile.checked');
+
+
+    Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('students.file');
+    Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('students.file.checked');
 
 
     Route::put('students/{student}/report-book', [StudentReportBookController::class, 'update'])->name('students.reportBook');

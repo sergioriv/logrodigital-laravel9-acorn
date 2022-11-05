@@ -1602,7 +1602,7 @@
                         <section class="card mb-5">
                             @can('students.documents.edit')
                                 <div class="card-header">
-                                    <form method="POST" action="{{ route('studentFile', $student) }}"
+                                    <form method="POST" action="{{ route('students.file', $student) }}"
                                         enctype="multipart/form-data" class="tooltip-label-end" novalidate>
                                         @csrf
                                         @method('PUT')
@@ -1661,7 +1661,7 @@
                             <div class="card-body">
 
                                 @can('students.documents.checked')
-                                    <form method="POST" action="{{ route('studentFile.checked', $student) }}"
+                                    <form method="POST" action="{{ route('students.file.checked', $student) }}"
                                         class="tooltip-label-end" novalidate>
                                         @csrf
                                         @method('PUT')
@@ -1672,39 +1672,23 @@
                                             <div class="col small-gutter-col">
                                                 <div class="h-100">
                                                     <div class="text-center d-flex flex-column">
-                                                        <span>
-
+                                                        <div>
                                                             @if ($studentFile->studentFile ?? null !== null)
-                                                                @if ($studentFile->studentFile->checked === 1)
-                                                                    <i class="icon bi-file-earmark-check-fill icon-70 text-muted cursor-pointer"
-                                                                        logro="studentDocument"
-                                                                        data-image="{{ $studentFile->studentFile->url }}"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#modalStudentDocuments"></i>
-                                                                @elseif ($studentFile->studentFile->checked === 0)
-                                                                    <i class="icon bi-file-earmark-x-fill icon-70 text-danger cursor-pointer"
-                                                                        logro="studentDocument"
-                                                                        data-image="{{ $studentFile->studentFile->url }}"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#modalStudentDocuments"></i>
-                                                                @else
-                                                                    <i class="icon bi-file-earmark-fill icon-70 text-info cursor-pointer"
-                                                                        logro="studentDocument"
-                                                                        data-image="{{ $studentFile->studentFile->url }}"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#modalStudentDocuments"></i>
-                                                                @endif
+                                                                <i class="icon icon-70 cursor-pointer
+                                                                    @if ($studentFile->studentFile->checked == 1) bi-file-earmark-check-fill text-muted
+                                                                    @else bi-file-earmark-fill text-info @endif"
+                                                                    logro="studentDocument" data-image="{{ $studentFile->studentFile->url }}"
+                                                                    data-bs-toggle="modal" data-bs-target="#modalStudentDocuments"></i>
                                                             @else
                                                                 <i class="icon bi-file-earmark icon-70 text-muted"></i>
                                                             @endif
-
-                                                        </span>
-                                                        <span>
+                                                        </div>
+                                                        <div>
                                                             {{ $studentFile->name }}
                                                             @if (1 === $studentFile->required)
-                                                                <span class="text-danger">*</span>
+                                                                <x-required />
                                                             @endif
-                                                        </span>
+                                                        </div>
 
                                                         @can('students.documents.checked')
                                                             @if ($studentFile->studentFile ?? null !== null)

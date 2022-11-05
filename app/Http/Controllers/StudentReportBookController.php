@@ -34,21 +34,16 @@ class StudentReportBookController extends Controller
             ->where('resource_study_year_id', $request->reportbook)
             ->first();
 
-        if ($reportBook === NULL) {
+        if ( $reportBook === NULL ) {
 
             $reportBook = new StudentReportBook();
-            $reportBook->creation_user_id = Auth::user()->id;
             $reportBook->student_id = $student->id;
             $reportBook->resource_study_year_id = $request->reportbook;
-
-        } else {
-
-            $reportBook->creation_user_id = Auth::user()->id;
 
         }
 
         $path_file = $this->upload_file($request, $student->id);
-        if (!$path_file) {
+        if ( !$path_file ) {
             return redirect()->back()->withErrors(__('An error occurred while uploading the file, please try again.'));
         }
 
@@ -56,6 +51,7 @@ class StudentReportBookController extends Controller
             File::delete(public_path($reportBook->url_absolute));
         }
 
+        $reportBook->creation_user_id = Auth::user()->id;
         $reportBook->url = config('app.url') .'/'. $path_file;
         $reportBook->url_absolute = $path_file;
         $reportBook->save();

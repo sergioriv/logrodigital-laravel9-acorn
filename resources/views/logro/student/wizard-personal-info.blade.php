@@ -62,6 +62,12 @@ $title = __('Personal Information');
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link text-center done" role="tab">
+                                        <div class="mb-1 title d-none d-sm-block">{{ __('Report books') }}</div>
+                                        <div class="text-small description d-none d-md-block"></div>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link text-center done" role="tab">
                                         <div class="mb-1 title d-none d-sm-block">{{ __('Persons in Charge') }}</div>
                                         <div class="text-small description d-none d-md-block"></div>
                                     </a>

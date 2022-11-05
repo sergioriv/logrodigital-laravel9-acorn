@@ -73,6 +73,9 @@ class ProfileController extends Controller
                 if ($student_find->wizard_documents === NULL) {
                     return $student->wizard_documents($student_find);
                     break;
+                } elseif ($student_find->wizard_report_books === NULL) {
+                    return $student->wizard_reportBooks($student_find);
+                    break;
                 } elseif ($student_find->wizard_person_charge === NULL) {
                     return $student->wizard_person_charge($student_find);
                     break;

@@ -13,6 +13,8 @@ use Illuminate\Validation\Rule;
 class StudentFileController extends Controller
 {
 
+    const FILE = 'file_upload';
+
     function __construct()
     {
         $this->middleware('can:students.documents.edit');
@@ -25,68 +27,103 @@ class StudentFileController extends Controller
 
         $request->validate([
             'file_type' => ['required',Rule::exists('student_file_types','id')],
-            'file_upload' => ['required','file','mimes:jpg,jpeg,png,webp','max:2048']
+            self::FILE => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048']
         ]);
 
-        $path_file = $this->upload_file($request, 'file_upload', $student->id);
 
-        $student_file = StudentFile::where('student_id', $student->id)
-                ->where('student_file_type_id', $request->file_type)
-                ->first();
+        $studentFile = StudentFile::where('student_id', $student->id)
+            ->where('student_file_type_id', $request->file_type)
+            ->first();
+
+        if ( $studentFile === NULL ) {
+
+            $studentFile = new StudentFile();
+            $studentFile->student_id = $student->id;
+            $studentFile->student_file_type_id = $request->file_type;
+
+        }
+
+        $path_file = $this->upload_file($request, $student->id);
+        if ( !$path_file ) {
+            return redirect()->back()->withErrors(__('An error occurred while uploading the file, please try again.'));
+        }
+
+        if ($request->hasFile(self::FILE) && $studentFile->url_absolute !== NULL) {
+            File::delete(public_path($studentFile->url_absolute));
+        }
+
+        $studentFile->creation_user_id = Auth::user()->id;
+        $studentFile->url = config('app.url') .'/'. $path_file;
+        $studentFile->url_absolute = $path_file;
+        $studentFile->save();
+
 
         /* Update Student Avatar */
-        if ($request->file_type == 9 && $path_file !== NULL) // 9 => foto para documento
-        {
-            $student->user->update([
-                'avatar' => $path_file
-            ]);
+        if ($request->file_type == 9) { // 9 => foto para documento
+
+            $student->user->avatar = $path_file;
+            $student->user->save();
+
         }
 
-        if ( $student_file === NULL )
-        {
-            StudentFile::create([
-                'student_id' => $student->id,
-                'student_file_type_id' => $request->file_type,
-                'url' => config('app.url') .'/'. $path_file,
-                'url_absolute' => $path_file,
-                'checked' => NULL,
-                'creation_user_id' => Auth::user()->id
-            ]);
-
-            Notify::success(__('File upload!'));
-            return redirect()->back();
-        } else
-        {
-
-            if ( $request->hasFile('file_upload') )
-                File::delete(public_path($student_file->url_absolute));
-
-            $renewed = $student_file->approval_date === NULL ? FALSE : TRUE ;
-            $student_file->update([
-                'url' => config('app.url') .'/'. $path_file,
-                'url_absolute' => $path_file,
-                'renewed' => $renewed,
-                'checked' => NULL,
-                'creation_user_id' => Auth::user()->id
-
-            ]);
-
-            Notify::success(__('File updated!'));
-            return redirect()->back();
-        }
+        static::tab();
+        Notify::success(__('File upload!'));
+        return redirect()->back();
     }
 
-    public static function upload_file($request, $file_name, $student_id)
+    public static function upload_file($request, $student_id)
     {
-        if ( $request->hasFile($file_name) )
+        if ( $request->hasFile(self::FILE) )
         {
-            $path = $request->file($file_name)->store('students/'.$student_id.'/files', 'public');
+            $path = $request->file(self::FILE)->store('students/'.$student_id.'/files', 'public');
             return config('filesystems.disks.public.url') .'/' . $path;
         }
         else return null;
     }
 
     public function checked(Request $request, Student $student)
+    {
+        $request->validate([
+            'student_files' => ['nullable', Rule::exists('student_files','id')->where('student_id',$student->id)]
+        ]);
+
+        $studentFiles = $student->files->whereNull('checked');
+
+        foreach ($studentFiles as $file) {
+            if ( in_array($file->id, $request->student_files ?? []) ) {
+
+                $file->checked = TRUE;
+                $file->approval_user_id = Auth::user()->id;
+                $file->approval_date = now()->format('Y-m-d');
+                $file->save();
+
+            } else {
+
+                $this->delete_studentFile($file);
+
+                if ( $file->student_file_type_id == 9 ) { //eliminacion de avatar
+
+                    $student->user->avatar = NULL;
+                    $student->user->save();
+
+                }
+
+            }
+        }
+
+        static::tab();
+        Notify::success(__('Files updated!'));
+        return redirect()->back();
+    }
+
+    private function delete_studentFile($file)
+    {
+        File::delete(public_path($file->url_absolute));
+
+        $file->delete();
+    }
+
+    public function __checked(Request $request, Student $student)
     {
         if ( !empty($request->student_files) )
         {
@@ -121,5 +158,10 @@ class StudentFileController extends Controller
 
         Notify::success(__('Files updated!'));
         return redirect()->back();
+    }
+
+    private static function tab()
+    {
+        session()->flash('tab', 'documents');
     }
 }

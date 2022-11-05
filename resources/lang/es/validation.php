@@ -245,7 +245,8 @@ return [
         'support_document' => 'documento soporte',
         'permit_date_end' => 'fecha fin',
         'permit_date_start' => 'fecha inicio',
-        'reportbooks_checked' => 'boletines aprobados'
+        'reportbooks_checked' => 'boletines aprobados',
+        'file_type' => 'tipo de documento'
     ],
 
 ];
