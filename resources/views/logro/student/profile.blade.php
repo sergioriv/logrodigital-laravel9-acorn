@@ -1661,11 +1661,15 @@
                             <div class="card-body">
 
                                 @can('students.documents.checked')
+                                    <div class="text-center">
+                                        <div class="alert alert-warning" role="alert">{{ __('Unapproved documents will be deleted') }}</div>
+                                    </div>
+
                                     <form method="POST" action="{{ route('students.file.checked', $student) }}"
                                         class="tooltip-label-end" novalidate>
                                         @csrf
                                         @method('PUT')
-                                    @endcan
+                                @endcan
 
                                     <div class="row g-2 row-cols-3 row-cols-md-5">
                                         @foreach ($studentFileTypes as $studentFile)
@@ -1720,6 +1724,7 @@
                     </div>
                     <!-- Documents Tab End -->
 
+                    <!-- Report Books Tab Start -->
                     <div class="tab-pane fade @if (session('tab') === 'reportBook') active show @endif" id="reportBookTab"
                         role="tabpanel">
                         <h2 class="small-title">{{ __('Report books') }}</h2>
@@ -1827,6 +1832,7 @@
 
                         </section>
                     </div>
+                    <!-- Report Books Tab End -->
                 @endcan
 
                 @can('students.psychosocial')
