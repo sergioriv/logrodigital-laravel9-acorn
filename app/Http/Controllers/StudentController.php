@@ -611,7 +611,7 @@ class StudentController extends Controller
             'kinships'      => Kinship::all(),
             'studentFileTypes' => $studentFileTypes->get(),
             'resourceStudyYears' => $resourceStudyYears->get(),
-            // 'groupsStudent' => $groupsStudent,
+            'groupsStudent' => [],
             'nationalCountry' => NationalCountry::country()
         ]);
     }
