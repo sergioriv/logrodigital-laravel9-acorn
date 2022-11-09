@@ -24,7 +24,7 @@ class YearCurrentMiddleware
 
         if( NULL === $Y->available )
         {
-            Notify::fail(__('Not allowed for ') . $Y->name);
+            Notify::fail(__('Not allowed for school year :year', ['year' => $Y->name]));
             return redirect()->back();
         }
 

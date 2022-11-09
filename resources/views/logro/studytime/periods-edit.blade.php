@@ -63,27 +63,6 @@ $title = $studyTime->name;
                 </section>
                 <!-- Title End -->
 
-                <section class="scroll-section">
-                    <div class="mb-5 wizard">
-                        <div class="border-0 pb-0">
-                            <ul class="nav nav-tabs justify-content-center disabled" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-center done" role="tab">
-                                        <div class="mb-1 text-muted title d-none d-sm-block">{{ __('Main Information') }}</div>
-                                        <div class="text-small description d-none d-md-block"></div>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-center active" role="tab">
-                                        <div class="mb-1 title d-none d-sm-block">{{ __('Periods') }}</div>
-                                        <div class="text-small description d-none d-md-block"></div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
                 <form action="{{ route('studyTime.periods.store', $studyTime) }}" method="post" novalidate autocomplete="off">
                     @csrf
 
@@ -96,7 +75,9 @@ $title = $studyTime->name;
                                     data-placeholder="{{ __('Number of periods') }}">
                                     <option label="&nbsp;"></option>
                                     @for ($i = 1; $i <= 15; $i++)
-                                        <option value="{{ $i }}">{{ $i . ' ' . __('Periods') }}</option>
+                                        <option value="{{ $i }}"
+                                            @if (count($periods) === $i) selected @endif>
+                                            {{ $i . ' ' . __('Periods') }}</option>
                                     @endfor
                                 </select>
                             </div>
@@ -106,7 +87,41 @@ $title = $studyTime->name;
 
                     <section class="scroll-section">
 
-                        @for ($i = 1; $i <= 15; $i++)
+                        <h2 class="small-title @if (count($periods) == 0) d-none @endif" id="periods-title">{{ __('Periods') }}</h2>
+
+                        @foreach ($periods as $period)
+                        <input type="hidden" name="period[{{ $period->ordering }}][id]" value="{{ $period->id }}" />
+                            <div class="card mb-3" logro="periods" id="period-{{ $period->ordering }}">
+                                <div class="card-body">
+                                    <h2 class="small-title">{{ __('Period') . ' ' . $period->ordering }}</h2>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <x-input name="period[{{ $period->ordering }}][name]"
+                                                placeholder="{{ __('Name') }}" value="{{ $period->name }}" />
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="input-daterange input-group datePickerRange">
+                                                <x-input name="period[{{ $period->ordering }}][start]"
+                                                    placeholder="{{ __('Start') }}" value="{{ $period->start }}" />
+                                                <span class="p-gutter"></span>
+                                                <x-input name="period[{{ $period->ordering }}][end]"
+                                                    placeholder="{{ __('End') }}" value="{{ $period->end }}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <x-input type="number" name="period[{{ $period->ordering }}][workload]"
+                                                placeholder="{{ __('Academic workload') }}" value="{{ $period->workload }}" />
+                                        </div>
+                                        <div class="col-2">
+                                            <x-input type="number" name="period[{{ $period->ordering }}][days]"
+                                                placeholder="{{ __('Deadline days') }}" value="{{ $period->days }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+
+                        @for ($i = (count($periods) + 1); $i <= 15; $i++)
                             <div class="card mb-3 d-none" logro="periods" id="period-{{ $i }}">
                                 <div class="card-body">
                                     <h2 class="small-title">{{ __('Period') . ' ' . $i }}</h2>
@@ -137,16 +152,12 @@ $title = $studyTime->name;
                             </div>
                         @endfor
 
-                        <div class="text-center">
-                            <x-button type="submit" class="btn-primary btn-icon btn-icon-end">
-                                <span>{{ __('Finish') }}</span>
-                                <i data-acorn-icon="chevron-right" class="icon" data-acorn-size="18"></i>
-                            </x-button>
-                        </div>
+                        <x-button type="submit" class="btn-primary">{{ __('Save periods') }}</x-button>
 
                     </section>
                     <!-- content End -->
                 </form>
+
 
             </div>
         </div>

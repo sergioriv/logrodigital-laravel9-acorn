@@ -125,12 +125,13 @@ class StudyTimeController extends Controller
 
     public function show(StudyTime $studyTime)
     {
-        // $Y = SchoolYearController::current_year();
+        $Y = SchoolYearController::current_year();
 
         // $periods = Period::where('school_year_id', $Y->id)->where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
         $periods = Period::where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
         // $studyYears = StudyYear::where('study_time_id', $studyTime->id)->get();
         return view('logro.studytime.show')->with([
+            'Y' => $Y,
             'studyTime' => $studyTime,
             'periods' => $periods
         ]);
@@ -155,14 +156,14 @@ class StudyTimeController extends Controller
         return redirect()->route('studyTime.show', $studyTime);
     } */
 
-    public function periods_create(StudyTime $studyTime)
+    /* public function periods_create(StudyTime $studyTime)
     {
         return view('logro.studytime.wizard-periods')->with([
             'studyTime' => $studyTime,
         ]);
-    }
+    } */
 
-    public function periods_store(Request $request, StudyTime $studyTime)
+    /* public function periods_store(Request $request, StudyTime $studyTime)
     {
 
         $request->validate([
@@ -174,7 +175,7 @@ class StudyTimeController extends Controller
             'period.*.days' => ['numeric']
         ]);
         return PeriodController::create($request, $studyTime);
-    }
+    } */
 
     /*
      * study times that did not complete the creation process are eliminated.

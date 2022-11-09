@@ -144,7 +144,7 @@
             <li>
                 <a href="{{ route('schoolYear.index') }}" data-href="/school_years">
                     <i class="icon icon-18 bi-clock-history"></i>
-                    <span class="label">{{ __('Years') }}</span>
+                    <span class="label">{{ __('School years') }}</span>
                 </a>
             </li>
             @endcan

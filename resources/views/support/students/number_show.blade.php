@@ -30,7 +30,7 @@ $title = __('Students Number');
                     <!-- Validation Errors -->
                     {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
 
-                    <form id="registerForm" method="POST" action="{{ route('support.number_students') }}"
+                    <form id="registerForm" method="POST" action="{{ route('support.number_students.update') }}"
                         class="tooltip-end-bottom" novalidate>
                         @csrf
                         @method('PUT')

@@ -1,5 +1,5 @@
 @php
-$title = $studyTime->name;
+    $title = $studyTime->name;
 @endphp
 @extends('layout', ['title' => $title])
 
@@ -98,7 +98,7 @@ $title = $studyTime->name;
                                     <div class="card border-2 border-danger">
                                         <div class="card-body text-center">
                                             <h5 class="text-capitalize">{{ __('low') }}</h5>
-                                            <h4 class="font-weight-bold">{{ '('. $studyTime->lowRange() .')' }}</h4>
+                                            <h4 class="font-weight-bold">{{ '(' . $studyTime->lowRange() . ')' }}</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -106,7 +106,8 @@ $title = $studyTime->name;
                                     <div class="card border-2 border-warning">
                                         <div class="card-body text-center">
                                             <h5 class="text-capitalize">{{ __('acceptable') }}</h5>
-                                            <h4 class="font-weight-bold">{{ '('. $studyTime->acceptableRange() .')' }}</h4>
+                                            <h4 class="font-weight-bold">{{ '(' . $studyTime->acceptableRange() . ')' }}
+                                            </h4>
                                         </div>
                                     </div>
                                 </div>
@@ -114,7 +115,7 @@ $title = $studyTime->name;
                                     <div class="card border-2 border-primary">
                                         <div class="card-body text-center">
                                             <h5 class="text-capitalize">{{ __('high') }}</h5>
-                                            <h4 class="font-weight-bold">{{ '('. $studyTime->highRange() .')' }}</h4>
+                                            <h4 class="font-weight-bold">{{ '(' . $studyTime->highRange() . ')' }}</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -122,27 +123,64 @@ $title = $studyTime->name;
                                     <div class="card border-2 border-success">
                                         <div class="card-body text-center">
                                             <h5 class="text-capitalize">{{ __('superior') }}</h5>
-                                            <h4 class="font-weight-bold">{{ '('. $studyTime->superiorRange() .')' }}</h4>
+                                            <h4 class="font-weight-bold">{{ '(' . $studyTime->superiorRange() . ')' }}</h4>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <!-- Periods Tab Start -->
                         <div class="tab-pane fade" id="periodsTab" role="tabpanel">
+
+                            <!-- Top Content Start -->
+                            <div class="row mb-3">
+
+                                <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-center">
+                                    <h4 class="m-0">{{ __('School year') .': '. $Y->name }}</h4>
+                                </div>
+
+                                <div
+                                    class="col-sm-12 col-md-6 col-lg-4 col-xxl-3 d-flex align-items-start justify-content-end">
+                                    <a href="{{ route('studyTime.periods.edit', $studyTime) }}"
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                        @if ($periods->count())
+                                            <i data-acorn-icon="edit-square"></i>
+                                            <span>{{ __('Edit periods') }}</span>
+                                        @else
+                                            <i data-acorn-icon="plus"></i>
+                                            <span>{{ __('Create periods') }}</span>
+                                        @endif
+                                    </a>
+                                </div>
+
+                            </div>
+                            <!-- Top Content End -->
+
+
                             <div class="row g-3">
                                 @foreach ($periods as $period)
                                     <div class="card">
-                                        <div class="card-body row">
+                                        <div class="card-body p-3 row">
                                             <div class="col-md-4">{{ $period->name }}</div>
-                                            <div class="col-md-2">{{ $period->start }}</div>
-                                            <div class="col-md-2">{{ $period->end }}</div>
+                                            <div class="col-md-4">{{ $period->start }} <span
+                                                    class="font-weight-bold p-2">/</span> {{ $period->end }}</div>
                                             <div class="col-md-2">{{ $period->workload }}%</div>
                                             <div class="col-md-2">{{ $period->days }}</div>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
+
+                            <!-- Edit Periods Button Start -->
+                            <div class="col-12 mt-3 d-flex align-items-start justify-content-end">
+
+
+
+
+                            </div>
+                            <!-- Edit Periods Button End -->
+
                         </div>
                     </div>
                     <!-- Right Side End -->

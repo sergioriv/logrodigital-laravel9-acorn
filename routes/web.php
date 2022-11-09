@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\Mail\SmtpMail;
+use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\PersonChargeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceAreaController;
@@ -61,24 +62,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->back();
         });
 
-        Route::get('add-permission', function () {
-            Permission::create(['name' => 'students.view']);
-        });
-
-        Route::get('add-resource-study-years', function() {
-            $seed = new \Database\Seeders\resourceStudyYear();
-            $seed->run();
-            dd('hecho');
-        });
-
-        Route::get('study-years-resource-foreing', function() {
-            $sy = StudyYear::all();
-            foreach ($sy as $s) {
-                $s->resource_study_year_id = $s->id;
-                $s->save();
-            }
-            dd('hecho');
-        });
 
         /* Route Users */
         Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');
@@ -90,7 +73,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         /* Route Number Students */
         Route::get('number-students', [SchoolController::class, 'number_students_show'])->name('support.number_students');
-        Route::put('number-students', [SchoolController::class, 'number_students_update'])->name('support.number_students');
+        Route::put('number-students', [SchoolController::class, 'number_students_update'])->name('support.number_students.update');
     });
 
     /* Asigna la contraseña luego de confirmar el correo */
@@ -128,10 +111,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route StudyTime */
     Route::resource('study-times', StudyTimeController::class)->except('destroy','edit','update')->names('studyTime');
-    Route::get('study-times/{study_time}/periods', [StudyTimeController::class, 'periods_create'])->name('studyTime.periods');
-    Route::post('study-times/{study_time}/periods', [StudyTimeController::class, 'periods_store'])->name('studyTime.periods.store');
-    Route::get('study-times/{study_time}/study-years', [StudyTimeController::class, 'studyYear_create'])->name('studyTime.studyYear');
-    Route::post('study-times/{study_time}/study-years', [StudyTimeController::class, 'studyYear_store'])->name('studyTime.studyYear.store');
+    Route::get('study-times/{study_time}/periods', [PeriodController::class, 'create'])->name('studyTime.periods');
+    Route::post('study-times/{study_time}/periods', [PeriodController::class, 'store'])->name('studyTime.periods.store');
+    Route::get('study-times/{study_time}/periods/edit', [PeriodController::class, 'edit'])->name('studyTime.periods.edit');
+    // Route::put('study-times/{study_time}/periods', [PeriodController::class, 'store'])->name('studyTime.periods.edit');
+    // ⛔ Route::get('study-times/{study_time}/study-years', [StudyTimeController::class, 'studyYear_create'])->name('studyTime.studyYear');
+    // ⛔ Route::post('study-times/{study_time}/study-years', [StudyTimeController::class, 'studyYear_store'])->name('studyTime.studyYear.store');
 
     /* Route StudyYear */
     Route::resource('study-years', StudyYearController::class)->except('destroy')->names('studyYear');

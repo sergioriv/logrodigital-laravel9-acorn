@@ -16,6 +16,13 @@ class PeriodController extends Controller
         $this->middleware(YearCurrentMiddleware::class)->only('update');
     }
 
+    public function create(StudyTime $studyTime)
+    {
+        return view('logro.studytime.wizard-periods')->with([
+            'studyTime' => $studyTime,
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -23,8 +30,24 @@ class PeriodController extends Controller
      * @param  \App\Models\Period  $period
      * @return \Illuminate\Http\Response
      */
-    public static function create(Request $request, StudyTime $studyTime)
+    public function store(Request $request, StudyTime $studyTime)
     {
+        $request->validate([
+            'period' => ['required', 'array'],
+            'period.*.*' => ['required'],
+            'period.*.start' => ['date'],
+            'period.*.end' => ['date'],
+            'period.*.workload' => ['numeric'],
+            'period.*.days' => ['numeric']
+        ]);
+
+        return $this->save($request, $studyTime);
+    }
+
+    private function save($request, $studyTime)
+    {
+        $Y = SchoolYearController::current_year();
+
         $workloadTotal = 0;
         DB::beginTransaction();
 
@@ -53,6 +76,7 @@ class PeriodController extends Controller
                 }
             } else {
                 Period::create([
+                    'school_year_id' => $Y->id,
                     'study_time_id' => $studyTime->id,
                     'period_type_id' => 1,
                     'ordering' => $key,
@@ -73,12 +97,24 @@ class PeriodController extends Controller
             $studyTime->forceFill(['active' => TRUE])->save();
             StudyTimeController::deleteNotActive();
 
-            Notify::success(__('Study time created!'));
+            Notify::success(__('Study time updated!'));
             return redirect()->route('studyTime.show', [$studyTime]);
         } else {
             DB::rollBack();
             return redirect()->back()->withErrors(__("workload not is 100%"));
         }
 
+    }
+
+    public function edit(StudyTime $studyTime)
+    {
+        $Y = SchoolYearController::current_year();
+
+        $periods = Period::where('school_year_id', $Y->id)->where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
+        return view('logro.studytime.periods-edit')->with([
+            'Y' => $Y,
+            'studyTime' => $studyTime,
+            'periods' => $periods
+        ]);
     }
 }
