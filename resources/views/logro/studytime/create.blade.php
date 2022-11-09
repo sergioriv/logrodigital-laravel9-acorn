@@ -4,17 +4,21 @@
 @extends('layout', ['title' => $title])
 
 @section('css')
+    <link rel="stylesheet" href="/css/vendor/select2.min.css" />
+    <link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" />
 @endsection
 
 @section('js_vendor')
     <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
     <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
+    <script src="/js/vendor/select2.full.min.js"></script>
     <script src="/js/vendor/imask.js"></script>
 @endsection
 
 @section('js_page')
     <script src="/js/forms/studytime-create.js"></script>
+    <script src="/js/forms/select2.js"></script>
 @endsection
 
 @section('content')
@@ -53,7 +57,7 @@
                 <section class="scroll-section">
 
                     <form method="POST" id="studyTimeCreateForm" action="{{ route('studyTime.store') }}"
-                        class="tooltip-end-bottom" novalidate>
+                        class="tooltip-start-bottom" novalidate>
                         @csrf
 
 
@@ -133,46 +137,104 @@
                         <div class="card mb-5">
                             <div class="card-body">
                                 <div class="row g-3">
-                                    <div class="col-md-2">
+                                    <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <x-label required>{{ __('minimun grade') }}</x-label>
-                                            <x-input name="minimum_grade" id="minimum_grade"
-                                                type="number" min="0.00" max="2.99" step="0.01"
-                                                value="0.00" required />
+                                            <x-label required>{{ __('number of decimal places for qualification') }}
+                                            </x-label>
+                                            <x-input name="decimal" id="decimal" value="2" type="number" min="0"
+                                                max="2" />
+                                            <div class="form-text">min: 0 - max: 2</div>
                                         </div>
                                     </div>
-                                    <div class="col-md-1">&nbsp;</div>
-                                    <div class="col-md-2">
-                                        <div class="position-relative form-group">
-                                            <x-label required>{{ __('low performance') }}</x-label>
-                                            <x-input name="low_performance" id="low_performance"
-                                                type="number" min="0.00" max="3.99" step="0.01"
-                                                value="2.99" required />
+                                    <div class="col-md-6">
+                                        <div class="w-100 position-relative form-group">
+                                            <x-label required>{{ __('round') }}</x-label>
+                                            <select name="round" logro='select2'>
+                                                <option value="up" selected>{{ __('Upward') }}</option>
+                                                <option value="down">{{ __('Downward') }}</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        <div class="position-relative form-group">
-                                            <x-label required>{{ __('acceptable performance') }}</x-label>
-                                            <x-input name="acceptable_performance" id="acceptable_performance"
-                                                type="number" min="2.99" max="4.59" step="0.01"
-                                                value="3.99" required />
+
+                                    <div class="col-md-3">
+                                        <div class="col small-gutter-col">
+                                            <div class="border-2 rounded-md border border-danger">
+                                                <div class="card-body text-center">
+                                                    <h5 class="text-capitalize">{{ __('low performance') }}</h5>
+                                                    <div class="row g-2">
+                                                        <div class="col-6 position-relative form-group">
+                                                            <x-input name="minimum_grade" id="minimum_grade" type="number"
+                                                                min="0.00" max="2.98" step="0.01"
+                                                                value="0.00" class="text-center" required />
+                                                        </div>
+                                                        <div class="col-6 position-relative form-group">
+                                                            <x-input name="low_performance" id="low_performance"
+                                                                type="number" min="0.01" max="3.99"
+                                                                step="0.01" value="2.99" class="text-center"
+                                                                required />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        <div class="position-relative form-group">
-                                            <x-label required>{{ __('high performance') }}</x-label>
-                                            <x-input name="high_performance" id="high_performance"
-                                                type="number" min="3.99" max="5.00" step="0.01"
-                                                value="4.59" required />
+                                    <div class="col-md-3">
+                                        <div class="col small-gutter-col">
+                                            <div class="border-2 rounded-md border border-warning">
+                                                <div class="card-body text-center">
+                                                    <h5 class="text-capitalize">{{ __('acceptable performance') }}</h5>
+                                                    <div class="row g-2">
+                                                        <div class="col-6 position-relative form-group">
+                                                            <div id="minAcceptable" class="form-control bg-light text-muted">3.00</div>
+                                                        </div>
+                                                        <div class="col-6 position-relative form-group">
+                                                            <x-input name="acceptable_performance"
+                                                                id="acceptable_performance" type="number" min="3.01"
+                                                                max="4.59" step="0.01" value="3.99"
+                                                                class="text-center" required />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-1">&nbsp;</div>
-                                    <div class="col-md-2">
-                                        <div class="position-relative form-group">
-                                            <x-label required>{{ __('maximum grade') }}</x-label>
-                                            <x-input name="maximum_grade" id="maximum_grade"
-                                                type="number" min="4.59" step="0.01"
-                                                value="5.00" required />
+                                    <div class="col-md-3">
+                                        <div class="col small-gutter-col">
+                                            <div class="border-2 rounded-md border border-primary">
+                                                <div class="card-body text-center">
+                                                    <h5 class="text-capitalize">{{ __('high performance') }}</h5>
+                                                    <div class="row g-2">
+                                                        <div class="col-6 position-relative form-group">
+                                                            <div id="minHigh" class="form-control bg-light text-muted">4.00</div>
+                                                        </div>
+                                                        <div class="col-6 position-relative form-group">
+                                                            <x-input name="high_performance" id="high_performance"
+                                                                type="number" min="4.01" max="5.00"
+                                                                step="0.01" value="4.59" class="text-center"
+                                                                required />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="col small-gutter-col">
+                                            <div class="border-2 rounded-md border border-success">
+                                                <div class="card-body text-center">
+                                                    <h5 class="text-capitalize">{{ __('superior performance') }}</h5>
+                                                    <div class="row g-2">
+                                                        <div class="col-6 position-relative form-group">
+                                                            <div id="minSuperior" class="form-control bg-light text-muted">4.60</div>
+                                                        </div>
+                                                        <div class="col-6 position-relative form-group">
+                                                            <x-input name="maximum_grade" id="maximum_grade"
+                                                                type="number" min="4.61" step="0.01"
+                                                                value="5.00" class="text-center" required />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

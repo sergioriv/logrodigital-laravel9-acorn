@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use NumberFormatter;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Round;
 
 class StudyTime extends Model
 {
@@ -21,10 +23,44 @@ class StudyTime extends Model
         'low_performance',
         'acceptable_performance',
         'high_performance',
-        'maximum_grade'
+        'maximum_grade',
+        'decimal',
+        'round',
+        'step'
     ];
 
     protected $hidden = ['active'];
+
+    protected function minimumGrade(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => number_format( round($value, $this->decimal), $this->decimal )
+        );
+    }
+    protected function lowPerformance(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => number_format( round($value, $this->decimal), $this->decimal )
+        );
+    }
+    protected function acceptablePerformance(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => number_format( round($value, $this->decimal), $this->decimal )
+        );
+    }
+    protected function highPerformance(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => number_format( round($value, $this->decimal), $this->decimal )
+        );
+    }
+    protected function maximumGrade(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => number_format( round($value, $this->decimal), $this->decimal )
+        );
+    }
 
     protected function createdAt(): Attribute
     {
@@ -57,15 +93,15 @@ class StudyTime extends Model
 
     public function acceptableRange()
     {
-        return ($this->low_performance + 0.01) ." - {$this->acceptable_performance}";
+        return ($this->low_performance + $this->step) ." - {$this->acceptable_performance}";
     }
 
     public function highRange()
     {
-        return ($this->acceptable_performance + 0.01) ." - {$this->high_performance}";
+        return ($this->acceptable_performance + $this->step) ." - {$this->high_performance}";
     }
     public function superiorRange()
     {
-        return ($this->high_performance + 0.01) ." - {$this->maximum_grade}";
+        return ($this->high_performance + $this->step) ." - {$this->maximum_grade}";
     }
 }

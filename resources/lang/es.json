@@ -457,6 +457,11 @@
     "Save approved report books": "Guardar boletines aprobados",
     "Unapproved report books will be deleted": "Los boletines no aprobados serán eliminados",
     "Unapproved documents will be deleted": "Los documentos no aprobados serán eliminados",
+    "number of decimal places for qualification": "número de decimales para la calificación",
+    "round": "redondear",
+    "Upward": "Hacia arriba",
+    "Downward": "Hacia abajo",
+    "Review the range of :performance": "Revisar el rango del :performance",
 
     "full name": "nombre completo",
     "new": "nuevo",

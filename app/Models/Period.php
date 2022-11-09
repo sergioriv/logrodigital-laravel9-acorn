@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Period extends CastCreateModel
 {
     use HasFactory;
+    use Uuid;
 
     protected $fillable = [
         'study_time_id',
