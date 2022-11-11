@@ -68,7 +68,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             $secretariat = Secretariat::get();
             foreach ($secretariat as $sec) {
                 $uuid = Str::uuid()->toString();
-                $sec->update(['uuid' => $uuid]);
+                $sec->forceFill(['uuid' => $uuid])->save();
                 echo $sec;
                 echo '<br />';
                 echo '<br />';
