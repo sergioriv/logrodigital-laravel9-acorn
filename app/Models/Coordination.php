@@ -24,4 +24,11 @@ class Coordination extends Model
     {
         return $this->belongsTo(User::class, 'id');
     }
+
+
+    /* accesored */
+    public function fullName()
+    {
+        return "{$this->name} {$this->last_names}";
+    }
 }

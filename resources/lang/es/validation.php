@@ -232,6 +232,7 @@ return [
         'evolution' => 'evolución',
         'recommendations_teachers' => 'recomendaciones para docentes',
         'date_limite' => 'fecha límite',
+        'recommendations_coordinator' => 'recomendacion para el coordinador',
         'recommendations_family' => 'recomendaciones para la familia',
         'entity_remit' => 'entidad a remitir',
         'observations_for_entity' => 'observaciones para la entidad',

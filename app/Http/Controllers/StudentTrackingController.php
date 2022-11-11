@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
+use App\Models\Coordination;
 use App\Models\Student;
 use App\Models\StudentTracking;
 use App\Models\StudentTrackingAdvice;
+use App\Models\StudentTrackingCoordination;
 use App\Models\StudentTrackingFamily;
 use App\Models\StudentTrackingRemit;
 use App\Models\StudentTrackingTeacher;
@@ -49,7 +51,7 @@ class StudentTrackingController extends Controller
     {
         $request->validate([
             'entity_remit' => ['required', 'min:1', 'max:191'],
-            'reason_entity' => ['required', 'min:10', 'max:1000']
+            'reason_entity' => ['required', 'string', 'min:10', 'max:1000']
         ]);
 
         StudentTrackingRemit::create([
@@ -69,7 +71,7 @@ class StudentTrackingController extends Controller
     {
         $request->validate([
             'date_limit_teachers' => ['required', 'date'],
-            'recommendations_teachers' => ['required', 'min:10', 'max:1000']
+            'recommendations_teachers' => ['required', 'string', 'min:10', 'max:1000']
         ]);
 
         StudentTrackingTeacher::create([
@@ -85,10 +87,33 @@ class StudentTrackingController extends Controller
         return redirect()->route('students.show', $student);
     }
 
+    public function coordination_store(Request $request, Student $student)
+    {
+
+        $request->validate([
+            'trackingCoordinator' => ['required', Rule::exists((new Coordination)->getTable(), 'uuid')],
+            'recommendations_coordinator' => ['required', 'string', 'min:10', 'max:1000']
+        ]);
+
+        $uuidCoordination = Coordination::select('id')->where('uuid', $request->trackingCoordinator)->first();
+
+        StudentTrackingCoordination::create([
+            'user_id' => Auth::user()->id,
+            'student_id' => $student->id,
+            'type_tracking' => 'COORDINATION',
+            'coordination_id' => $uuidCoordination->id,
+            'recommendations_coordination' => $request->recommendations_coordinator
+        ]);
+
+        self::tab();
+        Notify::success(__("Recommendations created!"));
+        return redirect()->route('students.show', $student);
+    }
+
     public function family_store(Request $request, Student $student)
     {
         $request->validate([
-            'recommendations_family' => ['required', 'min:10', 'max:1000']
+            'recommendations_family' => ['required', 'string', 'min:10', 'max:1000']
         ]);
 
         StudentTrackingFamily::create([
@@ -128,7 +153,7 @@ class StudentTrackingController extends Controller
         $request->validate([
             'attendance' => ["required"],
             'type_advice' => ["required_if:attendance,done"],
-            'evolution' => ["required", 'min:10', 'max:1000']
+            'evolution' => ["required", 'string', 'min:10', 'max:1000']
         ]);
 
         $advice->update([
@@ -160,6 +185,15 @@ class StudentTrackingController extends Controller
                             .'<p>'.$tracking->recommendations_teachers.'</p>';
                 break;
 
+            case 'coordination':
+                $title = __('Recommendation to coordination');
+                $content = '<div class="logro-label font-weight-bold">'.__('date').':</div>'.$tracking->created_at.'<br />'
+                            .'<div class="logro-label font-weight-bold mt-3">'. __('coordinator') .':</div>'
+                            .$tracking->coordination->fullName().'<br />'
+                            .'<div class="logro-label font-weight-bold mt-3">'. __('recommendation') .':</div>'
+                            .$tracking->recommendations_coordination;
+                break;
+
             case 'remit':
                 $title = __('Remit');
                 $content = '<p>'.$tracking->entity_remit.'</p>'
@@ -169,8 +203,8 @@ class StudentTrackingController extends Controller
             case 'advice':
                 $title = __('advice');
                 $content = '<div class="logro-label font-weight-bold">'.__('date').':</div>'.$tracking->dateFull().'<br />'
-                            .'<div class="logro-label font-weight-bold mt-2">'.__('Attendance').':</div>'.__($tracking->attendance).'<br />'
-                            .'<div class="logro-label font-weight-bold mt-2">'.__('Type advice').':</div>'.__($tracking->type_advice).'<br />'
+                            .'<div class="logro-label font-weight-bold mt-3">'.__('Attendance').':</div>'.__($tracking->attendance).'<br />'
+                            .'<div class="logro-label font-weight-bold mt-3">'.__('Type advice').':</div>'.__($tracking->type_advice).'<br />'
                             .'<hr>'
                             .'<p class="m-0">'.$tracking->evolution.'</p>';
                 break;

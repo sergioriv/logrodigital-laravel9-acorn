@@ -14,6 +14,7 @@ use App\Http\Middleware\YearCurrentMiddleware;
 use App\Http\Requests\TeacherAccessStudent;
 use App\Imports\StudentsImport;
 use App\Models\City;
+use App\Models\Coordination;
 use App\Models\Country;
 use App\Models\Data\RoleUser;
 use App\Models\Disability;
@@ -573,6 +574,8 @@ class StudentController extends Controller
         $Y = SchoolYearController::current_year();
         $YAvailable = SchoolYearController::available_year();
 
+        $user = User::find(Auth::user()->id);
+
         $studentFileTypes = StudentFileType::with([
             'studentFile' => function ($files) use ($student) {
                 $files->where('student_id', $student->id);
@@ -587,6 +590,14 @@ class StudentController extends Controller
             ->with([
                 'studentReportBook' => fn ($reportBooks) => $reportBooks->where('student_id', $student->id)
             ]);
+
+
+        /* opciones de orientacion */
+        $orientationOptions = ['coordinators' => []];
+        if ($user->hasPermissionTo('students.psychosocial')) {
+            $orientationOptions['coordinators'] = Coordination::all();
+        }
+
 
         return view('logro.student.profile')->with([
             'Y' => $Y,
@@ -612,7 +623,8 @@ class StudentController extends Controller
             'studentFileTypes' => $studentFileTypes->get(),
             'resourceStudyYears' => $resourceStudyYears->get(),
             'groupsStudent' => [],
-            'nationalCountry' => NationalCountry::country()
+            'nationalCountry' => NationalCountry::country(),
+            'coordinators' => $orientationOptions['coordinators']
         ]);
     }
 

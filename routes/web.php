@@ -267,6 +267,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('students/{student}/add-advice', 'advice_store')->name('students.tracking.advice.store');
         Route::post('students/{student}/add-remit', 'remit_store')->name('students.tracking.remit.store');
         Route::post('students/{student}/add-recom-teacher', 'teachers_store')->name('students.tracking.teachers.store');
+        Route::post('students/{student}/add-recom-coordination', 'coordination_store')->name('students.tracking.coordination.store');
         Route::post('students/{student}/add-recom-family', 'family_store')->name('students.tracking.family.store');
         Route::get('students/{student}/tracking/{advice}', 'tracking_evolution')->name('students.tracking.evolution');
         Route::put('students/{student}/tracking/{advice}', 'tracking_evolution_update')->name('students.tracking.evolution.store');

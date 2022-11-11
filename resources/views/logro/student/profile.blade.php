@@ -2186,12 +2186,12 @@
                     </div>
                     <!-- Psychosocial Information Tab End -->
 
-                    <!-- Advices Tab Start -->
+                    <!-- Tracking Tab Start -->
                     <div class="tab-pane fade @if (session('tab') === 'tracking') active show @endif" id="trackingTab"
                         role="tabpanel">
                         <div class="card mt-5">
                             <div class="card-header">
-                                <!-- Top Advice Tab Start -->
+                                <!-- Top Tracking Tab Start -->
                                 <div class="row">
                                     <div class="col-12 col-md-7">
                                         <h1 class="mb-1 pb-0 display-6">{{ __('Tracking') }}</h1>
@@ -2216,6 +2216,10 @@
                                                 <x-dropdown-item type="button" data-bs-toggle="modal"
                                                     data-bs-target="#addTeacherModal">
                                                     <span>{{ __('Add teacher referral') }}</span>
+                                                </x-dropdown-item>
+                                                <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#addCoordinationModal">
+                                                    <span>{{ __('Add coordination referral') }}</span>
                                                 </x-dropdown-item>
                                                 <x-dropdown-item type="button" data-bs-toggle="modal"
                                                     data-bs-target="#addFamilyModal">
@@ -2253,11 +2257,11 @@
                                                             <div class="d-inline-block">{{ __('Referral to') }}:
                                                                 {{ $studentTracking->entity_remit }}</div>
                                                         @elseif ($studentTracking->type_tracking === 'family')
-                                                            <div class="logro-label">
-                                                                {{ __('recommendation to the family') }}</div>
+                                                            <div class="logro-label">{{ __('recommendation to the family') }}</div>
                                                         @elseif ($studentTracking->type_tracking === 'teachers')
-                                                            <div class="logro-label">{{ __('Recommendation for teachers') }}
-                                                            </div>
+                                                            <div class="logro-label">{{ __('Recommendation for teachers') }}</div>
+                                                        @elseif ($studentTracking->type_tracking === 'coordination')
+                                                            <div class="logro-label">{{ __('Recommendation to coordination') }}</div>
                                                         @endif
                                                     </td>
                                                     <td class="text-small">
@@ -2279,14 +2283,14 @@
                                                                 {{ __('See') }}
                                                             </div>
                                                         @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
-                                </td>
-                                </tr>
-                                @endforeach
-                                </tbody>
-                                </table>
+                                <!-- Table End -->
                             </div>
-                            <!-- Table End -->
                         </div>
                     </div>
                 </div>
@@ -2521,6 +2525,20 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     @include('logro.student.tracking.teacher')
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Add Coordination -->
+        <div class="modal fade" id="addCoordinationModal" aria-labelledby="modalAddCoordination" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddCoordination">{{ __('Recommendation to coordination') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    @include('logro.student.tracking.coordination')
                 </div>
             </div>
         </div>
