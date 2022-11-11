@@ -24,7 +24,7 @@ $title = $school->name;
 
     <!-- DataTable -->
     <script src="/js/cs/datatable.extend.js"></script>
-    <script src="/js/plugins/datatable/datatables_myintitution.ajax.js?d=1668116603633"></script>
+    <script src="/js/plugins/datatable/datatables_myintitution.ajax.js?d=1668181091077"></script>
 @endsection
 
 @section('content')
@@ -64,6 +64,12 @@ $title = $school->name;
                                 <a class="nav-link @if(session('tab') === 'teachers') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
                                     href="#teachersTab" role="tab">
                                     <span class="align-middle">{{ __('Teachers') }}</span>
+                                </a>
+                            @endcan
+                            @can('orientation.index')
+                                <a class="nav-link @if(session('tab') === 'orientation') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
+                                    href="#orientationTab" role="tab">
+                                    <span class="align-middle">{{ __('Orientation') }}</span>
                                 </a>
                             @endcan
                             @can('secretariat.index')
@@ -414,6 +420,84 @@ $title = $school->name;
 
                 </div>
                 <!-- Teachers Tab End -->
+
+                <!-- Orientation Tab Start -->
+                <div class="tab-pane fade @if(session('tab') === 'orientation') active show @endif" id="orientationTab" role="tabpanel">
+
+                    <!-- Orientation Content Start -->
+                    <h2 class="small-title">{{ __('Orientation') }}</h2>
+                    <section class="card mb-5">
+                        <div class="card-body">
+                            <!-- Controls Start -->
+                            <div class="row mb-3">
+                                <!-- Search Start -->
+                                <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3 mb-1">
+                                    <div
+                                        class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
+                                        <input class="form-control datatable-search" placeholder="Search"
+                                            data-datatable="#datatable_orientation" />
+                                        <span class="search-magnifier-icon">
+                                            <i data-acorn-icon="search"></i>
+                                        </span>
+                                        <span class="search-delete-icon d-none">
+                                            <i data-acorn-icon="close"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Search End -->
+
+                                <!-- Top Buttons Start -->
+                                <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
+
+                                    <!-- Add New Button Start -->
+                                    <a href="{{ route('orientation.create') }}"
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                        <i data-acorn-icon="plus"></i>
+                                        <span>{{ __('Add New') }}</span>
+                                    </a>
+                                    <!-- Add New Button End -->
+
+                                </div>
+                                <!-- Top Buttons End -->
+                            </div>
+                            <!-- Controls End -->
+
+                            <!-- Table Start -->
+                            <div class="">
+                                <table id="datatable_orientation"
+                                    class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    data-order='[[ 0, "asc" ]]'>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('names') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('last names') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('email') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('telephone') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($orientations as $orientation)
+                                            <tr>
+                                                <td>{{ $orientation->name }}</td>
+                                                <td>{{ $orientation->last_names }}</td>
+                                                <td>{{ $orientation->email }}</td>
+                                                <td>{{ $orientation->telephone }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Table End -->
+                        </div>
+                    </section>
+                    <!-- Orientation Content End -->
+
+                </div>
+                <!-- Orientation Tab End -->
 
                 <!-- Secretariat Tab Start -->
                 <div class="tab-pane fade @if(session('tab') === 'secretariat') active show @endif" id="secretariatTab" role="tabpanel">

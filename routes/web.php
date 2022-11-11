@@ -5,6 +5,7 @@ use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\Mail\SmtpMail;
+use App\Http\Controllers\OrientationController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\PersonChargeController;
 use App\Http\Controllers\ProfileController;
@@ -37,6 +38,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +75,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 echo '<br />';
                 echo '<br />';
             }
+        });
+
+        Route::get('add-permissions/orientation', function() {
+            Permission::create(['name' => 'orientation.index']);
+            Permission::create(['name' => 'orientation.edit']);
+            dd('hecho');
         });
 
         /* Route Users */
@@ -168,6 +176,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route Coordination */
     Route::resource('coordination', CoordinationController::class)->only('create','store')->names('coordination');
+
+
+
+    /* Route Orientation */
+    Route::resource('orientation', OrientationController::class)->only('create','store')->names('orientation');
 
 
 

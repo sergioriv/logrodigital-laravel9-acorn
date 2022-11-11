@@ -1,5 +1,5 @@
 @php
-$title = __('Create Coordination User');
+$title = __('Create Orientation User');
 @endphp
 @extends('layout',['title'=>$title])
 
@@ -30,7 +30,7 @@ $title = __('Create Coordination User');
 
             <!-- Content Start -->
             <section class="scroll-section">
-                <form method="post" action="{{ route('coordination.store') }}" class="tooltip-label-end" id="userCreateForm" novalidate>
+                <form method="post" action="{{ route('orientation.store') }}" class="tooltip-label-end" id="userCreateForm" novalidate>
                     @csrf
 
                     <div class="card mb-5">
