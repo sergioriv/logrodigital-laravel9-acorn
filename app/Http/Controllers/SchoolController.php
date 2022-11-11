@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
+use App\Models\Coordination;
 use App\Models\School;
 use App\Models\Secretariat;
 use App\Models\SecurityCode;
@@ -35,7 +36,8 @@ class SchoolController extends Controller
             'school' => $this->myschool(),
             'daysToUpdate' => self::daysToUpdate(),
             'teachers' => Teacher::all(),
-            'secretariats' => Secretariat::all()
+            'secretariats' => Secretariat::all(),
+            'coordinations' => Coordination::all()
         ]);
     }
 

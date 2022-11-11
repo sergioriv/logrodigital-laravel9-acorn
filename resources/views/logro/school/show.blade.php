@@ -24,7 +24,7 @@ $title = $school->name;
 
     <!-- DataTable -->
     <script src="/js/cs/datatable.extend.js"></script>
-    <script src="/js/plugins/datatable/datatables_myintitution.ajax.js"></script>
+    <script src="/js/plugins/datatable/datatables_myintitution.ajax.js?d=1668116603633"></script>
 @endsection
 
 @section('content')
@@ -54,6 +54,12 @@ $title = $school->name;
                                 data-bs-toggle="tab" href="#myInstitutionTab" role="tab">
                                 <span class="align-middle">{{ __('My Institution') }}</span>
                             </a>
+                            @can('coordination.index')
+                                <a class="nav-link @if(session('tab') === 'coordination') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
+                                    href="#coordinationTab" role="tab">
+                                    <span class="align-middle">{{ __('Coordination') }}</span>
+                                </a>
+                            @endcan
                             @can('teachers.index')
                                 <a class="nav-link @if(session('tab') === 'teachers') active @endif logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
                                     href="#teachersTab" role="tab">
@@ -221,6 +227,84 @@ $title = $school->name;
                 </div>
                 <!-- My Institution Tab End -->
 
+                <!-- Coordination Tab Start -->
+                <div class="tab-pane fade @if(session('tab') === 'coordination') active show @endif" id="coordinationTab" role="tabpanel">
+
+                    <!-- Coordination Content Start -->
+                    <h2 class="small-title">{{ __('Coordination') }}</h2>
+                    <section class="card mb-5">
+                        <div class="card-body">
+                            <!-- Controls Start -->
+                            <div class="row mb-3">
+                                <!-- Search Start -->
+                                <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3 mb-1">
+                                    <div
+                                        class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
+                                        <input class="form-control datatable-search" placeholder="Search"
+                                            data-datatable="#datatable_coordination" />
+                                        <span class="search-magnifier-icon">
+                                            <i data-acorn-icon="search"></i>
+                                        </span>
+                                        <span class="search-delete-icon d-none">
+                                            <i data-acorn-icon="close"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Search End -->
+
+                                <!-- Top Buttons Start -->
+                                <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
+
+                                    <!-- Add New Button Start -->
+                                    <a href="{{ route('coordination.create') }}"
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                        <i data-acorn-icon="plus"></i>
+                                        <span>{{ __('Add New') }}</span>
+                                    </a>
+                                    <!-- Add New Button End -->
+
+                                </div>
+                                <!-- Top Buttons End -->
+                            </div>
+                            <!-- Controls End -->
+
+                            <!-- Table Start -->
+                            <div class="">
+                                <table id="datatable_coordination"
+                                    class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    data-order='[[ 0, "asc" ]]'>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('names') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('last names') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('email') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('telephone') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($coordinations as $coordination)
+                                            <tr>
+                                                <td>{{ $coordination->name }}</td>
+                                                <td>{{ $coordination->last_names }}</td>
+                                                <td>{{ $coordination->email }}</td>
+                                                <td>{{ $coordination->telephone }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Table End -->
+                        </div>
+                    </section>
+                    <!-- Coordination Content End -->
+
+                </div>
+                <!-- Coordination Tab End -->
+
                 <!-- Teachers Tab Start -->
                 <div class="tab-pane fade @if(session('tab') === 'teachers') active show @endif" id="teachersTab" role="tabpanel">
 
@@ -292,8 +376,8 @@ $title = $school->name;
                                     <thead>
                                         <tr>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
-                                                {{ __('last names') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('names') }}
+                                                {{ __('names') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('last names') }}
                                             </th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('email') }}
                                             </th>
@@ -307,13 +391,13 @@ $title = $school->name;
                                                 <td>
                                                     <a href="{{ route('teacher.show', $teacher) }}"
                                                         class="list-item-heading body">
-                                                        {{ $teacher->last_names }}
+                                                        {{ $teacher->names }}
                                                     </a>
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('teacher.show', $teacher) }}"
                                                         class="list-item-heading body">
-                                                        {{ $teacher->names }}
+                                                        {{ $teacher->last_names }}
                                                     </a>
                                                 </td>
                                                 <td>{{ $teacher->institutional_email }}</td>
@@ -380,8 +464,8 @@ $title = $school->name;
                                     <thead>
                                         <tr>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
-                                                {{ __('last names') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('names') }}
+                                                {{ __('names') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('last names') }}
                                             </th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('email') }}
                                             </th>

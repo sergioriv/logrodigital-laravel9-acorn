@@ -1,5 +1,5 @@
 @php
-$title = __('Create Secretariat User');
+$title = __('Create Coordination User');
 @endphp
 @extends('layout',['title'=>$title])
 
@@ -30,7 +30,7 @@ $title = __('Create Secretariat User');
 
             <!-- Content Start -->
             <section class="scroll-section">
-                <form method="post" action="{{ route('secreatariat.store') }}" class="tooltip-label-end" id="userCreateForm" novalidate>
+                <form method="post" action="{{ route('coordination.store') }}" class="tooltip-label-end" id="userCreateForm" novalidate>
                     @csrf
 
                     <div class="card mb-5">

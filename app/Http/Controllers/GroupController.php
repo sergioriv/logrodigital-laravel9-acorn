@@ -92,7 +92,7 @@ class GroupController extends Controller
         $headquarters = Headquarters::where('available', TRUE)->get();
         $studyTime = StudyTime::all();
         $studyYear = StudyYear::all();
-        $teachers = Teacher::select('id', 'first_name', 'first_last_name')->get();
+        $teachers = Teacher::select('uuid', 'names', 'last_names')->get();
 
         return view('logro.group.create')->with([
             'headquarters' => $headquarters,
@@ -108,18 +108,20 @@ class GroupController extends Controller
             'headquarters' => ['required', Rule::exists('headquarters', 'id')],
             'study_time' => ['required', Rule::exists('study_times', 'id')],
             'study_year' => ['required', Rule::exists('study_years', 'id')],
-            'group_director' => ['nullable', Rule::exists('teachers', 'id')],
+            'group_director' => ['nullable', Rule::exists('teachers', 'uuid')],
             'name' => ['required', 'string']
         ]);
 
         $Y = SchoolYearController::current_year();
+
+        $uuidTeacher = Teacher::select('id')->find($request->group_director);
 
         Group::create([
             'school_year_id' => $Y->id,
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->study_time,
             'study_year_id' => $request->study_year,
-            'teacher_id' => $request->group_director,
+            'teacher_id' => $uuidTeacher->id,
             'name' => $request->name,
         ]);
 

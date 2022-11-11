@@ -66,10 +66,13 @@ class UserController extends Controller
 
             /* evita enviar más de un mail de verificación al mismo correo */
             $sendmail = true;
-            $countEmail = User::where('email', $email)->count();
-            if ( $countEmail == 1 )
-            {
-                $sendmail = SmtpMail::sendEmailVerificationNotification($user);
+
+            if (config('app.env') === 'production') {
+                $countEmail = User::where('email', $email)->count();
+                if ( $countEmail == 1 )
+                {
+                    $sendmail = SmtpMail::sendEmailVerificationNotification($user);
+                }
             }
 
             /* si el mail de verificación rebota, el usuario es eliminado

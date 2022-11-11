@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\ConfirmEmailController;
+use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\Mail\SmtpMail;
@@ -27,6 +28,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Models\ResourceStudyYear;
+use App\Models\Secretariat;
 use App\Models\Student;
 use App\Models\StudentAdvice;
 use App\Models\StudyYear;
@@ -34,7 +36,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +64,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->back();
         });
 
+        Route::get('add-uuid/secretariat', function() {
+            $secretariat = Secretariat::get();
+            foreach ($secretariat as $sec) {
+                $uuid = Str::uuid()->toString();
+                $sec->update(['uuid' => $uuid]);
+                echo $sec;
+                echo '<br />';
+                echo '<br />';
+            }
+        });
 
         /* Route Users */
         Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');
@@ -147,8 +159,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('teachers', TeacherController::class)->except('destroy','index','edit','update')->names('teacher');
     Route::post('teachers/{teacher}/permit', [TeacherPermitController::class, 'store'])->name('teachers.permits.store');
 
+
+
     /* Route Secretariat */
     Route::resource('secretariat', SecretariatController::class)->only('create','store')->names('secreatariat');
+
+
+
+    /* Route Coordination */
+    Route::resource('coordination', CoordinationController::class)->only('create','store')->names('coordination');
+
+
 
     /* Route Groups */
     Route::resource('groups', GroupController::class)->except('destroy')->names('group');

@@ -16,6 +16,7 @@ class DatatablesMyInstitution {
 
         this._dataTableScroll = null;
 
+        this._initBoxedCoordination();
         this._initBoxedTeachers();
         this._initBoxedSecretariat();
         this._extendDatatables();
@@ -24,6 +25,24 @@ class DatatablesMyInstitution {
     _initBoxedTeachers() {
         const _this = this;
         jQuery("#datatable_teachers").DataTable({
+            destroy: false,
+            paging: true,
+            buttons: false,
+            length: 10,
+            sDom: '<"row"<"col-sm-12"<"table-container"<"half-padding"t>>>><"row"<"col-12 mt-3"p>>',
+            responsive: true,
+            language: {
+                url: "/json/datatable.spanish.json",
+            },
+            preDrawCallback: function (settings) {
+                _this._preDrawCallback($(this), settings);
+            },
+        });
+    }
+
+    _initBoxedCoordination() {
+        const _this = this;
+        jQuery("#datatable_coordination").DataTable({
             destroy: false,
             paging: true,
             buttons: false,
