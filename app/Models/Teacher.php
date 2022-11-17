@@ -76,7 +76,7 @@ class Teacher extends CastCreateModel
 
 
     /* Accesores */
-    public function fullName()
+    public function getFullName()
     {
         return "{$this->names} {$this->last_names}";
     }

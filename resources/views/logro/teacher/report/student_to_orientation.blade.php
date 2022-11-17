@@ -1,17 +1,13 @@
-<form action="{{ route('students.tracking.teachers.store', $student) }}" id="addTeacherForm" method="POST">
+<form action="{{ route('teacher.report.students.store', $student) }}" id="teacherReportForm" method="POST">
     @csrf
 
     <div class="modal-body">
 
         <div class="row g-3">
 
-            <div class="mb-2 form-group position-relative">
-                <x-label>{{ __('Alert due date') }}</x-label>
-                <x-input name="date_limit_teachers" logro="datePickerAfter" />
-            </div>
             <div class="form-group position-relative">
-                <x-label>{{ __('Recommendation for teachers') }}</x-label>
-                <textarea name="recommendations_teachers" class="form-control" rows="5"></textarea>
+                <x-label>{{ __('recommendation to orientation') }}</x-label>
+                <textarea name="recommendations_orientation" class="form-control" rows="5"></textarea>
             </div>
 
         </div>
@@ -21,7 +17,8 @@
         <div>
             <div class="form-check form-check-inline">
                 <x-label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" name="priority_teacher" value="1" />
+                    <input class="form-check-input" type="checkbox"
+                        name="priority_orientation" value="1" />
                     {{ __('priority') }}
                 </x-label>
             </div>
@@ -33,3 +30,4 @@
         </div>
     </div>
 </form>
+

@@ -13,7 +13,7 @@
                         @if (null !== $group->teacher_id)
                             <i class="icon icon-15 bi-award text-muted"></i>
                             <span>
-                                {{ $group->teacher->fullName() }}
+                                {{ $group->teacher->getFullName() }}
                             </span>
                         @else
                             <span>&nbsp;</span>

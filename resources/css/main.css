@@ -58,6 +58,11 @@ html[data-color=] .logo-lobby .logo-default {
         border-radius: var(--border-radius-lg) !important;
     }
 }
+@media (max-width: 500px) {
+    .toast {
+        width: 90vw !important;
+    }
+}
 /*
  * Full Page End
  */
@@ -118,6 +123,9 @@ input[type="file"] {
 }
 .border-pink{
     border-color: var(--bs-pink) !important;
+}
+.border-orange {
+    border-color: var(--bs-orange) !important;
 }
 .bg-pink {
     background-color: var(--bs-pink);

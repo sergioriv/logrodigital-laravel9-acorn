@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
@@ -99,6 +100,7 @@ class AuthenticatedSessionController extends Controller
 
     private function login_redirect()
     {
+        Notify::welcome(__('Welcome to Logro Digital!'));
         switch ( UserController::role_auth() ) :
             case 'STUDENT':
                 return redirect()->intended(RouteServiceProvider::PROFILE);

@@ -247,7 +247,10 @@ return [
         'permit_date_end' => 'fecha fin',
         'permit_date_start' => 'fecha inicio',
         'reportbooks_checked' => 'boletines aprobados',
-        'file_type' => 'tipo de documento'
+        'file_type' => 'tipo de documento',
+        'priority_coordinator' => 'prioridad del coordinador',
+        'studyTime' => 'jornada',
+        'studyYear' => 'año de estudio'
     ],
 
 ];

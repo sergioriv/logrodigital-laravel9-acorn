@@ -211,7 +211,7 @@
                                                                     <td class="col-6">
                                                                         @foreach ($subject->teacherSubjectGroups as $teacher_subject)
                                                                             @if ($loop->first)
-                                                                                {{ $teacher_subject->teacher->fullName() }}
+                                                                                {{ $teacher_subject->teacher->getFullName() }}
                                                                             @endif
                                                                         @endforeach
                                                                     </td>

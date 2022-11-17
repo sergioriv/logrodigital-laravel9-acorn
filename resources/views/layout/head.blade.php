@@ -34,6 +34,6 @@
 <!-- Vendor Styles End -->
 <!-- Template Base Styles Start -->
 <link rel="stylesheet" href="/css/styles.css" />
-<link rel="stylesheet" href="/css/main.css" />
+<link rel="stylesheet" href="/css/main.css?d=1668555514494" />
 <!-- Template Base Styles End -->
 <script src="/js/base/loader.js"></script>

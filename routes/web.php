@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\CoordinationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\Mail\SmtpMail;
@@ -28,12 +29,14 @@ use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
+use App\Http\Controllers\UserAlertController;
 use App\Models\ResourceStudyYear;
 use App\Models\Secretariat;
 use App\Models\Student;
 use App\Models\StudentAdvice;
 use App\Models\StudyYear;
 use App\Models\User;
+use App\Models\UserAlert;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -53,8 +56,8 @@ use Spatie\Permission\Models\Permission;
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard'); })->name('dashboard');
+
+    Route::get('dashboard', [DashboardController::class, 'show'])->name('dashboard');
 
 
     /* ACCESS SUPPORT */
@@ -273,6 +276,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('students/{student}/tracking/{advice}', 'tracking_evolution_update')->name('students.tracking.evolution.store');
         Route::get('students/tracking', 'tracking_view');
     });
+
+
+
+    /*
+     *
+     * ALERTS
+     *
+     * */
+    Route::post('students/{student}/report-to-orientation', [UserAlertController::class, 'teacher_to_orientation'])->name('teacher.report.students.store');
 
 
 

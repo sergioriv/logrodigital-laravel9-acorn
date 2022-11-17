@@ -310,6 +310,33 @@ class GroupController extends Controller
         foreach ($request->teachers as $teacher_subject) {
             if (NULL !== $teacher_subject) {
 
+                [$subject, $teacher] = explode('~', $teacher_subject);
+
+                $uuidTeacher = Teacher::select('id')->find($teacher);
+
+                TeacherSubjectGroup::updateOrCreate(
+                    [
+                        'school_year_id' => $Y->id,
+                        'group_id' => $group->id,
+                        'subject_id' => $subject
+                    ], [
+                        'teacher_id' => $uuidTeacher->id
+                    ]
+                );
+            }
+        }
+
+        Notify::success( __('Group updated!') );
+        return redirect()->route('group.show', $group);
+    }
+
+    /* public function teacher_update(Group $group, Request $request)
+    {
+        $Y = SchoolYearController::current_year();
+
+        foreach ($request->teachers as $teacher_subject) {
+            if (NULL !== $teacher_subject) {
+
                 [$create, $subject, $teacher] = explode('~', $teacher_subject);
 
                 $uuidTeacher = Teacher::select('id')->find($teacher);
@@ -333,7 +360,7 @@ class GroupController extends Controller
 
         Notify::success( __('Group updated!') );
         return redirect()->route('group.show', $group);
-    }
+    } */
 
     private function subjects_teacher($Y_id, $sy_id, $g_id)
     {

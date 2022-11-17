@@ -24,4 +24,11 @@ class Orientation extends Model
     {
         return $this->belongsTo(User::class, 'id');
     }
+
+
+    /* accesores */
+    public function getFullName()
+    {
+        return "{$this->name} {$this->last_names}";
+    }
 }

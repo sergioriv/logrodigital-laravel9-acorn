@@ -15,4 +15,7 @@ class Notify extends Controller
     public static function info($title) {
         return session()->flash('notify', 'info|'. $title);
     }
+    public static function welcome($title) {
+        return session()->flash('notify', 'welcome|'. $title);
+    }
 }

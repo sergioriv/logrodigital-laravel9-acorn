@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
+use App\Http\Controllers\support\UserController;
 use App\Models\Coordination;
+use App\Models\Orientation;
 use App\Models\Student;
 use App\Models\StudentTracking;
 use App\Models\StudentTrackingAdvice;
@@ -11,8 +13,10 @@ use App\Models\StudentTrackingCoordination;
 use App\Models\StudentTrackingFamily;
 use App\Models\StudentTrackingRemit;
 use App\Models\StudentTrackingTeacher;
+use App\Models\UserAlert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 
@@ -71,16 +75,34 @@ class StudentTrackingController extends Controller
     {
         $request->validate([
             'date_limit_teachers' => ['required', 'date'],
-            'recommendations_teachers' => ['required', 'string', 'min:10', 'max:1000']
+            'recommendations_teachers' => ['required', 'string', 'min:10', 'max:1000'],
+            'priority_teacher' => ['nullable', 'boolean']
         ]);
 
-        StudentTrackingTeacher::create([
+
+        DB::beginTransaction();
+        $tracking = StudentTrackingTeacher::create([
             'user_id' => Auth::user()->id,
             'student_id' => $student->id,
             'type_tracking' => 'TEACHERS',
             'recommendations_teachers' => $request->recommendations_teachers,
             'date_limit_teacher' => $request->date_limit_teachers
         ]);
+
+        /* Create alert for User Teacher */
+        $alert = UserAlertController::orientation_to_teacher($student, $request);
+
+        if ( $tracking && $alert ) {
+
+            DB::commit();
+
+        } else {
+
+            DB::rollBack();
+
+            self::tab();
+            return redirect()->back()->withErrors(__('Unexpected Error'));
+        }
 
         self::tab();
         Notify::success(__("Recommendations created!"));
@@ -89,21 +111,39 @@ class StudentTrackingController extends Controller
 
     public function coordination_store(Request $request, Student $student)
     {
-
         $request->validate([
             'trackingCoordinator' => ['required', Rule::exists((new Coordination)->getTable(), 'uuid')],
-            'recommendations_coordinator' => ['required', 'string', 'min:10', 'max:1000']
+            'recommendations_coordinator' => ['required', 'string', 'min:10', 'max:1000'],
+            'priority_coordinator' => ['nullable', 'boolean']
         ]);
 
         $uuidCoordination = Coordination::select('id')->where('uuid', $request->trackingCoordinator)->first();
 
-        StudentTrackingCoordination::create([
+        DB::beginTransaction();
+        $tracking = StudentTrackingCoordination::create([
             'user_id' => Auth::user()->id,
             'student_id' => $student->id,
             'type_tracking' => 'COORDINATION',
             'coordination_id' => $uuidCoordination->id,
             'recommendations_coordination' => $request->recommendations_coordinator
         ]);
+
+
+        /* Create alert for User Coordinator */
+        $alert = UserAlertController::orientation_to_coordinator($uuidCoordination, $student, $request);
+
+        if ( $tracking && $alert ) {
+
+            DB::commit();
+
+        } else {
+
+            DB::rollBack();
+
+            self::tab();
+            return redirect()->back()->withErrors(__('Unexpected Error'));
+        }
+
 
         self::tab();
         Notify::success(__("Recommendations created!"));

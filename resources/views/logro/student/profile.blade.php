@@ -2197,6 +2197,8 @@
                                         <h1 class="mb-1 pb-0 display-6">{{ __('Tracking') }}</h1>
                                     </div>
                                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+
+                                        @hasanyrole('ORIENTATION|SUPPORT')
                                         <!-- Dropdown Button Start -->
                                         <div class="">
                                             <button type="button" class="btn btn-outline-info btn-icon btn-icon-only"
@@ -2228,6 +2230,8 @@
                                             </div>
                                         </div>
                                         <!-- Dropdown Button End -->
+                                        @endhasanyrole
+
                                     </div>
                                 </div>
                                 <!-- Top Advice Tab Start -->
@@ -2487,6 +2491,8 @@
     @endunlessrole
 
     @can('students.psychosocial')
+
+    @hasanyrole('ORIENTATION|SUPPORT')
         <!-- Modal Add Advice -->
         <div class="modal fade" id="addAdviceModal" aria-labelledby="modalAddAdvice" data-bs-backdrop="static"
             data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -2556,6 +2562,7 @@
                 </div>
             </div>
         </div>
+    @endhasanyrole
 
         <!-- Modal View Info Tracking -->
         <div class="modal fade" id="viewTracking" aria-labelledby="modalViewTracking" data-bs-backdrop="static"

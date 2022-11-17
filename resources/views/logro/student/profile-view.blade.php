@@ -24,7 +24,7 @@
         <section class="page-title-container">
             <div class="row">
                 <!-- Title Start -->
-                <div class="col-12 col-md-9">
+                <div class="col-12 col-md-7">
                     <h1 class="mb-1 pb-0 display-4" id="title">
                         {{ __('Student') . ' | ' . $student->getCompleteNames() }}</h1>
                     <div aria-label="breadcrumb">
@@ -51,6 +51,15 @@
                     </div>
                 </div>
                 <!-- Title End -->
+
+                @hasrole('TEACHER')
+                    <!-- Top Buttons Start -->
+                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                        <!-- Download Matriculate Button -->
+                        <x-button type="button" class="btn-outline-info" data-bs-toggle="modal"
+                        data-bs-target="#addReportToOrientation">{{ __('Report to Orientation') }}</x-button>
+                    </div>
+                @endhasrole
 
             </div>
         </section>
@@ -229,4 +238,21 @@
         </section>
 
     </div>
+
+
+    @hasrole('TEACHER')
+    <!-- Modal Report To Orientation -->
+    <div class="modal fade" id="addReportToOrientation" aria-labelledby="modalAddReportToOrientation" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAddReportToOrientation">{{ __('Report to Orientation') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                @include('logro.teacher.report.student_to_orientation')
+            </div>
+        </div>
+    </div>
+    @endhasrole
 @endsection
