@@ -119,4 +119,20 @@ class UserAlertController extends Controller
 
         return redirect()->back()->withErrors(__('Not allowed'));
     }
+
+
+    /* access for methode GET */
+    public function checked(UserAlert $alert)
+    {
+        if ( $alert->for_user === Auth::user()->id ) {
+
+            $alert->forceFill(['checked' => TRUE])->save();
+
+            Notify::success(__('Read alert!'));
+            return redirect()->back();
+
+        }
+
+        return redirect()->back()->withErrors(__('Not allowed'));
+    }
 }

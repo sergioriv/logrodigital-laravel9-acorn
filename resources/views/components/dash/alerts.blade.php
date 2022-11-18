@@ -11,13 +11,14 @@
         <div class="card-body p-3 pe-4 ps-4">
             <div>
                 @if ($alert->created_rol === 'ORIENTATION')
-                {{ __($alert->title, ['CREATED_BY' => $alert->orientator->getFullName(), 'STUDENT_NAME' => $alert->student->getFullName()]) }}
+                {{ __($alert->title, ['CREATE_BY' => $alert->orientator->getFullName(), 'STUDENT_NAME' => $alert->student->getFullName()]) }}
                 @elseif ($alert->created_rol === 'TEACHER')
-                {{ __($alert->title, ['CREATED_BY' => $alert->teacher->getFullName(), 'STUDENT_NAME' => $alert->student->getFullName()]) }}
+                {{ __($alert->title, ['CREATE_BY' => $alert->teacher->getFullName(), 'STUDENT_NAME' => $alert->student->getFullName()]) }}
                 @endif
             </div>
             <div class="mt-2 pt-2 border-top">
                 {{ $alert->message }}
+                <a type="button" href="{{ route('alert.checked', $alert) }}" class="ms-2 btn-sm btn-outline-info">{{ __('Mark as read') }}</a>
             </div>
         </div>
     </div>

@@ -286,7 +286,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
      * */
     Route::post('students/{student}/report-to-orientation', [UserAlertController::class, 'teacher_to_orientation'])->name('teacher.report.students.store');
 
-
+    Route::get('alert/{alert}/checked', [UserAlertController::class, 'checked'])->name('alert.checked');
 
 
 });
