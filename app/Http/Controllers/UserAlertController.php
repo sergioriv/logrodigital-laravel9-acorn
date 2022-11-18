@@ -45,12 +45,12 @@ class UserAlertController extends Controller
 
     public static function orientation_to_teacher(Student $student, Request $request)
     {
-        if ($student->enrolled && UserController::role_auth() === RoleUser::ORIENTATION_ROL) {
+        if ($student->enrolled /* && UserController::role_auth() === RoleUser::ORIENTATION_ROL */) {
 
             $teachersGroup = TeacherSubjectGroup::with('teacher')->where('group_id', $student->group_id)->distinct()->get(['teacher_id']);
 
             if (!$teachersGroup->count()) {
-                return false;
+                return __('The group has no teachers');
             }
 
             foreach ($teachersGroup as $teacherGroup) {
@@ -77,6 +77,8 @@ class UserAlertController extends Controller
         return false;
     }
 
+
+    /* access for methode POST */
     public function teacher_to_orientation(Student $student, Request $request)
     {
         if ($student->enrolled && UserController::role_auth() === RoleUser::TEACHER_ROL) {
@@ -89,7 +91,7 @@ class UserAlertController extends Controller
             $orientators = Orientation::all();
 
             if (!$orientators->count()) {
-                return redirect()->back()->withErrors(__('Unexpected Error'));
+                return redirect()->back()->withErrors(__('No registered orientators'));
             }
 
             foreach ($orientators as $orientator) {

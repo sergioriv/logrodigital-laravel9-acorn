@@ -484,6 +484,9 @@
     "The teacher: :CREATE_BY, has created a report for the student: :STUDENT_NAME": "El/La docente: :CREATED_BY, ha creado un reporte para el estudiante: :STUDENT_NAME",
     "Report generated!": "Reporte generado!",
     "No pending alerts": "Sin alertas pendientes",
+    "The group has no teachers": "El group no tiene docentes",
+    "No registered orientators": "No hay orientadores registrados",
+    "Remit to Orientation": "Remitir a Orientación",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "full name": "nombre completo",

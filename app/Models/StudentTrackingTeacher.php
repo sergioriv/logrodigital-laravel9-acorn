@@ -18,8 +18,7 @@ class StudentTrackingTeacher extends Model
         'user_id',
         'student_id',
         'type_tracking',
-        'recommendations_teachers',
-        'date_limit_teacher'
+        'recommendations_teachers'
     ];
 
 

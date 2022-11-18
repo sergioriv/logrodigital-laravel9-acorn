@@ -30,6 +30,7 @@ use App\Models\HealthManager;
 use App\Models\IcbfProtectionMeasure;
 use App\Models\Kinship;
 use App\Models\LinkageProcess;
+use App\Models\Orientation;
 use App\Models\PersonCharge;
 use App\Models\Piar;
 use App\Models\Religion;
@@ -637,11 +638,11 @@ class StudentController extends Controller
      *  */
     public function view(Student $student)
     {
-
+        $orientation = [];
         /*
          * Para que el Rol TEACHER solo pueda ver estudiantes que esten en sus listados en el año actual
          *  */
-        if (UserController::role_auth() === 'TEACHER') {
+        if (UserController::role_auth() === RoleUser::TEACHER_ROL) {
             $subjectsTeacher = TeacherController::subjects()->select('group_id')->get();
 
             $groups = [];
@@ -654,9 +655,11 @@ class StudentController extends Controller
             if ( !in_array($student->group_id, $groups) ) {
                 return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
             }
+
+            $orientation = Orientation::all();
         }
 
-        return view('logro.student.profile-view', ['student' => $student]);
+        return view('logro.student.profile-view', ['student' => $student, 'orientation' => count($orientation)]);
     }
 
 

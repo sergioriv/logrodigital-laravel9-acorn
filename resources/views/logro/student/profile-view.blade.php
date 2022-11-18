@@ -53,12 +53,14 @@
                 <!-- Title End -->
 
                 @hasrole('TEACHER')
-                    <!-- Top Buttons Start -->
-                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-                        <!-- Download Matriculate Button -->
-                        <x-button type="button" class="btn-outline-info" data-bs-toggle="modal"
-                        data-bs-target="#addReportToOrientation">{{ __('Report to Orientation') }}</x-button>
-                    </div>
+                    @if ($orientation)
+                        <!-- Top Buttons Start -->
+                        <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                            <!-- Download Matriculate Button -->
+                            <x-button type="button" class="btn-outline-info" data-bs-toggle="modal"
+                                data-bs-target="#addRemitToOrientation">{{ __('Remit to Orientation') }}</x-button>
+                        </div>
+                    @endif
                 @endhasrole
 
             </div>
@@ -209,8 +211,11 @@
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('Do you have siblings in the institution?') }}</x-label>
                                     <div class="form-control">
-                                        @if($student->siblings_in_institution) {{ __('Yes') }}
-                                        @else {{ __('No') }} @endif
+                                        @if ($student->siblings_in_institution)
+                                            {{ __('Yes') }}
+                                        @else
+                                            {{ __('No') }}
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -241,18 +246,18 @@
 
 
     @hasrole('TEACHER')
-    <!-- Modal Report To Orientation -->
-    <div class="modal fade" id="addReportToOrientation" aria-labelledby="modalAddReportToOrientation" data-bs-backdrop="static"
-        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAddReportToOrientation">{{ __('Report to Orientation') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Modal Report To Orientation -->
+        <div class="modal fade" id="addRemitToOrientation" aria-labelledby="modalAddRemitToOrientation"
+            data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddRemitToOrientation">{{ __('Report to Orientation') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    @include('logro.teacher.report.student_to_orientation')
                 </div>
-                @include('logro.teacher.report.student_to_orientation')
             </div>
         </div>
-    </div>
     @endhasrole
 @endsection
