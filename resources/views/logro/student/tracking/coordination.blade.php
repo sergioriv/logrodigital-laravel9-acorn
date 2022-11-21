@@ -10,7 +10,7 @@
                 <select name="trackingCoordinator" logro="select2" required>
                     <option label="&nbsp;"></option>
                     @foreach ($coordinators as $coordinator)
-                        <option value="{{ $coordinator->uuid }}">{{ $coordinator->fullName() }}</option>
+                        <option value="{{ $coordinator->uuid }}">{{ $coordinator->getFullName() }}</option>
                     @endforeach
                 </select>
             </div>

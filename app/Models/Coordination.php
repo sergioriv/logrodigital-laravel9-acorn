@@ -27,7 +27,7 @@ class Coordination extends Model
 
 
     /* accesored */
-    public function fullName()
+    public function getFullName()
     {
         return "{$this->name} {$this->last_names}";
     }

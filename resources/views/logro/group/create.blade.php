@@ -82,7 +82,7 @@ $title = __('Create Group');
                                         <select id="select2Teacher" name="group_director">
                                             <option label="&nbsp;"></option>
                                             @foreach ($teachers as $tc)
-                                            <option value="{{ $tc->uuid }}">{{ $tc->fullName() }}</option>
+                                            <option value="{{ $tc->uuid }}">{{ $tc->getFullName() }}</option>
                                             @endforeach
                                         </select>
                                     </div>

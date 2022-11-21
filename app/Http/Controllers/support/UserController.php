@@ -5,7 +5,10 @@ namespace App\Http\Controllers\support;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\ProviderUser;
+use App\Models\Coordination;
 use App\Models\Data\RoleUser;
+use App\Models\Orientation;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -183,6 +186,28 @@ class UserController extends Controller
         return User::find(Auth::user()->id)->getRoleNames()[0];
     }
 
+    public static function myName()
+    {
+        $name = null;
+        $id = Auth::user()->id;
+        switch (static::role_auth()) {
+            case RoleUser::TEACHER_ROL:
+                $name = (Teacher::where('id', $id)->first())->getFullName();
+                break;
+
+            case RoleUser::ORIENTATION_ROL:
+                $name = (Orientation::where('id', $id)->first())->getFullName();
+                break;
+
+            case RoleUser::COORDINATION_ROL:
+                $name = (Coordination::where('id', $id)->first())->getFullName();
+                break;
+
+            }
+
+        return $name;
+    }
+
     public static function profile_update(Request $request, User $user)
     {
 
@@ -217,4 +242,5 @@ class UserController extends Controller
         $name = Str::words($name, 2, null);
         return $name;
     }
+
 }

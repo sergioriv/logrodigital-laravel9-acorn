@@ -4,11 +4,18 @@ namespace App\Http\Controllers\Mail;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\UserAlertController;
+use App\Models\Coordination;
 use App\Models\Group;
+use App\Models\Orientation;
 use App\Models\PersonCharge;
 use App\Models\School;
 use App\Models\Student;
+use App\Models\StudentTrackingCoordination;
+use App\Models\StudentTrackingTeacher;
+use App\Models\TeacherSubjectGroup;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
@@ -125,6 +132,86 @@ class SmtpMail extends Controller
             ->line(Lang::get('names') .': <b>' . $student->getCompleteNames() . '</b><br />' . Lang::get('Document') .': <b>' . $student->document_type_code .' '. $student->document . '</b>');
 
         return static::send_email($content->toContent());
+    }
+
+
+    /* Mail Alert
+     *
+     * $recommendation es para las entradas que no vienen de un tracking,
+     * como el reporte que hace el docente a orientacion
+     *
+     * */
+    public static function sendMailAlert($title, $to, $recommendation)
+    {
+        static::$subject = $title;
+
+
+        if ($to instanceof Collection) {
+
+            foreach ($to as $collection) {
+
+                /*
+                 *  SEND TO TEACHERS
+                 *
+                 *  */
+                if ($collection instanceof TeacherSubjectGroup) {
+
+                    static::$userName = $collection->teacher->getFullName();
+                    static::$userEmail = $collection->teacher->institutional_email;
+
+                    if ($collection->teacher->user->email_verified_at !== NULL) {
+
+                        $content = (new ContentMail)
+                            ->title(Lang::get('Hi') . ', ' . $collection->teacher->getFullName())
+                            ->line($title)
+                            ->line($recommendation);
+
+                        static::send_email($content->toContent());
+                    }
+
+                }
+
+                /*
+                 * SEND TO ORIENTATION
+                 *
+                 *  */
+                if ($collection instanceof Orientation) {
+
+                    static::$userName = $collection->getFullName();
+                    static::$userEmail = $collection->email;
+
+                    if ($collection->user->email_verified_at !== NULL) {
+
+                        $content = (new ContentMail)
+                            ->title(Lang::get('Hi') . ', ' . $collection->getFullName())
+                            ->line($title)
+                            ->line($recommendation);
+
+                        static::send_email($content->toContent());
+                    }
+
+                }
+
+            }
+        }
+
+
+        if ($to instanceof Coordination) {
+
+            static::$userName = $to->getFullName();
+            static::$userEmail = $to->email;
+
+            if ($to->user->email_verified_at !== NULL) {
+                $content = (new ContentMail)
+                        ->title(Lang::get('Hi') . ', ' . $to->getFullName())
+                        ->line($title)
+                        ->line($recommendation);
+
+                static::send_email($content->toContent());
+            }
+
+        }
+
     }
 
     private static function send_email($contentEmail)

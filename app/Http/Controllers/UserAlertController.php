@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Coordination;
@@ -35,6 +36,12 @@ class UserAlertController extends Controller
 
             if ($request->priority_coordinator === '1') {
                 $newAlert->priority = TRUE;
+
+                SmtpMail::sendMailAlert(
+                    __(self::TITLE_ORIENTATION, ['CREATE_BY' => UserController::myName(), 'STUDENT_NAME' => $student->getCompleteNames()]),
+                    $coordinator,
+                    $request->recommendations_coordinator
+                );
             }
 
             return $newAlert->save();
@@ -45,7 +52,7 @@ class UserAlertController extends Controller
 
     public static function orientation_to_teacher(Student $student, Request $request)
     {
-        if ($student->enrolled /* && UserController::role_auth() === RoleUser::ORIENTATION_ROL */) {
+        if ($student->enrolled && UserController::role_auth() === RoleUser::ORIENTATION_ROL) {
 
             $teachersGroup = TeacherSubjectGroup::with('teacher')->where('group_id', $student->group_id)->distinct()->get(['teacher_id']);
 
@@ -69,6 +76,15 @@ class UserAlertController extends Controller
                 }
 
                 $newAlert->save();
+            }
+
+            if ($request->priority_teacher === '1') {
+
+                SmtpMail::sendMailAlert(
+                    __(self::TITLE_ORIENTATION, ['CREATE_BY' => UserController::myName(), 'STUDENT_NAME' => $student->getCompleteNames()]),
+                    $teachersGroup,
+                    $request->recommendations_teachers
+                );
             }
 
             return true;
@@ -112,9 +128,18 @@ class UserAlertController extends Controller
                 $newAlert->save();
             }
 
+            if ($request->priority_orientation === '1') {
+
+                SmtpMail::sendMailAlert(
+                    __(self::TITLE_TEACHER, ['CREATE_BY' => UserController::myName(), 'STUDENT_NAME' => $student->getCompleteNames()]),
+                    $orientators,
+                    $request->recommendations_orientation
+                );
+
+            }
+
             Notify::success(__('Report generated!'));
             return redirect()->route('students.view', $student);
-
         }
 
         return redirect()->back()->withErrors(__('Not allowed'));
@@ -124,13 +149,12 @@ class UserAlertController extends Controller
     /* access for methode GET */
     public function checked(UserAlert $alert)
     {
-        if ( $alert->for_user === Auth::user()->id ) {
+        if ($alert->for_user === Auth::user()->id) {
 
             $alert->forceFill(['checked' => TRUE])->save();
 
             Notify::success(__('Read alert!'));
             return redirect()->back();
-
         }
 
         return redirect()->back()->withErrors(__('Not allowed'));

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Coordination;
@@ -118,7 +119,7 @@ class StudentTrackingController extends Controller
             'priority_coordinator' => ['nullable', 'boolean']
         ]);
 
-        $uuidCoordination = Coordination::select('id')->where('uuid', $request->trackingCoordinator)->first();
+        $uuidCoordination = Coordination::where('uuid', $request->trackingCoordinator)->first();
 
         DB::beginTransaction();
         $tracking = StudentTrackingCoordination::create([
@@ -229,7 +230,7 @@ class StudentTrackingController extends Controller
                 $title = __('Recommendation to coordination');
                 $content = '<div class="logro-label font-weight-bold">'.__('date').':</div>'.$tracking->created_at.'<br />'
                             .'<div class="logro-label font-weight-bold mt-3">'. __('coordinator') .':</div>'
-                            .$tracking->coordination->fullName().'<br />'
+                            .$tracking->coordination->getFullName().'<br />'
                             .'<div class="logro-label font-weight-bold mt-3">'. __('recommendation') .':</div>'
                             .$tracking->recommendations_coordination;
                 break;
