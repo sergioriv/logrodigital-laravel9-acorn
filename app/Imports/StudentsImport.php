@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Http\Controllers\ProviderUser;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SchoolYearController;
+use App\Http\Controllers\support\GenerateStudentCode;
 use App\Models\City;
 use App\Models\Headquarters;
 use App\Models\Student;
@@ -152,6 +153,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
 
             Student::create([
                 'id'                    => $newUser->id,
+                'code'                  => GenerateStudentCode::code(),
                 'first_name'            => $row['first_name'],
                 'second_name'           => $row['second_name'],
                 'first_last_name'       => $row['first_last_name'],

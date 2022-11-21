@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\StudentsInstructuveExport;
 use App\Http\Controllers\Mail\SmtpMail;
+use App\Http\Controllers\support\GenerateStudentCode;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\support\WAController;
@@ -209,6 +210,7 @@ class StudentController extends Controller
 
         Student::create([
             'id' => $user->id,
+            'code' => GenerateStudentCode::code(),
             'first_name' => $request->firstName,
             'second_name' => $request->secondName,
             'first_last_name' => $request->firstLastName,

@@ -5,7 +5,6 @@ use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
-use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\OrientationController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\PersonChargeController;
@@ -15,7 +14,6 @@ use App\Http\Controllers\ResourceSubjectController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\SecretariatController;
-use App\Http\Controllers\StudentAdviceController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFileController;
 use App\Http\Controllers\StudentReportBookController;
@@ -23,22 +21,15 @@ use App\Http\Controllers\StudentTrackingController;
 use App\Http\Controllers\StudyTimeController;
 use App\Http\Controllers\StudyYearController;
 use App\Http\Controllers\SubjectController;
-use App\Http\Controllers\support\ResolveUUID;
+use App\Http\Controllers\support\GenerateStudentCode;
 use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\UserAlertController;
-use App\Models\ResourceStudyYear;
 use App\Models\Secretariat;
 use App\Models\Student;
-use App\Models\StudentAdvice;
-use App\Models\StudyYear;
-use App\Models\User;
-use App\Models\UserAlert;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
@@ -83,6 +74,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('add-permissions/orientation', function() {
             Permission::create(['name' => 'orientation.index']);
             Permission::create(['name' => 'orientation.edit']);
+            dd('hecho');
+        });
+
+        Route::get('students/code-generate', function () {
+            $students = Student::all();
+            foreach ($students as $student) {
+                $student->forceFill(['code' => GenerateStudentCode::code()])
+                        ->save();
+            }
             dd('hecho');
         });
 
@@ -290,7 +290,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 });
-
 
 
 require __DIR__.'/auth.php';
