@@ -2199,12 +2199,13 @@
                                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
 
                                         @hasanyrole('ORIENTATION|SUPPORT')
+                                        @if ($student->enrolled === 1)
                                         <!-- Dropdown Button Start -->
                                         <div class="">
                                             <button type="button" class="btn btn-outline-info btn-icon btn-icon-only"
-                                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-submenu>
-                                                <i data-acorn-icon="more-horizontal"></i>
+                                            data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false" data-submenu>
+                                            <i data-acorn-icon="more-horizontal"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end">
                                                 <x-dropdown-item type="button" data-bs-toggle="modal"
@@ -2212,24 +2213,25 @@
                                                     <span>{{ __('Add advice') }}</span>
                                                 </x-dropdown-item>
                                                 <x-dropdown-item type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#addRemitModal">
+                                                data-bs-target="#addRemitModal">
                                                     <span>{{ __('Remit') }}</span>
                                                 </x-dropdown-item>
                                                 <x-dropdown-item type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#addTeacherModal">
-                                                    <span>{{ __('Add teacher referral') }}</span>
-                                                </x-dropdown-item>
-                                                <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                data-bs-target="#addTeacherModal">
+                                                <span>{{ __('Add teacher referral') }}</span>
+                                            </x-dropdown-item>
+                                            <x-dropdown-item type="button" data-bs-toggle="modal"
                                                     data-bs-target="#addCoordinationModal">
                                                     <span>{{ __('Add coordination referral') }}</span>
                                                 </x-dropdown-item>
                                                 <x-dropdown-item type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#addFamilyModal">
-                                                    <span>{{ __('Add referral to family') }}</span>
+                                                data-bs-target="#addFamilyModal">
+                                                <span>{{ __('Add referral to family') }}</span>
                                                 </x-dropdown-item>
                                             </div>
                                         </div>
                                         <!-- Dropdown Button End -->
+                                        @endif
                                         @endhasanyrole
 
                                     </div>
@@ -2493,6 +2495,7 @@
     @can('students.psychosocial')
 
     @hasanyrole('ORIENTATION|SUPPORT')
+    @if ($student->enrolled === 1)
         <!-- Modal Add Advice -->
         <div class="modal fade" id="addAdviceModal" aria-labelledby="modalAddAdvice" data-bs-backdrop="static"
             data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -2562,6 +2565,7 @@
                 </div>
             </div>
         </div>
+    @endif
     @endhasanyrole
 
         <!-- Modal View Info Tracking -->
