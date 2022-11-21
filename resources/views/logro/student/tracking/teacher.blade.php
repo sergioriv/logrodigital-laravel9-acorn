@@ -21,6 +21,8 @@
                     {{ __('priority') }}
                 </x-label>
             </div>
+            <i data-acorn-icon="question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="{{ __('By checking priority, an email with the given information will be sent to the relevant users. If the user has not verified their account, the email will not be sent.') }}"></i>
         </div>
         <div>
             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{{ __('Close') }}</button>
