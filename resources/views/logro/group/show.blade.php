@@ -59,7 +59,7 @@
             navigator.clipboard
                     .readText()
                     .then((value) => ({
-                        initPasteValues(value);
+                        initPasteValues(value)
                     }));
 
             // alert(clipboardContents);
