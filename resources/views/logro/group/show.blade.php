@@ -43,9 +43,9 @@
             const clipboardContents = await navigator.clipboard.read();
 
             for (const item of clipboardContents) {
-                if (item.types.includes('text')) {
+                // if (item.types.includes('text')) {
                     console.error(item);
-                }
+                // }
             }
 
             // alert(clipboardContents);
