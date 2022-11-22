@@ -38,7 +38,7 @@
 
         function clickPaste()
         {
-            const permission = await navigator.permissions.query({ name: 'clipboard-read' });
+            const permission = navigator.permissions.query({ name: 'clipboard-read' });
             alert(permission.state);
             /* let inputPaste = document.getElementById('input-values-paste');
             inputPaste.select();
