@@ -58,7 +58,9 @@
             }); */
             navigator.clipboard
                     .readText()
-                    .then((clipText) => (document.getElementById("input-values-paste").value = clipText));
+                    .then((value) => ({
+                        initPasteValues(value);
+                    }));
 
             // alert(clipboardContents);
             // let inputPaste = document.getElementById('input-values-paste');
@@ -66,15 +68,13 @@
             // document.execCommand('paste');
         }
 
-        $('.qualify-period').bind("paste", function(e) {
+        function initPasteValues(values) {
             document.getElementById("qualify-period").reset();
 
-            data = e.originalEvent.clipboardData.getData('text')
-                .replaceAll(",", ".")
-                .replaceAll("\r", "");
+            data = values.replaceAll(",", ".").replaceAll("\r", "");
 
             pasteValues();
-        });
+        };
     </script>
 @endsection
 
