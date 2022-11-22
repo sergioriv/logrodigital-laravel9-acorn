@@ -42,11 +42,16 @@
 
             const clipboardContents = await navigator.clipboard.read();
 
+            for (const item of clipboardContents) {
+                if (item.types.includes('text')) {
+                    console.error(item);
+                }
+            }
 
-            alert(clipboardContents);
-            /* let inputPaste = document.getElementById('input-values-paste');
+            // alert(clipboardContents);
+            let inputPaste = document.getElementById('input-values-paste');
             inputPaste.select();
-            document.execCommand('insertHTML ');*/
+            document.execCommand('insertHTML ');
         }
 
         $('.qualify-period').bind("paste", function(e) {
