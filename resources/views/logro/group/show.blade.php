@@ -56,14 +56,14 @@
             /* navigator.clipboard.readText().then(function(data) {
                 console.error("Your string: ", data);
             }); */
-            // navigator.clipboard
-            //         .readText()
-            //         .then((clipText) => (document.getElementById("outbox").innerText = clipText));
+            navigator.clipboard
+                    .readText()
+                    .then((clipText) => (document.getElementById("input-values-paste").value = clipText));
 
             // alert(clipboardContents);
-            let inputPaste = document.getElementById('input-values-paste');
-            inputPaste.select();
-            document.execCommand('paste');
+            // let inputPaste = document.getElementById('input-values-paste');
+            // inputPaste.select();
+            // document.execCommand('paste');
         }
 
         $('.qualify-period').bind("paste", function(e) {
