@@ -36,17 +36,26 @@
 
         }
 
-        async function clickPaste()
-        {
-            const permission = await navigator.permissions.query({ name: 'clipboard-read' });
+        async function clickPaste() {
+            const permission = await navigator.permissions.query({
+                name: 'clipboard-read'
+            });
 
             const clipboardContents = await navigator.clipboard.read();
+            const textBlob = await items[0].getType("text/plain");
+            const text = await (new Response(textBlob)).text();
 
-            for (const item of clipboardContents) {
-                // if (item.types.includes('text')) {
-                    console.error(item);
-                // }
-            }
+            console.error(text);
+
+            // for (const item of clipboardContents) {
+            // if (item.types.includes('text/plain')) {
+            // console.error((new Response(textBlob)).text(););
+            // }
+            // }
+
+            /* navigator.clipboard.readText().then(function(data) {
+                console.log("Your string: ", data);
+            }); */
 
             // alert(clipboardContents);
             let inputPaste = document.getElementById('input-values-paste');
