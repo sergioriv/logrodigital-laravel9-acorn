@@ -194,6 +194,9 @@ input[type="file"] {
 .object-scale-down {
     object-fit: scale-down;
 }
+.align-self-center {
+    align-self: center;
+}
 
 html[data-dimension="desktop"] .logro-badge-right-bottom {
     border-bottom-left-radius: 0;

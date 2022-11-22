@@ -10,6 +10,12 @@ $title = __('Dashboard');
 @endsection
 
 @section('js_page')
+<script>
+    $( document ).ready(function() {
+        const permission = await navigator.permissions.query({ name: 'clipboard-read' });
+        alert(permission.state);
+    });
+</script>
 @endsection
 
 

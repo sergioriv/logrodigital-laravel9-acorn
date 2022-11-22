@@ -6,9 +6,11 @@ use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\YearCurrentMiddleware;
+use App\Models\Data\RoleUser;
 use App\Models\Group;
 use App\Models\GroupStudent;
 use App\Models\Headquarters;
+use App\Models\Period;
 use App\Models\ResourceArea;
 use App\Models\SchoolYear;
 use App\Models\Student;
@@ -135,7 +137,7 @@ class GroupController extends Controller
         /*
          * Para que el Rol TEACHER solo pueda acceder a sus grupos de el año actual
          *  */
-        if (UserController::role_auth() === 'TEACHER') {
+        if (UserController::role_auth() === RoleUser::TEACHER_ROL) {
             $subjectsTeacher = TeacherController::subjects()->select('group_id')->get();
 
             $groups = [];
@@ -160,12 +162,18 @@ class GroupController extends Controller
             ->orderBy('second_last_name');
         $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
 
+        $periods = [];
+        if (UserController::role_auth() === RoleUser::TEACHER_ROL) {
+            $periods = Period::where('study_time_id', $group->study_time_id)->orderBy('ordering')->get();
+        }
+
         return view('logro.group.show')->with([
             'Y' => $Y,
             'group' => $group,
             'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
             'studentsGroup' => $studentsGroup->get(),
-            'areas' => $areas
+            'areas' => $areas,
+            'periods' => $periods
         ]);
     }
 

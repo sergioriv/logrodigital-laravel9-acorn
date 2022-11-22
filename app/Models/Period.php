@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Uuid;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -48,5 +49,22 @@ class Period extends CastCreateModel
     public function grades()
     {
         return $this->hasMany(Grade::class);
+    }
+
+
+    /* accesores */
+    public function getFullDate()
+    {
+        return "{$this->start} / {$this->end}";
+    }
+
+    public function dateUploadingNotes()
+    {
+        return Carbon::parse($this->end)->addDays(-$this->days)->format('Y-m-d');
+    }
+
+    public function active()
+    {
+        return (Carbon::now()->between($this->dateUploadingNotes(), $this->end));
     }
 }
