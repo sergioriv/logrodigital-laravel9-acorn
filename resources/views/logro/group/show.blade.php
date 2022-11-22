@@ -68,6 +68,8 @@
 
         function initPasteValues(values) {
             document.getElementById("qualify-period").reset();
+            let inputPaste = document.getElementById('input-values-paste');
+            inputPaste.value = values;
 
             data = values.replaceAll(",", ".").replaceAll("\r", "");
 
