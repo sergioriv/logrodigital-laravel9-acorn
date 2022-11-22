@@ -41,7 +41,7 @@
                 name: 'clipboard-read'
             });
 
-            const clipboardContents = await navigator.clipboard.read();
+            const items = await navigator.clipboard.read();
             const textBlob = await items[0].getType("text/plain");
             const text = await (new Response(textBlob)).text();
 
