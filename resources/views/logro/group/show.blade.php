@@ -58,9 +58,7 @@
             }); */
             navigator.clipboard
                     .readText()
-                    .then((value) => ({
-                        initPasteValues(value)
-                    }));
+                    .then((value) => (initPasteValues(value)));
 
             // alert(clipboardContents);
             // let inputPaste = document.getElementById('input-values-paste');
