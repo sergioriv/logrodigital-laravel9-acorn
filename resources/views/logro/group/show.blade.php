@@ -37,9 +37,9 @@
         }
 
         async function clickPaste() {
-            const permission = await navigator.permissions.query({
+            /* const permission = await navigator.permissions.query({
                 name: 'clipboard-read'
-            });
+            }); */
 
             navigator.clipboard
                     .readText()
