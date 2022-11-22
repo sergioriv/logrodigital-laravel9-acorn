@@ -41,11 +41,11 @@
                 name: 'clipboard-read'
             });
 
-            const items = await navigator.clipboard.read();
+            /* const items = await navigator.clipboard.read();
             const textBlob = await items[0].getType("text/plain");
             const text = await (new Response(textBlob)).text();
 
-            console.error(text);
+            console.error(text); */
 
             // for (const item of clipboardContents) {
             // if (item.types.includes('text/plain')) {
@@ -53,9 +53,9 @@
             // }
             // }
 
-            /* navigator.clipboard.readText().then(function(data) {
-                console.log("Your string: ", data);
-            }); */
+            navigator.clipboard.readText().then(function(data) {
+                console.error("Your string: ", data);
+            });
 
             // alert(clipboardContents);
             let inputPaste = document.getElementById('input-values-paste');
