@@ -41,35 +41,14 @@
                 name: 'clipboard-read'
             });
 
-            /* const items = await navigator.clipboard.read();
-            const textBlob = await items[0].getType("text/plain");
-            const text = await (new Response(textBlob)).text();
-
-            console.error(text); */
-
-            // for (const item of clipboardContents) {
-            // if (item.types.includes('text/plain')) {
-            // console.error((new Response(textBlob)).text(););
-            // }
-            // }
-
-            /* navigator.clipboard.readText().then(function(data) {
-                console.error("Your string: ", data);
-            }); */
             navigator.clipboard
                     .readText()
                     .then((value) => (initPasteValues(value)));
-
-            // alert(clipboardContents);
-            // let inputPaste = document.getElementById('input-values-paste');
-            // inputPaste.select();
-            // document.execCommand('paste');
         }
 
         function initPasteValues(values) {
             document.getElementById("qualify-period").reset();
-            let inputPaste = document.getElementById('input-values-paste');
-            inputPaste.value = values;
+            document.getElementById('input-values-paste').value = values;
 
             data = values.replaceAll(",", ".").replaceAll("\r", "");
 
@@ -345,7 +324,7 @@
                                                                 <div class="mb-3 d-flex justify-content-end">
                                                                     <x-button type="button" class="btn-outline-info btn-sm"
                                                                         onclick="clickPaste()">Pegas valores</x-button>
-                                                                    <input type="text" id="input-values-paste">
+                                                                    <input type="hidden" id="input-values-paste">
                                                                 </div>
 
                                                                 <form action="#" method="POST" id="qualify-period">
