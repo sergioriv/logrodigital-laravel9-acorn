@@ -39,7 +39,11 @@
         async function clickPaste()
         {
             const permission = await navigator.permissions.query({ name: 'clipboard-read' });
-            alert(permission.state);
+
+            const clipboardContents = await navigator.clipboard.read();
+
+
+            alert(clipboardContents);
             /* let inputPaste = document.getElementById('input-values-paste');
             inputPaste.select();
             document.execCommand('insertHTML ');*/
