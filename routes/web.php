@@ -24,12 +24,14 @@ use App\Http\Controllers\StudyTimeController;
 use App\Http\Controllers\StudyYearController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\support\GenerateStudentCode;
+use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\UserAlertController;
+use App\Models\Grade;
 use App\Models\Secretariat;
 use App\Models\Student;
 use Illuminate\Support\Facades\Route;
@@ -77,6 +79,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Permission::create(['name' => 'orientation.index']);
             Permission::create(['name' => 'orientation.edit']);
             dd('hecho');
+        });
+
+        Route::get('grades-reset', function () {
+            Grade::truncate();
+            Notify::success('Hecho');
+            return redirect()->route('dashboard');
         });
 
         Route::get('students/code-generate', function () {
