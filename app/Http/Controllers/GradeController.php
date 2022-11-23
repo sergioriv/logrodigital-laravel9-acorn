@@ -22,10 +22,7 @@ class GradeController extends Controller
     {
         $request->validate([
             'students' => ['required', 'array'],
-            'students.*' => ['required'],
-            'students.*.conceptual' => ['numeric'],
-            'students.*.procedural' => ['numeric'],
-            'students.*.attitudinal' => ['numeric']
+            'students.*' => ['required']
         ]);
 
         $group = $subject->group;
@@ -34,11 +31,17 @@ class GradeController extends Controller
         /* Verifica si PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
         $round = static::round($studyTime->round);
 
-        $period = Period::where('study_time_id', $subject->group->study_time_id)->orderBy('ordering')->get()->filter(function ($p) {
-            if ( $p->active() ) return $p;
-        });
+        $periods = Period::where('study_time_id', $subject->group->study_time_id)->orderBy('ordering')->get();
 
-        if (!count($period)) {
+        $period = new Period;
+        foreach ($periods as $p) {
+            if ($p->active()) {
+                $period = $p;
+                break;
+            }
+        }
+
+        if (is_null($period)) {
             return redirect()->back()->withErrors(__('No active period'));
         }
 
@@ -74,7 +77,7 @@ class GradeController extends Controller
             Grade::updateOrCreate(
                 [
                     'teacher_subject_group_id' => $subject->id,
-                    'period_id' => $period[1]->id,
+                    'period_id' => $period->id,
                     'student_id' => $student->id
                 ],
                 [

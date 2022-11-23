@@ -65,6 +65,6 @@ class Period extends CastCreateModel
 
     public function active()
     {
-        return (Carbon::now()->between($this->dateUploadingNotes(), $this->end));
+        return (Carbon::now()->between($this->dateUploadingNotes(), $this->end . ' 23:59:00'));
     }
 }
