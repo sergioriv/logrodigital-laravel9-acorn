@@ -19,6 +19,7 @@ use App\Models\StudyYear;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class GroupController extends Controller
@@ -135,21 +136,10 @@ class GroupController extends Controller
     {
 
         /*
-         * Para que el Rol TEACHER solo pueda acceder a sus grupos de el año actual
+         * Para que el Rol TEACHER no pueda acceder a ningun grupo, solo tiene acceso a las asignaturas
          *  */
         if (UserController::role_auth() === RoleUser::TEACHER_ROL) {
-            $subjectsTeacher = TeacherController::subjects()->select('group_id')->get();
-
-            $groups = [];
-            foreach ($subjectsTeacher as $subjects) {
-                array_push($groups, $subjects->group_id);
-            }
-
-            array_unique($groups);
-
-            if ( !in_array($group->id, $groups) ) {
-                return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
-            }
+            return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
         }
 
 
@@ -162,18 +152,12 @@ class GroupController extends Controller
             ->orderBy('second_last_name');
         $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
 
-        $periods = [];
-        if (UserController::role_auth() === RoleUser::TEACHER_ROL) {
-            $periods = Period::where('study_time_id', $group->study_time_id)->orderBy('ordering')->get();
-        }
-
         return view('logro.group.show')->with([
             'Y' => $Y,
             'group' => $group,
             'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
             'studentsGroup' => $studentsGroup->get(),
-            'areas' => $areas,
-            'periods' => $periods
+            'areas' => $areas
         ]);
     }
 
@@ -241,8 +225,7 @@ class GroupController extends Controller
             ->orderBy('second_last_name')
             ->get();
 
-        if (0 === count($studentsNoEnrolled))
-        {
+        if (0 === count($studentsNoEnrolled)) {
             Notify::fail(__('No students to enroll'));
             return redirect()->back();
         }
@@ -284,13 +267,12 @@ class GroupController extends Controller
 
                 /* Send mail to Email Person Charge */
                 SmtpMail::sendEmailEnrollmentNotification($studentNoNull, $group);
-
             } else {
                 return redirect()->back()->withErrors(__("Unexpected Error"));
             }
         }
 
-        Notify::success( __('Students matriculate!') );
+        Notify::success(__('Students matriculate!'));
         return redirect()->route('group.show', $group);
     }
 
@@ -327,14 +309,15 @@ class GroupController extends Controller
                         'school_year_id' => $Y->id,
                         'group_id' => $group->id,
                         'subject_id' => $subject
-                    ], [
+                    ],
+                    [
                         'teacher_id' => $uuidTeacher->id
                     ]
                 );
             }
         }
 
-        Notify::success( __('Group updated!') );
+        Notify::success(__('Group updated!'));
         return redirect()->route('group.show', $group);
     }
 

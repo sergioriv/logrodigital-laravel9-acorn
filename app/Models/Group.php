@@ -37,6 +37,11 @@ class Group extends CastCreateModel
         return $this->belongsTo(StudyTime::class)->select('id', 'name');
     }
 
+    public function studyTimeSelectAll()
+    {
+        return $this->belongsTo(StudyTime::class, 'study_time_id', 'id');
+    }
+
     public function studyYear()
     {
         return $this->belongsTo(StudyYear::class)->select('id', 'name');

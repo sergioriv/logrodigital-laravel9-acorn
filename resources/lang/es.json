@@ -495,6 +495,9 @@
     "Enabled as from": "Habilitado a partir del",
     "Deadline date": "Fecha límite",
     "Start date": "Fecha inicio",
+    "Paste values": "Pegar valores",
+    "The student (:STUDENT) doesn't belong to the group: :GROUP": "El estudiante (:STUDENT) no pertenece al grupo: :GROUP",
+    "No active period": "No hay periodo activo",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "full name": "nombre completo",

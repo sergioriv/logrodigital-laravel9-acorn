@@ -12,7 +12,9 @@ use App\Models\Data\MaritalStatus;
 use App\Models\Data\RoleUser;
 use App\Models\Data\TypeAdministrativeAct;
 use App\Models\Data\TypeAppointment;
+use App\Models\Period;
 use App\Models\SchoolYear;
+use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use App\Rules\MaritalStatusRule;
@@ -28,7 +30,7 @@ class TeacherController extends Controller
 {
     function __construct()
     {
-        $this->middleware('can:teachers.create')->only('create','store');
+        $this->middleware('can:teachers.create')->only('create', 'store');
         // $this->middleware('can:teachers.edit');
         $this->middleware('can:teachers.import')->only('export', 'export_instructive', 'import', 'import_store');
     }
@@ -93,8 +95,10 @@ class TeacherController extends Controller
 
     public function show(Teacher $teacher)
     {
-        $schoolYear = SchoolYear::whereHas('teacherSubjectGroups',
-            fn ($subject) => $subject->where('teacher_id', $teacher->id))
+        $schoolYear = SchoolYear::whereHas(
+            'teacherSubjectGroups',
+            fn ($subject) => $subject->where('teacher_id', $teacher->id)
+        )
             ->orderByDesc('id')->get();
 
         return view('logro.teacher.show')->with([
@@ -105,24 +109,20 @@ class TeacherController extends Controller
 
     public function profile(Teacher $teacher)
     {
-        if ( 'TEACHER' === UserController::role_auth() )
-        {
+        if (RoleUser::TEACHER_ROL === UserController::role_auth()) {
             return view('logro.teacher.profile.edit', [
                 'teacher' => $teacher,
                 'cities' => City::all(),
                 'maritalStatus' => MaritalStatus::data(),
             ]);
-        }
-        else
-        {
+        } else {
             return redirect()->back()->withErrors(__('Unauthorized'));
         }
     }
 
     public function profile_update(Teacher $teacher, Request $request)
     {
-        if ( 'TEACHER' === UserController::role_auth() )
-        {
+        if (RoleUser::TEACHER_ROL === UserController::role_auth()) {
 
             $request->validate([
                 'names' => ['required', 'string', 'max:191'],
@@ -195,9 +195,7 @@ class TeacherController extends Controller
 
             Notify::success(__('Updated profile!'));
             return redirect()->route('user.profile.edit');
-        }
-        else
-        {
+        } else {
             return redirect()->back()->withErrors(__('Unauthorized'));
         }
     }
@@ -205,6 +203,39 @@ class TeacherController extends Controller
     public function mysubjects()
     {
         return view('logro.teacher.profile.subjects', ['subjects' => self::subjects()->get()]);
+    }
+
+    public function mysubjects_show(TeacherSubjectGroup $subject)
+    {
+        /*
+         * Para que el Rol TEACHER solo pueda acceder a sus asignaturas de el año actual
+         *  */
+        if (UserController::role_auth() !== RoleUser::TEACHER_ROL) {
+            return redirect()->back()->withErrors(__('Unauthorized'));
+        }
+
+        /*
+         * Para que el Rol TEACHER solo pueda acceder a sus asignaturas de el año actual
+         *  */
+        if ($subject->teacher_id !== Auth::user()->id) {
+            return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
+        }
+
+        $Y = SchoolYearController::current_year();
+
+        $studentsGroup = Student::where('group_id', $subject->group_id)
+            ->orderBy('first_last_name')
+            ->orderBy('second_last_name');
+
+        $periods = Period::where('study_time_id', $subject->group->study_time_id)->orderBy('ordering')->get();
+
+
+        return view('logro.teacher.profile.subjects_show', [
+            'Y' => $Y,
+            'subject' => $subject,
+            'studentsGroup' => $studentsGroup->get(),
+            'periods' => $periods
+        ]);
     }
 
 
@@ -215,12 +246,12 @@ class TeacherController extends Controller
      *  */
     public static function subjects()
     {
-        if ( 'TEACHER' === UserController::role_auth() ) {
+        if (RoleUser::TEACHER_ROL === UserController::role_auth()) {
             $Y = SchoolYearController::available_year();
             $teacher_id = Auth::user()->id;
 
             $subjects = TeacherSubjectGroup::where('school_year_id', $Y->id)
-                        ->where('teacher_id', $teacher_id);
+                ->where('teacher_id', $teacher_id);
 
             return $subjects;
         }

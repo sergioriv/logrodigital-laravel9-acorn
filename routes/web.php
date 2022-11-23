@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GradeController;
+use App\Http\Controllers\GradesController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\OrientationController;
@@ -195,6 +197,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('groups/{group}/matriculate', [GroupController::class, 'matriculate'])->name('group.matriculate');
     Route::put('groups/{group}/matriculate', [GroupController::class, 'matriculate_update'])->name('group.matriculate.update');
 
+    /* Qualification */
+    Route::post('mysubjects/{subject}/qualify', [GradeController::class, 'store'])->name('subject.qualify.students');
 
 
 
@@ -208,6 +212,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route Teacher User */
     Route::get('mysubjects', [TeacherController::class, 'mysubjects'])->name('teacher.my.subjects');
+    Route::get('mysubjects/{subject}', [TeacherController::class, 'mysubjects_show'])->name('teacher.my.subjects.show');
 
 
 

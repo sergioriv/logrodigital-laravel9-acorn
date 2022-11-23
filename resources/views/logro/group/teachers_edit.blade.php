@@ -65,7 +65,7 @@
                                                                         @endif
                                                                         @endforeach
                                                                         value="{{ $subject->id . '~' . $teacher->uuid }}">
-                                                                        {{ $subject->id }}~{{ $teacher->getFullName() }}
+                                                                        {{ $teacher->getFullName() }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>

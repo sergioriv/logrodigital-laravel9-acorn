@@ -34,13 +34,13 @@ $title = __('My subjects');
                     <!-- Cards Start -->
                     <div class="row g-3 row-cols-3 row-cols-md-4 row-cols-lg-6">
                         @foreach ($subjects as $subject)
-                                <x-group.card :group="$subject->group">
+                                <x-group.subjects :subject="$subject">
                                     <span class="mt-3 text-black btn-icon-start">
                                         <i data-acorn-icon="notebook-1"
                                             class="icon"data-acorn-size="15"></i>
                                         {{ $subject->subject->resourceSubject->name }}
                                     </span>
-                                </x-group.card>
+                                </x-group.subjects>
                         @endforeach
                     </div>
                     <!-- Cards End -->

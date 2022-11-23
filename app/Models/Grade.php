@@ -2,18 +2,23 @@
 
 namespace App\Models;
 
+use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Grade extends CastCreateModel
 {
     use HasFactory;
+    use Uuid;
 
     protected $fillable = [
         'teacher_subject_group_id',
         'period_id',
         'student_id',
-        'grade'
+        'conceptual',
+        'procedural',
+        'attitudinal',
+        'final'
     ];
 
     /*
