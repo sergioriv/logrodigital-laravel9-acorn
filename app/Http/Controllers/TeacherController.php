@@ -6,6 +6,7 @@ use App\Exports\TeachersExport;
 use App\Exports\TeachersInstructuveExport;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
+use App\Http\Middleware\OnlyTeachersMiddleware;
 use App\Imports\TeachersImport;
 use App\Models\City;
 use App\Models\Data\MaritalStatus;
@@ -31,8 +32,9 @@ class TeacherController extends Controller
     function __construct()
     {
         $this->middleware('can:teachers.create')->only('create', 'store');
-        // $this->middleware('can:teachers.edit');
+        $this->middleware('can:teachers.index')->only('show');
         $this->middleware('can:teachers.import')->only('export', 'export_instructive', 'import', 'import_store');
+        $this->middleware(OnlyTeachersMiddleware::class)->only('profile', 'profile_update', 'mysubjects', 'mysubjects_show', 'subjects');
     }
 
     public function create()
@@ -202,17 +204,11 @@ class TeacherController extends Controller
 
     public function mysubjects()
     {
-        return view('logro.teacher.profile.subjects', ['subjects' => self::subjects()->get()]);
+        return view('logro.teacher.subjects.index', ['subjects' => self::subjects()->get()]);
     }
 
     public function mysubjects_show(TeacherSubjectGroup $subject)
     {
-        /*
-         * Para que el Rol TEACHER solo pueda acceder a sus asignaturas de el año actual
-         *  */
-        if (UserController::role_auth() !== RoleUser::TEACHER_ROL) {
-            return redirect()->back()->withErrors(__('Unauthorized'));
-        }
 
         /*
          * Para que el Rol TEACHER solo pueda acceder a sus asignaturas de el año actual
@@ -230,7 +226,7 @@ class TeacherController extends Controller
         $periods = Period::where('study_time_id', $subject->group->study_time_id)->orderBy('ordering')->get();
 
 
-        return view('logro.teacher.profile.subjects_show', [
+        return view('logro.teacher.subjects.show', [
             'Y' => $Y,
             'subject' => $subject,
             'studentsGroup' => $studentsGroup->get(),
@@ -246,17 +242,13 @@ class TeacherController extends Controller
      *  */
     public static function subjects()
     {
-        if (RoleUser::TEACHER_ROL === UserController::role_auth()) {
-            $Y = SchoolYearController::available_year();
-            $teacher_id = Auth::user()->id;
+        $Y = SchoolYearController::available_year();
+        $teacher_id = Auth::user()->id;
 
-            $subjects = TeacherSubjectGroup::where('school_year_id', $Y->id)
-                ->where('teacher_id', $teacher_id);
+        $subjects = TeacherSubjectGroup::where('school_year_id', $Y->id)
+            ->where('teacher_id', $teacher_id);
 
-            return $subjects;
-        }
-
-        return [];
+        return $subjects;
     }
 
 

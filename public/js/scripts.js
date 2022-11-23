@@ -120,6 +120,9 @@ class Scripts {
       if ("undefined" !== typeof TeacherPermitCreateForm) {
         new TeacherPermitCreateForm;
       }
+      if ("undefined" !== typeof PasteGrades) {
+        new PasteGrades;
+      }
     }
 
     // Plugin pages initialization

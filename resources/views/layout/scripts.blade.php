@@ -22,5 +22,5 @@
 @endauth
 @yield('js_page')
 <script src="/js/common.js?d=1666621931302"></script>
-<script src="/js/scripts.js?d=1666621931302"></script>
+<script src="/js/scripts.js?d=1669219709832"></script>
 <!-- Page Specific Scripts End -->

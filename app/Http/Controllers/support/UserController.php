@@ -183,7 +183,7 @@ class UserController extends Controller
 
     public static function role_auth()
     {
-        return User::find(Auth::user()->id)->getRoleNames()[0];
+        return Auth::user()->getRoleNames()[0];
     }
 
     public static function myName()

@@ -11,7 +11,8 @@
 @endsection
 
 @section('js_page')
-    <script>
+<script src="/js/pages/pasteGrades.js"></script>
+    {{-- <script>
         let data = "";
 
         function pasteValues() {
@@ -61,7 +62,7 @@
 
             pasteValues();
         });
-    </script>
+    </script> --}}
 @endsection
 
 @section('content')

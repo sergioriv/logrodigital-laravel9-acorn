@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
-use App\Http\Controllers\support\UserController;
-use App\Models\Data\RoleUser;
+use App\Http\Middleware\OnlyTeachersMiddleware;
 use App\Models\Grade;
-use App\Models\Group;
 use App\Models\Period;
 use App\Models\Student;
 use App\Models\TeacherSubjectGroup;
@@ -17,7 +15,7 @@ class GradeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:' . RoleUser::TEACHER_ROL)->only('store');
+        $this->middleware(OnlyTeachersMiddleware::class)->only('store');
     }
 
     public function store(TeacherSubjectGroup $subject, Request $request)
