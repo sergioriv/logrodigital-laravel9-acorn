@@ -30,7 +30,6 @@ class PasteGrades {
     }
 
     _clickPaste() {
-        /* onclick="clickPaste()" */
         const _this = this;
 
         const btnPaste = document.getElementById("clickPaste");
