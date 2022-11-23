@@ -137,6 +137,13 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <table class="table table-striped mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>&nbsp;</th>
+                                                            <th class="text-center">Definitiva</th>
+                                                            <th class="text-center">Desempeño</th>
+                                                        </tr>
+                                                    </thead>
                                                     <tbody>
                                                         @foreach ($studentsGroup as $studentG)
                                                             <tr>
@@ -158,6 +165,13 @@
                                                                             class="badge bg-outline-danger">{{ __($studentG->status) }}</span>
                                                                     @endif
                                                                 </td>
+                                                                <td class="text-center">
+                                                                    @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->id, $subject) @endphp
+                                                                    {{ $defStudent }}
+                                                                </td>
+                                                                <td class="text-center text-capitalize">
+                                                                    {!! \App\Http\Controllers\GradeController::performance($subject->group->studyTimeSelectAll, $defStudent) !!}
+                                                                </td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -176,25 +190,27 @@
                                     <div class="mb-n2" id="periodsCard">
 
                                         @foreach ($periods as $period)
-                                            <div class="card d-flex mt-2 text-muted">
+                                            <div class="card d-flex mt-2">
                                                 <div class="d-flex flex-grow-1" role="button" data-bs-toggle="collapse"
                                                     data-bs-target="#period-{{ $period->id }}" aria-expanded="true"
                                                     aria-controls="period-{{ $period->id }}">
                                                     <div class="card-body py-4">
                                                         <div class="list-item-heading p-0">
                                                             <div class="row g-2">
-                                                                <div class="col-6 d-inline-flex">
+                                                                <div class="col-md-6 text-md-start text-center">
                                                                     <div
-                                                                        class="font-weight-bold h3 m-0 align-self-center @if ($period->active()) text-base @else text-muted @endif">
-                                                                        {{ $period->name }}</div>
+                                                                        class="font-weight-bold h3 m-0 @if(!$period->active()) text-light @endif">
+                                                                        {{ $period->name }}
+                                                                        <div class="icon-14">{{ $period->workload }}%</div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-2 lh-lg m-0 text-center">
+                                                                <div class="col-4 col-md-2 lh-base h6 m-0 text-center @if(!$period->active()) text-light @endif">
                                                                     {{ __('Start date') }}<br /><b>{{ $period->start }}</b>
                                                                 </div>
-                                                                <div class="col-2 lh-lg m-0 text-center">
+                                                                <div class="col-4 col-md-2 lh-base h6 m-0 text-center @if(!$period->active()) text-light @endif">
                                                                     {{ __('Enabled as from') }}<br /><b>{{ $period->dateUploadingNotes() }}</b>
                                                                 </div>
-                                                                <div class="col-2 lh-lg m-0 text-center">
+                                                                <div class="col-4 col-md-2 lh-base h6 m-0 text-center @if(!$period->active()) text-light @endif">
                                                                     {{ __('Deadline date') }}<br /><b>{{ $period->end }}</b>
                                                                 </div>
                                                             </div>
@@ -209,9 +225,8 @@
                                                         @if ($period->active())
                                                             <div class="mb-3 d-flex justify-content-end">
                                                                 <x-button type="button" class="btn-outline-primary btn-sm"
-                                                                    id="clickPaste"><i data-acorn-icon="clipboard"
-                                                                        data-acorn-size="16"
-                                                                        class="me-2 align-self-center"></i>{{ __('Paste values') }}
+                                                                    id="clickPaste">
+                                                                        {{ __('Paste values from Excel') }}
                                                                 </x-button>
                                                             </div>
 
@@ -238,7 +253,7 @@
                                                                 @foreach ($studentsGroup as $studentG)
 
                                                                     @php
-                                                                    $gradesStudent = \App\Http\Controllers\GradeController::gradesStudent($subject->id, $period->id, $studentG->id)
+                                                                    $GxPS = \App\Http\Controllers\GradeController::forPeriod($subject->id, $period->id, $studentG->id)
                                                                     @endphp
 
                                                                     <tr>
@@ -275,9 +290,9 @@
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
                                                                                     name="students[{{ $studentG->code }}][conceptual]"
-                                                                                    value="{{ $gradesStudent->conceptual ?? null }}" />
+                                                                                    value="{{ $GxPS->conceptual ?? null }}" />
                                                                             @else
-                                                                                <div class="form-control bg-light">{{ $gradesStudent->conceptual ?? null }}</div>
+                                                                                <div class="form-control bg-light">{{ $GxPS->conceptual ?? null }}</div>
                                                                             @endif
                                                                         </td>
                                                                         <td scope="row" class="col-1">
@@ -288,9 +303,9 @@
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
                                                                                     name="students[{{ $studentG->code }}][procedural]"
-                                                                                    value="{{ $gradesStudent->procedural ?? null }}" />
+                                                                                    value="{{ $GxPS->procedural ?? null }}" />
                                                                             @else
-                                                                                <div class="form-control bg-light">{{ $gradesStudent->procedural ?? null }}</div>
+                                                                                <div class="form-control bg-light">{{ $GxPS->procedural ?? null }}</div>
                                                                             @endif
                                                                         </td>
                                                                         <td scope="row" class="col-1">
@@ -301,14 +316,14 @@
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
                                                                                     name="students[{{ $studentG->code }}][attitudinal]"
-                                                                                    value="{{ $gradesStudent->attitudinal ?? null }}" />
+                                                                                    value="{{ $GxPS->attitudinal ?? null }}" />
                                                                             @else
-                                                                                <div class="form-control bg-light">{{ $gradesStudent->attitudinal ?? null }}</div>
+                                                                                <div class="form-control bg-light">{{ $GxPS->attitudinal ?? null }}</div>
                                                                             @endif
                                                                         </td>
 
                                                                         <td scope="row" class="col-1">
-                                                                            <div class="form-control bg-light">{{ $gradesStudent->final ?? null }}</div>
+                                                                            <div class="form-control bg-light">{{ $GxPS->final ?? null }}</div>
                                                                         </td>
                                                                     </tr>
                                                                     @if ($period->active())

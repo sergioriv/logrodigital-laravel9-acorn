@@ -31,11 +31,8 @@ class GradeController extends Controller
         $group = $subject->group;
         $studyTime = $subject->group->studyTimeSelectAll;
 
-        if ($studyTime->round === 1) {
-            $round = PHP_ROUND_HALF_UP;
-        } else {
-            $round = PHP_ROUND_HALF_DOWN;
-        }
+        /* Verifica si PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
+        $round = static::round($studyTime->round);
 
         $period = Period::where('study_time_id', $subject->group->study_time_id)->orderBy('ordering')->get()->filter(function ($p) {
             if ( $p->active() ) return $p;
@@ -96,11 +93,51 @@ class GradeController extends Controller
         return redirect()->route('teacher.my.subjects.show', $subject);
     }
 
-    public static function gradesStudent($subject, $period, $student)
+    /* Notas por periodo y estudiante */
+    public static function forPeriod($subject, $period, $student)
     {
         return Grade::where('teacher_subject_group_id', $subject)
                     ->where('period_id', $period)
                     ->where('student_id', $student)
                     ->first();
+    }
+
+    /* Nota general por estudiante */
+    public static function forStudent($student, $subject)
+    {
+        $studyTime = $subject->group->studyTimeSelectAll;
+
+        $grades = Grade::select('period_id', 'final')->where('teacher_subject_group_id', $subject->id)
+                    ->where('student_id', $student)->get();
+
+        if (count($grades)) {
+
+            $def = 0;
+            foreach ($grades as $g) {
+                $wl = ($g->period->workload / 100);
+                $def += $g->final * $wl;
+            }
+
+        } else {
+            $def = $studyTime->minimum_grade;
+        }
+
+        /* Verifica decimales y PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
+        $def = number_format( round($def, $studyTime->decimal, static::round($studyTime->round)), $studyTime->decimal );
+
+        return $def;
+    }
+
+    private static function round($r)
+    {
+        return $r ? PHP_ROUND_HALF_UP : PHP_ROUND_HALF_DOWN;
+    }
+
+    public static function performance($studyTime, $value)
+    {
+        return $value > $studyTime->high_performance ? __('superior') :
+                ($value > $studyTime->acceptable_performance ? __('high') :
+                ($value > $studyTime->low_performance ? __('acceptable') :
+                '<span class="alert alert-danger px-2 py-1">'. __('low') .'</span>'  ));
     }
 }
