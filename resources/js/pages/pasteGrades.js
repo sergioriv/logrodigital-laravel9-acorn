@@ -43,10 +43,6 @@ class PasteGrades {
         });
     }
 
-    async clickPaste() {
-        const _this = this;
-    }
-
     _initPasteValues(values) {
         const _this = this;
 
