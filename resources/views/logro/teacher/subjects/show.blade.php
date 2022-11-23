@@ -209,7 +209,7 @@
                                                         @if ($period->active())
                                                             <div class="mb-3 d-flex justify-content-end">
                                                                 <x-button type="button" class="btn-outline-primary btn-sm"
-                                                                    onclick="clickPaste()"><i data-acorn-icon="clipboard"
+                                                                    id="clickPaste"><i data-acorn-icon="clipboard"
                                                                         data-acorn-size="16"
                                                                         class="me-2 align-self-center"></i>{{ __('Paste values') }}
                                                                 </x-button>

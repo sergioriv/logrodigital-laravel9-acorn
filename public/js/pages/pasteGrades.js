@@ -12,6 +12,7 @@ class PasteGrades {
         this.data = "";
 
         this._bindPaste();
+        this._clickPaste();
     }
 
     _bindPaste() {
@@ -28,13 +29,22 @@ class PasteGrades {
         });
     }
 
-    async clickPaste() {
+    _clickPaste() {
+        /* onclick="clickPaste()" */
         const _this = this;
 
-        /* Se solicitarán permision de Portapapeles al usuario */
-        navigator.clipboard
-            .readText()
-            .then((value) => _this._initPasteValues(value));
+        const btnPaste = document.getElementById("clickPaste");
+        btnPaste.addEventListener("click", async () => {
+
+            /* Se solicitarán permision de Portapapeles al usuario */
+            navigator.clipboard
+                .readText()
+                .then((value) => _this._initPasteValues(value));
+        });
+    }
+
+    async clickPaste() {
+        const _this = this;
     }
 
     _initPasteValues(values) {
@@ -65,6 +75,4 @@ class PasteGrades {
             }
         }
     }
-
-
 }
