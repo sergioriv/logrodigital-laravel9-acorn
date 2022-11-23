@@ -82,7 +82,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::get('grades-reset', function () {
-            Grade::truncate();
+            Grade::getQuery()->delete();
             Notify::success('Hecho');
             return redirect()->route('dashboard');
         });
