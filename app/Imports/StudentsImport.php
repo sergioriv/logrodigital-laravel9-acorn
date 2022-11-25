@@ -110,9 +110,9 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 $cityEx = Str::lower($row['expedition_city']);
                 $row['expedition_city'] = City::where('name', $cityEx)->first()->id ?? null;
             } */
-            /* if($row['birthdate']) {
+            if($row['birthdate']) {
                 $row['birthdate'] = Date::excelToDateTimeObject($row['birthdate'])->format('Y-m-d');
-            } */
+            }
 
 
             /*
@@ -165,7 +165,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 // 'expedition_city_id'    => $row['expedition_city'],
                 // 'number_siblings'       => $row['number_siblings'],
                 // 'birth_city_id'         => $row['birth_city'],
-                // 'birthdate'             => $row['birthdate'],
+                'birthdate'             => $row['birthdate'],
                 // 'gender_id'             => $row['gender'],
                 // 'rh_id'                 => $row['rh'],
 
