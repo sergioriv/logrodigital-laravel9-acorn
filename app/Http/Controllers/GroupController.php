@@ -10,16 +10,13 @@ use App\Models\Data\RoleUser;
 use App\Models\Group;
 use App\Models\GroupStudent;
 use App\Models\Headquarters;
-use App\Models\Period;
 use App\Models\ResourceArea;
-use App\Models\SchoolYear;
 use App\Models\Student;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class GroupController extends Controller
@@ -117,14 +114,14 @@ class GroupController extends Controller
 
         $Y = SchoolYearController::current_year();
 
-        $uuidTeacher = Teacher::select('id')->find($request->group_director);
+        $uuidTeacher = Teacher::select('id')->find($request->group_director)->id ?? null;
 
         Group::create([
             'school_year_id' => $Y->id,
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->study_time,
             'study_year_id' => $request->study_year,
-            'teacher_id' => $uuidTeacher->id,
+            'teacher_id' => $uuidTeacher,
             'name' => $request->name,
         ]);
 
@@ -187,13 +184,13 @@ class GroupController extends Controller
             'name' => ['required', 'string']
         ]);
 
-        $uuidTeacher = Teacher::select('id')->find($request->group_director);
+        $uuidTeacher = Teacher::select('id')->find($request->group_director)->id ?? null;
 
         $group->update([
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->study_time,
             'study_year_id' => $request->study_year,
-            'teacher_id' => $uuidTeacher->id,
+            'teacher_id' => $uuidTeacher,
             'name' => $request->name,
         ]);
 
@@ -302,7 +299,7 @@ class GroupController extends Controller
 
                 [$subject, $teacher] = explode('~', $teacher_subject);
 
-                $uuidTeacher = Teacher::select('id')->find($teacher);
+                $uuidTeacher = Teacher::select('id')->find($teacher)->id ?? null;
 
                 TeacherSubjectGroup::updateOrCreate(
                     [
@@ -311,7 +308,7 @@ class GroupController extends Controller
                         'subject_id' => $subject
                     ],
                     [
-                        'teacher_id' => $uuidTeacher->id
+                        'teacher_id' => $uuidTeacher
                     ]
                 );
             }
