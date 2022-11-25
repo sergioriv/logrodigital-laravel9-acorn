@@ -106,13 +106,13 @@ class StudentsImport implements ToCollection, WithHeadingRow
 
 
             /* Formating data */
-            if($row['expedition_city']) {
+            /* if($row['expedition_city']) {
                 $cityEx = Str::lower($row['expedition_city']);
                 $row['expedition_city'] = City::where('name', $cityEx)->first()->id ?? null;
-            }
-            if($row['birthdate']) {
+            } */
+            /* if($row['birthdate']) {
                 $row['birthdate'] = Date::excelToDateTimeObject($row['birthdate'])->format('Y-m-d');
-            }
+            } */
 
 
             /*
@@ -142,11 +142,11 @@ class StudentsImport implements ToCollection, WithHeadingRow
             /*
              * Creating a new user and a new student.
              */
-            $provider = ProviderUser::provider_validate($row['institutional_email']);
+            // $provider = ProviderUser::provider_validate($row['institutional_email']);
 
             $newUser = User::create([
-                'provider' => $provider,
-                'name'     => $row['first_name'] . ' ' . $row['first_last_name'],
+                // 'provider' => $provider,
+                'name'     => static::_username($row['first_name'] . ' ' . $row['first_last_name']),
                 'email'    => $row['institutional_email'],
             ])->assignRole(7);
             $newUser->forceFill(['email_verified_at' => now()])->save();
@@ -161,29 +161,29 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 'document_type_code'    => $row['document_type'],
                 'document'              => $row['document'],
                 'institutional_email'   => $row['institutional_email'],
-                'telephone'             => $row['telephone'],
-                'expedition_city_id'    => $row['expedition_city'],
-                'number_siblings'       => $row['number_siblings'],
-                'birth_city_id'         => $row['birth_city'],
-                'birthdate'             => $row['birthdate'],
-                'gender_id'             => $row['gender'],
-                'rh_id'                 => $row['rh'],
+                // 'telephone'             => $row['telephone'],
+                // 'expedition_city_id'    => $row['expedition_city'],
+                // 'number_siblings'       => $row['number_siblings'],
+                // 'birth_city_id'         => $row['birth_city'],
+                // 'birthdate'             => $row['birthdate'],
+                // 'gender_id'             => $row['gender'],
+                // 'rh_id'                 => $row['rh'],
 
-                'zone'                  => $row['zone'],
-                'residence_city_id'     => $row['residence_city'],
-                'address'               => $row['address'],
-                'neighborhood'          => $row['neighborhood'],
-                'social_stratum'        => $row['social_stratum'],
-                'dwelling_type_id'      => $row['dwelling_type'],
-                'electrical_energy'     => $row['electrical_energy'],
-                'natural_gas'           => $row['natural_gas'],
-                'sewage_system'         => $row['sewage_system'],
-                'aqueduct'              => $row['aqueduct'],
-                'internet'              => $row['internet'],
-                'lives_with_father'     => $row['lives_with_father'],
-                'lives_with_mother'     => $row['lives_with_mother'],
-                'lives_with_siblings'   => $row['lives_with_siblings'],
-                'lives_with_other_relatives' => $row['lives_with_other_relatives'],
+                // 'zone'                  => $row['zone'],
+                // 'residence_city_id'     => $row['residence_city'],
+                // 'address'               => $row['address'],
+                // 'neighborhood'          => $row['neighborhood'],
+                // 'social_stratum'        => $row['social_stratum'],
+                // 'dwelling_type_id'      => $row['dwelling_type'],
+                // 'electrical_energy'     => $row['electrical_energy'],
+                // 'natural_gas'           => $row['natural_gas'],
+                // 'sewage_system'         => $row['sewage_system'],
+                // 'aqueduct'              => $row['aqueduct'],
+                // 'internet'              => $row['internet'],
+                // 'lives_with_father'     => $row['lives_with_father'],
+                // 'lives_with_mother'     => $row['lives_with_mother'],
+                // 'lives_with_siblings'   => $row['lives_with_siblings'],
+                // 'lives_with_other_relatives' => $row['lives_with_other_relatives'],
 
                 'school_year_create'    => $Y->id,
                 'headquarters_id'       => $row['headquarters'],
@@ -196,5 +196,13 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 'data_treatment' => TRUE
             ]);
         }
+    }
+
+    /* Tratamiento de datos */
+    private static function _username($name)
+    {
+        $name = Str::limit($name, 15, null);
+        $name = Str::words($name, 2, null);
+        return $name;
     }
 }
