@@ -94,7 +94,7 @@
         <section class="page-title-container">
             <div class="row">
                 <!-- Title Start -->
-                <div class="col-12 col-md-9">
+                <div class="col-12 col-md-8">
                     <h1 class="mb-1 pb-0 display-4" id="title">
                         {{ __('Student') . ' | ' . $student->getCompleteNames() }}</h1>
                     <div aria-label="breadcrumb">
@@ -125,7 +125,7 @@
                 @can('students.matriculate')
                     @if (null !== $Y->available)
                         <!-- Top Buttons Start -->
-                        <div class="col-12 col-md-3 d-flex align-items-start justify-content-end">
+                        <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
                             <!-- Matriculate Button Start -->
                             <a class="btn btn-outline-info" href="{{ route('students.matriculate', $student) }}">
                                 @if (null === $student->group_id)
@@ -161,7 +161,7 @@
 
                 @hasrole('STUDENT')
                     <!-- Top Buttons Start -->
-                    <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                    <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
                         <!-- Download Matriculate Button -->
                         <a class="btn btn-outline-info" href="{{ route('student.pdf.matriculate') }}">
                             {{ __('Download enrollment sheet') }}

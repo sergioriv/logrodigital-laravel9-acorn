@@ -627,7 +627,8 @@ class StudentController extends Controller
             'resourceStudyYears' => $resourceStudyYears->get(),
             'groupsStudent' => [],
             'nationalCountry' => NationalCountry::country(),
-            'coordinators' => $orientationOptions['coordinators']
+            'coordinators' => $orientationOptions['coordinators'],
+            'handbook'      => SchoolController::handbook(),
         ]);
     }
 
