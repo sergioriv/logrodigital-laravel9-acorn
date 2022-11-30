@@ -236,7 +236,7 @@
                 <td class="p-1 p-tb-0">
                     <div class="form-control">
                         <b>Fecha de Matrícula:</b>
-                        {{ $student->enrolled_date ?? 'no matriculado' }}
+                        {{ $student->enrolled_date ?? 'en Proceso de Matrícula' }}
                     </div>
                 </td>
                 <td class="p-1 p-tb-0">
