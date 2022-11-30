@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\AttendanceStudentController;
 use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GradeController;
-use App\Http\Controllers\GradesController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\OrientationController;
@@ -221,8 +221,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /* Route Teacher User */
     Route::get('mysubjects', [TeacherController::class, 'mysubjects'])->name('teacher.my.subjects');
     Route::get('mysubjects/{subject}', [TeacherController::class, 'mysubjects_show'])->name('teacher.my.subjects.show');
-
-
+    Route::post('attendance/{subject}', [AttendanceStudentController::class, 'subject'])->name('attendance.subject');
+    Route::get('attendance/absences', [AttendanceStudentController::class, 'absences_view']);
 
 
     /* Route Students */

@@ -67,13 +67,7 @@
         <script>
             new TimePicker(document.querySelector('#timeAdvice'));
 
-            // jQuery('[tracking="view"]').on('click', function () {
-            //     $.get(HOST + "student/tracking", {
-            //         tracking: $(this).prop('tracking-id');
-            //     }, function (data) {
-            //         $('#viewTracking').modal('show');
-            //     });
-            // });
+            /* Ver seguimiento */
             jQuery("[tracking='view']").click(function() {
                 var trackingId = $(this).attr('tracking-id');
                 $.get(HOST + '/students/tracking', {

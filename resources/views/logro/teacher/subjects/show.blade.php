@@ -11,58 +11,19 @@
 @endsection
 
 @section('js_page')
-<script src="/js/pages/pasteGrades.js"></script>
-    {{-- <script>
-        let data = "";
-
-        function pasteValues() {
-
-            var rows = data.split("\n");
-
-            let i = 1;
-            for (var y in rows) {
-
-                var cells = rows[y].split("\t");
-
-                for (var x in cells) {
-
-                    if (!isNaN(cells[x])) {
-                        $('#grade-' + i).val(cells[x]);
-                    }
-
-                    i++;
-
-                }
-            }
-
-        }
-
-        async function clickPaste() {
-            navigator.clipboard
-                .readText()
-                .then((value) => (initPasteValues(value)));
-        }
-
-        function initPasteValues(values) {
-            document.getElementById("qualify-period").reset();
-
-            data = values
-                .replaceAll(",", ".")
-                .replaceAll("\r", "");
-
-            pasteValues();
-        };
-
-        $('.qualify-period').bind("paste", function(e) {
-            document.getElementById("qualify-period").reset();
-
-            data = e.originalEvent.clipboardData.getData('text')
-                .replaceAll(",", ".")
-                .replaceAll("\r", "");
-
-            pasteValues();
-        });
-    </script> --}}
+    <script src="/js/pages/pasteGrades.js"></script>
+    <script>
+        jQuery("[absences='view']").click(function() {
+                var attendance = $(this).attr('attendance-id');
+                $.get(HOST + '/attendance/absences', {
+                    attendance: attendance
+                }, function(data) {
+                    $('#modalViewAbsences').html(data.title);
+                    $('#modalContentViewAbsences').html(data.content);
+                    $('#viewAbsences').modal('show');
+                })
+            });
+    </script>
 @endsection
 
 @section('content')
@@ -118,11 +79,16 @@
                             <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link active" data-bs-toggle="tab" href="#studentsTab" role="tab"
-                                        aria-selected="true">{{ __('Students') }} ({{ $subject->group->student_quantity }})</a>
+                                        aria-selected="true">{{ __('Students') }}
+                                        ({{ $subject->group->student_quantity }})</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" data-bs-toggle="tab" href="#periodsTab" role="tab"
                                         aria-selected="false">{{ __('Periods') }}</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#attendanceTab" role="tab"
+                                        aria-selected="false">{{ __('Attendance') }}</a>
                                 </li>
                             </ul>
                             <!-- Title Tabs End -->
@@ -135,13 +101,13 @@
                                     <!-- Students Content Tab Start -->
                                     <section class="scroll-section">
                                         <div class="card">
-                                            <div class="card-body">
+                                            <div class="card-body pt-2">
                                                 <table class="table table-striped mb-0">
                                                     <thead>
                                                         <tr>
                                                             <th>&nbsp;</th>
-                                                            <th class="text-center">Definitiva</th>
-                                                            <th class="text-center">Desempeño</th>
+                                                            <th class="text-center text-muted text-small text-uppercase p-0 pb-2">{{ __('Definitive') }}</th>
+                                                            <th class="text-center text-muted text-small text-uppercase p-0 pb-2">{{ __('Performance') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -150,20 +116,10 @@
                                                                 <td scope="row">
                                                                     <a href="{{ route('students.view', $studentG) }}"
                                                                         class="list-item-heading body">
-                                                                        {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
+                                                                        {{ $studentG->getCompleteNames() }}
                                                                     </a>
-
-                                                                    @if (1 === $studentG->inclusive)
-                                                                        <span
-                                                                            class="badge bg-outline-warning">{{ __('inclusive') }}</span>
-                                                                    @endif
-                                                                    @if ('new' === $studentG->status)
-                                                                        <span
-                                                                            class="badge bg-outline-primary">{{ __($studentG->status) }}</span>
-                                                                    @elseif ('repeat' === $studentG->status)
-                                                                        <span
-                                                                            class="badge bg-outline-danger">{{ __($studentG->status) }}</span>
-                                                                    @endif
+                                                                    {!! $studentG->tag() !!}
+                                                                    {{-- <x-tag-student :student="$studentG" /> --}}
                                                                 </td>
                                                                 <td class="text-center">
                                                                     @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->id, $subject) @endphp
@@ -187,7 +143,7 @@
                                 <!-- Periods Tab Start -->
                                 <div class="tab-pane fade" id="periodsTab" role="tabpanel">
 
-                                    <div class="mb-n2" id="periodsCard">
+                                    <section class="scroll-section mb-n2" id="periodsCard">
 
                                         @foreach ($periods as $period)
                                             <div class="card d-flex mt-2">
@@ -199,18 +155,21 @@
                                                             <div class="row g-2">
                                                                 <div class="col-md-6 text-md-start text-center">
                                                                     <div
-                                                                        class="font-weight-bold h3 m-0 @if(!$period->active()) text-light @endif">
+                                                                        class="font-weight-bold h3 m-0 @if (!$period->active()) text-light @endif">
                                                                         {{ $period->name }}
                                                                         <div class="icon-14">{{ $period->workload }}%</div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-4 col-md-2 lh-base h6 m-0 text-center @if(!$period->active()) text-light @endif">
+                                                                <div
+                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$period->active()) text-light @endif">
                                                                     {{ __('Start date') }}<br /><b>{{ $period->start }}</b>
                                                                 </div>
-                                                                <div class="col-4 col-md-2 lh-base h6 m-0 text-center @if(!$period->active()) text-light @endif">
+                                                                <div
+                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$period->active()) text-light @endif">
                                                                     {{ __('Enabled as from') }}<br /><b>{{ $period->dateUploadingNotes() }}</b>
                                                                 </div>
-                                                                <div class="col-4 col-md-2 lh-base h6 m-0 text-center @if(!$period->active()) text-light @endif">
+                                                                <div
+                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$period->active()) text-light @endif">
                                                                     {{ __('Deadline date') }}<br /><b>{{ $period->end }}</b>
                                                                 </div>
                                                             </div>
@@ -226,12 +185,14 @@
                                                             <div class="mb-3 d-flex justify-content-end">
                                                                 <x-button type="button" class="btn-outline-primary btn-sm"
                                                                     id="clickPaste">
-                                                                        {{ __('Paste values from Excel') }}
+                                                                    {{ __('Paste values from Excel') }}
                                                                 </x-button>
                                                             </div>
 
-                                                            <form action="{{ route('subject.qualify.students', $subject) }}"
-                                                                method="POST" id="qualify-period" class="qualify-period">
+                                                            <form
+                                                                action="{{ route('subject.qualify.students', $subject) }}"
+                                                                method="POST" id="qualify-period"
+                                                                class="qualify-period">
                                                                 @csrf
                                                         @endif
 
@@ -251,9 +212,8 @@
                                                             <tbody>
                                                                 @php $gradeNumber = 1; @endphp
                                                                 @foreach ($studentsGroup as $studentG)
-
                                                                     @php
-                                                                    $GxPS = \App\Http\Controllers\GradeController::forPeriod($subject->id, $period->id, $studentG->id)
+                                                                        $GxPS = \App\Http\Controllers\GradeController::forPeriod($subject->id, $period->id, $studentG->id);
                                                                     @endphp
 
                                                                     <tr>
@@ -292,7 +252,8 @@
                                                                                     name="students[{{ $studentG->code }}][conceptual]"
                                                                                     value="{{ $GxPS->conceptual ?? null }}" />
                                                                             @else
-                                                                                <div class="form-control bg-light">{{ $GxPS->conceptual ?? null }}</div>
+                                                                                <div class="form-control bg-light">
+                                                                                    {{ $GxPS->conceptual ?? null }}</div>
                                                                             @endif
                                                                         </td>
                                                                         <td scope="row" class="col-1">
@@ -305,7 +266,8 @@
                                                                                     name="students[{{ $studentG->code }}][procedural]"
                                                                                     value="{{ $GxPS->procedural ?? null }}" />
                                                                             @else
-                                                                                <div class="form-control bg-light">{{ $GxPS->procedural ?? null }}</div>
+                                                                                <div class="form-control bg-light">
+                                                                                    {{ $GxPS->procedural ?? null }}</div>
                                                                             @endif
                                                                         </td>
                                                                         <td scope="row" class="col-1">
@@ -318,12 +280,14 @@
                                                                                     name="students[{{ $studentG->code }}][attitudinal]"
                                                                                     value="{{ $GxPS->attitudinal ?? null }}" />
                                                                             @else
-                                                                                <div class="form-control bg-light">{{ $GxPS->attitudinal ?? null }}</div>
+                                                                                <div class="form-control bg-light">
+                                                                                    {{ $GxPS->attitudinal ?? null }}</div>
                                                                             @endif
                                                                         </td>
 
                                                                         <td scope="row" class="col-1">
-                                                                            <div class="form-control bg-light">{{ $GxPS->final ?? null }}</div>
+                                                                            <div class="form-control bg-light">
+                                                                                {{ $GxPS->final ?? null }}</div>
                                                                         </td>
                                                                     </tr>
                                                                     @if ($period->active())
@@ -345,10 +309,69 @@
                                             </div>
                                         @endforeach
 
-                                    </div>
+                                    </section>
 
                                 </div>
                                 <!-- Periods Tab End -->
+
+                                <!-- Attendance Tab Start -->
+                                <div class="tab-pane fade" id="attendanceTab" role="tabpanel">
+
+                                    <!-- Groups Buttons Start -->
+                                    <div class="row d-flex align-items-start justify-content-between">
+                                        <!-- Attendance Available Start -->
+                                        <div class="col-12 col-md-6 h5 text-md-start text-center">
+                                            {{ __('Attendance for this week') . ': ' . $attendanceAvailable }}</div>
+                                        <!-- Attendance Available End -->
+
+                                        <div class="col-12 col-md-6 text-md-end text-center">
+
+                                            <!-- Add Attendance Button Start -->
+                                            <button type="button"
+                                                @if ($attendanceAvailable) data-bs-toggle="modal"
+                                            data-bs-target="#addAttendance"
+                                            @else disabled @endif
+                                                class="btn btn-primary">
+                                                <span>{{ __('Take attendance') }}</span>
+                                            </button>
+                                            <!-- Add Attendance Button End -->
+                                        </div>
+                                    </div>
+                                    <!-- Groups Buttons End -->
+
+                                    <section class="scroll-section mt-2">
+                                        <div class="card">
+                                            <div class="card-body pt-2">
+                                                <table class="table table-striped mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                                            <th class="text-center text-muted text-small text-uppercase p-0 pb-2">{{ __('absences') }}</th>
+                                                            <th class="empty ps-spacing-sm pe-0">&nbsp;</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($attendances as $attendance)
+                                                            <tr>
+                                                                <td scope="row">{{ $attendance->created_at }}</td>
+                                                                <td class="text-center">{{ $attendance->absences->count() }}</td>
+                                                                <td class="text-end">
+                                                                    @if ($attendance->absences->count())
+                                                                    <x-button class="btn-sm btn-outline-primary"
+                                                                    absences='view' attendance-id="{{ $attendance->id }}">{{ __('see absences') }}</x-button>
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                </div>
+                                <!-- Attendance Tab End -->
+
 
                             </div>
                         </div>
@@ -358,4 +381,75 @@
             </div>
         </div>
     </div>
+
+    @if ($attendanceAvailable)
+        <!-- Modal Add Attendance -->
+        <div class="modal fade" id="addAttendance" aria-labelledby="modalAddAttendance" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddAttendance">
+                            {{ __('Take attendance') . ': ' . $subject->group->name . ' | ' . $title }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('attendance.subject', $subject) }}" id="addAttendanceForm" method="POST">
+                        @csrf
+
+                        <div class="modal-body">
+
+                            <table class="table table-striped mb-0">
+                                <tbody>
+                                    @foreach ($studentsGroup as $studentG)
+                                        <tr>
+                                            <td>
+                                                <label class="form-check custom-icon mb-0 unchecked-opacity-25">
+                                                    <input type="checkbox" class="form-check-input"
+                                                        name="studentsAttendance[{{ $studentG->code }}]" value="1"
+                                                        checked>
+                                                    <span class="form-check-label">
+                                                        <span class="content">
+                                                            <span class="heading mb-1 d-block lh-1-25">
+                                                                {{ $studentG->getCompleteNames() }}
+                                                                <x-tag-student :student="$studentG" />
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger"
+                                data-bs-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" class="btn btn-primary">
+                                {{ __('Save') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Modal View Absences -->
+    <div class="modal fade" id="viewAbsences" aria-labelledby="modalViewAbsences" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalViewAbsences"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContentViewAbsences"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary"
+                    data-bs-dismiss="modal">{{ __('Close') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

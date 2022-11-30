@@ -5,19 +5,14 @@ namespace App\Models;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Model;
 
-class Grade extends Model
+class Attendance extends Model
 {
     use Uuid;
 
     protected $fillable = [
         'teacher_subject_group_id',
-        'period_id',
-        'student_id',
-        'conceptual',
-        'procedural',
-        'attitudinal',
-        'final'
     ];
+
 
     /*
      * PARENTS
@@ -27,13 +22,14 @@ class Grade extends Model
         return $this->belongsTo(TeacherSubjectGroup::class)->with('teacher', 'subject', 'group');
     }
 
-    public function period()
+    /* CHILDREN */
+    public function students()
     {
-        return $this->belongsTo(Period::class);
+        return $this->hasMany(AttendanceStudent::class, 'attendance_id');
     }
 
-    public function student()
+    public function absences()
     {
-        return $this->belongsTo(Student::class);
+        return $this->students()->where('attend', 'N');
     }
 }

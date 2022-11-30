@@ -95,8 +95,6 @@ $title = __('Students') .' '. __('no-enrolled');
                             <tr>
                                 <th class="empty ps-spacing-sm pe-0">&nbsp;</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>
-                                {{-- <th class="text-muted text-small text-uppercase">{{ __('last names') }}</th> --}}
-                                {{-- <th class="text-muted text-small text-uppercase">{{ __('email') }}</th> --}}
                                 <th class="text-muted text-small text-uppercase">{{ __('headquarters') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study time') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study year') }}</th>
@@ -125,8 +123,6 @@ $title = __('Students') .' '. __('no-enrolled');
                                         <span class="badge bg-outline-danger">{{ __($student->status) }}</span>
                                     @endif
                                 </td>
-                                {{-- <td>{{ $student->getLastNames() }}</td> --}}
-                                {{-- <td>{{ $student->institutional_email }}</td> --}}
                                 <td>{{ $student->headquarters->name }}</td>
                                 <td>{{ $student->studyTime->name }}</td>
                                 <td>{{ $student->studyYear->name }}</td>

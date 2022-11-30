@@ -498,6 +498,13 @@
     "Paste values from Excel": "Pegar valores desde Excel",
     "The student (:STUDENT) doesn't belong to the group: :GROUP": "El estudiante (:STUDENT) no pertenece al grupo: :GROUP",
     "No active period": "No hay periodo activo",
+    "Definitive": "Definitiva",
+    "Performance": "Desempeño",
+    "Take attendance": "Tomar asistencia",
+    "Attendance for this week": "Toma de asistencia para esta semana",
+    "Attendance saved!": "Asistencia guardada!",
+    "absences": "inasistencias",
+    "see absences": "ver inasistencias",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "full name": "nombre completo",

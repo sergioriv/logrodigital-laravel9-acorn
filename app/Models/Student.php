@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,15 +38,15 @@ class Student extends Model
         'social_stratum',
         'dwelling_type_id', //* (Propia, Familiar, En arriendo, Usufructo, Posecion sin título)
         'neighborhood', //*
-            'electrical_energy', //*
-            'natural_gas', //*
-            'sewage_system', //*
-            'aqueduct', //*
-            'internet', //*
-            'lives_with_father', //*
-            'lives_with_mother', //*
-            'lives_with_siblings', //*
-            'lives_with_other_relatives', //*
+        'electrical_energy', //*
+        'natural_gas', //*
+        'sewage_system', //*
+        'aqueduct', //*
+        'internet', //*
+        'lives_with_father', //*
+        'lives_with_mother', //*
+        'lives_with_siblings', //*
+        'lives_with_other_relatives', //*
 
         'health_manager_id',
         'school_insurance',
@@ -149,7 +150,7 @@ class Student extends Model
      */
     public function schoolYearCreate()
     {
-        return $this->belongsTo(SchoolYear::class,'school_year_create');
+        return $this->belongsTo(SchoolYear::class, 'school_year_create');
     }
     public function headquarters()
     {
@@ -224,7 +225,7 @@ class Student extends Model
      */
     public function groupYear()
     {
-        return $this->hasOne(GroupStudent::class,'student_id','id');
+        return $this->hasOne(GroupStudent::class, 'student_id', 'id');
     }
 
     public function groupStudents()
@@ -239,15 +240,15 @@ class Student extends Model
 
     public function mother()
     {
-        return $this->hasOne(PersonCharge::class,'student_id')->where('kinship_id', 1);
+        return $this->hasOne(PersonCharge::class, 'student_id')->where('kinship_id', 1);
     }
     public function father()
     {
-        return $this->hasOne(PersonCharge::class,'student_id')->where('kinship_id', 2);
+        return $this->hasOne(PersonCharge::class, 'student_id')->where('kinship_id', 2);
     }
     public function tutor()
     {
-        return $this->hasOne(PersonCharge::class,'student_id')->where('kinship_id', '>', 2);
+        return $this->hasOne(PersonCharge::class, 'student_id')->where('kinship_id', '>', 2);
     }
     public function myTutorIs()
     {
@@ -272,8 +273,8 @@ class Student extends Model
     public function filesRequired()
     {
         return $this->hasMany(StudentFile::class, 'student_id', 'id')
-            ->with(['studentFileType' => fn($fileType) => $fileType->where('required', 1)])
-            ->whereHas('studentFileType', fn($fileType) => $fileType->where('required', 1));
+            ->with(['studentFileType' => fn ($fileType) => $fileType->where('required', 1)])
+            ->whereHas('studentFileType', fn ($fileType) => $fileType->where('required', 1));
     }
     public function reportBooks()
     {
@@ -306,12 +307,43 @@ class Student extends Model
 
     public function getCompleteNames()
     {
-        return "{$this->first_last_name} {$this->second_last_name} {$this->first_name} {$this->second_name}";
+        return " {$this->first_last_name} {$this->second_last_name} {$this->first_name} {$this->second_name} ";
     }
 
     public function age()
     {
         if (NULL !== $this->birthdate)
             return Carbon::createFromDate($this->birthdate)->diff(Carbon::now())->format('%y');
+    }
+
+    public function tag()
+    {
+
+        $this->tag = null;
+
+        if ($this->inclusive) {
+            $this->tag .= '<span class="badge bg-outline-warning">'. __('inclusive') .'</span>';
+        }
+
+        if ($this->status === 'new') {
+            $this->tag .= '<span class="badge bg-outline-primary">'. __('new') .'</span>';
+        } elseif ($this->status === 'repeat') {
+            $this->tag .= '<span class="badge bg-outline-danger">'. __('repeat') .'</span>';
+        }
+
+
+        return $this->tag;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('first_last_name')
+                ->orderBy('second_last_name')
+                ->orderBy('first_name')
+                ->orderBy('second_name');
+        });
     }
 }

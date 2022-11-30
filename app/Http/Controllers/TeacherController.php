@@ -8,6 +8,7 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\OnlyTeachersMiddleware;
 use App\Imports\TeachersImport;
+use App\Models\Attendance;
 use App\Models\City;
 use App\Models\Data\MaritalStatus;
 use App\Models\Data\RoleUser;
@@ -16,13 +17,16 @@ use App\Models\Data\TypeAppointment;
 use App\Models\Period;
 use App\Models\SchoolYear;
 use App\Models\Student;
+use App\Models\StudyYearSubject;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use App\Rules\MaritalStatusRule;
 use App\Rules\TypeAdminActRule;
 use App\Rules\TypeAppointmentRule;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
@@ -219,18 +223,34 @@ class TeacherController extends Controller
 
         $Y = SchoolYearController::current_year();
 
-        $studentsGroup = Student::where('group_id', $subject->group_id)
-            ->orderBy('first_last_name')
-            ->orderBy('second_last_name');
+        $studentsGroup = Student::where('group_id', $subject->group_id)->get();
+
 
         $periods = Period::where('study_time_id', $subject->group->study_time_id)->orderBy('ordering')->get();
 
 
+        $weeklyLoad = StudyYearSubject::where('school_year_id', $Y->id)
+                        ->where('study_year_id', $subject->group->study_year_id)
+                        ->where('subject_id', $subject->subject->id)
+                        ->first();
+
+        $attendancesWeek = Attendance::where('teacher_subject_group_id', $subject->id)
+                        ->whereBetween('created_at', [
+                            Carbon::now()->startOfWeek()->format('Y-m-d H:i:s'),
+                            Carbon::now()->endOfWeek()->format('Y-m-d H:i:s')
+                        ])->count();
+
+
+
+        $attendances = Attendance::where('teacher_subject_group_id', $subject->id)->get();
+
         return view('logro.teacher.subjects.show', [
             'Y' => $Y,
             'subject' => $subject,
-            'studentsGroup' => $studentsGroup->get(),
-            'periods' => $periods
+            'studentsGroup' => $studentsGroup,
+            'periods' => $periods,
+            'attendanceAvailable' => $weeklyLoad->hours_week - $attendancesWeek,
+            'attendances' => $attendances
         ]);
     }
 
