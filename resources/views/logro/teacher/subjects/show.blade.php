@@ -14,15 +14,15 @@
     <script src="/js/pages/pasteGrades.js"></script>
     <script>
         jQuery("[absences='view']").click(function() {
-                var attendance = $(this).attr('attendance-id');
-                $.get(HOST + '/attendance/absences', {
-                    attendance: attendance
-                }, function(data) {
-                    $('#modalViewAbsences').html(data.title);
-                    $('#modalContentViewAbsences').html(data.content);
-                    $('#viewAbsences').modal('show');
-                })
-            });
+            var attendance = $(this).attr('attendance-id');
+            $.get(HOST + '/attendance/absences', {
+                attendance: attendance
+            }, function(data) {
+                $('#modalViewAbsences').html(data.title);
+                $('#modalContentViewAbsences').html(data.content);
+                $('#viewAbsences').modal('show');
+            })
+        });
     </script>
 @endsection
 
@@ -106,8 +106,12 @@
                                                     <thead>
                                                         <tr>
                                                             <th>&nbsp;</th>
-                                                            <th class="text-center text-muted text-small text-uppercase p-0 pb-2">{{ __('Definitive') }}</th>
-                                                            <th class="text-center text-muted text-small text-uppercase p-0 pb-2">{{ __('Performance') }}</th>
+                                                            <th
+                                                                class="text-center text-muted text-small text-uppercase p-0 pb-2">
+                                                                {{ __('Definitive') }}</th>
+                                                            <th
+                                                                class="text-center text-muted text-small text-uppercase p-0 pb-2">
+                                                                {{ __('Performance') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -146,6 +150,8 @@
                                     <section class="scroll-section mb-n2" id="periodsCard">
 
                                         @foreach ($periods as $period)
+                                            @php $isActive = $period->active() || $period->permit ? TRUE : FALSE @endphp
+
                                             <div class="card d-flex mt-2">
                                                 <div class="d-flex flex-grow-1" role="button" data-bs-toggle="collapse"
                                                     data-bs-target="#period-{{ $period->id }}" aria-expanded="true"
@@ -155,21 +161,21 @@
                                                             <div class="row g-2">
                                                                 <div class="col-md-6 text-md-start text-center">
                                                                     <div
-                                                                        class="font-weight-bold h3 m-0 @if (!$period->active()) text-light @endif">
+                                                                        class="font-weight-bold h3 m-0 @if (!$isActive) text-light @endif">
                                                                         {{ $period->name }}
                                                                         <div class="icon-14">{{ $period->workload }}%</div>
                                                                     </div>
                                                                 </div>
                                                                 <div
-                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$period->active()) text-light @endif">
+                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
                                                                     {{ __('Start date') }}<br /><b>{{ $period->start }}</b>
                                                                 </div>
                                                                 <div
-                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$period->active()) text-light @endif">
+                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
                                                                     {{ __('Enabled as from') }}<br /><b>{{ $period->dateUploadingNotes() }}</b>
                                                                 </div>
                                                                 <div
-                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$period->active()) text-light @endif">
+                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
                                                                     {{ __('Deadline date') }}<br /><b>{{ $period->end }}</b>
                                                                 </div>
                                                             </div>
@@ -177,11 +183,11 @@
                                                     </div>
                                                 </div>
                                                 <div id="period-{{ $period->id }}"
-                                                    class="collapse @if ($period->active()) show @endif"
+                                                    class="collapse @if ($isActive) show @endif"
                                                     data-bs-parent="#periodsCard">
                                                     <div class="card-body accordion-content pt-0">
 
-                                                        @if ($period->active())
+                                                        @if ($isActive)
                                                             <div class="mb-3 d-flex justify-content-end">
                                                                 <x-button type="button" class="btn-outline-primary btn-sm"
                                                                     id="clickPaste">
@@ -194,6 +200,8 @@
                                                                 method="POST" id="qualify-period"
                                                                 class="qualify-period">
                                                                 @csrf
+
+                                                                <input type="text" name="period" value="{{ $period->id }}">
                                                         @endif
 
                                                         <table class="table table-striped mb-0">
@@ -221,29 +229,20 @@
                                                                             @can('students.info')
                                                                                 <a href="{{ route('students.show', $studentG) }}"
                                                                                     class="list-item-heading body">
-                                                                                    {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
+                                                                                    {{ $studentG->getCompleteNames() }}
                                                                                 </a>
                                                                             @else
                                                                                 <a href="{{ route('students.view', $studentG) }}"
                                                                                     class="list-item-heading body">
-                                                                                    {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
+                                                                                    {{ $studentG->getCompleteNames() }}
                                                                                 </a>
                                                                             @endcan
 
-                                                                            @if (1 === $studentG->inclusive)
-                                                                                <span
-                                                                                    class="badge bg-outline-warning">{{ __('inclusive') }}</span>
-                                                                            @endif
-                                                                            @if ('new' === $studentG->status)
-                                                                                <span
-                                                                                    class="badge bg-outline-primary">{{ __($studentG->status) }}</span>
-                                                                            @elseif ('repeat' === $studentG->status)
-                                                                                <span
-                                                                                    class="badge bg-outline-danger">{{ __($studentG->status) }}</span>
-                                                                            @endif
+                                                                            {!! $studentG->tag() !!}
+
                                                                         </td>
                                                                         <td scope="row" class="col-1">
-                                                                            @if ($period->active())
+                                                                            @if ($isActive)
                                                                                 <x-input type="number"
                                                                                     id="grade-{{ $gradeNumber }}"
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
@@ -257,7 +256,7 @@
                                                                             @endif
                                                                         </td>
                                                                         <td scope="row" class="col-1">
-                                                                            @if ($period->active())
+                                                                            @if ($isActive)
                                                                                 <x-input type="number"
                                                                                     id="grade-{{ $gradeNumber + 1 }}"
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
@@ -271,7 +270,7 @@
                                                                             @endif
                                                                         </td>
                                                                         <td scope="row" class="col-1">
-                                                                            @if ($period->active())
+                                                                            @if ($isActive)
                                                                                 <x-input type="number"
                                                                                     id="grade-{{ $gradeNumber + 2 }}"
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
@@ -290,14 +289,14 @@
                                                                                 {{ $GxPS->final ?? null }}</div>
                                                                         </td>
                                                                     </tr>
-                                                                    @if ($period->active())
+                                                                    @if ($isActive)
                                                                         @php $gradeNumber = $gradeNumber + 3 @endphp
                                                                     @endif
                                                                 @endforeach
                                                             </tbody>
                                                         </table>
 
-                                                        @if ($period->active())
+                                                        @if ($isActive)
                                                             <div class="mt-4 d-flex justify-content-end">
                                                                 <x-button type="submit" class="btn-primary">
                                                                     {{ __('Save') }}</x-button>
@@ -345,8 +344,11 @@
                                                 <table class="table table-striped mb-0">
                                                     <thead>
                                                         <tr>
-                                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
-                                                            <th class="text-center text-muted text-small text-uppercase p-0 pb-2">{{ __('absences') }}</th>
+                                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                                {{ __('date') }}</th>
+                                                            <th
+                                                                class="text-center text-muted text-small text-uppercase p-0 pb-2">
+                                                                {{ __('absences') }}</th>
                                                             <th class="empty ps-spacing-sm pe-0">&nbsp;</th>
                                                         </tr>
                                                     </thead>
@@ -354,11 +356,14 @@
                                                         @foreach ($attendances as $attendance)
                                                             <tr>
                                                                 <td scope="row">{{ $attendance->created_at }}</td>
-                                                                <td class="text-center">{{ $attendance->absences->count() }}</td>
+                                                                <td class="text-center">
+                                                                    {{ $attendance->absences->count() }}</td>
                                                                 <td class="text-end">
                                                                     @if ($attendance->absences->count())
-                                                                    <x-button class="btn-sm btn-outline-primary"
-                                                                    absences='view' attendance-id="{{ $attendance->id }}">{{ __('see absences') }}</x-button>
+                                                                        <x-button class="btn-sm btn-outline-primary"
+                                                                            absences='view'
+                                                                            attendance-id="{{ $attendance->id }}">
+                                                                            {{ __('see absences') }}</x-button>
                                                                     @endif
                                                                 </td>
                                                             </tr>
@@ -437,19 +442,19 @@
 
     <!-- Modal View Absences -->
     <div class="modal fade" id="viewAbsences" aria-labelledby="modalViewAbsences" data-bs-backdrop="static"
-    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalViewAbsences"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modalContentViewAbsences"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary"
-                    data-bs-dismiss="modal">{{ __('Close') }}</button>
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalViewAbsences"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalContentViewAbsences"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary"
+                        data-bs-dismiss="modal">{{ __('Close') }}</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection

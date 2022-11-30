@@ -50,6 +50,10 @@ class Period extends CastCreateModel
     {
         return $this->hasMany(Grade::class);
     }
+    public function permits()
+    {
+        return $this->hasMany(PeriodPermit::class);
+    }
 
 
     /* accesores */

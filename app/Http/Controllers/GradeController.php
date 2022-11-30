@@ -6,10 +6,13 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\OnlyTeachersMiddleware;
 use App\Models\Grade;
 use App\Models\Period;
+use App\Models\PeriodPermit;
 use App\Models\Student;
 use App\Models\TeacherSubjectGroup;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class GradeController extends Controller
 {
@@ -22,6 +25,7 @@ class GradeController extends Controller
     {
         $request->validate([
             'students' => ['required', 'array'],
+            'period' => ['required', Rule::exists('periods', 'id')],
             'students.*' => ['required']
         ]);
 
@@ -31,17 +35,12 @@ class GradeController extends Controller
         /* Verifica si PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
         $round = static::round($studyTime->round);
 
-        $periods = Period::where('study_time_id', $subject->group->study_time_id)->orderBy('ordering')->get();
+        /* Traemos el periodo para verificar si esta disponible para su calificacion */
+        $period = Period::where('id', $request->period)
+                ->withCount(['permits as permit' => fn ($p) => $p->teacher_subject_group_id = $subject->id])
+                ->first();
 
-        $period = new Period;
-        foreach ($periods as $p) {
-            if ($p->active()) {
-                $period = $p;
-                break;
-            }
-        }
-
-        if (is_null($period)) {
+        if (!$period->active() && !$period->permit) {
             return redirect()->back()->withErrors(__('No active period'));
         }
 
@@ -73,26 +72,41 @@ class GradeController extends Controller
 
             $gradeFinal = round($gradeFinal, $studyTime->decimal, $round);
 
+            try {
+                Grade::updateOrCreate(
+                    [
+                        'teacher_subject_group_id' => $subject->id,
+                        'period_id' => $period->id,
+                        'student_id' => $student->id
+                    ],
+                    [
+                        'conceptual'    => $gradeConceptual,
+                        'procedural'    => $gradeProcedural,
+                        'attitudinal'   => $gradeAttitudinal,
+                        'final'         => $gradeFinal
+                    ]
+                );
+            } catch (Exception $e) {
 
-            Grade::updateOrCreate(
-                [
-                    'teacher_subject_group_id' => $subject->id,
-                    'period_id' => $period->id,
-                    'student_id' => $student->id
-                ],
-                [
-                    'conceptual'    => $gradeConceptual,
-                    'procedural'    => $gradeProcedural,
-                    'attitudinal'   => $gradeAttitudinal,
-                    'final'         => $gradeFinal
-                ]
-            );
+                DB::rollBack();
+                return redirect()->back()->withErrors(__("The student (:STUDENT) doesn't belong to the group: :GROUP",
+                        [
+                            'STUDENT' => $code,
+                            'GROUP' => $group->name
+                        ]));
+            }
+
 
         }
 
         DB::commit();
 
-        Notify::success(__('Saved!'));
+        /* En caso de tener un permiso, este se eliminará */
+        PeriodPermit::where('teacher_subject_group_id', $subject->id)
+                ->where('period_id', $period->id)->delete();
+
+
+        Notify::success(__('Qualifications saved!'));
         return redirect()->route('teacher.my.subjects.show', $subject);
     }
 
