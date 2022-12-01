@@ -60,6 +60,9 @@ class AttendanceStudentController extends Controller
 
         foreach ($attendance->absences as $absence) {
             $content .= '<tr><td scope="row">';
+            if ($absence->attend === 'JUSTIFIED') {
+                $content .= '<span class="badge bg-outline-success">'. __('justified') .'</span>';
+            }
             $content .= $absence->student->getCompleteNames();
             $content .= $absence->student->tag();
             $content .= '</td></tr>';

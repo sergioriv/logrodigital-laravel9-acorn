@@ -30,6 +30,6 @@ class Attendance extends Model
 
     public function absences()
     {
-        return $this->students()->where('attend', 'N');
+        return $this->students()->whereIn('attend', ['N', 'JUSTIFIED']);
     }
 }
