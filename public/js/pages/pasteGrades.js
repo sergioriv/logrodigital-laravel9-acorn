@@ -10,6 +10,7 @@
 class PasteGrades {
     constructor() {
         this.data = "";
+        this.period = "";
 
         this._bindPaste();
         this._clickPaste();
@@ -18,12 +19,16 @@ class PasteGrades {
     _bindPaste() {
         const _this = this;
         $(".qualify-period").bind("paste", function (e) {
-            document.getElementById("qualify-period").reset();
+
+            _this.period = $(this).attr('id');
+
+            document.getElementById(_this.period).reset();
 
             _this.data = e.originalEvent.clipboardData
                 .getData("text")
                 .replaceAll(",", ".")
                 .replaceAll("\r", "");
+
 
             _this._pasteValues();
         });
@@ -35,6 +40,8 @@ class PasteGrades {
         const btnPaste = document.getElementById("clickPaste");
         btnPaste.addEventListener("click", async () => {
 
+            _this.period = btnPaste.getAttribute('data-period-id');
+
             /* Se solicitarán permision de Portapapeles al usuario */
             navigator.clipboard
                 .readText()
@@ -45,7 +52,7 @@ class PasteGrades {
     _initPasteValues(values) {
         const _this = this;
 
-        document.getElementById("qualify-period").reset();
+        document.getElementById(_this.period).reset();
 
         _this.data = values.replaceAll(",", ".").replaceAll("\r", "");
 
@@ -63,7 +70,7 @@ class PasteGrades {
 
             for (var x in cells) {
                 if (!isNaN(cells[x])) {
-                    $("#grade-" + i).val(cells[x]);
+                    $("#" + _this.period + "-grade-" + i).val(cells[x]);
                 }
 
                 i++;

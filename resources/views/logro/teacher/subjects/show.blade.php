@@ -190,18 +190,18 @@
                                                         @if ($isActive)
                                                             <div class="mb-3 d-flex justify-content-end">
                                                                 <x-button type="button" class="btn-outline-primary btn-sm"
-                                                                    id="clickPaste">
+                                                                    id="clickPaste" data-period-id="{{ $period->id }}">
                                                                     {{ __('Paste values from Excel') }}
                                                                 </x-button>
                                                             </div>
 
                                                             <form
                                                                 action="{{ route('subject.qualify.students', $subject) }}"
-                                                                method="POST" id="qualify-period"
+                                                                method="POST" id="{{ $period->id }}"
                                                                 class="qualify-period">
                                                                 @csrf
 
-                                                                <input type="hidden" name="period" value="{{ $period->id }}">
+                                                                <input type="text" name="period" value="{{ $period->id }}">
                                                         @endif
 
                                                         <table class="table table-striped mb-0">
@@ -244,7 +244,7 @@
                                                                         <td scope="row" class="col-1">
                                                                             @if ($isActive)
                                                                                 <x-input type="number"
-                                                                                    id="grade-{{ $gradeNumber }}"
+                                                                                    id="{{ $period->id }}-grade-{{ $gradeNumber }}"
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
@@ -258,7 +258,7 @@
                                                                         <td scope="row" class="col-1">
                                                                             @if ($isActive)
                                                                                 <x-input type="number"
-                                                                                    id="grade-{{ $gradeNumber + 1 }}"
+                                                                                    id="{{ $period->id }}-grade-{{ $gradeNumber + 1 }}"
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
@@ -272,7 +272,7 @@
                                                                         <td scope="row" class="col-1">
                                                                             @if ($isActive)
                                                                                 <x-input type="number"
-                                                                                    id="grade-{{ $gradeNumber + 2 }}"
+                                                                                    id="{{ $period->id }}-grade-{{ $gradeNumber + 2 }}"
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
