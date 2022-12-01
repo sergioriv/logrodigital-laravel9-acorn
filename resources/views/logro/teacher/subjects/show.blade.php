@@ -11,7 +11,7 @@
 @endsection
 
 @section('js_page')
-    <script src="/js/pages/pasteGrades.js"></script>
+    <script src="/js/pages/pasteGrades.js?d=1669929322185"></script>
     <script>
         jQuery("[absences='view']").click(function() {
             var attendance = $(this).attr('attendance-id');
