@@ -4,13 +4,27 @@
 @extends('layout', ['title' => $title])
 
 @section('css')
+    <link rel="stylesheet" href="/css/vendor/select2.min.css" />
+    <link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" />
 @endsection
 
 @section('js_vendor')
     <script src="/js/cs/responsivetab.js"></script>
+    <script src="/js/vendor/select2.full.min.js"></script>
 @endsection
 
 @section('js_page')
+    <script src="/js/forms/select2.js"></script>
+    <script>
+        jQuery('[modal-period-permit]').click(function() {
+            let subjectId = $(this).data('subject-id');
+
+            if (subjectId) {
+                $('#subject-permit-id').val(subjectId);
+                $('#addPeriodPermit').modal('show');
+            }
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -199,16 +213,15 @@
                                                         <table class="table table-striped">
                                                             <tbody>
                                                                 @foreach ($area->subjects as $subject)
+                                                                    @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($group->id, $subject->id) @endphp
                                                                     <tr>
-                                                                        <td scope="row" class="col-4">
+                                                                        <td scope="row">
                                                                             {{ $subject->resourceSubject->name }}
                                                                         </td>
-                                                                        <td class="col-6">
-                                                                            @foreach ($subject->teacherSubjectGroups as $teacher_subject)
-                                                                                @if ($loop->first)
-                                                                                    {{ $teacher_subject->teacher->getFullName() }}
-                                                                                @endif
-                                                                            @endforeach
+                                                                        <td>
+                                                                            @if ($TSG)
+                                                                                {{ $TSG->teacher->getFullName() ?? null }}
+                                                                            @endif
                                                                         </td>
                                                                         <td class="col-1 text-center">
                                                                             {{ $subject->studyYearSubject->hours_week }}
@@ -219,7 +232,32 @@
                                                                             @endif
                                                                         </td>
                                                                         <td class="col-1 text-center">
-                                                                            {{ $subject->studyYearSubject->course_load }}%</td>
+                                                                            {{ $subject->studyYearSubject->course_load }}%
+                                                                        </td>
+                                                                        @hasrole('COORDINATOR')
+                                                                            <td class="col-1 text-end">
+                                                                                <!-- Dropdown Button Start -->
+                                                                                <div class="ms-1">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                                        data-bs-offset="0,3"
+                                                                                        data-bs-toggle="dropdown"
+                                                                                        aria-haspopup="true" aria-expanded="false"
+                                                                                        data-submenu>
+                                                                                        <i data-acorn-icon="more-vertical"></i>
+                                                                                    </button>
+                                                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                                                        <x-dropdown-item type="button"
+                                                                                            modal-period-permit
+                                                                                            data-subject-id="{{ $TSG->id }}">
+                                                                                            {{-- <i data-acorn-icon="download"></i> --}}
+                                                                                            <span>{{ __('Activate note upload') }}</span>
+                                                                                        </x-dropdown-item>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- Dropdown Button End -->
+                                                                            </td>
+                                                                        @endhasrole
                                                                     </tr>
                                                                 @endforeach
                                                             </tbody>
@@ -241,4 +279,54 @@
             </div>
         </div>
     </div>
+
+    @hasrole('COORDINATOR')
+        <!-- Modal Period Permit -->
+        <div class="modal fade" id="addPeriodPermit" aria-labelledby="modalPeriodPermit" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalPeriodPermit">
+                            {{ __('Activate note upload') }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('period.permit') }}" id="addPeriodPermitForm" method="POST">
+                        @csrf
+
+                        <input type="hidden" id="subject-permit-id" name="subject-permit-id" value="">
+
+                        <div class="modal-body">
+
+                            <div class="alert alert-info">
+                                <i data-acorn-icon="notification"></i>
+                                {{ __('Extemporaneous uploading of grades for the assigned teacher') }}
+                            </div>
+
+                            <div class="form-group">
+
+                                <x-label>{{ __('Period') }}</x-label>
+                                <select logro='select2' name="period-permit">
+                                    <option label="&nbsp;"></option>
+                                    @foreach ($periods as $period)
+                                    <option value="{{ $period->id }}">
+                                        {{ $period->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger"
+                                data-bs-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" class="btn btn-primary">
+                                {{ __('Save') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endhasrole
 @endsection

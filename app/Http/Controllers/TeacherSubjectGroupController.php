@@ -81,4 +81,14 @@ class TeacherSubjectGroupController extends Controller
     {
         return SchoolYear::select('id','name')->where('available',TRUE)->first();
     }
+
+
+    /* Extrae para logro.group.show */
+    public static function forSubject($group_id, $subject_id)
+    {
+        $Y = SchoolYearController::current_year();
+        return TeacherSubjectGroup::where('school_year_id', $Y->id)
+            ->where('group_id', $group_id)
+            ->where('subject_id', $subject_id)->first();
+    }
 }

@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class OnlyTeachersMiddleware
+class OnlyCoordinationMiddleware
 {
 
     /**
@@ -21,7 +21,7 @@ class OnlyTeachersMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if( !Auth::user()->hasRole(RoleUser::TEACHER_ROL) )
+        if( !Auth::user()->hasRole(RoleUser::COORDINATION_ROL) )
         {
             Notify::fail(__('Not allowed'));
             return redirect()->back();

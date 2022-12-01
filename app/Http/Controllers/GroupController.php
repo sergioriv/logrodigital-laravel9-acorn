@@ -10,6 +10,7 @@ use App\Models\Data\RoleUser;
 use App\Models\Group;
 use App\Models\GroupStudent;
 use App\Models\Headquarters;
+use App\Models\Period;
 use App\Models\ResourceArea;
 use App\Models\Student;
 use App\Models\StudyTime;
@@ -149,12 +150,21 @@ class GroupController extends Controller
             ->orderBy('second_last_name');
         $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
 
+
+        $periods = NULL;
+        if (UserController::role_auth() === RoleUser::COORDINATION_ROL) {
+            $periods = Period::select('id', 'name')->where('school_year_id', $Y->id)
+                ->where('study_time_id', $group->study_time_id)
+                ->orderBy('ordering')->get();
+        }
+
         return view('logro.group.show')->with([
             'Y' => $Y,
             'group' => $group,
             'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
             'studentsGroup' => $studentsGroup->get(),
-            'areas' => $areas
+            'areas' => $areas,
+            'periods' => $periods
         ]);
     }
 
@@ -318,38 +328,6 @@ class GroupController extends Controller
         return redirect()->route('group.show', $group);
     }
 
-    /* public function teacher_update(Group $group, Request $request)
-    {
-        $Y = SchoolYearController::current_year();
-
-        foreach ($request->teachers as $teacher_subject) {
-            if (NULL !== $teacher_subject) {
-
-                [$create, $subject, $teacher] = explode('~', $teacher_subject);
-
-                $uuidTeacher = Teacher::select('id')->find($teacher);
-
-                if ('null' === $create) {
-                    TeacherSubjectGroup::create([
-                        'school_year_id' => $Y->id,
-                        'teacher_id' => $uuidTeacher->id,
-                        'subject_id' => $subject,
-                        'group_id' => $group->id
-                    ]);
-                } else {
-                    echo 'update | ';
-                    $teacherGroup = TeacherSubjectGroup::find($create);
-                    $teacherGroup->update([
-                        'teacher_id' => $uuidTeacher->id
-                    ]);
-                }
-            }
-        }
-
-        Notify::success( __('Group updated!') );
-        return redirect()->route('group.show', $group);
-    } */
-
     private function subjects_teacher($Y_id, $sy_id, $g_id)
     {
         $fn_sy = fn ($sy) =>
@@ -366,6 +344,7 @@ class GroupController extends Controller
             ->whereHas('studyYearSubject', $fn_sy)
             ->with(['studyYearSubject' => $fn_sy])
 
+            /* Pendiente por eliminación */
             ->with(['teacherSubjectGroups' => $fn_tsg]);
 
         return ResourceArea::with(['subjects' => $fn_sb])

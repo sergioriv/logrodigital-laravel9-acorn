@@ -201,7 +201,7 @@
                                                                 class="qualify-period">
                                                                 @csrf
 
-                                                                <input type="text" name="period" value="{{ $period->id }}">
+                                                                <input type="hidden" name="period" value="{{ $period->id }}">
                                                         @endif
 
                                                         <table class="table table-striped mb-0">

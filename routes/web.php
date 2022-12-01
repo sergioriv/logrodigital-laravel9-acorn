@@ -9,6 +9,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\OrientationController;
 use App\Http\Controllers\PeriodController;
+use App\Http\Controllers\PeriodPermitController;
 use App\Http\Controllers\PersonChargeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceAreaController;
@@ -204,6 +205,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('groups/{group}/teachers', [GroupController::class, 'teacher_update'])->name('group.teachers.update');
     Route::get('groups/{group}/matriculate', [GroupController::class, 'matriculate'])->name('group.matriculate');
     Route::put('groups/{group}/matriculate', [GroupController::class, 'matriculate_update'])->name('group.matriculate.update');
+
+
+    /* Permit Period */
+    Route::post('subject/permit', [PeriodPermitController::class, 'store'])->name('period.permit');
+
 
     /* Qualification */
     Route::post('mysubjects/{subject}/qualify', [GradeController::class, 'store'])->name('subject.qualify.students');
