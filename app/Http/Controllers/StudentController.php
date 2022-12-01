@@ -746,12 +746,18 @@ class StudentController extends Controller
             $request->birth_city = NULL;
         }
 
-        /* COMPROBACION DE DCERTIFICADO DE DISCAPACIDAD */
-        if ($request->hasFile('disability_certificate') && $request->disability > 1) {
-            $disability_file = self::upload_disability_certificate($request, $student);
+        /* COMPROBACION DE CERTIFICADO DE DISCAPACIDAD */
+        /* OLD METHODE
+         * if ($request->hasFile('disability_certificate') && $request->disability > 1) {
+            return $disability_file = self::upload_disability_certificate($request, $student);
             if (FALSE === $disability_file) {
                 $request->disability = NULL;
             }
+        } */
+        if ($request->disability > 1) {
+
+            StudentFileController::upload_disability_file($request, $student);
+
         }
 
         $student->update([
@@ -979,7 +985,7 @@ class StudentController extends Controller
         return $c->count();
     }
 
-    private function upload_disability_certificate($request, $student)
+    /* private function upload_disability_certificate($request, $student)
     {
         $request->file_type = StudentFileType::select('id')->where('inclusive', 1)->first()->id; //certificado de discapacidad
         $path_file = StudentFileController::upload_file($request, 'disability_certificate', $student->id);
@@ -1016,7 +1022,7 @@ class StudentController extends Controller
         }
 
         return false;
-    }
+    } */
 
 
     /*
