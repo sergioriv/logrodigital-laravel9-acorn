@@ -93,7 +93,6 @@ $title = __('Students') .' '. __('no-enrolled');
                     <table id="datatable_students" class="data-table " logro="datatable"> {{-- nowrapw-100 --}}
                         <thead>
                             <tr>
-                                <th class="empty ps-spacing-sm pe-0">&nbsp;</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('headquarters') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study time') }}</th>
@@ -104,12 +103,10 @@ $title = __('Students') .' '. __('no-enrolled');
                         <tbody>
                             @foreach ($students as $student)
                             <tr>
-                                <td class="ps-spacing-sm pe-0">
-                                    @if ($countFileTypes > $student->filesRequired()->count())
-                                        <i title="{{ __("missing required documents") }}" class="icon bi-file-earmark-excel text-danger"></i>
-                                    @endif
-                                </td>
                                 <td>
+                                    @if ($countFileTypes <= $student->filesRequired()->count())
+                                        <div class="badge bg-success">{{ __('Complete documents') }}</div>
+                                    @endif
                                     <a href="{{ route('students.show', $student) }}"
                                         class="list-item-heading body">
                                         {{ $student->getCompleteNames() }}

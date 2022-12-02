@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\FormatDate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class StudentFile extends CastCreateModel
+class StudentFile extends Model
 {
     use HasFactory;
+    use FormatDate;
 
     protected $fillable = [
         'student_id',

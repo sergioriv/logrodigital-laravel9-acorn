@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\FormatDate;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-
-class TeacherSubjectGroup extends CastCreateModel
+class TeacherSubjectGroup extends Model
 {
     use HasFactory;
     use Uuid;
+    use FormatDate;
 
     protected $fillable = [
         'school_year_id',

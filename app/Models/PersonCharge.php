@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\FormatDate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class PersonCharge extends CastCreateModel
+class PersonCharge extends Model
 {
     use HasFactory;
+    use FormatDate;
 
     protected $table = 'persons_charge';
 

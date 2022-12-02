@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\FormatDate;
 use App\Traits\Uuid;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-
-class Teacher extends CastCreateModel
+class Teacher extends Model
 {
     use HasFactory;
     use Uuid;
+    use FormatDate;
 
     protected $primaryKey = 'uuid';
 

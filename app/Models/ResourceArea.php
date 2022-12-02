@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\FormatDate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-
-class ResourceArea extends CastCreateModel
+class ResourceArea extends Model
 {
     use HasFactory;
+    use FormatDate;
 
     protected $fillable = [
         'name'

@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\FormatDate;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-
-class School extends CastCreateModel
+class School extends Model
 {
     use HasFactory;
+    use FormatDate;
 
     public $table = 'school';
 

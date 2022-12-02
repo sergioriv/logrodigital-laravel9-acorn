@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\StudyYear as ModelsStudyYear;
+use App\Traits\FormatDate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-
-class StudyYearSubject extends CastCreateModel
+class StudyYearSubject extends Model
 {
     use HasFactory;
+    use FormatDate;
 
     public $timestamps = false;
 

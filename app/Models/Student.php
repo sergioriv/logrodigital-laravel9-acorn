@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\FormatDate;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     use HasFactory;
+    use FormatDate;
 
     protected $fillable = [
         'id',
@@ -126,10 +128,6 @@ class Student extends Model
         'wizard_person_charge',
         'wizard_personal_info',
         'wizard_complete'
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime:Y-m-d h:i:s'
     ];
 
 
@@ -273,8 +271,7 @@ class Student extends Model
     public function filesRequired()
     {
         return $this->hasMany(StudentFile::class, 'student_id', 'id')
-            ->with(['studentFileType' => fn ($fileType) => $fileType->where('required', 1)])
-            ->whereHas('studentFileType', fn ($fileType) => $fileType->where('required', 1));
+            ->whereHas('studentFileType', fn ($sft) => $sft->where('required', 1));
     }
     public function reportBooks()
     {

@@ -319,7 +319,7 @@
                                     <!-- Groups Buttons Start -->
                                     <div class="row d-flex align-items-start justify-content-between">
                                         <!-- Attendance Available Start -->
-                                        <div class="col-12 col-md-6 h5 text-md-start text-center">
+                                        <div class="col-12 col-md-6 h5 text-md-start text-center align-self-center">
                                             {{ __('Attendance for this week') . ': ' . $attendanceAvailable }}</div>
                                         <!-- Attendance Available End -->
 
@@ -355,7 +355,7 @@
                                                     <tbody>
                                                         @foreach ($attendances as $attendance)
                                                             <tr>
-                                                                <td scope="row">{{ $attendance->created_at }}</td>
+                                                                <td scope="row" class="text-capitalize">{{ $attendance->created_at }}</td>
                                                                 <td class="text-center">
                                                                     {{ $attendance->absences->count() }}</td>
                                                                 <td class="text-end">

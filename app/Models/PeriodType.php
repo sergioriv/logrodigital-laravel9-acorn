@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\FormatDate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-
-class PeriodType extends CastCreateModel
+class PeriodType extends Model
 {
     use HasFactory;
+    use FormatDate;
 
     public $timestamps = false;
 

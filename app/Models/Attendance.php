@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\FormatDate;
 use App\Traits\Uuid;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
 {
     use Uuid;
+    use FormatDate;
 
     protected $fillable = [
         'teacher_subject_group_id',
