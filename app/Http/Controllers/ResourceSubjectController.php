@@ -12,7 +12,7 @@ class ResourceSubjectController extends Controller
     public function __construct()
     {
         $this->middleware('can:resourceSubjects.index');
-        $this->middleware('can:resourceSubjects.edit')->only('create','store');
+        $this->middleware('can:resourceSubjects.edit')->only('create', 'store');
     }
     /**
      * Display a listing of the resource.
@@ -21,13 +21,15 @@ class ResourceSubjectController extends Controller
      */
     public function index()
     {
-        return view('logro.resource.subject.index');
+        return view('logro.resource.subject.index', [
+            'subjects' => ResourceSubject::all()
+        ]);
     }
 
-    public function data()
+    /* public function data()
     {
         return ['data' => ResourceSubject::orderBy('name')->get()];
-    }
+    } */
 
     public function create()
     {
@@ -37,15 +39,24 @@ class ResourceSubjectController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', Rule::unique('resource_subjects')],
+            'descriptive_name' => ['required', 'string', Rule::unique('resource_subjects','name')],
+            'public_name' => ['required', 'string'],
+            'specialty' => ['nullable', 'boolean']
         ]);
 
         ResourceSubject::create([
-            'name' => $request->name
+            'name' => $request->descriptive_name,
+            'public_name' => $request->public_name,
+            'specialty' => $request->specialty ? TRUE : NULL
         ]);
 
-        Notify::success( __('Subject created!') );
+
+        if ($request->specialty ? TRUE : NULL) {
+            Notify::success(__('Specialty created!'));
+        } else {
+            Notify::success(__('Subject created!'));
+        }
+
         return redirect()->route('resourceSubject.index');
     }
-
 }

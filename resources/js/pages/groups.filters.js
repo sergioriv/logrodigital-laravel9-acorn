@@ -34,6 +34,9 @@ function template_card_group(group)
         } else {
             template += `<span>&nbsp;</span>`
         }
+        if (group.specialty){
+            template += `<span class="badge text-primary icon-12 me-2 position-absolute e-n2 t-2 z-index-1"><i class="icon bi-star-fill"></i></span>`
+        }
         template += `</small><small class="mt-2 text-muted">` + group.student_quantity + ` estudiantes</small>`
         template += `</div></a></div></div>`
     return template;

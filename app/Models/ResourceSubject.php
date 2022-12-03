@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\FormatDate;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,8 +13,26 @@ class ResourceSubject extends Model
     use FormatDate;
 
     protected $fillable = [
-        'name'
+        'name',
+        'public_name',
+        'specialty'
     ];
+
+    private function isSpecialty()
+    {
+        if ($this->specialty)
+            return ' <i class="icon bi-star-fill"></i> ';
+
+        return null;
+    }
+
+    public function name(): Attribute
+    {
+        $isSpecialty = $this->isSpecialty();
+        return Attribute::make(
+            get: fn ($v) => $isSpecialty . $v
+        );
+    }
 
 
     /*

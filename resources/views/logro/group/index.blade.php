@@ -119,6 +119,9 @@ $title = __('Groups');
                     <section class="row g-3 row-cols-3 row-cols-md-4 row-cols-lg-6" id="groupsList">
                         @foreach ($groups as $group)
                         <x-group.card :group="$group">
+                            @if ($group->specialty)
+                            <span class="badge text-primary icon-12 me-2 position-absolute e-n2 t-2 z-index-1"><i class="icon bi-star-fill"></i></span>
+                            @endif
                             <small class="mt-2 text-muted">{{ $group->student_quantity .' '. __("students") }}</small>
                         </x-group.card>
                         @endforeach

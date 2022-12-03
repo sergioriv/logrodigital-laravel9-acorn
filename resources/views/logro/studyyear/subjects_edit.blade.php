@@ -58,7 +58,7 @@ $title = $studyYear->name;
                                                                 value="{{ $subject->resource_area_id . '~' . $subject->id }}~{{ $subject->studyYearSubject->id ?? 'null' }}"
                                                                 data-subject="{{ $subject->id }}" class="form-check-input"
                                                                 @if (null !== $subject->studyYearSubject) checked @endif>
-                                                            <span>{{ $subject->resourceSubject->name }}</span>
+                                                            <span>{!! $subject->resourceSubject->name !!}</span>
                                                         </label>
                                                     </td>
                                                     <td class="w-30">

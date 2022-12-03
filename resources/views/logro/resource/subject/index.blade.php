@@ -15,7 +15,7 @@ $title = __('Subjects list');
 
 @section('js_page')
 <script src="/js/cs/datatable.extend.js"></script>
-<script src="/js/plugins/datatable/subjects_datatable.ajax.js"></script>
+<script src="/js/plugins/datatable/datatable_standard.ajax.js"></script>
 @endsection
 
 @section('content')
@@ -70,13 +70,23 @@ $title = __('Subjects list');
 
                 <!-- Table Start -->
                 <div class="data-table-responsive-wrapper">
-                    <table id="datatable_subjects" class="data-table nowrap w-100">
+                    <table id="datatable_subjects" class="data-table" logro="datatable">
                         <thead>
                             <tr>
-                                <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('Descriptive name') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('Public name') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('Created at') }}</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            @foreach ($subjects as $subject)
+                                <tr>
+                                    <td>{!! $subject->name !!}</td>
+                                    <td>{{ $subject->public_name }}</td>
+                                    <td class="text-small">{{ $subject->created_at }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
                 <!-- Table End -->

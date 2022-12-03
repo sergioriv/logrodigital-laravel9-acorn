@@ -250,7 +250,11 @@ return [
         'file_type' => 'tipo de documento',
         'priority_coordinator' => 'prioridad del coordinador',
         'studyTime' => 'jornada',
-        'studyYear' => 'año de estudio'
+        'studyYear' => 'año de estudio',
+
+        'descriptive_name' => 'nombre descriptivo',
+        'public_name' => 'nombre público',
+        'specialty' => 'de especialidad',
     ],
 
 ];

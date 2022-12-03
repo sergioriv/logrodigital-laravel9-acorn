@@ -54,7 +54,7 @@ $title = $studyYear->name;
                             <tbody>
                                 @foreach ($area->subjects as $subject)
                                 <tr>
-                                    <td class="w-50">{{ $subject->resourceSubject->name }}</td>
+                                    <td class="w-50">{!! $subject->resourceSubject->name !!}</td>
                                     <td class="w-25">{{ $subject->studyYearSubject->hours_week }}
                                         @if (1 === $subject->studyYearSubject->hours_week)
                                             {{ __("hour") }}

@@ -2333,7 +2333,7 @@
                                                         @if ($groupS->school_year_id === $studyYearSubject->school_year_id)
                                                             <div class="mb-3">
                                                                 <h2 class="small-title">
-                                                                    {{ $studyYearSubject->subject->resourceSubject->name }}
+                                                                    {{ $studyYearSubject->subject->resourceSubject->public_name }}
                                                                     -
 
                                                                     @foreach ($studyYearSubject->subject->teacherSubjectGroups as $groupTSG)

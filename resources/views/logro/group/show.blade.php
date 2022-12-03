@@ -216,7 +216,7 @@
                                                                     @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($group->id, $subject->id) @endphp
                                                                     <tr>
                                                                         <td scope="row">
-                                                                            {{ $subject->resourceSubject->name }}
+                                                                            {!! $subject->resourceSubject->name !!}
                                                                         </td>
                                                                         <td>
                                                                             @if ($TSG)

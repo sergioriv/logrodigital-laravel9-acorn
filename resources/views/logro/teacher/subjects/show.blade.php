@@ -1,5 +1,5 @@
 @php
-    $title = $subject->subject->resourceSubject->name;
+    $title = $subject->subject->resourceSubject->public_name;
 @endphp
 @extends('layout', ['title' => $title])
 

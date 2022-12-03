@@ -114,7 +114,7 @@ $title = __('Areas & Subjects');
                                             <span
                                                 class="logro-tag badge bg-outline-primary hover-bg-primary text-uppercase input_subject"
                                                 data-subject="{{ $subject->id }}">
-                                                {{ $subject->name }}
+                                                {!! $subject->name !!}
                                                 <input readonly type="hidden" name="subjects[]" value="null~{{ $subject->id }}">
                                             </span>
                                             @endforeach
@@ -136,7 +136,7 @@ $title = __('Areas & Subjects');
                                             @if ($subject_area->resource_area_id == $area->id)
                                             <span class="logro-tag badge bg-muted text-uppercase disabled"
                                                 data-id="{{ $subject_area->resourceSubject->id }}">
-                                                {{ $subject_area->resourceSubject->name }}
+                                                {!! $subject_area->resourceSubject->name !!}
                                             </span>
                                             @endif
                                             @endforeach
@@ -153,7 +153,7 @@ $title = __('Areas & Subjects');
                     @if (count($resourceSubjects) > 0)
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="confirm_save" />
-                        <label class="form-check-label" for="confirm_save">Este proceso es irreversible. Por favor confirme que está seguro que de guardar.</label>
+                        <label class="form-check-label" for="confirm_save">{{ __('This process is irreversible. Please confirm that you are sure to save.') }}</label>
                     </div>
 
                     <x-button type="submit" disabled id="save_areas_subjects" class="btn-primary">{{ __('Save') .' '. __('Areas & Subjects') }}</x-button>

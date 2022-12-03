@@ -239,7 +239,30 @@ html[data-dimension="mobile"] .logro-badge-right-bottom {
     border: 1px solid var(--separator);
 }
 
-
+/*
+ * Check Custon Star
+ */
+ .form-check.custom-icon.icon-star .form-check-input {
+    font-size: 18px;
+    padding: 0;
+}
+.form-check.custom-icon.icon-star .form-check-input:not(:checked):after {
+    font-family: "CS-Interface" !important;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    opacity: 1;
+    content: "\e90a" !important;
+}
+.form-check.custom-icon.icon-star .form-check-input:checked:after {
+    content: "\e90b" !important;
+}
+.form-check.custom-icon.icon-star .form-check-input[type=radio]:checked:after {
+    content: "\e90b" !important;
+}
 
 /*
  * DataTables Start

@@ -18,7 +18,8 @@ class Group extends Model
         'study_year_id',
         'teacher_id',
         'name',
-        'student_quantity'
+        'student_quantity',
+        'specialty'
     ];
 
     /*

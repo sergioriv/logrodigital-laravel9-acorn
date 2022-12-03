@@ -110,21 +110,27 @@ class GroupController extends Controller
             'study_time' => ['required', Rule::exists('study_times', 'id')],
             'study_year' => ['required', Rule::exists('study_years', 'id')],
             'group_director' => ['nullable', Rule::exists('teachers', 'uuid')],
-            'name' => ['required', 'string']
+            'name' => ['required', 'string'],
+            'specialty' => ['required', 'in:no,yes']
         ]);
 
         $Y = SchoolYearController::current_year();
 
         $uuidTeacher = Teacher::select('id')->find($request->group_director)->id ?? null;
 
-        Group::create([
-            'school_year_id' => $Y->id,
-            'headquarters_id' => $request->headquarters,
-            'study_time_id' => $request->study_time,
-            'study_year_id' => $request->study_year,
-            'teacher_id' => $uuidTeacher,
-            'name' => $request->name,
-        ]);
+        try {
+            Group::create([
+                'school_year_id' => $Y->id,
+                'headquarters_id' => $request->headquarters,
+                'study_time_id' => $request->study_time,
+                'study_year_id' => $request->study_year,
+                'teacher_id' => $uuidTeacher,
+                'name' => $request->name,
+                'specialty' => $request->specialty === 'yes' ? TRUE : NULL
+            ]);
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors(__('Unexpected Error'));
+        }
 
         Notify::success(__('Group created!'));
         return redirect()->route('group.index');

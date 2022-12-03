@@ -47,7 +47,7 @@
                                         <tbody>
                                             @foreach ($area->subjects as $subject)
                                                 <tr>
-                                                    <td scope="row" class="col-4">{{ $subject->resourceSubject->name }}
+                                                    <td scope="row" class="col-4">{!! $subject->resourceSubject->name !!}
                                                     </td>
                                                     <td class="col-6">
                                                         <div class="w-100">
