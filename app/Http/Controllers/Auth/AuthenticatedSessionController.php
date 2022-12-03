@@ -67,7 +67,7 @@ class AuthenticatedSessionController extends Controller
     {
 
         if ('access_denied' === $request->error) {
-            return redirect()->route('login')->withErrors(__('Error when logging in'));
+            return redirect()->route('login')->withErrors(__($request->error));
         }
 
 
