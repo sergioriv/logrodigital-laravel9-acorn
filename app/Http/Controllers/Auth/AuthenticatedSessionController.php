@@ -12,6 +12,7 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -64,8 +65,17 @@ class AuthenticatedSessionController extends Controller
 
     public function microsoft_callback()
     {
-        $microsoft = Socialite::driver('azure')->user();
-        // $user = User::where('provider', 'microsoft')->where('email', $microsoft->email)->first();
+
+        try {
+            $microsoft = Socialite::driver('azure')->stateless()->user();
+        } catch (InvalidStateException $e) {
+            $microsoft = Socialite::driver('azure')->stateless()->user();
+        }
+
+        if ($microsoft->error) {
+            return redirect()->route('login')->withErrors(__('Error when logging in'));
+        }
+
         $user = User::where('email', $microsoft->email)->first();
 
         if ( $user )
