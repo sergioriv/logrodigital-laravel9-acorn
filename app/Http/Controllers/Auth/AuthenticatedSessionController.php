@@ -70,7 +70,8 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('login')->withErrors(__('Error when logging in'));
         }
 
-        $microsoft = Socialite::driver('azure')->user();
+
+        $microsoft = Socialite::driver('azure')->stateless()->user();
 
         $user = User::where('email', $microsoft->email)->first();
 
