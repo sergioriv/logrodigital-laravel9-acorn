@@ -66,7 +66,7 @@ class AuthenticatedSessionController extends Controller
     public function microsoft_callback(Request $request)
     {
 
-        dd($request);
+        dd($request->error);
 
         try {
             $microsoft = Socialite::driver('azure')->stateless()->user();
