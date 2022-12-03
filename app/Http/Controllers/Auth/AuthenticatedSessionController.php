@@ -71,7 +71,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         // try {
-            $microsoft = Socialite::driver('azure')->user();
+            $microsoft = Socialite::driver('azure')->stateless()->user();
         // } catch (InvalidStateException $e) {
             // $microsoft = Socialite::driver('azure')->stateless()->user();
         // }
