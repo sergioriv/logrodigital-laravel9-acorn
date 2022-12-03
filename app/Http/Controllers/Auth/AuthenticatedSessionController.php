@@ -66,16 +66,14 @@ class AuthenticatedSessionController extends Controller
     public function microsoft_callback(Request $request)
     {
 
-        dd($request->error);
+        if ('access_denied' === $request->error) {
+            return redirect()->route('login')->withErrors(__('Error when logging in'));
+        }
 
         try {
             $microsoft = Socialite::driver('azure')->stateless()->user();
         } catch (InvalidStateException $e) {
             $microsoft = Socialite::driver('azure')->stateless()->user();
-        }
-
-        if ($microsoft->error) {
-            return redirect()->route('login')->withErrors(__('Error when logging in'));
         }
 
         $user = User::where('email', $microsoft->email)->first();
