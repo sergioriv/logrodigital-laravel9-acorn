@@ -42,7 +42,8 @@ class SubjectController extends Controller
             });
         })->get();
 
-        $subjects = Subject::with('resourceSubject')->where('school_year_id', $Y->id)->get();
+        $subjects = Subject::whereHas('resourceSubject', fn($rs) => $rs->whereNull('specialty'))
+            ->where('school_year_id', $Y->id)->get();
         return view('logro.subject.index')->with([
             'Y' => $Y,
             'resourceAreas' => $resourceAreas,

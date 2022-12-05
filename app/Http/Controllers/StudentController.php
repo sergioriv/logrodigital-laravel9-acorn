@@ -122,6 +122,8 @@ class StudentController extends Controller
             'first_last_name',
             'second_last_name',
             'institutional_email',
+            'document_type_code',
+            'document',
             'status',
             'inclusive',
             'headquarters_id',
@@ -431,6 +433,8 @@ class StudentController extends Controller
             'first_last_name',
             'second_last_name',
             'institutional_email',
+            'document_type_code',
+            'document',
             'status',
             'inclusive'
         )

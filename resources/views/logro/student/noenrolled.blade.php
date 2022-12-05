@@ -94,6 +94,8 @@ $title = __('Students') .' '. __('no-enrolled');
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>
+                                <th class="empty d-none">{{ __('document') }}</th>
+                                <th class="empty d-none">{{ __('email') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('headquarters') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study time') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('study year') }}</th>
@@ -111,15 +113,10 @@ $title = __('Students') .' '. __('no-enrolled');
                                         class="list-item-heading body">
                                         {{ $student->getCompleteNames() }}
                                     </a>
-                                    @if (1 === $student->inclusive)
-                                    <i class="icon icon-12 bi-circle-fill logro-inclusive-color"></i>
-                                    @endif
-                                    @if ('new' === $student->status)
-                                        <span class="badge bg-outline-primary">{{ __($student->status) }}</span>
-                                    @elseif ('repeat' === $student->status)
-                                        <span class="badge bg-outline-danger">{{ __($student->status) }}</span>
-                                    @endif
+                                    {!! $student->tag() !!}
                                 </td>
+                                <td class="d-none">{{ $student->document_type_code }} {{ $student->document }}</td>
+                                <td class="d-none">{{ $student->institutional_email }}</td>
                                 <td>{{ $student->headquarters->name }}</td>
                                 <td>{{ $student->studyTime->name }}</td>
                                 <td>{{ $student->studyYear->name }}</td>
