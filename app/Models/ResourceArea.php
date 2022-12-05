@@ -23,4 +23,11 @@ class ResourceArea extends Model
     {
         return $this->hasMany(Subject::class);
     }
+
+
+
+    public static function specialty()
+    {
+        return ResourceArea::where('specialty', 1)->first();
+    }
 }

@@ -27,6 +27,7 @@ $title = __('Areas & Subjects');
     }
 
     @foreach ($resourceAreas as $area)
+    @if(is_null($area->specialty))
     if (document.getElementById('areaGroup{{ $area->id }}')) {
       Sortable.create(document.getElementById('areaGroup{{ $area->id }}'), {
         draggable: ".input_subject",
@@ -38,6 +39,7 @@ $title = __('Areas & Subjects');
         }
       });
     }
+    @endif
     @endforeach
 
     jQuery("#confirm_save").click(function () {
@@ -54,7 +56,9 @@ $title = __('Areas & Subjects');
         subejcts.forEach(s => {
             const value = $(s).attr('data-subject');
             const area = $(s).parent().data('area');
-            $(s).children('input').val(area +'~'+ value);
+            // $(s).children('input').val(area +'~'+ value);
+            $(s).children('input').attr('name', 'area-'+ area +'[]');
+            // $(s).children('input').val(value);
         });
     });
 </script>
@@ -97,13 +101,13 @@ $title = __('Areas & Subjects');
             <!-- Content Start -->
             <div class="">
 
-                @if (NULL !== $Y->available)
+                @if (NULL !== $Y->available && count($resourceSubjects) > 0)
                 <form method="POST" action="{{ route('subject.store') }}" class="tooltip-end-bottom" novalidate>
                     @csrf
                 @endif
                     <!-- Moving Start -->
                     <section class="scroll-section">
-                        @if (NULL !== $Y->available)
+                        @if (NULL !== $Y->available && count($resourceSubjects) > 0)
                         <div class="row">
                             <section class="col-12">
                                 <div class="card mb-5 border border-pink">
@@ -115,7 +119,7 @@ $title = __('Areas & Subjects');
                                                 class="logro-tag badge bg-outline-primary hover-bg-primary text-uppercase input_subject"
                                                 data-subject="{{ $subject->id }}">
                                                 {!! $subject->name !!}
-                                                <input readonly type="hidden" name="subjects[]" value="null~{{ $subject->id }}">
+                                                <input readonly type="hidden" name="area-null[]" value="{{ $subject->id }}">
                                             </span>
                                             @endforeach
                                         </div>
@@ -128,17 +132,14 @@ $title = __('Areas & Subjects');
                             @foreach ($resourceAreas as $area)
                             <section class="col-sm-6 col-xxl-3">
                                 <h2 class="small-title">{{ $area->name }}</h2>
-                                <div class="card mb-5 card-areas" data-area="{{ $area->id }}">
+                                <div class="card mb-5 card-areas" @if(is_null($area->specialty)) data-area="{{ $area->id }}" @endif>
                                     <div class="card-body d-inline-flex">
-                                        <div id="areaGroup{{ $area->id }}" class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm"
-                                            data-area="{{ $area->id }}">
-                                            @foreach ($subjects as $subject_area)
-                                            @if ($subject_area->resource_area_id == $area->id)
-                                            <span class="logro-tag badge bg-muted text-uppercase disabled"
-                                                data-id="{{ $subject_area->resourceSubject->id }}">
-                                                {!! $subject_area->resourceSubject->name !!}
+                                        <div @if(is_null($area->specialty)) id="areaGroup{{ $area->id }}" data-area="{{ $area->id }}" @endif
+                                            class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm">
+                                            @foreach ($area->subjects as $subjectA)
+                                            <span class="logro-tag badge bg-muted text-uppercase disabled">
+                                                {!! $subjectA->resourceSubject->name !!}
                                             </span>
-                                            @endif
                                             @endforeach
                                         </div>
                                     </div>
@@ -149,15 +150,13 @@ $title = __('Areas & Subjects');
                     </section>
                     <!-- Moving End -->
 
-                @if (NULL !== $Y->available)
-                    @if (count($resourceSubjects) > 0)
+                @if (NULL !== $Y->available && count($resourceSubjects) > 0)
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="confirm_save" />
                         <label class="form-check-label" for="confirm_save">{{ __('This process is irreversible. Please confirm that you are sure to save.') }}</label>
                     </div>
 
                     <x-button type="submit" disabled id="save_areas_subjects" class="btn-primary">{{ __('Save') .' '. __('Areas & Subjects') }}</x-button>
-                    @endif
                 </form>
                 @endif
                 <!-- Advanced End -->

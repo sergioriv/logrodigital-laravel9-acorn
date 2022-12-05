@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
+use App\Models\ResourceArea;
 use App\Models\ResourceSubject;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -44,11 +46,23 @@ class ResourceSubjectController extends Controller
             'specialty' => ['nullable', 'boolean']
         ]);
 
-        ResourceSubject::create([
+        $newSubject = ResourceSubject::create([
             'name' => $request->descriptive_name,
             'public_name' => $request->public_name,
             'specialty' => $request->specialty ? TRUE : NULL
         ]);
+
+        if ($newSubject->specialty) {
+
+            $Y = SchoolYearController::current_year();
+            $areaSpecialty = ResourceArea::specialty();
+            Subject::create([
+                'school_year_id' => $Y->id,
+                'resource_area_id' => $areaSpecialty->id,
+                'resource_subject_id' => $newSubject->id
+            ]);
+
+        }
 
 
         if ($request->specialty ? TRUE : NULL) {
