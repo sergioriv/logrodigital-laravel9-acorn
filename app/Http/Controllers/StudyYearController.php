@@ -7,7 +7,7 @@ use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\ResourceArea;
 use App\Models\ResourceStudyYear;
 use App\Models\StudyYear;
-use App\Models\StudyYearSubject;
+use App\Models\AcademicWorkload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -30,20 +30,6 @@ class StudyYearController extends Controller
     public function index()
     {
         $Y = SchoolYearController::current_year();
-
-        // $studyYears = StudyYear::withCount([
-        //     'studyYearSubject' =>
-        //     fn ($subjects) => $subjects->where('school_year_id', $Y->id)
-        // ])
-        //     ->withCount([
-        //         'groups' =>
-        //         fn ($groups) => $groups->where('school_year_id', $Y->id)
-        //     ])
-        //     ->withSum([
-        //         'groups' =>
-        //         fn ($groups) => $groups->where('school_year_id', $Y->id)
-        //     ], 'student_quantity')
-        //     ->get();
 
         return view('logro.studyyear.index')->with([
             'Y' => $Y->name,
@@ -85,7 +71,7 @@ class StudyYearController extends Controller
     {
         $request->validate([
             'name' => ['required', Rule::unique('study_years', 'name')->ignore($studyYear->id)],
-            'study_year' => ['required', Rule::exists('resource_study_years','uuid')]
+            'study_year' => ['required', Rule::exists('resource_study_years', 'uuid')]
         ]);
 
         $resource = ResourceStudyYear::where('uuid', $request->study_year)->first();
@@ -102,7 +88,7 @@ class StudyYearController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $subject_count = StudyYearSubject::where('school_year_id', $Y->id)->where('study_year_id', $studyYear->id)->count();
+        $subject_count = AcademicWorkload::where('school_year_id', $Y->id)->where('study_year_id', $studyYear->id)->count();
 
         if ($subject_count == 0 && NULL !== $Y->available) {
             /*
@@ -111,7 +97,7 @@ class StudyYearController extends Controller
             $areas = ResourceArea::with([
                 'subjects' =>
                 fn ($s) => $s->where('school_year_id', $Y->id)
-            ])->get();
+            ])->whereNull('specialty')->get();
 
             return view('logro.studyyear.subjects')->with([
                 'Y' => $Y,
@@ -128,11 +114,12 @@ class StudyYearController extends Controller
 
             $fn_subjects = fn ($s) =>
             $s->where('school_year_id', $Y->id)
-                ->whereHas('studyYearSubject', $fn_study_year)
-                ->with(['studyYearSubject' => $fn_study_year]);
+                ->whereHas('academicWorkload', $fn_study_year)
+                ->with(['academicWorkload' => $fn_study_year]);
 
             $areas = ResourceArea::with(['subjects' => $fn_subjects])
                 ->whereHas('subjects', $fn_subjects)
+                ->whereNull('specialty')
                 ->get();
 
             return view('logro.studyyear.subjects_show')->with([
@@ -153,9 +140,10 @@ class StudyYearController extends Controller
 
         $fn_subjects = fn ($s) =>
         $s->where('school_year_id', $Y->id)
-            ->with(['studyYearSubject' => $fn_study_year]);
+            ->with(['academicWorkload' => $fn_study_year]);
 
         $areas = ResourceArea::with(['subjects' => $fn_subjects])
+            ->whereNull('specialty')
             ->get();
 
         return view('logro.studyyear.subjects_edit')->with([
@@ -205,9 +193,9 @@ class StudyYearController extends Controller
 
             if ('null' !== $exist && isset($exist)) {
                 /*
-                 * StudyYearSubject modified
+                 * AcademicWorkload modified
                 */
-                $sy_subject = StudyYearSubject::where('id', $exist)
+                $sy_subject = AcademicWorkload::where('id', $exist)
                     ->where('school_year_id', $Y->id)
                     ->where('study_year_id', $studyYear->id)
                     ->where('subject_id', $subject)
@@ -224,9 +212,9 @@ class StudyYearController extends Controller
                 }
             } else {
                 /*
-                 * StudyYearSubject Created
+                 * AcademicWorkload Created
                 */
-                StudyYearSubject::create([
+                AcademicWorkload::create([
                     'school_year_id' => $Y->id,
                     'study_year_id' => $studyYear->id,
                     'subject_id' => $subject,
@@ -247,5 +235,4 @@ class StudyYearController extends Controller
             return redirect()->back()->withErrors(__("check the course load"));
         }
     }
-
 }

@@ -50,9 +50,9 @@ class SchoolYear extends Model
         return $this->hasMany(TeacherSubjectGroup::class);
     }
 
-    public function studyYearSubject()
+    public function academicWorkload()
     {
-        return $this->hasMany(StudyYearSubject::class);
+        return $this->hasMany(AcademicWorkload::class);
     }
 
 }

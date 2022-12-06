@@ -55,28 +55,28 @@ $title = $studyYear->name;
                                                     <td class="w-40">
                                                         <label class="form-check-label">
                                                             <input type="checkbox" name="subjects[]"
-                                                                value="{{ $subject->resource_area_id . '~' . $subject->id }}~{{ $subject->studyYearSubject->id ?? 'null' }}"
+                                                                value="{{ $subject->resource_area_id . '~' . $subject->id }}~{{ $subject->academicWorkload->id ?? 'null' }}"
                                                                 data-subject="{{ $subject->id }}" class="form-check-input"
-                                                                @if (null !== $subject->studyYearSubject) checked @endif>
+                                                                @if (null !== $subject->academicWorkload) checked @endif>
                                                             <span>{!! $subject->resourceSubject->name !!}</span>
                                                         </label>
                                                     </td>
                                                     <td class="w-30">
-                                                        <input type="number" @if (null === $subject->studyYearSubject) disabled @endif
+                                                        <input type="number" @if (null === $subject->academicWorkload) disabled @endif
                                                             max="20" min="0" placeholder="{{ __('Hours week') }}"
                                                             subject="{{ $subject->id }}" class="form-control"
                                                             name="{{ $subject->id }}~hours_week"
-                                                            value="{{ $subject->studyYearSubject->hours_week ?? null }}"
+                                                            value="{{ $subject->academicWorkload->hours_week ?? null }}"
                                                             required>
                                                     </td>
                                                     <td class="w-30">
                                                         <div class="input-group">
                                                             <span class="input-group-text logro-input-disabled">%</span>
-                                                            <input type="number" @if (null === $subject->studyYearSubject) disabled @endif
+                                                            <input type="number" @if (null === $subject->academicWorkload) disabled @endif
                                                             max="100" min="0" placeholder="{{ __('Course load') }}"
                                                             subject="{{ $subject->id }}" class="form-control"
                                                             name="{{ $subject->id }}~course_load"
-                                                            value="{{ $subject->studyYearSubject->course_load ?? null }}"
+                                                            value="{{ $subject->academicWorkload->course_load ?? null }}"
                                                             required>
                                                         </div>
                                                     </td>

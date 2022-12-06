@@ -347,8 +347,8 @@ class GroupController extends Controller
         $fn_sb = fn ($s) =>
         $s->where('school_year_id', $Y_id)
 
-            ->whereHas('studyYearSubject', $fn_sy)
-            ->with(['studyYearSubject' => $fn_sy])
+            ->whereHas('academicWorkload', $fn_sy)
+            ->with(['academicWorkload' => $fn_sy])
 
             /* Pendiente por eliminación */
             ->with(['teacherSubjectGroups' => $fn_tsg]);

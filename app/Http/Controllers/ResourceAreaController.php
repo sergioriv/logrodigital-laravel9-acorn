@@ -22,7 +22,7 @@ class ResourceAreaController extends Controller
 
     public function data()
     {
-        return ['data' => ResourceArea::orderBy('name')->get()];
+        return ['data' => ResourceArea::whereNull('specialty')->orderBy('name')->get()];
     }
 
     public function create()

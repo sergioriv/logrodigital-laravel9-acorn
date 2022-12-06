@@ -43,7 +43,7 @@ class SubjectController extends Controller
             $query->whereHas('subjects', function ($subject) use ($Y) {
                 $subject->where('school_year_id', $Y->id);
             });
-        })->get();
+        })->orderBy('name')->get();
 
         return view('logro.subject.index')->with([
             'Y' => $Y,
@@ -63,10 +63,10 @@ class SubjectController extends Controller
         $Y = SchoolYearController::current_year();
 
         $resourceAreas = ResourceArea::whereNull('specialty')
-            ->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
+            // ->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
             ->get();
 
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
         foreach ($resourceAreas as $area) {
             $areaInput = 'area-' . $area->id;
@@ -74,11 +74,9 @@ class SubjectController extends Controller
                 foreach ($request->$areaInput as $subject) {
 
                     /* Verificar que una asignatura no sea de especialidad */
-                    $sbArea = ResourceSubject::where('id', $subject)
-                        ->whereNull('specialty')
-                        ->first();
+                    $sbArea = ResourceSubject::where('id', $subject)->whereNull('specialty')->first();
 
-                    if (is_null($sbArea)) {
+                    if (NULL !== $sbArea) {
                         Subject::create([
                             'school_year_id' => $Y->id,
                             'resource_area_id' => $area->id,
@@ -89,7 +87,7 @@ class SubjectController extends Controller
             }
         }
 
-        DB::commit();
+        // DB::commit();
 
         Notify::success(__('Areas & Subjects updated!'));
         return redirect()->route('subject.index');

@@ -210,7 +210,7 @@
                                                 <div class="card d-flex mb-2">
                                                     <div class="card-body">
                                                         <h2 class="small-title">{{ $area->name }}</h2>
-                                                        <table class="table table-striped">
+                                                        <table class="table table-striped mb-0">
                                                             <tbody>
                                                                 @foreach ($area->subjects as $subject)
                                                                     @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($group->id, $subject->id) @endphp
@@ -224,15 +224,15 @@
                                                                             @endif
                                                                         </td>
                                                                         <td class="col-1 text-center">
-                                                                            {{ $subject->studyYearSubject->hours_week }}
-                                                                            @if (1 === $subject->studyYearSubject->hours_week)
+                                                                            {{ $subject->academicWorkload->hours_week }}
+                                                                            @if (1 === $subject->academicWorkload->hours_week)
                                                                                 {{ __('hour') }}
                                                                             @else
                                                                                 {{ __('hours') }}
                                                                             @endif
                                                                         </td>
                                                                         <td class="col-1 text-center">
-                                                                            {{ $subject->studyYearSubject->course_load }}%
+                                                                            {{ $subject->academicWorkload->course_load }}%
                                                                         </td>
                                                                         @hasrole('COORDINATOR')
                                                                             <td class="col-1 text-end">

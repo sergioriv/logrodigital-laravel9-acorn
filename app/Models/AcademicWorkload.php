@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Traits\FormatDate;
+use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StudyYearSubject extends Model
+class AcademicWorkload extends Model
 {
     use HasFactory;
+    use Uuid;
     use FormatDate;
 
     public $timestamps = false;

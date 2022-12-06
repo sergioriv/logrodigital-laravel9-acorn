@@ -17,7 +17,7 @@ use App\Models\Data\TypeAppointment;
 use App\Models\Period;
 use App\Models\SchoolYear;
 use App\Models\Student;
-use App\Models\StudyYearSubject;
+use App\Models\AcademicWorkload;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use App\Rules\MaritalStatusRule;
@@ -231,7 +231,7 @@ class TeacherController extends Controller
                     ->orderBy('ordering')->get();
 
 
-        $weeklyLoad = StudyYearSubject::where('school_year_id', $Y->id)
+        $weeklyLoad = AcademicWorkload::where('school_year_id', $Y->id)
                         ->where('study_year_id', $subject->group->study_year_id)
                         ->where('subject_id', $subject->subject->id)
                         ->first();

@@ -33,6 +33,7 @@ use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
+use App\Models\ResourceArea;
 use App\Models\Secretariat;
 use App\Models\Student;
 use Illuminate\Support\Facades\Route;
@@ -65,7 +66,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->back();
         });
 
-        Route::get('add-uuid/secretariat', function() {
+        /*  ⛔  Route::get('add-uuid/secretariat', function() {
             $secretariat = Secretariat::get();
             foreach ($secretariat as $sec) {
                 $uuid = Str::uuid()->toString();
@@ -74,13 +75,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 echo '<br />';
                 echo '<br />';
             }
-        });
+        }); */
 
-        Route::get('add-permissions/orientation', function() {
+        /*  ⛔  Route::get('add-permissions/orientation', function() {
             Permission::create(['name' => 'orientation.index']);
             Permission::create(['name' => 'orientation.edit']);
             dd('hecho');
-        });
+        }); */
+
+        /*  ⛔  Route::get('students/code-generate', function () {
+            $students = Student::all();
+            foreach ($students as $student) {
+                $student->forceFill(['code' => GenerateStudentCode::code()])
+                        ->save();
+            }
+            dd('hecho');
+        }); */
 
         Route::get('grades-reset', function () {
             Grade::getQuery()->delete();
@@ -88,14 +98,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->route('dashboard');
         });
 
-        Route::get('students/code-generate', function () {
-            $students = Student::all();
-            foreach ($students as $student) {
-                $student->forceFill(['code' => GenerateStudentCode::code()])
-                        ->save();
-            }
-            dd('hecho');
+        Route::get('add/area-specialty', function() {
+            $newArea = (new ResourceArea)->forceFill([
+                'name' => 'ESPECIALIDAD', 'specialty' => TRUE
+            ])->save();
+
+            dd($newArea);
         });
+
+
 
         /* Route Users */
         Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');

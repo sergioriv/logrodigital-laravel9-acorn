@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Traits\FormatDate;
+use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model
 {
     use HasFactory;
+    use Uuid;
     use FormatDate;
 
     protected $fillable = [
@@ -48,9 +50,9 @@ class Subject extends Model
         return $this->hasOne(TeacherSubjectGroup::class, 'subject_id', 'id');
     } */
 
-    public function studyYearSubject()
+    public function academicWorkload()
     {
-        return $this->hasOne(StudyYearSubject::class,'subject_id','id');
+        return $this->hasOne(AcademicWorkload::class,'subject_id','id');
     }
 
     public function piar()

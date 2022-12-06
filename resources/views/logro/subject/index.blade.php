@@ -51,14 +51,11 @@ $title = __('Areas & Subjects');
     });
 
     jQuery("#save_areas_subjects").click(function (e) {
-        // e.preventDefault();
         var subejcts = document.querySelectorAll(".input_subject");
         subejcts.forEach(s => {
             const value = $(s).attr('data-subject');
             const area = $(s).parent().data('area');
-            // $(s).children('input').val(area +'~'+ value);
             $(s).children('input').attr('name', 'area-'+ area +'[]');
-            // $(s).children('input').val(value);
         });
     });
 </script>
@@ -130,6 +127,25 @@ $title = __('Areas & Subjects');
                         @endif
                         <div class="row">
                             @foreach ($resourceAreas as $area)
+                            @if ($area->specialty)
+                            @if (count($area->subjects))
+                                <section class="col-sm-6 col-xxl-3">
+                                    <h2 class="small-title">{{ $area->name }}</h2>
+                                    <div class="card mb-5 card-areas">
+                                        <div class="card-body d-inline-flex">
+                                            <div
+                                                class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm">
+                                                @foreach ($area->subjects as $subjectA)
+                                                <span class="logro-tag badge bg-muted text-uppercase disabled">
+                                                    {!! $subjectA->resourceSubject->name !!}
+                                                </span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            @endif
+                            @else
                             <section class="col-sm-6 col-xxl-3">
                                 <h2 class="small-title">{{ $area->name }}</h2>
                                 <div class="card mb-5 card-areas" @if(is_null($area->specialty)) data-area="{{ $area->id }}" @endif>
@@ -145,6 +161,7 @@ $title = __('Areas & Subjects');
                                     </div>
                                 </div>
                             </section>
+                            @endif
                             @endforeach
                         </div>
                     </section>

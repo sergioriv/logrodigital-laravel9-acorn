@@ -31,9 +31,9 @@ class StudyYear extends Model
         return $this->hasMany(Group::class);
     }
 
-    public function studyYearSubject()
+    public function academicWorkload()
     {
-        return $this->hasMany(StudyYearSubject::class);
+        return $this->hasMany(AcademicWorkload::class);
     }
 
 }

@@ -72,15 +72,15 @@
                                                         </div>
                                                     </td>
                                                     <td class="col-1 text-center">
-                                                        {{ $subject->studyYearSubject->hours_week }}
-                                                        @if (1 === $subject->studyYearSubject->hours_week)
+                                                        {{ $subject->academicWorkload->hours_week }}
+                                                        @if (1 === $subject->academicWorkload->hours_week)
                                                             {{ __('hour') }}
                                                         @else
                                                             {{ __('hours') }}
                                                         @endif
                                                     </td>
                                                     <td class="col-1 text-center">
-                                                        {{ $subject->studyYearSubject->course_load }}%</td>
+                                                        {{ $subject->academicWorkload->course_load }}%</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

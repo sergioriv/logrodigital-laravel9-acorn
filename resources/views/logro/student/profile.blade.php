@@ -2329,14 +2329,14 @@
                                                     @endif
                                                     @php $groupSubjects = '' @endphp
 
-                                                    @foreach ($groupS->studyYear->studyYearSubject as $studyYearSubject)
-                                                        @if ($groupS->school_year_id === $studyYearSubject->school_year_id)
+                                                    @foreach ($groupS->studyYear->academicWorkload as $academicWorkload)
+                                                        @if ($groupS->school_year_id === $academicWorkload->school_year_id)
                                                             <div class="mb-3">
                                                                 <h2 class="small-title">
-                                                                    {{ $studyYearSubject->subject->resourceSubject->public_name }}
+                                                                    {{ $academicWorkload->subject->resourceSubject->public_name }}
                                                                     -
 
-                                                                    @foreach ($studyYearSubject->subject->teacherSubjectGroups as $groupTSG)
+                                                                    @foreach ($academicWorkload->subject->teacherSubjectGroups as $groupTSG)
                                                                         @if ($groupS->id === $groupTSG->group_id && $groupS->school_year_id === $groupTSG->school_year_id)
                                                                             {{ '(' . $groupTSG->teacher->getFullName() . ')' }}
                                                                         @endif
@@ -2344,18 +2344,18 @@
 
                                                                 </h2>
                                                                 <div class="w-100 position-relative form-group">
-                                                                    @if ($YAvailable === $studyYearSubject->subject->school_year_id)
+                                                                    @if ($YAvailable === $academicWorkload->subject->school_year_id)
                                                                         <textarea
-                                                                            name="{{ $studyYearSubject->subject->piarOne->id ?? 'null' }}~{{ $studyYearSubject->subject->id }}~annotation"
-                                                                            class="form-control" cols="2">{{ $studyYearSubject->subject->piarOne->annotation ?? null }}</textarea>
+                                                                            name="{{ $academicWorkload->subject->piarOne->id ?? 'null' }}~{{ $academicWorkload->subject->id }}~annotation"
+                                                                            class="form-control" cols="2">{{ $academicWorkload->subject->piarOne->annotation ?? null }}</textarea>
                                                                     @else
                                                                         <span
-                                                                            class="form-control">{{ $studyYearSubject->subject->piarOne->annotation ?? null }}</span>
+                                                                            class="form-control">{{ $academicWorkload->subject->piarOne->annotation ?? null }}</span>
                                                                     @endif
                                                                 </div>
                                                             </div>
                                                             @php
-                                                                $groupSubjects .= $studyYearSubject->subject->id . '~';
+                                                                $groupSubjects .= $academicWorkload->subject->id . '~';
                                                             @endphp
                                                         @endif
                                                     @endforeach

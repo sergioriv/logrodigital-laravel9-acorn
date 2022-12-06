@@ -55,14 +55,14 @@ $title = $studyYear->name;
                                 @foreach ($area->subjects as $subject)
                                 <tr>
                                     <td class="w-50">{!! $subject->resourceSubject->name !!}</td>
-                                    <td class="w-25">{{ $subject->studyYearSubject->hours_week }}
-                                        @if (1 === $subject->studyYearSubject->hours_week)
+                                    <td class="w-25">{{ $subject->academicWorkload->hours_week }}
+                                        @if (1 === $subject->academicWorkload->hours_week)
                                             {{ __("hour") }}
                                         @else
                                             {{ __("hours") }}
                                         @endif
                                     </td>
-                                    <td class="w-25">{{ $subject->studyYearSubject->course_load }}%</td>
+                                    <td class="w-25">{{ $subject->academicWorkload->course_load }}%</td>
                                 </tr>
                                 @endforeach
                             </tbody>
