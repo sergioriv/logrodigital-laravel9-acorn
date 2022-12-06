@@ -136,7 +136,7 @@ $title = __('Areas & Subjects');
                                             <div
                                                 class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm">
                                                 @foreach ($area->subjects as $subjectA)
-                                                <span class="logro-tag badge bg-muted text-uppercase disabled">
+                                                <span class="logro-tag badge bg-light text-alternate font-weight-bold text-uppercase disabled">
                                                     {!! $subjectA->resourceSubject->name !!}
                                                 </span>
                                                 @endforeach
@@ -153,7 +153,7 @@ $title = __('Areas & Subjects');
                                         <div @if(is_null($area->specialty)) id="areaGroup{{ $area->id }}" data-area="{{ $area->id }}" @endif
                                             class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm">
                                             @foreach ($area->subjects as $subjectA)
-                                            <span class="logro-tag badge bg-muted text-uppercase disabled">
+                                            <span class="logro-tag badge bg-light text-alternate font-weight-bold text-uppercase disabled">
                                                 {!! $subjectA->resourceSubject->name !!}
                                             </span>
                                             @endforeach
