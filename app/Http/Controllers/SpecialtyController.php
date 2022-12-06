@@ -9,7 +9,7 @@ use App\Models\ResourceSubject;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 
-class SubjectController extends Controller
+class SpecialtyController extends Controller
 {
     public function __construct()
     {
@@ -28,26 +28,25 @@ class SubjectController extends Controller
         $Y = SchoolYearController::current_year();
 
         if (NULL === $Y->available) {
-            $resourceAreas = ResourceArea::whereNull('specialty')->whereHas('subjects', fn ($s) => $s->where('school_year_id', $Y->id))
+            $resourceAreas = ResourceArea::where('specialty', 1)->whereHas('subjects', fn ($s) => $s->where('school_year_id', $Y->id))
                 ->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
                 ->orderBy('name')->get();
         } else {
-            $resourceAreas = ResourceArea::whereNull('specialty')->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
+            $resourceAreas = ResourceArea::where('specialty', 1)->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
                 ->orderBy('name')->get();
         }
 
 
-        $resourceSubjects = ResourceSubject::whereNull('specialty')->whereNot(function ($query) use ($Y) {
+        $resourceSubjects = ResourceSubject::where('specialty', 1)->whereNot(function ($query) use ($Y) {
             $query->whereHas('subjects', function ($subject) use ($Y) {
                 $subject->where('school_year_id', $Y->id);
             });
         })->orderBy('name')->get();
 
-        return view('logro.subject.index')->with([
+        return view('logro.subject.specialties')->with([
             'Y' => $Y,
             'resourceAreas' => $resourceAreas,
-            'resourceSubjects' => $resourceSubjects,
-            'countAreasSpecialty' => ResourceArea::where('specialty', 1)->count()
+            'resourceSubjects' => $resourceSubjects
         ]);
     }
 
@@ -61,7 +60,7 @@ class SubjectController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $resourceAreas = ResourceArea::whereNull('specialty')
+        $resourceAreas = ResourceArea::where('specialty', 1)
             // ->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
             ->get();
 
@@ -80,7 +79,7 @@ class SubjectController extends Controller
                     if (!$sbCreated) {
 
                         /* Verificar que una asignatura no sea de especialidad */
-                        $sbArea = ResourceSubject::where('id', $subject)->whereNull('specialty')->first();
+                        $sbArea = ResourceSubject::where('id', $subject)->where('specialty', 1)->first();
 
                         if (NULL !== $sbArea) {
                             Subject::create([
@@ -97,6 +96,6 @@ class SubjectController extends Controller
         // DB::commit();
 
         Notify::success(__('Areas & Subjects updated!'));
-        return redirect()->route('subject.index');
+        return redirect()->route('specialties.index');
     }
 }

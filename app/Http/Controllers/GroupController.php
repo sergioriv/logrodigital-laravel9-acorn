@@ -353,9 +353,9 @@ class GroupController extends Controller
             /* Pendiente por eliminación */
             ->with(['teacherSubjectGroups' => $fn_tsg]);
 
-        return ResourceArea::with(['subjects' => $fn_sb])
+        return ResourceArea::whereNull('specialty')->with(['subjects' => $fn_sb])
             ->whereHas('subjects', $fn_sb)
-            ->get();
+            ->orderBy('name')->get();
     }
 
 

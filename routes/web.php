@@ -17,6 +17,7 @@ use App\Http\Controllers\ResourceSubjectController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\SecretariatController;
+use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFileController;
 use App\Http\Controllers\StudentReportBookController;
@@ -24,7 +25,6 @@ use App\Http\Controllers\StudentTrackingController;
 use App\Http\Controllers\StudyTimeController;
 use App\Http\Controllers\StudyYearController;
 use App\Http\Controllers\SubjectController;
-use App\Http\Controllers\support\GenerateStudentCode;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
@@ -33,12 +33,7 @@ use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
-use App\Models\ResourceArea;
-use App\Models\Secretariat;
-use App\Models\Student;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use Spatie\Permission\Models\Permission;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,14 +91,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Grade::getQuery()->delete();
             Notify::success('Hecho');
             return redirect()->route('dashboard');
-        });
-
-        Route::get('add/area-specialty', function() {
-            $newArea = (new ResourceArea)->forceFill([
-                'name' => 'ESPECIALIDAD', 'specialty' => TRUE
-            ])->save();
-
-            dd($newArea);
         });
 
 
@@ -179,7 +166,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('subjects.json', [ResourceSubjectController::class, 'data']);
 
     /* Route Areas & subjects */
-    Route::resource('areas-subjects', SubjectController::class)->except('destroy','show')->names('subject');
+    Route::resource('areas-subjects', SubjectController::class)->only('index', 'store')->names('subject');
+
+    /* Reoute Areas & Subjects of Specialties */
+    Route::resource('specialties', SpecialtyController::class)->only('index', 'store')->names('specialties');
 
     /* Route Teachers */
     Route::controller(TeacherController::class)->group( function () {

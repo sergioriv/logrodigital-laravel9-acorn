@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\FormatDate;
 use App\Traits\Uuid;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +16,8 @@ class ResourceArea extends Model
     use FormatDate;
 
     protected $fillable = [
-        'name'
+        'name',
+        'specialty'
     ];
 
 
@@ -27,9 +30,24 @@ class ResourceArea extends Model
     }
 
 
-
-    public static function specialty()
+    private function isSpecialty()
     {
-        return ResourceArea::where('specialty', 1)->first();
+        if ($this->specialty)
+            return ' <i class="icon bi-star-fill"></i> ';
+
+        return null;
+    }
+
+    /* public function name(): Attribute
+    {
+        // $isSpecialty = $this->isSpecialty();
+        return Attribute::make(
+            get: fn ($v) => $this->isSpecialty() . $v
+        );
+    } */
+
+    public function nameSpecialty()
+    {
+        return $this->isSpecialty() . $this->name;
     }
 }

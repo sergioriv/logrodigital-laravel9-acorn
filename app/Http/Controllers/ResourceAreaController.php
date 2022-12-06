@@ -17,12 +17,9 @@ class ResourceAreaController extends Controller
 
     public function index()
     {
-        return view('logro.resource.area.index');
-    }
-
-    public function data()
-    {
-        return ['data' => ResourceArea::whereNull('specialty')->orderBy('name')->get()];
+        return view('logro.resource.area.index', ['areas' =>
+            ResourceArea::orderByDesc('specialty')->orderBy('name')->get()
+        ]);
     }
 
     public function create()
@@ -34,10 +31,12 @@ class ResourceAreaController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', Rule::unique('resource_areas')],
+            'specialty' => ['nullable', 'boolean']
         ]);
 
         ResourceArea::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'specialty' => $request->specialty ? TRUE : NULL
         ]);
 
         Notify::success( __('Area created!') );

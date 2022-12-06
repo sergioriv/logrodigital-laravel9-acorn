@@ -76,14 +76,12 @@ $title = __('Areas & Subjects');
                     <!-- Top Buttons Start -->
                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
 
-                        @if ($countAreasSpecialty)
-                        <!-- Specialties Button Start -->
-                        <a href="{{ route('specialties.index') }}"
+                        <!-- Subjects Button Start -->
+                        <a href="{{ route('subject.index') }}"
                             class="btn btn-primary btn-icon btn-icon-start w-100 w-md-auto me-1">
-                            <span>{{ __('Specialties') }}</span>
+                            <span>{{ __('Subjects') }}</span>
                         </a>
-                        <!-- Specialties Button End -->
-                        @endif
+                        <!-- Subjects Button End -->
 
                         <!-- Add Areas Button Start -->
                         <a href="{{ route('resourceArea.index') }}"
@@ -109,7 +107,7 @@ $title = __('Areas & Subjects');
             <div class="">
 
                 @if (NULL !== $Y->available && count($resourceSubjects) > 0)
-                <form method="POST" action="{{ route('subject.store') }}" class="tooltip-end-bottom" novalidate>
+                <form method="POST" action="{{ route('specialties.store') }}" class="tooltip-end-bottom" novalidate>
                     @csrf
                 @endif
                     <!-- Moving Start -->

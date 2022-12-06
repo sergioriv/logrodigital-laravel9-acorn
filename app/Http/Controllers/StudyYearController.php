@@ -97,7 +97,7 @@ class StudyYearController extends Controller
             $areas = ResourceArea::with([
                 'subjects' =>
                 fn ($s) => $s->where('school_year_id', $Y->id)
-            ])->whereNull('specialty')->get();
+            ])->orderBy('specialty')->orderBy('name')->get();
 
             return view('logro.studyyear.subjects')->with([
                 'Y' => $Y,
@@ -119,8 +119,7 @@ class StudyYearController extends Controller
 
             $areas = ResourceArea::with(['subjects' => $fn_subjects])
                 ->whereHas('subjects', $fn_subjects)
-                ->whereNull('specialty')
-                ->get();
+                ->orderBy('specialty')->orderBy('name')->get();
 
             return view('logro.studyyear.subjects_show')->with([
                 'Y' => $Y,
@@ -143,8 +142,7 @@ class StudyYearController extends Controller
             ->with(['academicWorkload' => $fn_study_year]);
 
         $areas = ResourceArea::with(['subjects' => $fn_subjects])
-            ->whereNull('specialty')
-            ->get();
+            ->orderBy('specialty')->orderBy('name')->get();
 
         return view('logro.studyyear.subjects_edit')->with([
             'Y' => $Y,

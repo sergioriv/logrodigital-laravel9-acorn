@@ -15,7 +15,8 @@ $title = __('Areas list');
 
 @section('js_page')
 <script src="/js/cs/datatable.extend.js"></script>
-<script src="/js/plugins/datatable/areas_datatable.ajax.js"></script>
+{{-- <script src="/js/plugins/datatable/areas_datatable.ajax.js"></script> --}}
+<script src="/js/plugins/datatable/datatable_standard.ajax.js"></script>
 @endsection
 
 @section('content')
@@ -26,7 +27,7 @@ $title = __('Areas list');
             <div class="page-title-container">
                 <div class="row">
                     <!-- Title Start -->
-                    <div class="col-12 col-md-7">
+                    <div class="col-12 col-md-7 mb-2 mb-md-0">
                         <h1 class="mb-1 pb-0 display-4" id="title">{{ $title }}</h1>
                     </div>
                     <!-- Title End -->
@@ -70,14 +71,34 @@ $title = __('Areas list');
 
                 <!-- Table Start -->
                 <div class="data-table-responsive-wrapper">
-                    <table id="datatable_areas" class="data-table nowrap w-100">
+                    <table id="datatable_areas" class="data-table" logro="datatable">
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('Created at') }}</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            @foreach ($areas as $area)
+                                <tr>
+                                    <td>{!! $area->nameSpecialty() !!}</td>
+                                    <td class="text-small">{{ $area->created_at }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
+
+
+
+
+                    {{-- <table id="datatable_areas" class="data-table nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
+                                <th class="text-muted text-small text-uppercase">{{ __('Created at') }}</th>
+                            </tr>
+                        </thead>
+                    </table> --}}
                 </div>
                 <!-- Table End -->
             </div>

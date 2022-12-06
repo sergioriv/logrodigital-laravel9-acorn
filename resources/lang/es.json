@@ -511,6 +511,7 @@
     "justified": "justificada",
     "Complete documents": "Documentos completos",
     "Specialty subject?": "¿asignatura de especialidad?",
+    "Specialty area?": "¿área de especialidad?",
     "Public name": "Nombre público",
     "Descriptive name": "Nombre descriptivo",
     "Specialty created!": "Especialidad creada!",
@@ -518,6 +519,7 @@
     "Areas & Subjects updated!": "Areas & Asignaturas actualizadas!",
     "is it a specialty group?": "¿es un grupo de especialidad?",
     "Error when logging in": "Error al iniciar sesión",
+    "Specialties": "Especialidades",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "full name": "nombre completo",

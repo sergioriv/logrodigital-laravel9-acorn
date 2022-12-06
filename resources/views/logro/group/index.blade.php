@@ -35,7 +35,7 @@ $title = __('Groups');
                 <div class="page-title-container">
                     <div class="row">
                         <!-- Title Start -->
-                        <div class="col-12 col-md-7">
+                        <div class="col-12 col-md-7 mb-2 mb-md-0">
                             <h1 class="mb-1 pb-0 display-4" id="title">{{ $title }}</h1>
                         </div>
                         <!-- Title End -->
