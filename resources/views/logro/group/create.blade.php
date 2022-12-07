@@ -41,11 +41,11 @@
                         <div class="card mb-3">
                             <div class="card-body">
 
-                                <!-- Headquarters -->
-                                <div class="mb-3 w-100">
+                                <div class="row g-3">
 
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
+                                    <!-- Headquarters -->
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group w-100">
                                             <x-label>{{ __('Headquarters') }}
                                                 <x-required />
                                             </x-label>
@@ -56,7 +56,11 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
+                                    </div>
+
+                                    <!-- Study Time -->
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group w-100">
                                             <x-label>{{ __('Study time') }}
                                                 <x-required />
                                             </x-label>
@@ -67,8 +71,11 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                    </div>
 
-                                        <div class="col-md-6">
+                                    <!-- Study Year -->
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group w-100">
                                             <x-label>{{ __('Study year') }}
                                                 <x-required />
                                             </x-label>
@@ -79,7 +86,11 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
+                                    </div>
+
+                                    <!-- Group Director -->
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group w-100">
                                             <x-label>{{ __('Group director') }}</x-label>
                                             <select logro="select2" name="group_director">
                                                 <option label="&nbsp;"></option>
@@ -88,24 +99,31 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                    </div>
 
-                                        <div class="col-md-6">
+                                    <!-- Name -->
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('Name') }}
                                                 <x-required />
                                             </x-label>
                                             <x-input name="name" :value="old('name')" required />
                                         </div>
-                                        <div class="col-md-6">
-                                            <x-label>{{ __('is it a specialty group?') }}</x-label>
-                                            <select logro="select2" name="specialty">
-                                                <option value="no" selected>{{ __('No') }}</option>
-                                                <option value="yes">{{ __('Yes') }}</option>
-                                            </select>
-                                        </div>
                                     </div>
 
+                                    @if ($existAreasSpecialty)
+                                    <!-- Is Specialty -->
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group w-100">
+                                                <x-label>{{ __('is it a specialty group?') }}</x-label>
+                                                <select logro="select2" name="specialty">
+                                                    <option value="no" selected>{{ __('No') }}</option>
+                                                    <option value="yes">{{ __('Yes') }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
-
 
                             </div>
                         </div>

@@ -15,6 +15,7 @@ use App\Models\ResourceArea;
 use App\Models\Student;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
+use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
@@ -99,19 +100,20 @@ class GroupController extends Controller
             'headquarters' => $headquarters,
             'studyTime' => $studyTime,
             'studyYear' => $studyYear,
-            'teachers' => $teachers
+            'teachers' => $teachers,
+            'existAreasSpecialty' => Subject::whereHas('resourceArea', fn($ra) => $ra->where('specialty', 1))->count()
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'headquarters' => ['required', Rule::exists('headquarters', 'id')],
-            'study_time' => ['required', Rule::exists('study_times', 'id')],
-            'study_year' => ['required', Rule::exists('study_years', 'id')],
+            'headquarters'  => ['required', Rule::exists('headquarters', 'id')],
+            'study_time'    => ['required', Rule::exists('study_times', 'id')],
+            'study_year'    => ['required', Rule::exists('study_years', 'id')],
             'group_director' => ['nullable', Rule::exists('teachers', 'uuid')],
-            'name' => ['required', 'string'],
-            'specialty' => ['required', 'in:no,yes']
+            'name'          => ['required', 'string'],
+            'specialty'     => ['nullable', 'in:no,yes']
         ]);
 
         $Y = SchoolYearController::current_year();
@@ -119,7 +121,7 @@ class GroupController extends Controller
         $uuidTeacher = Teacher::select('id')->find($request->group_director)->id ?? null;
 
         try {
-            Group::create([
+            $newGroup = Group::create([
                 'school_year_id' => $Y->id,
                 'headquarters_id' => $request->headquarters,
                 'study_time_id' => $request->study_time,
@@ -132,9 +134,62 @@ class GroupController extends Controller
             return redirect()->back()->withErrors(__('Unexpected Error'));
         }
 
+        if ($request->specialty === 'yes') {
+            return redirect()->route('group.specialty', $newGroup->id);
+        }
+
         Notify::success(__('Group created!'));
         return redirect()->route('group.index');
     }
+
+    public function specialty(Group $group)
+    {
+        if (is_null($group->specialty)) {
+            return redirect()->route('group.index')->withErrors(__('Not allowed'));
+        }
+
+
+        $Y = SchoolYearController::current_year();
+
+        if (NULL === $Y->available) {
+            $resourceAreas = ResourceArea::where('specialty', 1)->whereHas('subjects', fn ($s) => $s->where('school_year_id', $Y->id))
+                ->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
+                ->orderBy('name')->get();
+        } else {
+            $resourceAreas = ResourceArea::where('specialty', 1)->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
+                ->orderBy('name')->get();
+        }
+
+        return view('logro.group.specialty', [
+            'group' => $group,
+            'resourceAreas' => $resourceAreas
+        ]);
+    }
+
+    public function specialty_store(Group $group, Request $request)
+    {
+        if (is_null($group->specialty)) {
+            return redirect()->route('group.index')->withErrors(__('Not allowed'));
+        }
+
+        $request->validate([
+            'area_specialty' => ['required', Rule::exists('resource_areas','id')->where('specialty', 1)]
+        ]);
+
+        $existSubjects = Subject::where('resource_area_id', $request->area_specialty)->count();
+        if (!$existSubjects) {
+            return redirect()->route('group.specialty', $group)->withErrors(__('Unexpected Error'));
+        }
+
+
+        $group->forceFill(['specialty_area_id' => $request->area_specialty])->save();
+
+        Notify::success(__('Specialty group saved!'));
+        return redirect()->route('group.index');
+
+    }
+
+
 
     public function show(Group $group)
     {
@@ -149,12 +204,26 @@ class GroupController extends Controller
 
         $Y = SchoolYearController::current_year();
 
-        $sy = $group->study_year_id;
+        if ($group->specialty) {
+            $studentsGroup = Student::where('group_specialty_id', $group->id)->get();
+        } else {
+            $studentsGroup = Student::where('group_id', $group->id)->get();
+        }
 
-        $studentsGroup = Student::where('group_id', $group->id)
-            ->orderBy('first_last_name')
-            ->orderBy('second_last_name');
-        $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
+        $areas = $this->subjects_teacher($Y->id, $group);
+
+        $count_studentsMatriculateInStudyYear = 0;
+        if ($group->specialty) {
+
+            $count_studentsMatriculateInStudyYear = Student::whereHas('groupStudents',
+                fn($gs) => $gs->whereHas('group',
+                    fn($g) => $g->where('school_year_id', $Y->id)
+                                ->where('headquarters_id', $group->headquarters_id)
+                                ->where('study_time_id', $group->study_time_id)
+                                ->where('study_year_id', $group->study_year_id)
+                            ))->where('enrolled', 1)
+                            ->whereNull('group_specialty_id')->count();
+        }
 
 
         $periods = NULL;
@@ -168,7 +237,8 @@ class GroupController extends Controller
             'Y' => $Y,
             'group' => $group,
             'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
-            'studentsGroup' => $studentsGroup->get(),
+            'count_studentsMatriculateInStudyYear' => $count_studentsMatriculateInStudyYear,
+            'studentsGroup' => $studentsGroup,
             'areas' => $areas,
             'periods' => $periods
         ]);
@@ -218,34 +288,63 @@ class GroupController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $studentsNoEnrolled = Student::select(
-            'id',
-            'first_name',
-            'second_name',
-            'first_last_name',
-            'second_last_name',
-            'document_type_code',
-            'document',
-            'inclusive',
-            'status'
-        )->with('headquarters', 'studyTime', 'studyYear')
-            ->where('school_year_create', '<=', $Y->id)
-            ->where('headquarters_id', $group->headquarters_id)
-            ->where('study_time_id', $group->study_time_id)
-            ->where('study_year_id', $group->study_year_id)
-            ->whereNull('enrolled')
-            ->orderBy('first_last_name')
-            ->orderBy('second_last_name')
-            ->get();
+        if (is_null($group->specialty)) {
 
-        if (0 === count($studentsNoEnrolled)) {
-            Notify::fail(__('No students to enroll'));
-            return redirect()->back();
+            /* Estudiantes que estes sin matricula */
+            $studentsForMatriculate = Student::select(
+                'id',
+                'first_name',
+                'second_name',
+                'first_last_name',
+                'second_last_name',
+                'document_type_code',
+                'document',
+                'inclusive',
+                'status'
+            )->where('school_year_create', '<=', $Y->id)
+                ->where('headquarters_id', $group->headquarters_id)
+                ->where('study_time_id', $group->study_time_id)
+                ->where('study_year_id', $group->study_year_id)
+                ->whereNull('enrolled')
+                ->get();
+
+            if (count($studentsForMatriculate) === 0) {
+                Notify::fail(__('No students to enroll'));
+                return redirect()->back();
+            }
+        } else {
+
+            /* Estudiantes ya matriculados que se van a registrar en una especialidad */
+            $studentsForMatriculate = Student::select(
+                'id',
+                'first_name',
+                'second_name',
+                'first_last_name',
+                'second_last_name',
+                'document_type_code',
+                'document',
+                'inclusive',
+                'status'
+            )->whereHas('groupStudents',
+                fn($gs) => $gs->whereHas('group',
+                    fn($g) => $g->where('school_year_id', $Y->id)
+                        ->where('headquarters_id', $group->headquarters_id)
+                        ->where('study_time_id', $group->study_time_id)
+                        ->where('study_year_id', $group->study_year_id)
+                ))
+                ->where('enrolled', 1)
+                ->whereNull('group_specialty_id')
+                ->get();
+
+            if (count($studentsForMatriculate) === 0) {
+                Notify::fail(__('No students to enroll'));
+                return redirect()->back();
+            }
         }
 
         return view('logro.group.matriculate')->with([
             'group' => $group,
-            'studentsNoEnrolled' => $studentsNoEnrolled
+            'studentsForMatriculate' => $studentsForMatriculate
         ]);
     }
 
@@ -256,11 +355,25 @@ class GroupController extends Controller
         ]);
 
         foreach ($request->students as $student) {
-            $studentNoNull = Student::where('id', $student)
-                ->where('headquarters_id', $group->headquarters_id)
-                ->where('study_time_id', $group->study_time_id)
-                ->where('study_year_id', $group->study_year_id)
-                ->whereNull('enrolled')->first();
+
+            if ($group->specialty) {
+
+                $studentNoNull = Student::where('id', $student)
+                    ->where('headquarters_id', $group->headquarters_id)
+                    ->where('study_time_id', $group->study_time_id)
+                    ->where('study_year_id', $group->study_year_id)
+                    ->where('enrolled', 1)
+                    ->whereNotNull('group_id')
+                    ->whereNull('group_specialty_id')->first();
+
+            } else {
+
+                $studentNoNull = Student::where('id', $student)
+                    ->where('headquarters_id', $group->headquarters_id)
+                    ->where('study_time_id', $group->study_time_id)
+                    ->where('study_year_id', $group->study_year_id)
+                    ->whereNull('enrolled')->first();
+            }
 
             if (NULL !== $studentNoNull) {
                 GroupStudent::create([
@@ -272,11 +385,22 @@ class GroupController extends Controller
                     'student_quantity' => ++$group->student_quantity
                 ]);
 
-                $studentNoNull->update([
-                    'group_id' => $group->id,
-                    'enrolled_date' => now(),
-                    'enrolled' => TRUE
-                ]);
+                /* si el grupo es de especialidad, ya debe estar matriculado en otro grupo
+                 * y le será asignado un grupo de especialidad */
+                if ($group->specialty) {
+
+                    $studentNoNull->forceFill([
+                        'group_specialty_id' => $group->id
+                    ])->save();
+
+                } else {
+
+                    $studentNoNull->update([
+                        'group_id' => $group->id,
+                        'enrolled_date' => now(),
+                        'enrolled' => TRUE
+                    ]);
+                }
 
                 /* Send mail to Email Person Charge */
                 SmtpMail::sendEmailEnrollmentNotification($studentNoNull, $group);
@@ -293,11 +417,9 @@ class GroupController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $sy = $group->study_year_id;
-
         $teachers = Teacher::where('active', TRUE)->get();
 
-        $areas = $this->subjects_teacher($Y->id, $sy, $group->id);
+        $areas = $this->subjects_teacher($Y->id, $group);
 
         return view('logro.group.teachers_edit')->with([
             'group' => $group,
@@ -334,35 +456,43 @@ class GroupController extends Controller
         return redirect()->route('group.show', $group);
     }
 
-    private function subjects_teacher($Y_id, $sy_id, $g_id)
+    private function subjects_teacher($Y_id, $group)
     {
+        $sy_id = $group->study_year_id;
+
         $fn_sy = fn ($sy) =>
         $sy->where('school_year_id', $Y_id)
             ->where('study_year_id', $sy_id);
 
-        $fn_tsg = fn ($tsg) =>
-        $tsg->where('school_year_id', $Y_id)
-            ->where('group_id', $g_id);
-
         $fn_sb = fn ($s) =>
         $s->where('school_year_id', $Y_id)
-
             ->whereHas('academicWorkload', $fn_sy)
-            ->with(['academicWorkload' => $fn_sy])
+            ->with(['academicWorkload' => $fn_sy]);
 
-            /* Pendiente por eliminación */
-            ->with(['teacherSubjectGroups' => $fn_tsg]);
+        if (is_null($group->specialty)) {
 
-        return ResourceArea::whereNull('specialty')->with(['subjects' => $fn_sb])
-            ->whereHas('subjects', $fn_sb)
-            ->orderBy('name')->get();
+            return ResourceArea::whereNull('specialty')->with(['subjects' => $fn_sb])
+                ->whereHas('subjects', $fn_sb)
+                ->orderBy('name')->get();
+
+        } else {
+
+            if (is_null($group->specialty_area_id)) {
+                return ResourceArea::whereNull('id')->get();
+            }
+
+            return ResourceArea::where('id', $group->specialty_area_id)->with(['subjects' => $fn_sb])
+                ->whereHas('subjects', $fn_sb)
+                ->orderBy('name')->get();
+
+        }
     }
 
 
     /* ADICIONALES */
     private function countStudentsNoEnrolled($Y, $group)
     {
-        return $count_studentsNoEnrolled = Student::where('school_year_create', '<=', $Y->id)
+        return Student::where('school_year_create', '<=', $Y->id)
             ->where('headquarters_id', $group->headquarters_id)
             ->where('study_time_id', $group->study_time_id)
             ->where('study_year_id', $group->study_year_id)

@@ -60,11 +60,7 @@ class SpecialtyController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $resourceAreas = ResourceArea::where('specialty', 1)
-            // ->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
-            ->get();
-
-        // DB::beginTransaction();
+        $resourceAreas = ResourceArea::where('specialty', 1)->get();
 
         foreach ($resourceAreas as $area) {
             $areaInput = 'area-' . $area->id;
@@ -92,8 +88,6 @@ class SpecialtyController extends Controller
                 }
             }
         }
-
-        // DB::commit();
 
         Notify::success(__('Areas & Subjects updated!'));
         return redirect()->route('specialties.index');

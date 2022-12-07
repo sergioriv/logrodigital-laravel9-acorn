@@ -206,6 +206,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('groups/{group}/teachers', [GroupController::class, 'teacher_update'])->name('group.teachers.update');
     Route::get('groups/{group}/matriculate', [GroupController::class, 'matriculate'])->name('group.matriculate');
     Route::put('groups/{group}/matriculate', [GroupController::class, 'matriculate_update'])->name('group.matriculate.update');
+    Route::get('groups/{group}/specialty', [GroupController::class, 'specialty'])->name('group.specialty');
+    Route::post('groups/{group}/specialty', [GroupController::class, 'specialty_store'])->name('group.specialty.store');
 
 
     /* Permit Period */

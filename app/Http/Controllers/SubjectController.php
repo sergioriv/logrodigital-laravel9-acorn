@@ -47,7 +47,7 @@ class SubjectController extends Controller
             'Y' => $Y,
             'resourceAreas' => $resourceAreas,
             'resourceSubjects' => $resourceSubjects,
-            'countAreasSpecialty' => ResourceArea::where('specialty', 1)->count()
+            'existAreasSpecialty' => ResourceArea::where('specialty', 1)->count()
         ]);
     }
 
@@ -61,11 +61,7 @@ class SubjectController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $resourceAreas = ResourceArea::whereNull('specialty')
-            // ->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
-            ->get();
-
-        // DB::beginTransaction();
+        $resourceAreas = ResourceArea::whereNull('specialty')->get();
 
         foreach ($resourceAreas as $area) {
             $areaInput = 'area-' . $area->id;
@@ -93,8 +89,6 @@ class SubjectController extends Controller
                 }
             }
         }
-
-        // DB::commit();
 
         Notify::success(__('Areas & Subjects updated!'));
         return redirect()->route('subject.index');

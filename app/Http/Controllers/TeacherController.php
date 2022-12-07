@@ -223,7 +223,11 @@ class TeacherController extends Controller
 
         $Y = SchoolYearController::current_year();
 
-        $studentsGroup = Student::where('group_id', $subject->group_id)->get();
+        if ($subject->group->specialty) {
+            $studentsGroup = Student::where('group_specialty_id', $subject->group_id)->get();
+        } else {
+            $studentsGroup = Student::where('group_id', $subject->group_id)->get();
+        }
 
 
         $periods = Period::where('study_time_id', $subject->group->study_time_id)

@@ -32,7 +32,7 @@ $title = __('My subjects');
                 <div class="data-table-rows slim">
 
                     <!-- Cards Start -->
-                    <div class="row g-3 row-cols-3 row-cols-md-4 row-cols-lg-6">
+                    <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
                         @foreach ($subjects as $subject)
                                 <x-group.subjects :subject="$subject">
                                     <span class="mt-3 text-black btn-icon-start">

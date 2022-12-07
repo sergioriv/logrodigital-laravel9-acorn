@@ -113,7 +113,7 @@
                                     @can('groups.students.matriculate')
                                         <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
                                             @if (null !== $Y->available)
-                                                @if ($count_studentsNoEnrolled > 0)
+                                                @if ($count_studentsNoEnrolled > 0 || $count_studentsMatriculateInStudyYear > 0)
                                                     <!-- Groups Buttons Start -->
                                                     <div class="col-12 d-flex align-items-start justify-content-end">
                                                         <!-- Matriculate Students Button Start -->
@@ -190,6 +190,14 @@
                                                         <span>{{ __('Edit') . ' ' . __('Teachers') }}</span>
                                                     </a>
                                                     <!-- Add New Button End -->
+                                                @elseif ($group->specialty === TRUE && $group->specialty_area_id === NULL)
+                                                    <!-- Assing Area Specialty Button Start -->
+                                                    <a href="{{ route('group.specialty', $group) }}"
+                                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>{{ __('Assign specialty area') }}</span>
+                                                    </a>
+                                                    <!-- Assing Area Specialty Button End -->
                                                 @else
                                                     <!-- Assing Teachers Button Start -->
                                                     <a href="{{ route('studyYear.subject.show', $group->studyYear) }}"
@@ -220,7 +228,7 @@
                                                                         </td>
                                                                         <td>
                                                                             @if ($TSG)
-                                                                                {{ $TSG->teacher->getFullName() ?? null }}
+                                                                                {{ $TSG->teacher->getFullName() ?? NULL }}
                                                                             @endif
                                                                         </td>
                                                                         <td class="col-1 text-center">
@@ -249,8 +257,7 @@
                                                                                     <div class="dropdown-menu dropdown-menu-end">
                                                                                         <x-dropdown-item type="button"
                                                                                             modal-period-permit
-                                                                                            data-subject-id="{{ $TSG->id }}">
-                                                                                            {{-- <i data-acorn-icon="download"></i> --}}
+                                                                                            data-subject-id="{{ $TSG->id ?? NULL }}">
                                                                                             <span>{{ __('Activate note upload') }}</span>
                                                                                         </x-dropdown-item>
                                                                                     </div>

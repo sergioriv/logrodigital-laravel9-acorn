@@ -73,10 +73,6 @@ $title = __('Matriculate students');
 
                 <section class="scroll-section">
 
-
-                    <!-- Validation Errors -->
-                    {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
-
                     <form method="POST" action="{{ route('group.matriculate.update', $group) }}" novalidate>
                         @csrf
                         @method('PUT')
@@ -123,7 +119,7 @@ $title = __('Matriculate students');
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($studentsNoEnrolled as $student)
+                                        @foreach ($studentsForMatriculate as $student)
                                             <tr>
                                                 <td class="text-alternate">
                                                     <div class="form-check ms-2 mb-0">

@@ -76,7 +76,7 @@ $title = __('Areas & Subjects');
                     <!-- Top Buttons Start -->
                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
 
-                        @if ($countAreasSpecialty)
+                        @if ($existAreasSpecialty)
                         <!-- Specialties Button Start -->
                         <a href="{{ route('specialties.index') }}"
                             class="btn btn-primary btn-icon btn-icon-start w-100 w-md-auto me-1">

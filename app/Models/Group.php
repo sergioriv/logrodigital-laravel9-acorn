@@ -22,6 +22,8 @@ class Group extends Model
         'specialty'
     ];
 
+    protected $casts = ['specialty' => 'boolean'];
+
     /*
     * PARENTS
     */
