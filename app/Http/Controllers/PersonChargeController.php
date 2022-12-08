@@ -8,6 +8,7 @@ use App\Models\Data\RoleUser;
 use App\Models\PersonCharge;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class PersonChargeController extends Controller
@@ -110,41 +111,68 @@ class PersonChargeController extends Controller
          */
         if (NULL !== $request->mother_name) {
             if ($mother === NULL) {
+
+                DB::beginTransaction();
+
                 $user_mother = UserController::_create($request->mother_name, $request->mother_email, RoleUser::PARENT);
 
                 if (!$user_mother) {
+
+                    DB::rollBack();
+
                     Notify::fail(__('Invalid email (:email)', ['email' => $request->mother_email]));
                     return redirect()->back();
                 }
 
-                PersonCharge::create([
-                    'id' => $user_mother->id,
-                    'student_id' => $student->id,
-                    'name' => $request->mother_name,
-                    'email' => $request->mother_email,
-                    'document' => $request->mother_document,
-                    'expedition_city_id' => $request->mother_expedition_city,
-                    'residence_city_id' => $request->mother_residence_city,
-                    'address' => $request->mother_address,
-                    'telephone' => $request->mother_telephone,
-                    'cellphone' => $request->mother_cellphone,
-                    'birthdate' => $request->mother_birthdate,
-                    'kinship_id' => 1,
-                    'occupation' => $request->mother_occupation
-                ]);
+                try {
+
+                    PersonCharge::create([
+                        'id' => $user_mother->id,
+                        'student_id' => $student->id,
+                        'name' => $request->mother_name,
+                        'email' => $request->mother_email,
+                        'document' => $request->mother_document,
+                        'expedition_city_id' => $request->mother_expedition_city,
+                        'residence_city_id' => $request->mother_residence_city,
+                        'address' => $request->mother_address,
+                        'telephone' => $request->mother_telephone,
+                        'cellphone' => $request->mother_cellphone,
+                        'birthdate' => $request->mother_birthdate,
+                        'kinship_id' => 1,
+                        'occupation' => $request->mother_occupation
+                    ]);
+
+                    DB::commit();
+                } catch (\Throwable $th) {
+
+                    DB::rollBack();
+                    Notify::fail(__('Something went wrong.'));
+                    return redirect()->back();
+                }
             } else {
-                UserController::_update($mother->id, $request->mother_name);
-                $mother->update([
-                    'name' => $request->mother_name,
-                    'document' => $request->mother_document,
-                    'expedition_city_id' => $request->mother_expedition_city,
-                    'residence_city_id' => $request->mother_residence_city,
-                    'address' => $request->mother_address,
-                    'telephone' => $request->mother_telephone,
-                    'cellphone' => $request->mother_cellphone,
-                    'birthdate' => $request->mother_birthdate,
-                    'occupation' => $request->mother_occupation
-                ]);
+
+                try {
+
+                    UserController::_update($mother->id, $request->mother_name);
+                    $mother->update([
+                        'name' => $request->mother_name,
+                        'document' => $request->mother_document,
+                        'expedition_city_id' => $request->mother_expedition_city,
+                        'residence_city_id' => $request->mother_residence_city,
+                        'address' => $request->mother_address,
+                        'telephone' => $request->mother_telephone,
+                        'cellphone' => $request->mother_cellphone,
+                        'birthdate' => $request->mother_birthdate,
+                        'occupation' => $request->mother_occupation
+                    ]);
+
+                    DB::commit();
+                } catch (\Throwable $th) {
+
+                    DB::rollBack();
+                    Notify::fail(__('Something went wrong.'));
+                    return redirect()->back();
+                }
             }
         }
 
@@ -153,41 +181,67 @@ class PersonChargeController extends Controller
          */
         if (NULL !== $request->father_name) {
             if ($father === NULL) {
+
+                DB::beginTransaction();
+
                 $user_father = UserController::_create($request->father_name, $request->father_email, RoleUser::PARENT);
 
                 if (!$user_father) {
+
+                    DB::rollBack();
                     Notify::fail(__('Invalid email (:email)', ['email' => $request->father_email]));
                     return redirect()->back();
                 }
 
-                PersonCharge::create([
-                    'id' => $user_father->id,
-                    'student_id' => $student->id,
-                    'name' => $request->father_name,
-                    'email' => $request->father_email,
-                    'document' => $request->father_document,
-                    'expedition_city_id' => $request->father_expedition_city,
-                    'residence_city_id' => $request->father_residence_city,
-                    'address' => $request->father_address,
-                    'telephone' => $request->father_telephone,
-                    'cellphone' => $request->father_cellphone,
-                    'birthdate' => $request->father_birthdate,
-                    'kinship_id' => 2,
-                    'occupation' => $request->father_occupation
-                ]);
+                try {
+
+                    PersonCharge::create([
+                        'id' => $user_father->id,
+                        'student_id' => $student->id,
+                        'name' => $request->father_name,
+                        'email' => $request->father_email,
+                        'document' => $request->father_document,
+                        'expedition_city_id' => $request->father_expedition_city,
+                        'residence_city_id' => $request->father_residence_city,
+                        'address' => $request->father_address,
+                        'telephone' => $request->father_telephone,
+                        'cellphone' => $request->father_cellphone,
+                        'birthdate' => $request->father_birthdate,
+                        'kinship_id' => 2,
+                        'occupation' => $request->father_occupation
+                    ]);
+
+                    DB::commit();
+                } catch (\Throwable $th) {
+
+                    DB::rollBack();
+                    Notify::fail(__('Something went wrong.'));
+                    return redirect()->back();
+                }
             } else {
-                UserController::_update($father->id, $request->father_name);
-                $father->update([
-                    'name' => $request->father_name,
-                    'document' => $request->father_document,
-                    'expedition_city_id' => $request->father_expedition_city,
-                    'residence_city_id' => $request->father_residence_city,
-                    'address' => $request->father_address,
-                    'telephone' => $request->father_telephone,
-                    'cellphone' => $request->father_cellphone,
-                    'birthdate' => $request->father_birthdate,
-                    'occupation' => $request->father_occupation
-                ]);
+
+                try {
+
+                    UserController::_update($father->id, $request->father_name);
+                    $father->update([
+                        'name' => $request->father_name,
+                        'document' => $request->father_document,
+                        'expedition_city_id' => $request->father_expedition_city,
+                        'residence_city_id' => $request->father_residence_city,
+                        'address' => $request->father_address,
+                        'telephone' => $request->father_telephone,
+                        'cellphone' => $request->father_cellphone,
+                        'birthdate' => $request->father_birthdate,
+                        'occupation' => $request->father_occupation
+                    ]);
+
+                    DB::commit();
+                } catch (\Throwable $th) {
+
+                    DB::rollBack();
+                    Notify::fail(__('Something went wrong.'));
+                    return redirect()->back();
+                }
             }
         }
 
@@ -197,42 +251,68 @@ class PersonChargeController extends Controller
         if ($request->person_charge > 2) {
             if (NULL !== $request->tutor_name) {
                 if ($tutor === NULL) {
+
+                    DB::beginTransaction();
+
                     $user_tutor = UserController::_create($request->tutor_name, $request->tutor_email, RoleUser::PARENT);
 
                     if (!$user_tutor) {
+
+                        DB::rollBack();
                         Notify::fail(__('Invalid email (:email)', ['email' => $request->tutor_email]));
                         return redirect()->back();
                     }
 
-                    PersonCharge::create([
-                        'id' => $user_tutor->id,
-                        'student_id' => $student->id,
-                        'name' => $request->tutor_name,
-                        'email' => $request->tutor_email,
-                        'document' => $request->tutor_document,
-                        'expedition_city_id' => $request->tutor_expedition_city,
-                        'residence_city_id' => $request->tutor_residence_city,
-                        'address' => $request->tutor_address,
-                        'telephone' => $request->tutor_telephone,
-                        'cellphone' => $request->tutor_cellphone,
-                        'birthdate' => $request->tutor_birthdate,
-                        'kinship_id' => $request->person_charge,
-                        'occupation' => $request->tutor_occupation
-                    ]);
+                    try {
+
+                        PersonCharge::create([
+                            'id' => $user_tutor->id,
+                            'student_id' => $student->id,
+                            'name' => $request->tutor_name,
+                            'email' => $request->tutor_email,
+                            'document' => $request->tutor_document,
+                            'expedition_city_id' => $request->tutor_expedition_city,
+                            'residence_city_id' => $request->tutor_residence_city,
+                            'address' => $request->tutor_address,
+                            'telephone' => $request->tutor_telephone,
+                            'cellphone' => $request->tutor_cellphone,
+                            'birthdate' => $request->tutor_birthdate,
+                            'kinship_id' => $request->person_charge,
+                            'occupation' => $request->tutor_occupation
+                        ]);
+
+                        DB::commit();
+                    } catch (\Throwable $th) {
+
+                        DB::rollBack();
+                        Notify::fail(__('Something went wrong.'));
+                        return redirect()->back();
+                    }
                 } else {
-                    UserController::_update($tutor->id, $request->tutor_name);
-                    $tutor->update([
-                        'name' => $request->tutor_name,
-                        'document' => $request->tutor_document,
-                        'expedition_city_id' => $request->tutor_expedition_city,
-                        'residence_city_id' => $request->tutor_residence_city,
-                        'address' => $request->tutor_address,
-                        'telephone' => $request->tutor_telephone,
-                        'cellphone' => $request->tutor_cellphone,
-                        'birthdate' => $request->tutor_birthdate,
-                        'kinship_id' => $request->person_charge,
-                        'occupation' => $request->tutor_occupation
-                    ]);
+
+                    try {
+
+                        UserController::_update($tutor->id, $request->tutor_name);
+                        $tutor->update([
+                            'name' => $request->tutor_name,
+                            'document' => $request->tutor_document,
+                            'expedition_city_id' => $request->tutor_expedition_city,
+                            'residence_city_id' => $request->tutor_residence_city,
+                            'address' => $request->tutor_address,
+                            'telephone' => $request->tutor_telephone,
+                            'cellphone' => $request->tutor_cellphone,
+                            'birthdate' => $request->tutor_birthdate,
+                            'kinship_id' => $request->person_charge,
+                            'occupation' => $request->tutor_occupation
+                        ]);
+
+                        DB::commit();
+                    } catch (\Throwable $th) {
+
+                        DB::rollBack();
+                        Notify::fail(__('Something went wrong.'));
+                        return redirect()->back();
+                    }
                 }
             }
         } else {
@@ -252,7 +332,7 @@ class PersonChargeController extends Controller
 
             return redirect()->back()->with('student', $student);
         } else {
-            Notify::success( __('Student updated!') );
+            Notify::success(__('Student updated!'));
             return redirect()->back();
         }
     }

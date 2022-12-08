@@ -33,7 +33,6 @@ use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,64 +45,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('test-date', function(){
-
-    echo '<br>'. Carbon::parse('07/11/1987')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('07/11/1987')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('07/11/1987')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('07/11/1987')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('20-10-1977')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('20-10-1977')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('08-06-1976')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('08-06-1976')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('08-06-1976')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('08-06-1976')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('08-12-1991')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('08-12-1991')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('08-12-1991')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('28-10-1984')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('28-10-1984')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('28-10-1984')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('28-10-1984')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('28-10-1984')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('28-10-1984')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('28-10-1984')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('16-05-1992')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('16-05-1992')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('16-05-1992')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('19-10-1993')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('19-10-1993')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('19-10-1993')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('12-08-1995')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('04/05/1981')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('04/05/1981')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('04/05/1981')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('04/05/1981')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('20-01-1980')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('20-01-1980')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('20-01-1980')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('20-01-1980')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('18-01-1986')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('08/07/1976')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('08/07/1976')->format('Y-m-d');
-    echo '<br>'. Carbon::parse('08/07/1976')->format('Y-m-d');
-
-
-});
 
 
 Route::middleware(['auth', 'verified'])->group(function () {

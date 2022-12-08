@@ -91,4 +91,40 @@ class Teacher extends Model
             set: fn($v) => Carbon::parse($v)->format('Y-m-d')
         );
     }
+    protected function dateEntry(): Attribute
+    {
+        return Attribute::make(
+            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
+        );
+    }
+    protected function dateAppointment(): Attribute
+    {
+        return Attribute::make(
+            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
+        );
+    }
+    protected function datePossessionCertificate(): Attribute
+    {
+        return Attribute::make(
+            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
+        );
+    }
+    protected function dateTransferResolution(): Attribute
+    {
+        return Attribute::make(
+            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
+        );
+    }
+    protected function dateResolutionHierarchy(): Attribute
+    {
+        return Attribute::make(
+            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
+        );
+    }
+    protected function dateLastDiploma(): Attribute
+    {
+        return Attribute::make(
+            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
+        );
+    }
 }
