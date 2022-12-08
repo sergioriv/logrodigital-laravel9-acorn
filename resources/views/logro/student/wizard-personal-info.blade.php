@@ -247,7 +247,7 @@ $title = __('Personal Information');
                                                                 name="birthdate" :hasError="'birthdate'" />
                                                         @else
                                                             <x-input-error :value="old('birthdate', $student->birthdate)" logro="datePickerBefore"
-                                                                name="birthdate" :hasError="'birthdate'" />
+                                                                name="birthdate" :hasError="'birthdate'" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                                         @endif
                                                     </div>
                                                 </div>

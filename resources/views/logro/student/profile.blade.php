@@ -420,7 +420,7 @@
                                                 @unlessrole('STUDENT')
                                                     <x-label>{{ __('birthdate') }} {!! $input_required !!}</x-label>
                                                     <x-input-error :value="$student->birthdate" logro="datePickerBefore" name="birthdate"
-                                                        :hasError="'birthdate'" />
+                                                        :hasError="'birthdate'" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                                 @else
                                                     <x-label>{{ __('birthdate') }}</x-label>
                                                     <span class="form-control text-muted">{{ $student->birthdate }}</span>
@@ -1318,9 +1318,10 @@
                                         <div class="col-md-6">
                                             <div class="mb-3 tooltip-label-end position-relative form-group">
                                                 <x-label>{{ __('birthdate') }}</x-label>
-                                                <x-input-error
+                                                <x-input-error data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd"
                                                     value="{{ old('mother_birthdate', $student->mother->birthdate ?? null) }}"
-                                                    logro="datePickerBefore" name="mother_birthdate" :hasError="'mother_birthdate'" />
+                                                    logro="datePickerBefore" name="mother_birthdate" :hasError="'mother_birthdate'"
+                                                    data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -1440,7 +1441,8 @@
                                                 <x-label>{{ __('birthdate') }}</x-label>
                                                 <x-input-error
                                                     value="{{ old('father_birthdate', $student->father->birthdate ?? null) }}"
-                                                    logro="datePickerBefore" name="father_birthdate" :hasError="'father_birthdate'" />
+                                                    logro="datePickerBefore" name="father_birthdate" :hasError="'father_birthdate'"
+                                                    data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -1561,7 +1563,8 @@
                                                     <x-label>{{ __('birthdate') }}</x-label>
                                                     <x-input-error
                                                         value="{{ old('tutor_birthdate', $student->tutor->birthdate ?? null) }}"
-                                                        logro="datePickerBefore" name="tutor_birthdate" :hasError="'tutor_birthdate'" />
+                                                        logro="datePickerBefore" name="tutor_birthdate" :hasError="'tutor_birthdate'"
+                                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">

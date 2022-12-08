@@ -122,7 +122,8 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('birthdate') }}</x-label>
-                                        <x-input :value="old('birthdate', $teacher)" logro="datePickerBefore" name="birthdate" />
+                                        <x-input :value="old('birthdate', $teacher)" logro="datePickerBefore" name="birthdate"
+                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -190,7 +191,8 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('date') }}</x-label>
-                                        <x-input :value="old('date_appointment', $teacher)" logro="datePickerBefore" name="date_appointment" />
+                                        <x-input :value="old('date_appointment', $teacher)" logro="datePickerBefore" name="date_appointment"
+                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -203,7 +205,7 @@
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('date') }}</x-label>
                                         <x-input :value="old('date_possession_certificate', $teacher)" logro="datePickerBefore"
-                                            name="date_possession_certificate" />
+                                            name="date_possession_certificate" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -216,7 +218,7 @@
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('date') }}</x-label>
                                         <x-input :value="old('date_transfer_resolution', $teacher)" logro="datePickerBefore"
-                                            name="date_transfer_resolution" />
+                                            name="date_transfer_resolution" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                     </div>
                                 </div>
                             </div>
@@ -240,7 +242,7 @@
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('date') }}</x-label>
                                         <x-input :value="old('date_resolution_hierarchy', $teacher)" logro="datePickerBefore"
-                                            name="date_resolution_hierarchy" />
+                                            name="date_resolution_hierarchy" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                     </div>
                                 </div>
                             </div>
@@ -263,7 +265,8 @@
                                 <div class="col-md-4">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('date') }}</x-label>
-                                        <x-input :value="old('date_last_diploma', $teacher)" logro="datePickerBefore" name="date_last_diploma" />
+                                        <x-input :value="old('date_last_diploma', $teacher)" logro="datePickerBefore" name="date_last_diploma"
+                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                     </div>
                                 </div>
                             </div>

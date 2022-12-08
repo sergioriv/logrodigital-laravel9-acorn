@@ -115,7 +115,8 @@ $title = __('Create Teacher');
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
-                                            <x-input :value="old('date_appointment')" logro="datePickerBefore" name="date_appointment" />
+                                            <x-input :value="old('date_appointment')" logro="datePickerBefore" name="date_appointment"
+                                            data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                         </div>
                                     </div>
                                 </div>
@@ -129,7 +130,8 @@ $title = __('Create Teacher');
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
-                                            <x-input :value="old('date_possession_certificate')" logro="datePickerBefore" name="date_possession_certificate" />
+                                            <x-input :value="old('date_possession_certificate')" logro="datePickerBefore" name="date_possession_certificate"
+                                            data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +145,8 @@ $title = __('Create Teacher');
                                     <div class="col-md-6">
                                         <div class="mb-3 position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
-                                            <x-input :value="old('date_transfer_resolution')" logro="datePickerBefore" name="date_transfer_resolution" />
+                                            <x-input :value="old('date_transfer_resolution')" logro="datePickerBefore" name="date_transfer_resolution"
+                                            data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                         </div>
                                     </div>
                                 </div>

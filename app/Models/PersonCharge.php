@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Traits\FormatDate;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -45,5 +47,14 @@ class PersonCharge extends Model
     public function residenceCity()
     {
         return $this->belongsTo(City::class, 'residence_city_id');
+    }
+
+
+    /* Cast */
+    protected function birthdate(): Attribute
+    {
+        return Attribute::make(
+            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
+        );
     }
 }

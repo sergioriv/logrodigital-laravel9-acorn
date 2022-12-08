@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\FormatDate;
 use App\Traits\Uuid;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -80,5 +82,13 @@ class Teacher extends Model
     public function getFullName()
     {
         return "{$this->names} {$this->last_names}";
+    }
+
+    /* Cast */
+    protected function birthdate(): Attribute
+    {
+        return Attribute::make(
+            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
+        );
     }
 }

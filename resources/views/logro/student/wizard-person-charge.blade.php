@@ -218,7 +218,8 @@ $title = __('Persons in Charge');
                                                             <x-input-error
                                                                 value="{{ old('mother_birthdate', $student->mother->birthdate ?? null) }}"
                                                                 logro="datePickerBefore" name="mother_birthdate"
-                                                                :hasError="'mother_birthdate'" />
+                                                                :hasError="'mother_birthdate'"
+                                                                data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
@@ -346,7 +347,8 @@ $title = __('Persons in Charge');
                                                             <x-input-error
                                                                 value="{{ old('father_birthdate', $student->father->birthdate ?? null) }}"
                                                                 logro="datePickerBefore" name="father_birthdate"
-                                                                :hasError="'father_birthdate'" />
+                                                                :hasError="'father_birthdate'"
+                                                                data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
@@ -482,7 +484,8 @@ $title = __('Persons in Charge');
                                                                 <x-input-error
                                                                     value="{{ old('tutor_birthdate', $student->tutor->birthdate ?? null) }}"
                                                                     logro="datePickerBefore" name="tutor_birthdate"
-                                                                    :hasError="'tutor_birthdate'" />
+                                                                    :hasError="'tutor_birthdate'"
+                                                                    data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
