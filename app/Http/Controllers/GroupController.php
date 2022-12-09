@@ -424,7 +424,7 @@ class GroupController extends Controller
                 [$subject, $teacher] = explode('~', $teacher_subject);
 
                 /*
-                 * Para comprobar que la manteria que llega, pertenece al grado que se encuentra el grado
+                 * Para comprobar que la materia que llega, pertenece al grado que se encuentra el grado
                  *  */
                 $checkSubjectInGroup = AcademicWorkload::where('school_year_id', $group->school_year_id)
                     ->where('study_year_id', $group->study_year_id)
