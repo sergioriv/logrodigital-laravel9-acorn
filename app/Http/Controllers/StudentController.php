@@ -526,10 +526,6 @@ class StudentController extends Controller
                         'student_id' => $student->id
                     ]);
 
-                    $group->update([
-                        'student_quantity' => ++$group->student_quantity
-                    ]);
-
                     $student->update([
                         'group_id' => $group->id,
                         'enrolled_date' => now(),
@@ -547,16 +543,6 @@ class StudentController extends Controller
                 } else {
                     $groupStudentExist->update([
                         'group_id' => $request->group
-                    ]);
-
-                    $leaveGroup = Group::find($student->group_id);
-                    $leaveGroup->update([
-                        'student_quantity' => --$leaveGroup->student_quantity
-                    ]);
-
-                    $newGroup = Group::find($request->group);
-                    $newGroup->update([
-                        'student_quantity' => ++$newGroup->student_quantity
                     ]);
 
                     $student->update([
@@ -1088,16 +1074,11 @@ class StudentController extends Controller
         }
 
         if (NULL !== $student->group_id) {
-            $groupStudent = $student->group;
+
             GroupStudent::where('student_id', $student->id)
                 ->where('group_id', $student->group_id)
                 ->first()
                 ->delete();
-
-            $newGroupQuantity = --$groupStudent->student_quantity;
-            $groupStudent->update([
-                'student_quantity' => $newGroupQuantity
-            ]);
         }
 
         $student->update([

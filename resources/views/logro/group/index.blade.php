@@ -122,7 +122,7 @@ $title = __('Groups');
                             @if ($group->specialty)
                             <span class="badge text-primary icon-12 me-2 position-absolute e-n2 t-2 z-index-1"><i class="icon bi-star-fill"></i></span>
                             @endif
-                            <small class="mt-2 text-muted">{{ $group->student_quantity .' '. __("students") }}</small>
+                            <small class="mt-2 text-muted">{{ $group->groupStudents->count() .' '. __("students") }}</small>
                         </x-group.card>
                         @endforeach
                     </section>

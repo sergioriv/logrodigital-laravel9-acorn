@@ -47,7 +47,16 @@ class GradeController extends Controller
 
         DB::beginTransaction();
         foreach ($request->students as $code => $grades) {
-            $student = Student::where('code', $code)->where('group_id', $group->id)->first();
+
+            if ($group->specialty) {
+
+                $student = Student::where('code', $code)->where('group_specialty_id', $group->id)->first();
+            } else {
+
+                $student = Student::where('code', $code)->where('group_id', $group->id)->first();
+            }
+
+
             if (!$student) {
 
                 DB::rollBack();

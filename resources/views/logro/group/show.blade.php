@@ -93,7 +93,7 @@
                                 @can('groups.students')
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link active" data-bs-toggle="tab" href="#studentsTab" role="tab"
-                                            aria-selected="true">{{ __('Students') }} ({{ $group->student_quantity }})</a>
+                                            aria-selected="true">{{ __('Students') }} ({{ $group->groupStudents->count() }})</a>
                                     </li>
                                 @endcan
                                 @can('groups.teachers')
@@ -139,33 +139,28 @@
                                             <div class="card-body">
                                                 <table class="table table-striped mb-0">
                                                     <tbody>
-                                                        @foreach ($studentsGroup as $studentG)
+                                                        @foreach ($group->groupStudents as $studentG)
                                                             <tr>
                                                                 <td scope="row">
                                                                     @can('students.info')
-                                                                        <a href="{{ route('students.show', $studentG) }}"
+                                                                        <a href="{{ route('students.show', $studentG->student) }}"
                                                                             class="list-item-heading body">
-                                                                            {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
+                                                                            {{ $studentG->student->getCompleteNames() }}
                                                                         </a>
                                                                     @else
-                                                                        <a href="{{ route('students.view', $studentG) }}"
+                                                                        <a href="{{ route('students.view', $studentG->student) }}"
                                                                             class="list-item-heading body">
-                                                                            {{ $studentG->getLastNames() . ' ' . $studentG->getNames() }}
+                                                                            {{ $studentG->student->getCompleteNames() }}
                                                                         </a>
                                                                     @endcan
 
-                                                                    @if (1 === $studentG->inclusive)
-                                                                        <span
-                                                                            class="badge bg-outline-warning">{{ __('inclusive') }}</span>
-                                                                    @endif
-                                                                    @if ('new' === $studentG->status)
-                                                                        <span
-                                                                            class="badge bg-outline-primary">{{ __($studentG->status) }}</span>
-                                                                    @elseif ('repeat' === $studentG->status)
-                                                                        <span
-                                                                            class="badge bg-outline-danger">{{ __($studentG->status) }}</span>
-                                                                    @endif
+                                                                    {!! $studentG->student->tag() !!}
                                                                 </td>
+                                                                @if (is_null($group->specialty))
+                                                                    <td>
+                                                                        {{ \App\Http\Controllers\GroupController::specialtyForStudent($studentG->student->id, $group) }}
+                                                                    </td>
+                                                                @endif
                                                             </tr>
                                                         @endforeach
                                                     </tbody>

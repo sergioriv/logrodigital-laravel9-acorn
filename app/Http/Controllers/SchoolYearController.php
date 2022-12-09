@@ -24,7 +24,12 @@ class SchoolYearController extends Controller
      */
     public function index()
     {
-        $years = SchoolYear::withCount('groups')->withSum('groups','student_quantity')->get();
+        /*
+         *
+         * Pendiente para agregar la cantidad de estudiantes matriculados por ciclo escolar
+         *
+         *  */
+        $years = SchoolYear::withCount('groups')->get();
         return view('logro.schoolyear.index')->with('years', $years);
     }
 

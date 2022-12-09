@@ -60,10 +60,10 @@ $title = __('School years');
                                             <span class="heading text-body text-primary d-block">{{ $year->name }}</span>
                                             <span class="mb-2 text-extra-small fw-medium text-muted text-uppercase d-block">
                                                 {{ $year->groups_count . ' ' . __('Groups') }}</span>
-                                            @if ($year->groups_sum_student_quantity !== null)
+                                            {{-- @if ($year->groups_sum_student_quantity !== null)
                                                 <span class="text-extra-small fw-medium text-muted text-uppercase d-block">
                                                     {{ $year->groups_sum_student_quantity . ' ' . __('students') }}</span>
-                                            @endif
+                                            @endif --}}
                                         </span>
                                     </span>
                                 </label>

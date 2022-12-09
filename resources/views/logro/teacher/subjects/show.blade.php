@@ -80,7 +80,7 @@
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link active" data-bs-toggle="tab" href="#studentsTab" role="tab"
                                         aria-selected="true">{{ __('Students') }}
-                                        ({{ $subject->group->student_quantity }})</a>
+                                        ({{ $subject->group->groupStudents->count() }})</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" data-bs-toggle="tab" href="#periodsTab" role="tab"
@@ -115,18 +115,17 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($studentsGroup as $studentG)
+                                                        @foreach ($subject->group->groupStudents as $studentG)
                                                             <tr>
                                                                 <td scope="row">
-                                                                    <a href="{{ route('students.view', $studentG) }}"
+                                                                    <a href="{{ route('students.view', $studentG->student) }}"
                                                                         class="list-item-heading body">
-                                                                        {{ $studentG->getCompleteNames() }}
+                                                                        {{ $studentG->student->getCompleteNames() }}
                                                                     </a>
-                                                                    {!! $studentG->tag() !!}
-                                                                    {{-- <x-tag-student :student="$studentG" /> --}}
+                                                                    {!! $studentG->student->tag() !!}
                                                                 </td>
                                                                 <td class="text-center">
-                                                                    @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->id, $subject) @endphp
+                                                                    @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->student->id, $subject) @endphp
                                                                     {{ $defStudent }}
                                                                 </td>
                                                                 <td class="text-center text-capitalize">
@@ -219,26 +218,26 @@
                                                             </thead>
                                                             <tbody>
                                                                 @php $gradeNumber = 1; @endphp
-                                                                @foreach ($studentsGroup as $studentG)
+                                                                @foreach ($subject->group->groupStudents as $studentG)
                                                                     @php
-                                                                        $GxPS = \App\Http\Controllers\GradeController::forPeriod($subject->id, $period->id, $studentG->id);
+                                                                        $GxPS = \App\Http\Controllers\GradeController::forPeriod($subject->id, $period->id, $studentG->student->id);
                                                                     @endphp
 
                                                                     <tr>
                                                                         <td scope="row">
                                                                             @can('students.info')
-                                                                                <a href="{{ route('students.show', $studentG) }}"
+                                                                                <a href="{{ route('students.show', $studentG->student) }}"
                                                                                     class="list-item-heading body">
-                                                                                    {{ $studentG->getCompleteNames() }}
+                                                                                    {{ $studentG->student->getCompleteNames() }}
                                                                                 </a>
                                                                             @else
-                                                                                <a href="{{ route('students.view', $studentG) }}"
+                                                                                <a href="{{ route('students.view', $studentG->student) }}"
                                                                                     class="list-item-heading body">
-                                                                                    {{ $studentG->getCompleteNames() }}
+                                                                                    {{ $studentG->student->getCompleteNames() }}
                                                                                 </a>
                                                                             @endcan
 
-                                                                            {!! $studentG->tag() !!}
+                                                                            {!! $studentG->student->tag() !!}
 
                                                                         </td>
                                                                         <td scope="row" class="col-1">
@@ -248,7 +247,7 @@
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
-                                                                                    name="students[{{ $studentG->code }}][conceptual]"
+                                                                                    name="students[{{ $studentG->student->code }}][conceptual]"
                                                                                     value="{{ $GxPS->conceptual ?? null }}" />
                                                                             @else
                                                                                 <div class="form-control bg-light">
@@ -262,7 +261,7 @@
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
-                                                                                    name="students[{{ $studentG->code }}][procedural]"
+                                                                                    name="students[{{ $studentG->student->code }}][procedural]"
                                                                                     value="{{ $GxPS->procedural ?? null }}" />
                                                                             @else
                                                                                 <div class="form-control bg-light">
@@ -276,7 +275,7 @@
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
-                                                                                    name="students[{{ $studentG->code }}][attitudinal]"
+                                                                                    name="students[{{ $studentG->student->code }}][attitudinal]"
                                                                                     value="{{ $GxPS->attitudinal ?? null }}" />
                                                                             @else
                                                                                 <div class="form-control bg-light">
@@ -405,18 +404,18 @@
 
                             <table class="table table-striped mb-0">
                                 <tbody>
-                                    @foreach ($studentsGroup as $studentG)
+                                    @foreach ($subject->group->groupStudents as $studentG)
                                         <tr>
                                             <td>
                                                 <label class="form-check custom-icon mb-0 unchecked-opacity-25">
                                                     <input type="checkbox" class="form-check-input"
-                                                        name="studentsAttendance[{{ $studentG->code }}]" value="1"
+                                                        name="studentsAttendance[{{ $studentG->student->code }}]" value="1"
                                                         checked>
                                                     <span class="form-check-label">
                                                         <span class="content">
                                                             <span class="heading mb-1 d-block lh-1-25">
-                                                                {{ $studentG->getCompleteNames() }}
-                                                                <x-tag-student :student="$studentG" />
+                                                                {{ $studentG->student->getCompleteNames() }}
+                                                                <x-tag-student :student="$studentG->student" />
                                                             </span>
                                                         </span>
                                                     </span>

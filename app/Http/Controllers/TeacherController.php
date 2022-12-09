@@ -246,12 +246,6 @@ class TeacherController extends Controller
 
         $Y = SchoolYearController::current_year();
 
-        if ($subject->group->specialty) {
-            $studentsGroup = Student::where('group_specialty_id', $subject->group_id)->get();
-        } else {
-            $studentsGroup = Student::where('group_id', $subject->group_id)->get();
-        }
-
 
         $periods = Period::where('study_time_id', $subject->group->study_time_id)
                     ->withCount(['permits as permit' => fn ($p) => $p->teacher_subject_group_id = $subject->id])
@@ -276,7 +270,7 @@ class TeacherController extends Controller
         return view('logro.teacher.subjects.show', [
             'Y' => $Y,
             'subject' => $subject,
-            'studentsGroup' => $studentsGroup,
+            // 'studentsGroup' => $studentsGroup,
             'periods' => $periods,
             'attendanceAvailable' => $weeklyLoad->hours_week - $attendancesWeek,
             'attendances' => $attendances

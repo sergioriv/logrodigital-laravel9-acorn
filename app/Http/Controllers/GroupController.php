@@ -81,7 +81,8 @@ class GroupController extends Controller
         if (NULL !== $name)
             $groups->where('name', 'like', '%' . $name . '%');
 
-        $groups->orderBy('headquarters_id')
+        $groups->withCount('groupStudents as student_quantity')
+            ->orderBy('headquarters_id')
             ->orderBy('study_time_id')
             ->orderBy('study_year_id');
 
@@ -204,11 +205,12 @@ class GroupController extends Controller
 
         $Y = SchoolYearController::current_year();
 
-        if ($group->specialty) {
+        /* if ($group->specialty) {
             $studentsGroup = Student::where('group_specialty_id', $group->id)->get();
         } else {
             $studentsGroup = Student::where('group_id', $group->id)->get();
-        }
+        } */
+
 
         $areas = $this->subjects_teacher($Y->id, $group);
 
@@ -224,7 +226,7 @@ class GroupController extends Controller
             'group' => $group,
             'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
             'count_studentsMatriculateInStudyYear' => $this->countStudentMatriculateInStudyYear($Y, $group),
-            'studentsGroup' => $studentsGroup,
+            // 'studentsGroup' => $studentsGroup,
             'areas' => $areas,
             'periods' => $periods
         ]);
@@ -368,10 +370,6 @@ class GroupController extends Controller
                     'student_id' => $student
                 ]);
 
-                $group->update([
-                    'student_quantity' => ++$group->student_quantity
-                ]);
-
                 /* si el grupo es de especialidad, ya debe estar matriculado en otro grupo
                  * y le será asignado un grupo de especialidad */
                 if ($group->specialty) {
@@ -502,5 +500,16 @@ class GroupController extends Controller
         }
 
         return null;
+    }
+
+    public static function specialtyForStudent($student, $group)
+    {
+        return GroupStudent::where('student_id', $student)->whereHas('group', fn($g) =>
+            $g->where('school_year_id', $group->school_year_id)
+                ->where('headquarters_id', $group->headquarters_id)
+                ->where('study_time_id', $group->study_time_id)
+                ->where('study_year_id', $group->study_year_id)
+                ->where('specialty', 1)
+        )->first()->group->name ?? null;
     }
 }

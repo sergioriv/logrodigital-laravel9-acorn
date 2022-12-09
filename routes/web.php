@@ -61,32 +61,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->back();
         });
 
-        /*  ⛔  Route::get('add-uuid/secretariat', function() {
-            $secretariat = Secretariat::get();
-            foreach ($secretariat as $sec) {
-                $uuid = Str::uuid()->toString();
-                $sec->forceFill(['uuid' => $uuid])->save();
-                echo $sec;
-                echo '<br />';
-                echo '<br />';
-            }
-        }); */
-
-        /*  ⛔  Route::get('add-permissions/orientation', function() {
-            Permission::create(['name' => 'orientation.index']);
-            Permission::create(['name' => 'orientation.edit']);
-            dd('hecho');
-        }); */
-
-        /*  ⛔  Route::get('students/code-generate', function () {
-            $students = Student::all();
-            foreach ($students as $student) {
-                $student->forceFill(['code' => GenerateStudentCode::code()])
-                        ->save();
-            }
-            dd('hecho');
-        }); */
-
         Route::get('grades-reset', function () {
             Grade::getQuery()->delete();
             Notify::success('Hecho');

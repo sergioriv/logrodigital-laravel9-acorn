@@ -27,7 +27,6 @@ class GroupFactory extends Factory
             'study_year_id' => StudyYear::all()->random()->id,
             'teacher_id' => null,
             'name' => $this->faker->streetName(),
-            'student_quantity' => 0
         ];
     }
 }
