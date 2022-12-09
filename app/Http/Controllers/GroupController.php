@@ -212,20 +212,6 @@ class GroupController extends Controller
 
         $areas = $this->subjects_teacher($Y->id, $group);
 
-        $count_studentsMatriculateInStudyYear = 0;
-        if ($group->specialty) {
-
-            $count_studentsMatriculateInStudyYear = Student::whereHas('groupStudents',
-                fn($gs) => $gs->whereHas('group',
-                    fn($g) => $g->where('school_year_id', $Y->id)
-                                ->where('headquarters_id', $group->headquarters_id)
-                                ->where('study_time_id', $group->study_time_id)
-                                ->where('study_year_id', $group->study_year_id)
-                            ))->where('enrolled', 1)
-                            ->whereNull('group_specialty_id')->count();
-        }
-
-
         $periods = NULL;
         if (UserController::role_auth() === RoleUser::COORDINATION_ROL) {
             $periods = Period::select('id', 'name')->where('school_year_id', $Y->id)
@@ -237,7 +223,7 @@ class GroupController extends Controller
             'Y' => $Y,
             'group' => $group,
             'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
-            'count_studentsMatriculateInStudyYear' => $count_studentsMatriculateInStudyYear,
+            'count_studentsMatriculateInStudyYear' => $this->countStudentMatriculateInStudyYear($Y, $group),
             'studentsGroup' => $studentsGroup,
             'areas' => $areas,
             'periods' => $periods
@@ -324,7 +310,8 @@ class GroupController extends Controller
                 'document_type_code',
                 'document',
                 'inclusive',
-                'status'
+                'status',
+                'group_id'
             )->whereHas('groupStudents',
                 fn($gs) => $gs->whereHas('group',
                     fn($g) => $g->where('school_year_id', $Y->id)
@@ -498,5 +485,22 @@ class GroupController extends Controller
             ->where('study_year_id', $group->study_year_id)
             ->whereNull('enrolled')
             ->count();
+    }
+
+    private function countStudentMatriculateInStudyYear($Y, $group)
+    {
+        if ($group->specialty) {
+
+            return Student::whereHas('groupStudents',
+                fn($gs) => $gs->whereHas('group',
+                    fn($g) => $g->where('school_year_id', $Y->id)
+                                ->where('headquarters_id', $group->headquarters_id)
+                                ->where('study_time_id', $group->study_time_id)
+                                ->where('study_year_id', $group->study_year_id)
+                            ))->where('enrolled', 1)
+                            ->whereNull('group_specialty_id')->count();
+        }
+
+        return null;
     }
 }

@@ -102,8 +102,7 @@ $title = __('Matriculate students');
                             <!-- Stripe Table Start -->
                             <div class="mb-3">
                                 <table id="boxedStudentsMatriculate"
-                                    class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
-                                    data-order='[[ 2, "asc" ]]'>
+                                    class="data-table responsive nowrap stripe dataTable no-footer dtr-inline">
                                     <thead>
                                         <tr>
                                             <th class="empty all sw-3">
@@ -116,6 +115,9 @@ $title = __('Matriculate students');
                                             </th>
                                             <th class="text-muted text-small text-uppercase">{{ __('document') }}</th>
                                             <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>
+                                            @if ($group->specialty)
+                                            <th class="text-muted text-small text-uppercase">{{ __('Group') }}</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -134,20 +136,17 @@ $title = __('Matriculate students');
                                                 </td>
                                                 <td class="text-alternate">
                                                     <label for="student{{ $student->id }}">
-                                                        {{ $student->getLastNames() . ' ' . $student->getNames() }}
-
-                                                        @if (1 === $student->inclusive)
-                                                            <span class="badge bg-outline-warning">{{ __('inclusive') }}</span>
-                                                        @endif
-                                                        @if ('new' === $student->status)
-                                                            <span
-                                                                class="badge bg-outline-primary">{{ __($student->status) }}</span>
-                                                        @elseif ('repeat' === $student->status)
-                                                            <span
-                                                                class="badge bg-outline-danger">{{ __($student->status) }}</span>
-                                                        @endif
+                                                        {{ $student->getCompleteNames() }}
+                                                        {!! $student->tag() !!}
                                                     </label>
                                                 </td>
+                                                @if ($group->specialty)
+                                                <td class="text-alternate">
+                                                    <label for="student{{ $student->id }}">
+                                                        {{ $student->group->name }}
+                                                    </label>
+                                                </td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                     </tbody>

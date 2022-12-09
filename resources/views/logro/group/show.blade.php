@@ -113,7 +113,10 @@
                                     @can('groups.students.matriculate')
                                         <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
                                             @if (null !== $Y->available)
-                                                @if ($count_studentsNoEnrolled > 0 || $count_studentsMatriculateInStudyYear > 0)
+                                                @if (( is_null($group->specialty) && $count_studentsNoEnrolled > 0 )
+                                                    || ( $group->specialty && $count_studentsMatriculateInStudyYear > 0 ))
+
+                                                {{-- @if ($count_studentsNoEnrolled > 0 || $count_studentsMatriculateInStudyYear > 0) --}}
                                                     <!-- Groups Buttons Start -->
                                                     <div class="col-12 d-flex align-items-start justify-content-end">
                                                         <!-- Matriculate Students Button Start -->
