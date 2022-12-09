@@ -19,9 +19,13 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public function __construct()
+    protected $user;
+
+    public function __construct(User $user = null)
     {
         $this->middleware('can:support.access');
+
+        $this->user = $user;
     }
 
     public function index()
@@ -34,24 +38,14 @@ class UserController extends Controller
         return ['data' => User::with('roles')->orderBy('created_at', 'DESC')->get()];
     }
 
-    /* public function create($name, $email, $role)
+    public static function __create(string $name, string|null $email, int $role)
     {
-
-        return $this->_create($name, $email, $role);
-
-    } */
-
-    public static function _create($name, $email, $role)
-    {
-
-
 
         /* tratamiento para el username */
         $name = static::_username($name);
 
         $provider = null;
-        if (NULL != $email)
-        {
+        if (NULL != $email) {
             /* convertir email in lower */
             $email = Str::lower($email);
             $provider = ProviderUser::provider_validate($email);
@@ -63,34 +57,44 @@ class UserController extends Controller
             'email' => $email,
         ])->assignRole($role);
 
-        if ($role === RoleUser::STUDENT)
+        if ($role === RoleUser::STUDENT) {
+
             $user->forceFill(['email_verified_at' => now()])->save();
-        elseif (NULL !== $email) {
+
+            event(new Registered($user));
+        }
+
+        return new static($user);
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function sendVerification()
+    {
+
+        if (!is_null($this->user->email)) {
 
             /* evita enviar más de un mail de verificación al mismo correo */
             $sendmail = true;
 
             if (config('app.env') === 'production') {
-                $countEmail = User::where('email', $email)->count();
-                if ( $countEmail == 1 )
-                {
-                    $sendmail = SmtpMail::sendEmailVerificationNotification($user);
+                $countEmail = User::where('email', $this->user->email)->count();
+                if ($countEmail == 1) {
+                    $sendmail = SmtpMail::sendEmailVerificationNotification($this->user);
                 }
             }
 
-            /* si el mail de verificación rebota, el usuario es eliminado
-             * se retorna false para la creación del usuario
-             * */
-            if (!$sendmail) {
-                $user->delete();
-                return false;
-            }
+            if ($sendmail)
+                event(new Registered($this->user));
+
+            /*
+             * si el mail de verificación rebota, se retorna false y hará un rollback
+             */
+            return $sendmail;
         }
-
-
-        event(new Registered($user));
-
-        return $user;
     }
 
     public function show(User $user)
@@ -130,7 +134,7 @@ class UserController extends Controller
             /* convertir email in lower */
             $email = Str::lower($email);
 
-            if ( $user->email !== $email ) {
+            if ($user->email !== $email) {
 
                 $sendmail = SmtpMail::sendEmailVerificationNotification($user);
 
@@ -144,10 +148,8 @@ class UserController extends Controller
                     'email_verified_at' => null,
                     'password' => null,
                     'remember_token' => null
-                    ])->save();
-
+                ])->save();
             }
-
         }
 
         /* tratamiento para el username */
@@ -202,8 +204,7 @@ class UserController extends Controller
             case RoleUser::COORDINATION_ROL:
                 $name = (Coordination::where('id', $id)->first())->getFullName();
                 break;
-
-            }
+        }
 
         return $name;
     }
@@ -242,5 +243,4 @@ class UserController extends Controller
         $name = Str::words($name, 2, null);
         return $name;
     }
-
 }

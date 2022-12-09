@@ -6,6 +6,7 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Coordination;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class CoordinationController extends Controller
@@ -40,20 +41,43 @@ class CoordinationController extends Controller
             'telephone'     => ['nullable', 'string', 'max:30']
         ]);
 
-        $user = UserController::_create($request->name, $request->email, 3);
+        DB::beginTransaction();
 
-        if (!$user) {
+        $coordinationCreate = UserController::__create($request->name, $request->email, 3);
+
+        if (!$coordinationCreate->getUser()) {
+
+            DB::rollBack();
+            Notify::fail( __('Something went wrong.') );
+            return redirect()->back();
+        }
+
+        try {
+
+            Coordination::create([
+                'id' => $coordinationCreate->getUser()->id,
+                'name' => $request->name,
+                'last_names' => $request->last_names,
+                'email' => $request->email,
+                'telephone' => $request->telephone
+            ]);
+
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+            Notify::fail(__('Something went wrong.'));
+            return redirect()->back();
+        }
+
+        if (!$coordinationCreate->sendVerification()) {
+
+            DB::rollBack();
             Notify::fail( __('Invalid email (:email)', ['email' => $request->email]) );
             return redirect()->back();
         }
 
-        Coordination::create([
-            'id' => $user->id,
-            'name' => $request->name,
-            'last_names' => $request->last_names,
-            'email' => $request->email,
-            'telephone' => $request->telephone
-        ]);
+        DB::commit();
+
 
         Notify::success( __('Created coordination user!') );
         self::tab();

@@ -6,6 +6,7 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Orientation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class OrientationController extends Controller
@@ -40,20 +41,43 @@ class OrientationController extends Controller
             'telephone'     => ['nullable', 'string', 'max:30']
         ]);
 
-        $user = UserController::_create($request->name, $request->email, 5);
+        DB::beginTransaction();
 
-        if (!$user) {
+        $orientatorCreate = UserController::__create($request->name, $request->email, 5);
+
+        if (!$orientatorCreate->getUser()) {
+
+            DB::rollBack();
+            Notify::fail( __('Something went wrong.') );
+            return redirect()->back();
+        }
+
+        try {
+
+            Orientation::create([
+                'id' => $orientatorCreate->getUser()->id,
+                'name' => $request->name,
+                'last_names' => $request->last_names,
+                'email' => $request->email,
+                'telephone' => $request->telephone
+            ]);
+
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+            Notify::fail(__('Something went wrong.'));
+            return redirect()->back();
+        }
+
+        if (!$orientatorCreate->sendVerification()) {
+
+            DB::rollBack();
             Notify::fail( __('Invalid email (:email)', ['email' => $request->email]) );
             return redirect()->back();
         }
 
-        Orientation::create([
-            'id' => $user->id,
-            'name' => $request->name,
-            'last_names' => $request->last_names,
-            'email' => $request->email,
-            'telephone' => $request->telephone
-        ]);
+        DB::commit();
+
 
         Notify::success( __('Created orientation user!') );
         self::tab();

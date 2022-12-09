@@ -66,33 +66,56 @@ class TeacherController extends Controller
             'date_transfer_resolution' => ['nullable', 'date'],
         ]);
 
-        $user_name = $request->names . ' ' . $request->lastNames;
-        $user = UserController::_create($user_name, $request->institutional_email, RoleUser::TEACHER);
+        DB::beginTransaction();
 
-        if (!$user) {
-            Notify::fail(__('Invalid email (:email)', ['email' => $request->institutional_email]));
+        $techaerName = $request->names . ' ' . $request->lastNames;
+        $teacherCreate = UserController::__create($techaerName, $request->institutional_email, RoleUser::TEACHER);
+
+        if (!$teacherCreate->getUser()) {
+
+            DB::rollBack();
+            Notify::fail( __('Something went wrong.') );
             return redirect()->back();
         }
 
-        Teacher::create([
-            'id' => $user->id,
-            'uuid' => Str::uuid()->toString(),
-            'names' => $request->names,
-            'last_names' => $request->lastNames,
-            'institutional_email' => $request->institutional_email,
-            'date_entry' => $request->date_entry,
+        try {
 
-            'type_appointment' => $request->type_appointment,
-            'type_admin_act' => $request->type_admin_act,
-            'appointment_number' => $request->appointment_number,
-            'date_appointment' => $request->date_appointment,
-            'possession_certificate' => $request->possession_certificate,
-            'date_possession_certificate' => $request->date_possession_certificate,
-            'transfer_resolution' => $request->transfer_resolution,
-            'date_transfer_resolution' => $request->date_transfer_resolutionm,
+            Teacher::create([
+                'id' => $teacherCreate->getUser()->id,
+                'uuid' => Str::uuid()->toString(),
+                'names' => $request->names,
+                'last_names' => $request->lastNames,
+                'institutional_email' => $request->institutional_email,
+                'date_entry' => $request->date_entry,
 
-            'active' => TRUE
-        ]);
+                'type_appointment' => $request->type_appointment,
+                'type_admin_act' => $request->type_admin_act,
+                'appointment_number' => $request->appointment_number,
+                'date_appointment' => $request->date_appointment,
+                'possession_certificate' => $request->possession_certificate,
+                'date_possession_certificate' => $request->date_possession_certificate,
+                'transfer_resolution' => $request->transfer_resolution,
+                'date_transfer_resolution' => $request->date_transfer_resolutionm,
+
+                'active' => TRUE
+            ]);
+
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+            Notify::fail(__('Something went wrong.'));
+            return redirect()->back();
+        }
+
+        if (!$teacherCreate->sendVerification()) {
+
+            DB::rollBack();
+            Notify::fail( __('Invalid email (:email)', ['email' => $request->institutional_email]) );
+            return redirect()->back();
+        }
+
+        DB::commit();
+
 
         Notify::success(__('Teacher created!'));
         self::tab();
@@ -160,8 +183,8 @@ class TeacherController extends Controller
                 'date_last_diploma' => ['nullable', 'date', 'before:today']
             ]);
 
-            $user_name = $request->names . ' ' . $request->lastNames;
-            $user = UserController::_update($teacher->id, $user_name, $request->institutional_email);
+            $techaerName = $request->names . ' ' . $request->lastNames;
+            $user = UserController::_update($teacher->id, $techaerName, $request->institutional_email);
 
             if (!$user) {
                 Notify::fail(__('Invalid email (:email)', ['email' => $request->institutional_email]));

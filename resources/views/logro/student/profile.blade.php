@@ -420,7 +420,8 @@
                                                 @unlessrole('STUDENT')
                                                     <x-label>{{ __('birthdate') }} {!! $input_required !!}</x-label>
                                                     <x-input-error :value="$student->birthdate" logro="datePickerBefore" name="birthdate"
-                                                        :hasError="'birthdate'" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                                        :hasError="'birthdate'" data-placeholder="yyyy-mm-dd"
+                                                        placeholder="yyyy-mm-dd" />
                                                 @else
                                                     <x-label>{{ __('birthdate') }}</x-label>
                                                     <span class="form-control text-muted">{{ $student->birthdate }}</span>
@@ -1321,7 +1322,7 @@
                                                 <x-input-error data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd"
                                                     value="{{ old('mother_birthdate', $student->mother->birthdate ?? null) }}"
                                                     logro="datePickerBefore" name="mother_birthdate" :hasError="'mother_birthdate'"
-                                                    data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
+                                                    data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -1659,14 +1660,15 @@
 
                                 @can('students.documents.checked')
                                     <div class="text-center">
-                                        <div class="alert alert-warning" role="alert">{{ __('Unapproved documents will be deleted') }}</div>
+                                        <div class="alert alert-warning" role="alert">
+                                            {{ __('Unapproved documents will be deleted') }}</div>
                                     </div>
 
                                     <form method="POST" action="{{ route('students.file.checked', $student) }}"
                                         class="tooltip-label-end" novalidate>
                                         @csrf
                                         @method('PUT')
-                                @endcan
+                                    @endcan
 
                                     <div class="row g-2 row-cols-3 row-cols-md-5">
                                         @foreach ($studentFileTypes as $studentFile)
@@ -1678,8 +1680,10 @@
                                                                 <i class="icon icon-70 cursor-pointer
                                                                     @if ($studentFile->studentFile->checked == 1) bi-file-earmark-check-fill text-muted
                                                                     @else bi-file-earmark-fill text-info @endif"
-                                                                    logro="studentDocument" data-image="{{ $studentFile->studentFile->url }}"
-                                                                    data-bs-toggle="modal" data-bs-target="#modalStudentDocuments"></i>
+                                                                    logro="studentDocument"
+                                                                    data-image="{{ $studentFile->studentFile->url }}"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modalStudentDocuments"></i>
                                                             @else
                                                                 <i class="icon bi-file-earmark icon-70 text-muted"></i>
                                                             @endif
@@ -1739,13 +1743,15 @@
                                                     <select data-placeholder="Boletín a subir" name="reportbook" logro="select2">
                                                         <option label="&nbsp;"></option>
                                                         @foreach ($resourceStudyYears as $resourceSY)
-                                                        @if ($resourceSY->studentReportBook === null)
-                                                            <option value="{{ $resourceSY->id }}">{{ __($resourceSY->name) }}</option>
-                                                        @else
-                                                            @if ($resourceSY->studentReportBook->checked != 1)
-                                                            <option value="{{ $resourceSY->id }}">{{ __($resourceSY->name) }}</option>
+                                                            @if ($resourceSY->studentReportBook === null)
+                                                                <option value="{{ $resourceSY->id }}">
+                                                                    {{ __($resourceSY->name) }}</option>
+                                                            @else
+                                                                @if ($resourceSY->studentReportBook->checked != 1)
+                                                                    <option value="{{ $resourceSY->id }}">
+                                                                        {{ __($resourceSY->name) }}</option>
+                                                                @endif
                                                             @endif
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -1767,65 +1773,68 @@
                                 </div>
                             @endcan
 
-                                <div class="card-body">
+                            <div class="card-body">
 
-                                    @can('students.documents.checked')
-                                        <div class="text-center">
-                                            <div class="alert alert-warning" role="alert">{{ __('Unapproved report books will be deleted') }}</div>
-                                        </div>
+                                @can('students.documents.checked')
+                                    <div class="text-center">
+                                        <div class="alert alert-warning" role="alert">
+                                            {{ __('Unapproved report books will be deleted') }}</div>
+                                    </div>
 
-                                        <form method="POST" action="{{ route('students.reportBooks.checked', $student) }}"
-                                            class="tooltip-label-end" novalidate>
-                                            @csrf
-                                            @method('PUT')
+                                    <form method="POST" action="{{ route('students.reportBooks.checked', $student) }}"
+                                        class="tooltip-label-end" novalidate>
+                                        @csrf
+                                        @method('PUT')
                                     @endcan
 
-                                            <div class="row g-2 row-cols-3 row-cols-md-5">
-                                                @foreach ($resourceStudyYears as $resourceSYview)
-                                                    <div class="col small-gutter-col">
-                                                        <div class="h-100">
-                                                            <div class="text-center d-flex flex-column">
-                                                                <div>
-                                                                    @if ($resourceSYview->studentReportBook ?? null !== null)
-                                                                        <i class="icon icon-70 cursor-pointer
+                                    <div class="row g-2 row-cols-3 row-cols-md-5">
+                                        @foreach ($resourceStudyYears as $resourceSYview)
+                                            <div class="col small-gutter-col">
+                                                <div class="h-100">
+                                                    <div class="text-center d-flex flex-column">
+                                                        <div>
+                                                            @if ($resourceSYview->studentReportBook ?? null !== null)
+                                                                <i class="icon icon-70 cursor-pointer
                                                                         @if ($resourceSYview->studentReportBook->checked == 1) bi-file-earmark-check-fill text-muted
                                                                         @else bi-file-earmark-fill text-info @endif"
-                                                                            logro="studentDocument"
-                                                                            data-image="{{ $resourceSYview->studentReportBook->url ?? null }}"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#modalStudentDocuments"></i>
-                                                                    @else
-                                                                        <i class="icon bi-file-earmark icon-70 text-muted"></i>
-                                                                    @endif
-                                                                </div>
-                                                                <div>
-                                                                    {{ __($resourceSYview->name) }}
-                                                                </div>
-                                                                @can('students.documents.checked')
-                                                                    @if ($resourceSYview->studentReportBook ?? null !== null)
-                                                                        @if ($resourceSYview->studentReportBook->checked != 1)
-                                                                            <div class="form-switch">
-                                                                                <input class="form-check-input" name="reportbooks_checked[]"
-                                                                                    value="{{ $resourceSYview->studentReportBook->id }}"
-                                                                                    type="checkbox" />
-                                                                            </div>
-                                                                        @endif
-                                                                    @endif
-                                                                @endcan
-                                                            </div>
+                                                                    logro="studentDocument"
+                                                                    data-image="{{ $resourceSYview->studentReportBook->url ?? null }}"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modalStudentDocuments"></i>
+                                                            @else
+                                                                <i class="icon bi-file-earmark icon-70 text-muted"></i>
+                                                            @endif
                                                         </div>
+                                                        <div>
+                                                            {{ __($resourceSYview->name) }}
+                                                        </div>
+                                                        @can('students.documents.checked')
+                                                            @if ($resourceSYview->studentReportBook ?? null !== null)
+                                                                @if ($resourceSYview->studentReportBook->checked != 1)
+                                                                    <div class="form-switch">
+                                                                        <input class="form-check-input"
+                                                                            name="reportbooks_checked[]"
+                                                                            value="{{ $resourceSYview->studentReportBook->id }}"
+                                                                            type="checkbox" />
+                                                                    </div>
+                                                                @endif
+                                                            @endif
+                                                        @endcan
                                                     </div>
-                                                @endforeach
+                                                </div>
                                             </div>
+                                        @endforeach
+                                    </div>
 
                                     @can('students.documents.checked')
-                                            <div class="mt-3 d-flex justify-content-end">
-                                                <x-button class="btn-primary" type="submit">{{ __('Save approved report books') }}</x-button>
-                                            </div>
-                                        </form>
-                                    @endcan
+                                        <div class="mt-3 d-flex justify-content-end">
+                                            <x-button class="btn-primary" type="submit">{{ __('Save approved report books') }}
+                                            </x-button>
+                                        </div>
+                                    </form>
+                                @endcan
 
-                                </div>
+                            </div>
 
                         </section>
                     </div>
@@ -2168,12 +2177,6 @@
                                             <div class="mb-3 position-relative form-group">
                                                 <x-label>{{ __('medical prediagnosis') }}</x-label>
                                                 <textarea name="medical_prediagnosis" rows="5" class="form-control">{{ $student->medical_prediagnosis }}</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                            <!--  Psychosocial Assessment Section End -->
 
                             <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
                                 <x-button class="btn-primary" type="submit">{{ __('Save psychosocial information') }}
@@ -2196,39 +2199,39 @@
                                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
 
                                         @hasanyrole('ORIENTATION|SUPPORT')
-                                        @if ($student->enrolled === 1)
-                                        <!-- Dropdown Button Start -->
-                                        <div class="">
-                                            <button type="button" class="btn btn-outline-info btn-icon btn-icon-only"
-                                            data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false" data-submenu>
-                                            <i data-acorn-icon="more-horizontal"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <x-dropdown-item type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#addAdviceModal">
-                                                    <span>{{ __('Add advice') }}</span>
-                                                </x-dropdown-item>
-                                                <x-dropdown-item type="button" data-bs-toggle="modal"
-                                                data-bs-target="#addRemitModal">
-                                                    <span>{{ __('Remit') }}</span>
-                                                </x-dropdown-item>
-                                                <x-dropdown-item type="button" data-bs-toggle="modal"
-                                                data-bs-target="#addTeacherModal">
-                                                <span>{{ __('Add teacher referral') }}</span>
-                                            </x-dropdown-item>
-                                            <x-dropdown-item type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#addCoordinationModal">
-                                                    <span>{{ __('Add coordination referral') }}</span>
-                                                </x-dropdown-item>
-                                                <x-dropdown-item type="button" data-bs-toggle="modal"
-                                                data-bs-target="#addFamilyModal">
-                                                <span>{{ __('Add referral to family') }}</span>
-                                                </x-dropdown-item>
-                                            </div>
-                                        </div>
-                                        <!-- Dropdown Button End -->
-                                        @endif
+                                            @if ($student->enrolled === 1)
+                                                <!-- Dropdown Button Start -->
+                                                <div class="">
+                                                    <button type="button" class="btn btn-outline-info btn-icon btn-icon-only"
+                                                        data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false" data-submenu>
+                                                        <i data-acorn-icon="more-horizontal"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                            data-bs-target="#addAdviceModal">
+                                                            <span>{{ __('Add advice') }}</span>
+                                                        </x-dropdown-item>
+                                                        <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                            data-bs-target="#addRemitModal">
+                                                            <span>{{ __('Remit') }}</span>
+                                                        </x-dropdown-item>
+                                                        <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                            data-bs-target="#addTeacherModal">
+                                                            <span>{{ __('Add teacher referral') }}</span>
+                                                        </x-dropdown-item>
+                                                        <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                            data-bs-target="#addCoordinationModal">
+                                                            <span>{{ __('Add coordination referral') }}</span>
+                                                        </x-dropdown-item>
+                                                        <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                            data-bs-target="#addFamilyModal">
+                                                            <span>{{ __('Add referral to family') }}</span>
+                                                        </x-dropdown-item>
+                                                    </div>
+                                                </div>
+                                                <!-- Dropdown Button End -->
+                                            @endif
                                         @endhasanyrole
 
                                     </div>
@@ -2260,11 +2263,14 @@
                                                             <div class="d-inline-block">{{ __('Referral to') }}:
                                                                 {{ $studentTracking->entity_remit }}</div>
                                                         @elseif ($studentTracking->type_tracking === 'family')
-                                                            <div class="logro-label">{{ __('recommendation to the family') }}</div>
+                                                            <div class="logro-label">
+                                                                {{ __('recommendation to the family') }}</div>
                                                         @elseif ($studentTracking->type_tracking === 'teachers')
-                                                            <div class="logro-label">{{ __('Recommendation for teachers') }}</div>
+                                                            <div class="logro-label">{{ __('Recommendation for teachers') }}
+                                                            </div>
                                                         @elseif ($studentTracking->type_tracking === 'coordination')
-                                                            <div class="logro-label">{{ __('Recommendation to coordination') }}</div>
+                                                            <div class="logro-label">
+                                                                {{ __('Recommendation to coordination') }}</div>
                                                         @endif
                                                     </td>
                                                     <td class="text-small">
@@ -2296,100 +2302,98 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- Advices Tab End -->
+                    <!-- Tracking Tab End -->
 
-                <!-- PIAR Tab Start -->
-                @if (1 === $student->inclusive)
-                    <div class="tab-pane fade " id="piarTab" role="tabpanel">
-                        <section class="scroll-section">
-                            <h2 class="small-title">PIAR</h2>
-                            <div class="mb-n2" id="accordionCardsSubjects">
-                                @foreach ($groupsStudent as $groupS)
-                                    <div class="card d-flex mb-2 card-color-background">
-                                        <div class="d-flex flex-grow-1" role="button" data-bs-toggle="collapse"
-                                            data-bs-target="#year-{{ $groupS->schoolYear->name }}" aria-expanded="true"
-                                            aria-controls="year-{{ $groupS->schoolYear->name }}">
-                                            <div class="card-body py-3 border-bottom">
-                                                <div class="btn btn-link list-item-heading p-0">
-                                                    {{ $groupS->schoolYear->name }} -
-                                                    {{ '(' . $groupS->studyYear->name . ' - ' . $groupS->name . ')' }}
+                    <!-- PIAR Tab Start -->
+                    @if (1 === $student->inclusive)
+                        <div class="tab-pane fade " id="piarTab" role="tabpanel">
+                            <section class="scroll-section">
+                                <h2 class="small-title">PIAR</h2>
+                                <div class="mb-n2" id="accordionCardsSubjects">
+                                    @foreach ($groupsStudent as $groupS)
+                                        <div class="card d-flex mb-2 card-color-background">
+                                            <div class="d-flex flex-grow-1" role="button" data-bs-toggle="collapse"
+                                                data-bs-target="#year-{{ $groupS->schoolYear->name }}"
+                                                aria-expanded="true" aria-controls="year-{{ $groupS->schoolYear->name }}">
+                                                <div class="card-body py-3 border-bottom">
+                                                    <div class="btn btn-link list-item-heading p-0">
+                                                        {{ $groupS->schoolYear->name }} -
+                                                        {{ '(' . $groupS->studyYear->name . ' - ' . $groupS->name . ')' }}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div id="year-{{ $groupS->schoolYear->name }}"
-                                            class="collapse @if ($loop->first) show @endif"
-                                            data-bs-parent="#accordionCardsSubjects">
-                                            <div class="card mt-3 accordion-content">
-                                                <div class="card-body pb-3">
+                                            <div id="year-{{ $groupS->schoolYear->name }}"
+                                                class="collapse @if ($loop->first) show @endif"
+                                                data-bs-parent="#accordionCardsSubjects">
+                                                <div class="card mt-3 accordion-content">
+                                                    <div class="card-body pb-3">
 
-                                                    @if ($YAvailable === $groupS->school_year_id)
-                                                        <form
-                                                            method="POST"action="{{ route('students.piar', $student) }}"
-                                                            novalidate>
-                                                            @csrf
-                                                            @method('PUT')
-                                                    @endif
-                                                    @php $groupSubjects = '' @endphp
-
-                                                    @foreach ($groupS->studyYear->academicWorkload as $academicWorkload)
-                                                        @if ($groupS->school_year_id === $academicWorkload->school_year_id)
-                                                            <div class="mb-3">
-                                                                <h2 class="small-title">
-                                                                    {{ $academicWorkload->subject->resourceSubject->public_name }}
-                                                                    -
-
-                                                                    @foreach ($academicWorkload->subject->teacherSubjectGroups as $groupTSG)
-                                                                        @if ($groupS->id === $groupTSG->group_id && $groupS->school_year_id === $groupTSG->school_year_id)
-                                                                            {{ '(' . $groupTSG->teacher->getFullName() . ')' }}
-                                                                        @endif
-                                                                    @endforeach
-
-                                                                </h2>
-                                                                <div class="w-100 position-relative form-group">
-                                                                    @if ($YAvailable === $academicWorkload->subject->school_year_id)
-                                                                        <textarea
-                                                                            name="{{ $academicWorkload->subject->piarOne->id ?? 'null' }}~{{ $academicWorkload->subject->id }}~annotation"
-                                                                            class="form-control" cols="2">{{ $academicWorkload->subject->piarOne->annotation ?? null }}</textarea>
-                                                                    @else
-                                                                        <span
-                                                                            class="form-control">{{ $academicWorkload->subject->piarOne->annotation ?? null }}</span>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                            @php
-                                                                $groupSubjects .= $academicWorkload->subject->id . '~';
-                                                            @endphp
+                                                        @if ($YAvailable === $groupS->school_year_id)
+                                                            <form
+                                                                method="POST"action="{{ route('students.piar', $student) }}"
+                                                                novalidate>
+                                                                @csrf
+                                                                @method('PUT')
                                                         @endif
-                                                    @endforeach
+                                                        @php $groupSubjects = '' @endphp
 
-                                                    @if ($YAvailable === $groupS->school_year_id)
-                                                        <input type="hidden" name="groupSubjects"
-                                                            value="{{ $groupSubjects }}">
-                                                        <div
-                                                            class="border-0 pt-0 d-flex justify-content-end align-items-center">
-                                                            <x-button class="btn-primary" type="submit">
-                                                                {{ __('Save') }} PIAR</x-button>
-                                                        </div>
-                                                        </form>
-                                                    @endif
+                                                        @foreach ($groupS->studyYear->academicWorkload as $academicWorkload)
+                                                            @if ($groupS->school_year_id === $academicWorkload->school_year_id)
+                                                                <div class="mb-3">
+                                                                    <h2 class="small-title">
+                                                                        {{ $academicWorkload->subject->resourceSubject->public_name }}
+                                                                        -
+
+                                                                        @foreach ($academicWorkload->subject->teacherSubjectGroups as $groupTSG)
+                                                                            @if ($groupS->id === $groupTSG->group_id && $groupS->school_year_id === $groupTSG->school_year_id)
+                                                                                {{ '(' . $groupTSG->teacher->getFullName() . ')' }}
+                                                                            @endif
+                                                                        @endforeach
+
+                                                                    </h2>
+                                                                    <div class="w-100 position-relative form-group">
+                                                                        @if ($YAvailable === $academicWorkload->subject->school_year_id)
+                                                                            <textarea
+                                                                                name="{{ $academicWorkload->subject->piarOne->id ?? 'null' }}~{{ $academicWorkload->subject->id }}~annotation"
+                                                                                class="form-control" cols="2">{{ $academicWorkload->subject->piarOne->annotation ?? null }}</textarea>
+                                                                        @else
+                                                                            <span
+                                                                                class="form-control">{{ $academicWorkload->subject->piarOne->annotation ?? null }}</span>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                                @php
+                                                                    $groupSubjects .= $academicWorkload->subject->id . '~';
+                                                                @endphp
+                                                            @endif
+                                                        @endforeach
+
+                                                        @if ($YAvailable === $groupS->school_year_id)
+                                                            <input type="hidden" name="groupSubjects"
+                                                                value="{{ $groupSubjects }}">
+                                                            <div
+                                                                class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                                                                <x-button class="btn-primary" type="submit">
+                                                                    {{ __('Save') }} PIAR</x-button>
+                                                            </div>
+                                                            </form>
+                                                        @endif
 
 
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </section>
-                    </div>
-                @endif
-                <!-- PIAR Tab End -->
-            @endcan
-
-    </div>
-    <!-- Right Side End -->
-    </section>
+                                    @endforeach
+                                </div>
+                            </section>
+                        </div>
+                    @endif
+                    <!-- PIAR Tab End -->
+                @endcan
+            </div>
+            <!-- Right Side End -->
+        </section>
 
     </div>
 
@@ -2490,80 +2494,85 @@
     @endunlessrole
 
     @can('students.psychosocial')
-
-    @hasanyrole('ORIENTATION|SUPPORT')
-    @if ($student->enrolled === 1)
-        <!-- Modal Add Advice -->
-        <div class="modal fade" id="addAdviceModal" aria-labelledby="modalAddAdvice" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalAddAdvice">{{ __('Add advice') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        @hasanyrole('ORIENTATION|SUPPORT')
+            @if ($student->enrolled === 1)
+                <!-- Modal Add Advice -->
+                <div class="modal fade" id="addAdviceModal" aria-labelledby="modalAddAdvice" data-bs-backdrop="static"
+                    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalAddAdvice">{{ __('Add advice') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            @include('logro.student.tracking.advice')
+                        </div>
                     </div>
-                    @include('logro.student.tracking.advice')
                 </div>
-            </div>
-        </div>
 
-        <!-- Modal Add Remit -->
-        <div class="modal fade" id="addRemitModal" aria-labelledby="modalAddRemit" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalAddRemit">{{ __('Remit') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- Modal Add Remit -->
+                <div class="modal fade" id="addRemitModal" aria-labelledby="modalAddRemit" data-bs-backdrop="static"
+                    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalAddRemit">{{ __('Remit') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            @include('logro.student.tracking.remit')
+                        </div>
                     </div>
-                    @include('logro.student.tracking.remit')
                 </div>
-            </div>
-        </div>
 
-        <!-- Modal Add Teachers -->
-        <div class="modal fade" id="addTeacherModal" aria-labelledby="modalAddTeacher" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalAddTeacher">{{ __('Recommendation for teachers') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- Modal Add Teachers -->
+                <div class="modal fade" id="addTeacherModal" aria-labelledby="modalAddTeacher" data-bs-backdrop="static"
+                    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalAddTeacher">{{ __('Recommendation for teachers') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            @include('logro.student.tracking.teacher')
+                        </div>
                     </div>
-                    @include('logro.student.tracking.teacher')
                 </div>
-            </div>
-        </div>
 
-        <!-- Modal Add Coordination -->
-        <div class="modal fade" id="addCoordinationModal" aria-labelledby="modalAddCoordination" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalAddCoordination">{{ __('Recommendation to coordination') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- Modal Add Coordination -->
+                <div class="modal fade" id="addCoordinationModal" aria-labelledby="modalAddCoordination"
+                    data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalAddCoordination">{{ __('Recommendation to coordination') }}
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            @include('logro.student.tracking.coordination')
+                        </div>
                     </div>
-                    @include('logro.student.tracking.coordination')
                 </div>
-            </div>
-        </div>
 
-        <!-- Modal Add Family -->
-        <div class="modal fade" id="addFamilyModal" aria-labelledby="modalAddFamily" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalAddFamily">{{ __('recommendation to the family') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- Modal Add Family -->
+                <div class="modal fade" id="addFamilyModal" aria-labelledby="modalAddFamily" data-bs-backdrop="static"
+                    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalAddFamily">{{ __('recommendation to the family') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            @include('logro.student.tracking.family')
+                        </div>
                     </div>
-                    @include('logro.student.tracking.family')
                 </div>
-            </div>
-        </div>
-    @endif
-    @endhasanyrole
+            @endif
+        @endhasanyrole
 
         <!-- Modal View Info Tracking -->
         <div class="modal fade" id="viewTracking" aria-labelledby="modalViewTracking" data-bs-backdrop="static"

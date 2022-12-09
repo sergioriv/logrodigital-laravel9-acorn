@@ -109,25 +109,25 @@ class PersonChargeController extends Controller
         /*
          * Create or Update Mother User
          */
+        DB::beginTransaction();
+        $sendEmailMother = false;
+
         if (NULL !== $request->mother_name) {
             if ($mother === NULL) {
 
-                DB::beginTransaction();
+                $motherCreate = UserController::__create($request->mother_name, $request->mother_email, RoleUser::PARENT);
 
-                $user_mother = UserController::_create($request->mother_name, $request->mother_email, RoleUser::PARENT);
-
-                if (!$user_mother) {
+                if (!$motherCreate->getUser()) {
 
                     DB::rollBack();
-
-                    Notify::fail(__('Invalid email (:email)', ['email' => $request->mother_email]));
+                    Notify::fail(__('Something went wrong.'));
                     return redirect()->back();
                 }
 
                 try {
 
                     PersonCharge::create([
-                        'id' => $user_mother->id,
+                        'id' => $motherCreate->getUser()->id,
                         'student_id' => $student->id,
                         'name' => $request->mother_name,
                         'email' => $request->mother_email,
@@ -142,7 +142,7 @@ class PersonChargeController extends Controller
                         'occupation' => $request->mother_occupation
                     ]);
 
-                    DB::commit();
+                    $sendEmailMother = true;
                 } catch (\Throwable $th) {
 
                     DB::rollBack();
@@ -166,7 +166,6 @@ class PersonChargeController extends Controller
                         'occupation' => $request->mother_occupation
                     ]);
 
-                    DB::commit();
                 } catch (\Throwable $th) {
 
                     DB::rollBack();
@@ -176,27 +175,42 @@ class PersonChargeController extends Controller
             }
         }
 
+        if ($sendEmailMother) {
+
+            if (!$motherCreate->sendVerification()) {
+
+                DB::rollBack();
+                Notify::fail(__('Invalid email (:email)', ['email' => $request->mother_email]));
+                return redirect()->back();
+            }
+        }
+
+        DB::commit();
+
+
         /*
          * Create or Update Father User
          */
+        DB::beginTransaction();
+        $sendEmailFather = false;
+
         if (NULL !== $request->father_name) {
             if ($father === NULL) {
 
-                DB::beginTransaction();
 
-                $user_father = UserController::_create($request->father_name, $request->father_email, RoleUser::PARENT);
+                $fatherCreate = UserController::__create($request->father_name, $request->father_email, RoleUser::PARENT);
 
-                if (!$user_father) {
+                if (!$fatherCreate->getUser()) {
 
                     DB::rollBack();
-                    Notify::fail(__('Invalid email (:email)', ['email' => $request->father_email]));
+                    Notify::fail(__('Something went wrong.'));
                     return redirect()->back();
                 }
 
                 try {
 
                     PersonCharge::create([
-                        'id' => $user_father->id,
+                        'id' => $fatherCreate->getUser()->id,
                         'student_id' => $student->id,
                         'name' => $request->father_name,
                         'email' => $request->father_email,
@@ -211,7 +225,7 @@ class PersonChargeController extends Controller
                         'occupation' => $request->father_occupation
                     ]);
 
-                    DB::commit();
+                    $sendEmailFather = true;
                 } catch (\Throwable $th) {
 
                     DB::rollBack();
@@ -235,7 +249,6 @@ class PersonChargeController extends Controller
                         'occupation' => $request->father_occupation
                     ]);
 
-                    DB::commit();
                 } catch (\Throwable $th) {
 
                     DB::rollBack();
@@ -245,28 +258,46 @@ class PersonChargeController extends Controller
             }
         }
 
+        if ($sendEmailFather) {
+
+            if (!$fatherCreate->sendVerification()) {
+
+                DB::rollBack();
+                Notify::fail(__('Invalid email (:email)', ['email' => $request->father_email]));
+                return redirect()->back();
+            }
+        }
+
+        DB::commit();
+
+
+
         /*
          * Create or Update Tutor User
          */
+
         if ($request->person_charge > 2) {
+
+            DB::beginTransaction();
+            $sendEmailTutor = false;
+
             if (NULL !== $request->tutor_name) {
                 if ($tutor === NULL) {
 
-                    DB::beginTransaction();
 
-                    $user_tutor = UserController::_create($request->tutor_name, $request->tutor_email, RoleUser::PARENT);
+                    $tutorCreate = UserController::__create($request->tutor_name, $request->tutor_email, RoleUser::PARENT);
 
-                    if (!$user_tutor) {
+                    if (!$tutorCreate->getUser()) {
 
                         DB::rollBack();
-                        Notify::fail(__('Invalid email (:email)', ['email' => $request->tutor_email]));
+                        Notify::fail(__('Something went wrong.'));
                         return redirect()->back();
                     }
 
                     try {
 
                         PersonCharge::create([
-                            'id' => $user_tutor->id,
+                            'id' => $tutorCreate->getUser()->id,
                             'student_id' => $student->id,
                             'name' => $request->tutor_name,
                             'email' => $request->tutor_email,
@@ -281,7 +312,7 @@ class PersonChargeController extends Controller
                             'occupation' => $request->tutor_occupation
                         ]);
 
-                        DB::commit();
+                        $sendEmailTutor = true;
                     } catch (\Throwable $th) {
 
                         DB::rollBack();
@@ -306,7 +337,6 @@ class PersonChargeController extends Controller
                             'occupation' => $request->tutor_occupation
                         ]);
 
-                        DB::commit();
                     } catch (\Throwable $th) {
 
                         DB::rollBack();
@@ -315,11 +345,29 @@ class PersonChargeController extends Controller
                     }
                 }
             }
+
+            if ($sendEmailTutor) {
+
+                if (!$tutorCreate->sendVerification()) {
+
+                    DB::rollBack();
+                    Notify::fail(__('Invalid email (:email)', ['email' => $request->tutor_email]));
+                    return redirect()->back();
+                }
+            }
+
+            DB::commit();
+
+
         } else {
             if (NULL !== $tutor) {
                 UserController::delete_user($tutor->id);
             }
         }
+
+
+
+
 
         $student->update([
             'person_charge' => $request->person_charge

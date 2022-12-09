@@ -54,6 +54,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -200,8 +201,10 @@ class StudentController extends Controller
             'studyYear' => ['required', Rule::exists('study_years', 'id')],
         ]);
 
-        $user_name = $request->firstName . ' ' . $request->firstLastName;
-        $user = UserController::_create($user_name, $request->institutional_email, RoleUser::STUDENT);
+        DB::beginTransaction();
+
+        $studentUserName = $request->firstName . ' ' . $request->firstLastName;
+        $studentCreate = UserController::__create($studentUserName, $request->institutional_email, RoleUser::STUDENT);
 
         $Y = SchoolYearController::current_year();
 
@@ -210,32 +213,42 @@ class StudentController extends Controller
             $request->birth_city = NULL;
         }
 
-        Student::create([
-            'id' => $user->id,
-            'code' => GenerateStudentCode::code(),
-            'first_name' => $request->firstName,
-            'second_name' => $request->secondName,
-            'first_last_name' => $request->firstLastName,
-            'second_last_name' => $request->secondLastName,
-            'document_type_code' => $request->document_type,
-            'document' => $request->document,
-            'country_id' => $request->country,
-            'birth_city_id' => $request->birth_city,
-            'birthdate' => $request->birthdate,
-            'siblings_in_institution' => $request->siblings_in_institution,
-            'institutional_email' => $request->institutional_email,
-            'school_year_create' => $Y->id,
-            'headquarters_id' => $request->headquarters,
-            'study_time_id' => $request->studyTime,
-            'study_year_id' => $request->studyYear,
-            'status' => 'new',
-            'data_treatment' => TRUE
-        ]);
+        try {
+
+            Student::create([
+                'id' => $studentCreate->getUser()->id,
+                'code' => GenerateStudentCode::code(),
+                'first_name' => $request->firstName,
+                'second_name' => $request->secondName,
+                'first_last_name' => $request->firstLastName,
+                'second_last_name' => $request->secondLastName,
+                'document_type_code' => $request->document_type,
+                'document' => $request->document,
+                'country_id' => $request->country,
+                'birth_city_id' => $request->birth_city,
+                'birthdate' => $request->birthdate,
+                'siblings_in_institution' => $request->siblings_in_institution,
+                'institutional_email' => $request->institutional_email,
+                'school_year_create' => $Y->id,
+                'headquarters_id' => $request->headquarters,
+                'study_time_id' => $request->studyTime,
+                'study_year_id' => $request->studyYear,
+                'status' => 'new',
+                'data_treatment' => TRUE
+            ]);
+
+            DB::commit();
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+            Notify::fail(__('Something went wrong.'));
+            return redirect()->back();
+        }
 
         Notify::success(__('Student created!'));
 
         if (1 == $request->matriculate) {
-            return redirect()->route('students.matriculate', $user->id);
+            return redirect()->route('students.matriculate', $studentCreate->getUser()->id);
         }
 
         return redirect()->route('students.no_enrolled');
@@ -742,8 +755,8 @@ class StudentController extends Controller
             'data_treatment' => ['nullable', 'boolean']
         ]);
 
-        $user_name = $request->firstName . ' ' . $request->firstLastName;
-        UserController::_update($student->id, $user_name, $studentEmail);
+        $studentUserName = $request->firstName . ' ' . $request->firstLastName;
+        UserController::_update($student->id, $studentUserName, $studentEmail);
 
         /* DATOS PAIS DE ORIGEN */
         if (NationalCountry::country()->id != $request->country) {

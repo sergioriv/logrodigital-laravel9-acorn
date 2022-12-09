@@ -6,6 +6,7 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Secretariat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class SecretariatController extends Controller
@@ -41,48 +42,49 @@ class SecretariatController extends Controller
             'telephone'     => ['nullable', 'string', 'max:20']
         ]);
 
-        $user = UserController::_create($request->name, $request->email, 4);
+        DB::beginTransaction();
 
-        if (!$user) {
+        $secreatariatCreate = UserController::__create($request->name, $request->email, 4);
+
+        if (!$secreatariatCreate->getUser()) {
+
+            DB::rollBack();
+            Notify::fail( __('Something went wrong.') );
+            return redirect()->back();
+        }
+
+        try {
+
+            Secretariat::create([
+                'id' => $secreatariatCreate->getUser()->id,
+                'name' => $request->name,
+                'last_names' => $request->last_names,
+                'email' => $request->email,
+                'telephone' => $request->telephone
+            ]);
+
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+            Notify::fail(__('Something went wrong.'));
+            return redirect()->back();
+        }
+
+        if (!$secreatariatCreate->sendVerification()) {
+
+            DB::rollBack();
             Notify::fail( __('Invalid email (:email)', ['email' => $request->email]) );
             return redirect()->back();
         }
 
-        Secretariat::create([
-            'id' => $user->id,
-            'name' => $request->name,
-            'last_names' => $request->last_names,
-            'email' => $request->email,
-            'telephone' => $request->telephone
-        ]);
+        DB::commit();
+
 
         Notify::success( __('Created secretariat user!') );
         self::tab();
         return redirect()->route('myinstitution');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Secretariat  $secretariat
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Secretariat $secretariat)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Secretariat  $secretariat
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Secretariat $secretariat)
-    {
-        //
-    }
 
     private function tab()
     {

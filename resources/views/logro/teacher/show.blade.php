@@ -43,7 +43,7 @@
 
         <section class="row">
             <!-- Left Side Start -->
-            <div class="col-12 col-xl-3 col-xxl-2">
+            <div class="col-12 col-xl-3">
 
                 <!-- Biography Start -->
                 <h2 class="small-title">{{ __('Profile') }}</h2>
@@ -108,7 +108,7 @@
             <!-- Left Side End -->
 
             <!-- Right Side Start -->
-            <div class="col-12 col-xl-9 col-xxl-10 mb-5 tab-content">
+            <div class="col-12 col-xl-9 mb-5 tab-content">
 
                 <!-- Subjects Tab Start -->
                 <div class="tab-pane fade @empty(session('tab')) active show @endempty" id="subjectsTab"
