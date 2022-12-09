@@ -66,8 +66,8 @@ class AuthenticatedSessionController extends Controller
     public function microsoft_callback(Request $request)
     {
 
-        if ('access_denied' === $request->error) {
-            return redirect()->route('login')->withErrors(__($request->error));
+        if ($request->has('error')) {
+            return redirect()->route('login')->withErrors(__('Error when logging in'));
         }
 
         try {
