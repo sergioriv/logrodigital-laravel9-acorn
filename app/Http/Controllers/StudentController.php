@@ -483,7 +483,8 @@ class StudentController extends Controller
          * VALIDACION PARA ESTUDIANTES MATRICULADOS EN AÑOS ANTERIORES
          *  */
 
-        $groups = Group::where('school_year_id', $Y->id)
+        $groups = Group::whereNull('specialty')
+            ->where('school_year_id', $Y->id)
             ->where('headquarters_id', $student->headquarters_id)
             ->where('study_time_id', $student->study_time_id)
             ->where('study_year_id', $student->study_year_id)
@@ -504,7 +505,7 @@ class StudentController extends Controller
     public function matriculate_update(Request $request, Student $student)
     {
         $request->validate([
-            'group' => ['required', Rule::exists('groups', 'id')]
+            'group' => ['required', Rule::exists('groups', 'id')->whereNull('specialty')]
         ]);
 
         $group = Group::find($request->group);
