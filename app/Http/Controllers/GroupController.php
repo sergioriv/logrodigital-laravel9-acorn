@@ -6,6 +6,7 @@ use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\YearCurrentMiddleware;
+use App\Models\AcademicWorkload;
 use App\Models\Data\RoleUser;
 use App\Models\Group;
 use App\Models\GroupStudent;
@@ -421,6 +422,16 @@ class GroupController extends Controller
             if (NULL !== $teacher_subject) {
 
                 [$subject, $teacher] = explode('~', $teacher_subject);
+
+                /*
+                 * Para comprobar que la manteria que llega, pertenece al grado que se encuentra el grado
+                 *  */
+                $checkSubjectInGroup = AcademicWorkload::where('school_year_id', $group->school_year_id)
+                    ->where('study_year_id', $group->study_year_id)
+                    ->where('subject_id', $subject)->first();
+                if (is_null($checkSubjectInGroup)) {
+                    break;
+                }
 
                 $uuidTeacher = Teacher::select('id')->find($teacher)->id ?? null;
 

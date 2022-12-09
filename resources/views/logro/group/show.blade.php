@@ -174,7 +174,7 @@
                                 <!-- Students Tab End -->
 
                                 @can('groups.teachers.edit')
-                                    <!-- Groups Tab Start -->
+                                    <!-- Subjects & Teachers Tab Start -->
                                     <div class="tab-pane fade" id="subjectsTab" role="tabpanel">
 
                                         @if (null !== $Y->available)
@@ -273,7 +273,7 @@
                                         </section>
                                         <!-- Groups Content Tab End -->
                                     </div>
-                                    <!-- Groups Tab End -->
+                                    <!-- Subjects & Teachers Tab End -->
                                 @endcan
 
                             </div>

@@ -46,6 +46,9 @@
                                     <table class="table table-striped">
                                         <tbody>
                                             @foreach ($area->subjects as $subject)
+
+                                            @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($group->id, $subject->id) @endphp
+
                                                 <tr>
                                                     <td scope="row" class="col-4">{!! $subject->resourceSubject->name !!}
                                                     </td>
@@ -56,14 +59,7 @@
                                                                 class="logro-select2">
                                                                 <option label="&nbsp;"></option>
                                                                 @foreach ($teachers as $teacher)
-                                                                    <option
-                                                                        @foreach ($subject->teacherSubjectGroups as $teacher_subject)
-                                                                        @if ($loop->first)
-                                                                            @if ($teacher_subject->teacher->id === $teacher->id)
-                                                                                selected
-                                                                            @endif
-                                                                        @endif
-                                                                        @endforeach
+                                                                    <option @selected($TSG->teacher->id === $teacher->id)
                                                                         value="{{ $subject->id . '~' . $teacher->uuid }}">
                                                                         {{ $teacher->getFullName() }}
                                                                     </option>
