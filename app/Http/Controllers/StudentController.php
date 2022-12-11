@@ -110,11 +110,6 @@ class StudentController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $fn_g = fn ($g) => $g->where('school_year_id', $Y->id);
-
-        $fn_gs = fn ($gs) =>
-        $gs->with(['group' => $fn_g])
-            ->whereHas('group', $fn_g);
 
         $students = Student::select(
             'id',
@@ -132,11 +127,12 @@ class StudentController extends Controller
             'study_year_id',
             'created_at'
         )->with('headquarters', 'studyTime', 'studyYear')
+            ->withCount('filesRequired')
             ->where('school_year_create', '<=', $Y->id)
             ->whereNot(
                 fn ($q) =>
-                $q->whereHas('groupYear', $fn_gs)
-                    ->with(['groupYear' => $fn_gs])
+                $q->whereHas('groupYear', fn ($gs) =>
+                    $gs->whereHas('group', fn ($g) => $g->where('school_year_id', $Y->id)))
             );
 
         if (0 === $Y->available) {

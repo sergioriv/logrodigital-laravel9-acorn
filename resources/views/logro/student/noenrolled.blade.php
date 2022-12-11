@@ -106,7 +106,7 @@ $title = __('Students') .' '. __('no-enrolled');
                             @foreach ($students as $student)
                             <tr>
                                 <td>
-                                    @if ($countFileTypes <= $student->filesRequired()->count())
+                                    @if ($countFileTypes <= $student->files_required_count)
                                         <div class="badge bg-success">{{ __('Complete documents') }}</div>
                                     @endif
                                     <a href="{{ route('students.show', $student) }}"
