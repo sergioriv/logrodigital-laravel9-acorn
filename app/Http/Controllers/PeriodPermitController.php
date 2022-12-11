@@ -27,7 +27,7 @@ class PeriodPermitController extends Controller
             PeriodPermit::create([
                 'teacher_subject_group_id' => $request->get('subject-permit-id'),
                 'period_id' => $request->get('period-permit'),
-                'user_created_id' => Auth::user()->id
+                'user_created_id' => Auth::id()
             ]);
         } catch (\Throwable $th) {
             return redirect()->back()->withErrors(__('Unexpected Error'));

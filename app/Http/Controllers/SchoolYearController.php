@@ -88,7 +88,7 @@ class SchoolYearController extends Controller
 
         $sy = self::available_year()->id == $request->school_year ? null : $request->school_year;
 
-        User::find(Auth::user()->id)->update([
+        User::find(Auth::id())->update([
             'school_year_id' => $sy
         ]);
 

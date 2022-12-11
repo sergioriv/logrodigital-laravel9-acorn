@@ -45,7 +45,7 @@ class ConfirmEmailController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::min(6)],
         ]);
 
-        $user = User::find(Auth::user()->id);
+        $user = User::find(Auth::id());
 
         $user->forceFill([
             'password' => Hash::make($request->password),

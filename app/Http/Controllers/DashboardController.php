@@ -35,7 +35,7 @@ class DashboardController extends Controller
 
     private function dashTeacher()
     {
-        $alerts = UserAlert::where('for_user', Auth::user()->id)
+        $alerts = UserAlert::where('for_user', Auth::id())
                 ->whereNull('checked')
                 ->orderByDesc('priority')
                 ->orderBy('created_at')
@@ -46,7 +46,7 @@ class DashboardController extends Controller
 
     private function dashOrientation()
     {
-        $alerts = UserAlert::where('for_user', Auth::user()->id)
+        $alerts = UserAlert::where('for_user', Auth::id())
                 ->whereNull('checked')
                 ->orderByDesc('priority')
                 ->orderBy('created_at')
@@ -57,7 +57,7 @@ class DashboardController extends Controller
 
     private function dashCoordination()
     {
-        $alerts = UserAlert::where('for_user', Auth::user()->id)
+        $alerts = UserAlert::where('for_user', Auth::id())
                 ->whereNull('checked')
                 ->orderByDesc('priority')
                 ->orderBy('created_at')

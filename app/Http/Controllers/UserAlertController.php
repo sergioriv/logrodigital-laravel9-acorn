@@ -31,7 +31,7 @@ class UserAlertController extends Controller
             $newAlert->title = self::TITLE_ORIENTATION;
             $newAlert->student_id = $student->id;
             $newAlert->message = $request->recommendations_coordinator;
-            $newAlert->created_user_id = Auth::user()->id;
+            $newAlert->created_user_id = Auth::id();
             $newAlert->created_rol = RoleUser::ORIENTATION_ROL;
 
             if ($request->priority_coordinator === '1') {
@@ -68,7 +68,7 @@ class UserAlertController extends Controller
                 $newAlert->title = self::TITLE_ORIENTATION;
                 $newAlert->student_id = $student->id;
                 $newAlert->message = $request->recommendations_teachers;
-                $newAlert->created_user_id = Auth::user()->id;
+                $newAlert->created_user_id = Auth::id();
                 $newAlert->created_rol = RoleUser::ORIENTATION_ROL;
 
                 if ($request->priority_teacher === '1') {
@@ -118,7 +118,7 @@ class UserAlertController extends Controller
                 $newAlert->title = self::TITLE_TEACHER;
                 $newAlert->student_id = $student->id;
                 $newAlert->message = $request->recommendations_orientation;
-                $newAlert->created_user_id = Auth::user()->id;
+                $newAlert->created_user_id = Auth::id();
                 $newAlert->created_rol = RoleUser::TEACHER_ROL;
 
                 if ($request->priority_teacher === '1') {
@@ -149,7 +149,7 @@ class UserAlertController extends Controller
     /* access for methode GET */
     public function checked(UserAlert $alert)
     {
-        if ($alert->for_user === Auth::user()->id) {
+        if ($alert->for_user === Auth::id()) {
 
             $alert->forceFill(['checked' => TRUE])->save();
 

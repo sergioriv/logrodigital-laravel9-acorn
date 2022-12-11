@@ -42,7 +42,7 @@ class SecurityCodeController extends Controller
         (new SecurityCode)->forceFill([
             'email' => static::$email,
             'code' => static::$code,
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'created_at' => now()
         ])->save();
     }

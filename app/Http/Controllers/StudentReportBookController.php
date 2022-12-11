@@ -51,7 +51,7 @@ class StudentReportBookController extends Controller
             File::delete(public_path($reportBook->url_absolute));
         }
 
-        $reportBook->creation_user_id = Auth::user()->id;
+        $reportBook->creation_user_id = Auth::id();
         $reportBook->url = config('app.url') .'/'. $path_file;
         $reportBook->url_absolute = $path_file;
         $reportBook->save();
@@ -82,7 +82,7 @@ class StudentReportBookController extends Controller
             if ( in_array($book->id, $request->reportbooks_checked ?? []) ) {
 
                 $book->checked = TRUE;
-                $book->approval_user_id = Auth::user()->id;
+                $book->approval_user_id = Auth::id();
                 $book->approval_date = now()->format('Y-m-d');
                 $book->save();
 

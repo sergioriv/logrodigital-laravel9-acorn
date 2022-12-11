@@ -45,7 +45,7 @@ class StudentRemovalCodeController extends Controller
         (new StudentRemovalCode())->forceFill([
             'student_id' => static::$student->id,
             'code' => static::$code,
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'created_at' => now()
         ])->save();
     }

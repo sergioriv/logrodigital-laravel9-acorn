@@ -23,17 +23,17 @@ class ProfileController extends Controller
     {
         switch (UserController::role_auth()) {
                 /* case 'Support':
-                $support = User::findOrFail(Auth::user()->id);
+                $support = User::findOrFail(Auth::id());
                 return view('profile.support-edit')->with('support', $support);
                 break; */
 
                 /* case 'STUDENT':
-                $student = User::findOrFail(Auth::user()->id);
+                $student = User::findOrFail(Auth::id());
                 return view('profile.estudent-edit')->with('student', $student);
                 break; */
                 /*
             case 'Branch':
-                $branch = Branch::with('user')->findOrFail(Auth::user()->id);
+                $branch = Branch::with('user')->findOrFail(Auth::id());
                 $deps = json_decode(file_get_contents('json/colombia.min.json'), true);
 
                 return view('profile.branch-edit')->with(['branch' => $branch, 'deps' => $deps]);
@@ -52,17 +52,17 @@ class ProfileController extends Controller
         switch (UserController::role_auth()) {
 
             case 'SUPPORT':
-                $support = User::findOrFail(Auth::user()->id);
+                $support = User::findOrFail(Auth::id());
                 return view('profile.support-edit', ['support' => $support]);
                 break;
 
             case 'SECRETARY':
-                $support = User::findOrFail(Auth::user()->id);
+                $support = User::findOrFail(Auth::id());
                 return view('profile.support-edit', ['support' => $support]);
                 break;
 
             case 'TEACHER':
-                $teacher = Teacher::where('id', Auth::user()->id)->first();
+                $teacher = Teacher::where('id', Auth::id())->first();
                 return (new TeacherController)->profile($teacher);
                 break;
 
@@ -87,7 +87,7 @@ class ProfileController extends Controller
                     break;
                 }
 
-                return $student->show(Student::find(Auth::user()->id));
+                return $student->show(Student::find(Auth::id()));
                 break;
 
             default:
@@ -107,22 +107,22 @@ class ProfileController extends Controller
     {
         switch (UserController::role_auth()) {
             case 'SUPPORT':
-                $support = User::findOrFail(Auth::user()->id);
+                $support = User::findOrFail(Auth::id());
                 UserController::profile_update($request, $support);
                 break;
 
             case 'SECRETARY':
-                $support = User::findOrFail(Auth::user()->id);
+                $support = User::findOrFail(Auth::id());
                 UserController::profile_update($request, $support);
                 break;
 
             case 'TEACHER':
-                $teacher = Teacher::where('id', Auth::user()->id)->first();
+                $teacher = Teacher::where('id', Auth::id())->first();
                 return (new TeacherController)->profile_update($teacher, $request);
                 break;
 
             case 'STUDENT':
-                $student = Student::findOrFail(Auth::user()->id);
+                $student = Student::findOrFail(Auth::id());
                 $update = new StudentController();
                 $update->update($request, $student);
                 break;
@@ -176,7 +176,7 @@ class ProfileController extends Controller
         if ('STUDENT' === UserController::role_auth()) {
 
             $student = new StudentController();
-            $student_find = Student::find( Auth::user()->id );
+            $student_find = Student::find( Auth::id() );
 
             if ($student_find->wizard_documents === NULL) {
                 return $student->wizard_documents($student_find);

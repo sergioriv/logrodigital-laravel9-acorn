@@ -23,7 +23,7 @@ class TeacherPermitController extends Controller
         if ( $pathDocument ) {
 
             TeacherPermit::create([
-                'user_id' => Auth::user()->id,
+                'user_id' => Auth::id(),
                 'teacher_id' => $teacher->id,
                 'description' => $request->short_description,
                 'start' => $request->permit_date_start,

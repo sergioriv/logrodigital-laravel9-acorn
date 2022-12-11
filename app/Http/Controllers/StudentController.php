@@ -256,7 +256,7 @@ class StudentController extends Controller
     public function wizard_documents(Student $student)
     {
         if ('STUDENT' === UserController::role_auth()) {
-            // $student = Student::find(Auth::user()->id);
+            // $student = Student::find(Auth::id());
             $studentFileTypes = StudentFileType::with([
                 'studentFile' => fn ($files) => $files->where('student_id', $student->id)
             ]);
@@ -276,7 +276,7 @@ class StudentController extends Controller
     {
         if ('STUDENT' === UserController::role_auth()) {
 
-            $student = Student::findOrFail(Auth::user()->id);
+            $student = Student::findOrFail(Auth::id());
             if ($request->docsFails > 0) {
                 return redirect()->back()->withErrors(["custom" => __("documents are missing to upload")]);
             }
@@ -314,7 +314,7 @@ class StudentController extends Controller
     {
         if ('STUDENT' === UserController::role_auth()) {
 
-            $student = Student::findOrFail(Auth::user()->id);
+            $student = Student::findOrFail(Auth::id());
 
             $student->forceFill([
                 'wizard_report_books' => TRUE
@@ -329,7 +329,7 @@ class StudentController extends Controller
     public function wizard_person_charge(Student $student)
     {
         if ('STUDENT' === UserController::role_auth()) {
-            // $student = Student::find(Auth::user()->id);
+            // $student = Student::find(Auth::id());
             $cities = City::all();
             $kinships = Kinship::all();
 
@@ -347,7 +347,7 @@ class StudentController extends Controller
     {
         if ('STUDENT' === UserController::role_auth()) {
 
-            $student = Student::findOrFail(Auth::user()->id);
+            $student = Student::findOrFail(Auth::id());
 
             $person_charge = new PersonChargeController;
             return $person_charge->update($student, $request, TRUE);
@@ -390,7 +390,7 @@ class StudentController extends Controller
     {
         if ('STUDENT' === UserController::role_auth()) {
 
-            $student = Student::findOrFail(Auth::user()->id);
+            $student = Student::findOrFail(Auth::id());
 
             return self::update($request, $student, TRUE);
         }
@@ -406,7 +406,7 @@ class StudentController extends Controller
     {
         if ('STUDENT' === UserController::role_auth()) {
 
-            $student = Student::findOrFail(Auth::user()->id);
+            $student = Student::findOrFail(Auth::id());
 
             $student->forceFill([
                 'wizard_complete' => TRUE
@@ -429,11 +429,11 @@ class StudentController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $fn_g = fn ($g) => $g->where('school_year_id', $Y->id);
+        $fn_g = fn ($g) => $g->with('headquarters', 'studyYear', 'studyTime')->where('school_year_id', $Y->id);
 
         $fn_gs = fn ($gs) =>
-        $gs->with(['group' => $fn_g])
-            ->whereHas('group', $fn_g);
+        $gs->withWhereHas('group', $fn_g);
+            // ->whereHas('group', $fn_g);
 
         $students = Student::select(
             'id',
@@ -577,7 +577,7 @@ class StudentController extends Controller
         $Y = SchoolYearController::current_year();
         $YAvailable = SchoolYearController::available_year();
 
-        $user = User::find(Auth::user()->id);
+        $user = User::find(Auth::id());
 
         $studentFileTypes = StudentFileType::with([
             'studentFile' => function ($files) use ($student) {
@@ -954,7 +954,7 @@ class StudentController extends Controller
                     'student_id' => $student->id,
                     'subject_id' => $gs,
                     'annotation' => $request->$request_annotation,
-                    'user_id' => Auth::user()->id
+                    'user_id' => Auth::id()
                 ]);
             }
         }
@@ -1001,7 +1001,7 @@ class StudentController extends Controller
                 'url' => config('app.url') . '/' . $path_file,
                 'url_absolute' => $path_file,
                 'checked' => NULL,
-                'creation_user_id' => Auth::user()->id
+                'creation_user_id' => Auth::id()
             ]);
             return true;
         } else {
@@ -1015,7 +1015,7 @@ class StudentController extends Controller
                 'url_absolute' => $path_file,
                 'renewed' => $renewed,
                 'checked' => NULL,
-                'creation_user_id' => Auth::user()->id
+                'creation_user_id' => Auth::id()
 
             ]);
             return true;
@@ -1212,7 +1212,7 @@ class StudentController extends Controller
 
         if ('STUDENT' == UserController::role_auth())
         {
-            return self::pdfMatriculateGenerate(Auth::user()->id);
+            return self::pdfMatriculateGenerate(Auth::id());
         }
 
         return self::pdfMatriculateGenerate($student->id);

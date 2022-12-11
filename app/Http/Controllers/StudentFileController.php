@@ -52,7 +52,7 @@ class StudentFileController extends Controller
             File::delete(public_path($studentFile->url_absolute));
         }
 
-        $studentFile->creation_user_id = Auth::user()->id;
+        $studentFile->creation_user_id = Auth::id();
         $studentFile->url = config('app.url') . '/' . $path_file;
         $studentFile->url_absolute = $path_file;
         $studentFile->save();
@@ -101,7 +101,7 @@ class StudentFileController extends Controller
         }
 
         /* Actualizamos los valores */
-        $studentDisabilityFile->creation_user_id = Auth::user()->id;
+        $studentDisabilityFile->creation_user_id = Auth::id();
         $studentDisabilityFile->url = config('app.url') . '/' . $path_file;
         $studentDisabilityFile->url_absolute = $path_file;
         $studentDisabilityFile->save();
@@ -129,7 +129,7 @@ class StudentFileController extends Controller
             if (in_array($file->id, $request->student_files ?? [])) {
 
                 $file->checked = TRUE;
-                $file->approval_user_id = Auth::user()->id;
+                $file->approval_user_id = Auth::id();
                 $file->approval_date = now()->format('Y-m-d');
                 $file->save();
             } else {
@@ -167,7 +167,7 @@ class StudentFileController extends Controller
                 if (in_array($file->id, $request->student_files)) {
                     StudentFile::find($file->id)->update([
                         'checked' => TRUE,
-                        'approval_user_id' => Auth::user()->id,
+                        'approval_user_id' => Auth::id(),
                         'approval_date' => now()
                     ]);
                 } else {

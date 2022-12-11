@@ -39,7 +39,7 @@ class StudentTrackingController extends Controller
         $timeAdvice = Str::substr($request->time, 0,5);
 
         StudentTrackingAdvice::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'student_id' => $student->id,
             'type_tracking' => 'ADVICE',
             'attendance' => 'SCHEDULED',
@@ -60,7 +60,7 @@ class StudentTrackingController extends Controller
         ]);
 
         StudentTrackingRemit::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'student_id' => $student->id,
             'type_tracking' => 'REMIT',
             'entity_remit' => $request->entity_remit,
@@ -82,7 +82,7 @@ class StudentTrackingController extends Controller
 
         DB::beginTransaction();
         $tracking = StudentTrackingTeacher::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'student_id' => $student->id,
             'type_tracking' => 'TEACHERS',
             'recommendations_teachers' => $request->recommendations_teachers,
@@ -123,7 +123,7 @@ class StudentTrackingController extends Controller
 
         DB::beginTransaction();
         $tracking = StudentTrackingCoordination::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'student_id' => $student->id,
             'type_tracking' => 'COORDINATION',
             'coordination_id' => $uuidCoordination->id,
@@ -159,7 +159,7 @@ class StudentTrackingController extends Controller
         ]);
 
         StudentTrackingFamily::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'student_id' => $student->id,
             'type_tracking' => 'FAMILY',
             'recommendations_family' => $request->recommendations_family

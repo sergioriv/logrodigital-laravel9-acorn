@@ -240,7 +240,7 @@ class TeacherController extends Controller
         /*
          * Para que el Rol TEACHER solo pueda acceder a sus asignaturas de el año actual
          *  */
-        if ($subject->teacher_id !== Auth::user()->id) {
+        if ($subject->teacher_id !== Auth::id()) {
             return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
         }
 
@@ -286,7 +286,7 @@ class TeacherController extends Controller
     public static function subjects()
     {
         $Y = SchoolYearController::available_year();
-        $teacher_id = Auth::user()->id;
+        $teacher_id = Auth::id();
 
         $subjects = TeacherSubjectGroup::where('school_year_id', $Y->id)
             ->where('teacher_id', $teacher_id);

@@ -191,7 +191,7 @@ class UserController extends Controller
     public static function myName()
     {
         $name = null;
-        $id = Auth::user()->id;
+        $id = Auth::id();
         switch (static::role_auth()) {
             case RoleUser::TEACHER_ROL:
                 $name = (Teacher::where('id', $id)->first())->getFullName();
