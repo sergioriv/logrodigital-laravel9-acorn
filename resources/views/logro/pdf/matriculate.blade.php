@@ -346,7 +346,7 @@
                     </td>
                     <td class="p-1">
                         <div class="label">Zona</div>
-                        <div class="form-control">{{ __($student->zone) }}</div>
+                        <div class="form-control">{{ __($student->zone ?? null) }}</div>
                     </td>
                     <td colspan="4" class="p-1">
                         <div class="label">Dirección</div>
@@ -360,7 +360,7 @@
                 <tr>
                     <td colspan="2" class="p-1">
                         <div class="label">Tipo de vivienda</div>
-                        <div class="form-control">{{ __($student->dwellingType->name) ?? '' }}</div>
+                        <div class="form-control">{{ __($student->dwellingType->name ?? null) }}</div>
                     </td>
                     <td colspan="3" class="p-1">
                         <div class="label">Barrio</div>
