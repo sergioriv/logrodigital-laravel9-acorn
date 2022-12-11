@@ -8,6 +8,7 @@ use App\Http\Controllers\support\UserController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -72,6 +73,10 @@ class AuthenticatedSessionController extends Controller
 
         try {
             $microsoft = Socialite::driver('azure')->user();
+
+        } catch (ClientException $e) {
+            return redirect()->route('login')->withErrors(__('Error when logging in'));
+
         } catch (InvalidStateException $e) {
             $microsoft = Socialite::driver('azure')->stateless()->user();
         }
