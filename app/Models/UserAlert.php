@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Data\RoleUser;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,23 +20,19 @@ class UserAlert extends Model
         'created_rol',
     ];
 
-    /*  */
-    public function orientator()
+    public function createdRol()
     {
-        if ( $this->created_rol === 'ORIENTATION' ) {
-            return $this->belongsTo(Orientation::class, 'created_user_id', 'id');
+        switch ($this->created_rol) {
+            case RoleUser::ORIENTATION_ROL:
+                return $this->belongsTo(Orientation::class, 'created_user_id', 'id');
+                break;
+
+            case RoleUser::TEACHER_ROL:
+                return $this->belongsTo(Teacher::class, 'created_user_id', 'id');
+                break;
         }
 
-        return [];
-    }
-
-    public function teacher()
-    {
-        if ( $this->created_rol === 'TEACHER' ) {
-            return $this->belongsTo(Teacher::class, 'created_user_id', 'id');
-        }
-
-        return [];
+        return null;
     }
 
     public function student()
@@ -44,6 +41,6 @@ class UserAlert extends Model
             return $this->belongsTo(Student::class, 'student_id', 'id');
         }
 
-        return [];
+        return null;
     }
 }

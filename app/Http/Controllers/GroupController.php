@@ -206,12 +206,8 @@ class GroupController extends Controller
 
         $Y = SchoolYearController::current_year();
 
-        /* if ($group->specialty) {
-            $studentsGroup = Student::where('group_specialty_id', $group->id)->get();
-        } else {
-            $studentsGroup = Student::where('group_id', $group->id)->get();
-        } */
 
+        $studentsGroup = GroupStudent::with('student')->where('group_id', $group->id)->get();
 
         $areas = $this->subjects_teacher($Y->id, $group);
 
@@ -227,7 +223,7 @@ class GroupController extends Controller
             'group' => $group,
             'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
             'count_studentsMatriculateInStudyYear' => $this->countStudentMatriculateInStudyYear($Y, $group),
-            // 'studentsGroup' => $studentsGroup,
+            'studentsGroup' => $studentsGroup,
             'areas' => $areas,
             'periods' => $periods
         ]);
@@ -408,6 +404,7 @@ class GroupController extends Controller
         $areas = $this->subjects_teacher($Y->id, $group);
 
         return view('logro.group.teachers_edit')->with([
+            'Y' => $Y,
             'group' => $group,
             'areas' => $areas,
             'teachers' => $teachers

@@ -10,11 +10,7 @@
     <div class="card border border-1 @if ($alert->priority === 1) border-orange @else border-light @endif mb-2">
         <div class="card-body p-3 pe-4 ps-4">
             <div>
-                @if ($alert->created_rol === 'ORIENTATION')
-                {{ __($alert->title, ['CREATE_BY' => $alert->orientator->getFullName(), 'STUDENT_NAME' => $alert->student->getFullName()]) }}
-                @elseif ($alert->created_rol === 'TEACHER')
-                {{ __($alert->title, ['CREATE_BY' => $alert->teacher->getFullName(), 'STUDENT_NAME' => $alert->student->getFullName()]) }}
-                @endif
+                {{ __($alert->title, ['CREATE_BY' => $alert->createdRol->getFullName() ?? null, 'STUDENT_NAME' => $alert->student->getFullName() ?? null]) }}
             </div>
             <div class="mt-2 pt-2 border-top">
                 {{ $alert->message }}

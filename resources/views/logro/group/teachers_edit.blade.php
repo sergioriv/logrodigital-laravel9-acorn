@@ -47,7 +47,7 @@
                                         <tbody>
                                             @foreach ($area->subjects as $subject)
 
-                                            @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($group->id, $subject->id) @endphp
+                                            @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($Y->id, $group->id, $subject->id) @endphp
 
                                                 <tr>
                                                     <td scope="row" class="col-4">{!! $subject->resourceSubject->name !!}

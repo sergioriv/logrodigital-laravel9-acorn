@@ -93,7 +93,7 @@
                                 @can('groups.students')
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link active" data-bs-toggle="tab" href="#studentsTab" role="tab"
-                                            aria-selected="true">{{ __('Students') }} ({{ $group->groupStudents->count() }})</a>
+                                            aria-selected="true">{{ __('Students') }} ({{ $studentsGroup->count() }})</a>
                                     </li>
                                 @endcan
                                 @can('groups.teachers')
@@ -116,7 +116,6 @@
                                                 @if (( is_null($group->specialty) && $count_studentsNoEnrolled > 0 )
                                                     || ( $group->specialty && $count_studentsMatriculateInStudyYear > 0 ))
 
-                                                {{-- @if ($count_studentsNoEnrolled > 0 || $count_studentsMatriculateInStudyYear > 0) --}}
                                                     <!-- Groups Buttons Start -->
                                                     <div class="col-12 d-flex align-items-start justify-content-end">
                                                         <!-- Matriculate Students Button Start -->
@@ -139,7 +138,7 @@
                                             <div class="card-body">
                                                 <table class="table table-striped mb-0">
                                                     <tbody>
-                                                        @foreach ($group->groupStudents as $studentG)
+                                                        @foreach ($studentsGroup as $studentG)
                                                             <tr>
                                                                 <td scope="row">
                                                                     @can('students.info')
@@ -219,7 +218,7 @@
                                                         <table class="table table-striped mb-0">
                                                             <tbody>
                                                                 @foreach ($area->subjects as $subject)
-                                                                    @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($group->id, $subject->id) @endphp
+                                                                    @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($Y->id, $group->id, $subject->id) @endphp
                                                                     <tr>
                                                                         <td scope="row">
                                                                             {!! $subject->resourceSubject->name !!}

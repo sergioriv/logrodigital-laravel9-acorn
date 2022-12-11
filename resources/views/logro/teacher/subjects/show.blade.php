@@ -80,7 +80,7 @@
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link active" data-bs-toggle="tab" href="#studentsTab" role="tab"
                                         aria-selected="true">{{ __('Students') }}
-                                        ({{ $subject->group->groupStudents->count() }})</a>
+                                        ({{ $studentsGroup->count() }})</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" data-bs-toggle="tab" href="#periodsTab" role="tab"
@@ -115,7 +115,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($subject->group->groupStudents as $studentG)
+                                                        @foreach ($studentsGroup as $studentG)
                                                             <tr>
                                                                 <td scope="row">
                                                                     <a href="{{ route('students.view', $studentG->student) }}"
@@ -125,7 +125,7 @@
                                                                     {!! $studentG->student->tag() !!}
                                                                 </td>
                                                                 <td class="text-center">
-                                                                    @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->student->id, $subject) @endphp
+                                                                    @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->student_id, $subject) @endphp
                                                                     {{ $defStudent }}
                                                                 </td>
                                                                 <td class="text-center text-capitalize">
@@ -218,7 +218,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 @php $gradeNumber = 1; @endphp
-                                                                @foreach ($subject->group->groupStudents as $studentG)
+                                                                @foreach ($studentsGroup as $studentG)
                                                                     @php
                                                                         $GxPS = \App\Http\Controllers\GradeController::forPeriod($subject->id, $period->id, $studentG->student->id);
                                                                     @endphp
@@ -404,7 +404,7 @@
 
                             <table class="table table-striped mb-0">
                                 <tbody>
-                                    @foreach ($subject->group->groupStudents as $studentG)
+                                    @foreach ($studentsGroup as $studentG)
                                         <tr>
                                             <td>
                                                 <label class="form-check custom-icon mb-0 unchecked-opacity-25">

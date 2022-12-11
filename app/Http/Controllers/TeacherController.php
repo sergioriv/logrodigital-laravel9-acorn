@@ -18,6 +18,7 @@ use App\Models\Period;
 use App\Models\SchoolYear;
 use App\Models\Student;
 use App\Models\AcademicWorkload;
+use App\Models\GroupStudent;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use App\Rules\MaritalStatusRule;
@@ -247,6 +248,8 @@ class TeacherController extends Controller
         $Y = SchoolYearController::current_year();
 
 
+        $studentsGroup = GroupStudent::with('student')->where('group_id', $subject->group_id)->get();
+
         $periods = Period::where('study_time_id', $subject->group->study_time_id)
                     ->withCount(['permits as permit' => fn ($p) => $p->teacher_subject_group_id = $subject->id])
                     ->orderBy('ordering')->get();
@@ -270,7 +273,7 @@ class TeacherController extends Controller
         return view('logro.teacher.subjects.show', [
             'Y' => $Y,
             'subject' => $subject,
-            // 'studentsGroup' => $studentsGroup,
+            'studentsGroup' => $studentsGroup,
             'periods' => $periods,
             'attendanceAvailable' => $weeklyLoad->hours_week - $attendancesWeek,
             'attendances' => $attendances
