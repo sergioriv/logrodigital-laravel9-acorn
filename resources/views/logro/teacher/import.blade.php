@@ -47,7 +47,7 @@ $title = __('Import') . ' ' . __('teachers');
                     <div class="card mb-5">
                         <div class="card-body">
 
-                            <form method="POST" action="{{ route('teacher.import') }}" enctype="multipart/form-data"
+                            <form method="POST" action="{{ route('teacher.import.store') }}" enctype="multipart/form-data"
                                 novalidate>
                                 @csrf
 

@@ -150,7 +150,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Route::get('teachers.json', 'data');
         Route::get('teachers/export', 'export')->name('teacher.export');
         Route::get('teachers/import', 'import')->name('teacher.import');
-        Route::post('teachers/import', 'import_store')->name('teacher.import');
+        Route::post('teachers/import', 'import_store')->name('teacher.import.store');
         Route::get('teachers/instructive', 'export_instructive')->name('teachers.instructive');
     });
     Route::resource('teachers', TeacherController::class)->except('destroy','index','edit','update')->names('teacher');
