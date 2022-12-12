@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
+use Illuminate\Support\Str;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -92,7 +93,7 @@ class AuthenticatedSessionController extends Controller
             }
 
             $user->forceFill([
-                'remember_token' => $microsoft->token
+                'remember_token' => Str::random(60)
             ])->save();
 
             Auth::login($user);
@@ -103,14 +104,6 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('login')->withErrors( $microsoft->email .' '. __("unregistered on our platform"));
         }
     }
-
-    /* public function microsoft_logout(Request $request)
-    {
-        Auth::guard()->logout();
-        $request->session()->flush();
-        $azureLogoutUrl = Socialite::driver('azure')->getLogoutUrl(route('login'));
-        return redirect($azureLogoutUrl);
-    } */
 
 
     private function login_redirect()

@@ -126,7 +126,8 @@ class StudentController extends Controller
             'study_time_id',
             'study_year_id',
             'created_at'
-        )->with('headquarters', 'studyTime', 'studyYear')
+        )
+            ->with('headquarters', 'studyTime', 'studyYear')
             ->withCount('filesRequired')
             ->where('school_year_create', '<=', $Y->id)
             ->whereNot(
