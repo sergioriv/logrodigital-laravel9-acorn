@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SchoolController;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +21,12 @@ class NewPasswordController extends Controller
      */
     public function create(Request $request)
     {
-        return view('auth.reset-password', ['request' => $request]);
+        $SCHOOL = SchoolController::myschool();
+        return view('auth.reset-password', [
+            'SCHOOL_name' => $SCHOOL->name(),
+            'SCHOOL_badge' => $SCHOOL->badge(),
+            'request' => $request
+        ]);
     }
 
     /**

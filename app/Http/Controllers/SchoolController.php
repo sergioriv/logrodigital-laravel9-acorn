@@ -18,16 +18,15 @@ use Illuminate\Support\Str;
 
 class SchoolController extends Controller
 {
-    function __construct()
+    protected $school;
+
+    function __construct(School $school = null)
     {
         $this->middleware('can:myinstitution')->except('name', 'badge', 'email', 'handbook', 'numberStudents');
         $this->middleware('can:myinstitution.edit')->only('update');
         $this->middleware('can:support.access')->only('number_students_show', 'number_students_update');
-    }
 
-    private static function myschool()
-    {
-        return School::find(1) ?? null;
+        $this->school = $school;
     }
 
     public function show()
@@ -99,6 +98,18 @@ class SchoolController extends Controller
         } else return null;
     }
 
+
+    /* Static access info */
+    public static function myschool()
+    {
+        return new static(School::find(1) ?? null);
+    }
+
+    public function getData(): School
+    {
+        return $this->school;
+    }
+
     private function daysToUpdate()
     {
         $updatedAt = static::myschool()->updated_at;
@@ -109,39 +120,33 @@ class SchoolController extends Controller
         return 0;
     }
 
-    public static function all()
+    public function name()
     {
-        return static::myschool();
+        return $this->school->name ?? null;
     }
-    public static function name()
+    public function badge()
     {
-        return static::myschool()->name ?? null;
+        return $this->school->badge ?? null;
     }
-    public static function badge()
+    public function email()
     {
-        return static::myschool()->badge ?? null;
+        return $this->school->institutional_email ?? null;
     }
-    public static function email()
+    public function handbook()
     {
-        return static::myschool()->institutional_email ?? null;
+        return $this->school->handbook_coexistence ?? null;
     }
-    public static function handbook()
+    public function securityEmail()
     {
-        return static::myschool()->handbook_coexistence ?? null;
+        return $this->school->security_email ?? null;
     }
-    public static function securityEmail()
+    public function numberStudents()
     {
-        return static::myschool()->security_email ?? null;
-    }
-
-    /*  */
-    public static function numberStudents()
-    {
-        return static::myschool()->number_students;
+        return $this->school->number_students;
     }
     public function number_students_show()
     {
-        return view('support.students.number_show', ['number_students' => static::numberStudents()]);
+        return view('support.students.number_show', ['number_students' => $this->numberStudents()]);
     }
     public function number_students_update(Request $request)
     {

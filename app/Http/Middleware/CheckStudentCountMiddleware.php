@@ -23,7 +23,7 @@ class CheckStudentCountMiddleware
     {
 
         $CC = Student::count();
-        $MCS = SchoolController::numberStudents();
+        $MCS = SchoolController::myschool()->numberStudents();
 
         if ($CC >= $MCS)
         {

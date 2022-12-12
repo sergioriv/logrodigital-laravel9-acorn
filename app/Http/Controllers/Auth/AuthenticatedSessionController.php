@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Requests\Auth\LoginRequest;
@@ -25,7 +26,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        return view('auth.login');
+        $SCHOOL = SchoolController::myschool();
+        return view('auth.login', [
+            'SCHOOL_name' => $SCHOOL->name(),
+            'SCHOOL_badge' => $SCHOOL->badge()
+        ]);
     }
 
     /**

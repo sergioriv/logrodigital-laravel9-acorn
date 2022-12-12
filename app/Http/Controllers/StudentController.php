@@ -100,7 +100,7 @@ class StudentController extends Controller
         $this->middleware('can:students.delete')->only('send_delete_code', 'delete');
 
         $this->middleware(YearCurrentMiddleware::class)->only('matriculate', 'matriculate_update');
-        $this->middleware(CheckStudentCountMiddleware::class)->only('create', 'store', 'import', 'import_store');
+        $this->middleware('countStudents')->only('create', 'store', 'import', 'import_store');
     }
 
     /*
@@ -156,24 +156,23 @@ class StudentController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $documentType = DocumentType::orderBy('foreigner')->get();
-        $countGroups = Group::where('school_year_id', $Y->id)->count();
 
         /* notificación de estudiantes restantes */
         $CC = Student::count();
-        $MCS = SchoolController::numberStudents();
-        if ($CC >= ($MCS - 100)) {
-            Notify::info(__(":count students remain from the contracted plan.", ['count' => $MCS - $CC]));
+        $SCHOOL = SchoolController::myschool()->getData();
+        if ($CC >= ($SCHOOL->number_students - 100)) {
+            Notify::info(__(":count students remain from the contracted plan.", ['count' => $SCHOOL->number_students - $CC]));
         }
 
         return view("logro.student.create", [
+            'SCHOOL' => $SCHOOL,
             'headquarters' => Headquarters::all(),
             'studyTime' => StudyTime::all(),
             'studyYear' => StudyYear::all(),
-            'cities' => City::all(),
+            'cities' => City::with('department')->get(),
             'countries' => Country::all(),
-            'documentType' => $documentType,
-            'countGroups' => $countGroups,
+            'documentType' => DocumentType::orderBy('foreigner')->get(),
+            'countGroups' => Group::where('school_year_id', $Y->id)->count(),
             'nationalCountry' => NationalCountry::country()
         ]);
     }
@@ -372,7 +371,7 @@ class StudentController extends Controller
                 'sisbenes'      => Sisben::all(),
                 'dwellingTypes' => DwellingType::all(),
                 'disabilities'  => Disability::all(),
-                'handbook'      => SchoolController::handbook(),
+                'handbook'      => SchoolController::myschool()->handbook(),
                 'nationalCountry' => NationalCountry::country(),
                 'ethnicGroups'  => EthnicGroup::all(),
                 'reservations'  => Reservation::all(),
@@ -533,7 +532,7 @@ class StudentController extends Controller
                     // self::send_msg($student, $group);
 
                     /* Send mail to Email Person Charge */
-                    SmtpMail::sendEmailEnrollmentNotification($student, $group);
+                    SmtpMail::init()->sendEmailEnrollmentNotification($student, $group);
 
                     Notify::success(__('Student matriculate!'));
                     return redirect()->route('students.show', $student);
@@ -606,9 +605,10 @@ class StudentController extends Controller
         return view('logro.student.profile')->with([
             'Y' => $Y,
             'YAvailable' => $YAvailable->id,
+            'SCHOOL' => SchoolController::myschool(),
             'student' => $student,
             'documentType' => DocumentType::orderBy('foreigner')->get(),
-            'cities' => City::all(),
+            'cities' => City::with('department')->get(),
             'countries' => Country::all(),
             'genders' => Gender::all(),
             'rhs' => Rh::all(),
@@ -629,7 +629,7 @@ class StudentController extends Controller
             'groupsStudent' => [],
             'nationalCountry' => NationalCountry::country(),
             'coordinators' => $orientationOptions['coordinators'],
-            'handbook'      => SchoolController::handbook(),
+            'handbook'      => SchoolController::myschool()->handbook(),
         ]);
     }
 
@@ -1223,7 +1223,7 @@ class StudentController extends Controller
 
     private function pdfMatriculateGenerate($student)
     {
-        $school = SchoolController::all();
+        $SCHOOL = SchoolController::myschool()->getData();
         $date = Carbon::now()->format('d/m/Y');
 
         $student = Student::find($student);
@@ -1231,7 +1231,7 @@ class StudentController extends Controller
 
 
         $pdf = Pdf::loadView('logro.pdf.matriculate', [
-            'school' => $school,
+            'SCHOOL' => $SCHOOL,
             'date' => $date,
             'student' => $student,
             'tutor' => $tutor,
@@ -1243,7 +1243,7 @@ class StudentController extends Controller
         return $pdf->download($student->getFullName() .'.pdf');
     }
 
-    private function send_msg($student, $group)
+    /* private function send_msg($student, $group)
     {
         if ($student->person_charge !== NULL) {
             $tutor = PersonCharge::select('id', 'cellphone')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
@@ -1260,12 +1260,11 @@ class StudentController extends Controller
                 $message->send();
             }
         }
-    }
+    } */
 
     public function send_delete_code(Student $student, Request $request)
     {
-        $securityEmail = SchoolController::securityEmail();
-        if ($securityEmail === NULL)
+        if (is_null(SchoolController::myschool()->securityEmail()))
         {
             return ['status' => false, 'message' => 'fail|' . __('No security email exists')];
         }
@@ -1280,8 +1279,7 @@ class StudentController extends Controller
 
     public function delete(Student $student, Request $request)
     {
-        $securityEmail = SchoolController::securityEmail();
-        if ($securityEmail === NULL)
+        if (is_null(SchoolController::myschool()->securityEmail()))
         {
             Notify::fail(__('No security email exists'));
             return redirect()->back();

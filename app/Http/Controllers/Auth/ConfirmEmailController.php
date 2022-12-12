@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\support\Notify;
 use App\Models\User;
 use Carbon\Carbon;
@@ -26,15 +27,24 @@ class ConfirmEmailController extends Controller
     public function show()
     {
         $auth = Auth::user();
+        $SCHOOL = SchoolController::myschool();
 
         if ( NULL === $auth->password )
         {
-            return view('auth.confirm-email')->with('status', 'password');
+            return view('auth.confirm-email', [
+                'SCHOOL_name' => $SCHOOL->name(),
+                'SCHOOL_badge' => $SCHOOL->badge(),
+                'status' => 'password'
+            ]);
         }
         else
         {
             Auth::logout();
-            return view('auth.confirm-email')->with('status', 'fail');
+            return view('auth.confirm-email', [
+                'SCHOOL_name' => $SCHOOL->name(),
+                'SCHOOL_badge' => $SCHOOL->badge(),
+                'status' => 'fail'
+            ]);
         }
     }
 

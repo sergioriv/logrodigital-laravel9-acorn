@@ -1,6 +1,4 @@
-@php
-    $badge = \App\Http\Controllers\SchoolController::badge()
-@endphp
+@props(['badge' => null])
 <a href="/" class="logo-lobby">
     @if ($badge)
         <img class="sw-13 sh-13 object-fit-fill"

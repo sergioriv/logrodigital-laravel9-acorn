@@ -2435,7 +2435,7 @@
                             @method('DELETE')
 
                             <div class="modal-body">
-                                @if (\App\Http\Controllers\SchoolController::securityEmail() === null)
+                                @if ($SCHOOL->securityEmail() === null)
                                     <div class="alert alert-info mb-0" role="alert">
                                         <h4 class="alert-heading">{{ __('No security email exists') }}.</h4>
                                         <hr>

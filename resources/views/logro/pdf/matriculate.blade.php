@@ -205,13 +205,13 @@
     <table class="table w-100" border="0">
         <tr>
             <td class="h-70p w-70p text-center align-sub">
-                @if ($school->badge)
-                    <img class="badge" src="{{ $school->badge }}" alt="badge">
+                @if ($SCHOOL->badge)
+                    <img class="badge" src="{{ $SCHOOL->badge }}" alt="badge">
                 @endif
             </td>
             <td class="t-center p-se-1">
                 <p class="t-title bold">
-                    {{ $school->name ?? null }}
+                    {{ $SCHOOL->name ?? null }}
                 </p>
                 <p>
                     HOJA DE MATRÍCULA - FECHA: {{ $date }}
@@ -524,14 +524,14 @@
     <section class="mt-4">
         Yo, {{ $student->myTutorIs->name ?? '___________________________________' }} identificado/a con cédula
         {{ $student->myTutorIs->document ?? '_________________' }}, acudiente del estudiante, autorizo al
-        {{ $school->name }}, para que según lo dispuesto en la ley de protección de datos 1581 de 2012 y en
+        {{ $SCHOOL->name }}, para que según lo dispuesto en la ley de protección de datos 1581 de 2012 y en
         concordancia con el decreto 1377 de 2013, haga uso de los datos de mi acudido con fines institucionales y
         siguiendo alineamientos del mismo.
     </section>
     <section class="mt-4">
         Yo, {{ $student->myTutorIs->name ?? '___________________________________' }} identificado/a con cédula
         {{ $student->myTutorIs->document ?? '_________________' }}, acudiente del estudiante, @if ($student->data_treatment !== 1) no @endif autorizo al
-        {{ $school->name }}, para que según lo dispuesto en la ley de protección de datos 1581 de 2012 y en
+        {{ $SCHOOL->name }}, para que según lo dispuesto en la ley de protección de datos 1581 de 2012 y en
         concordancia con el decreto 1377 de 2013, haga uso con fines institucionales de las fotografías en las que aparezca mi acudido.
     </section>
 

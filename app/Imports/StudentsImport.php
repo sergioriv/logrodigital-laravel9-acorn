@@ -31,7 +31,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
     {
 
         $CC = Student::count();
-        $MCS = SchoolController::numberStudents();
+        $MCS = SchoolController::myschool()->numberStudents();
 
         if ( $CC + count($rows) > $MCS )
         {

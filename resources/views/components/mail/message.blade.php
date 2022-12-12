@@ -2,7 +2,7 @@
 {{-- Header --}}
 @slot('header')
 @component('components.mail.header', ['url' => config('app.url')])
-{{ \App\Http\Controllers\SchoolController::name() }}
+{{ $SCHOOL->name }}
 @endcomponent
 @endslot
 

@@ -21,10 +21,10 @@ $description = 'Reset Password Page'
     class="sw-lg-70 min-h-100 bg-foreground d-flex justify-content-center align-items-center shadow-deep py-5 full-page-content-right-border">
     <div class="sw-lg-50 px-5">
         <div class="sh-13 mb-7 d-flex justify-content-center">
-            <x-auth.logo />
+            <x-auth.logo :badge="$SCHOOL_badge" />
         </div>
         <div class="mb-5 text-center">
-            <h2 class="cta-1 text-primary">{{ \App\Http\Controllers\SchoolController::name() }}</h2>
+            <h2 class="cta-1 text-primary">{{ $SCHOOL_name }}</h2>
         </div>
         <div class="mb-5">
             <p class="h6">{{ __("Enter new password for your account") }}</p>

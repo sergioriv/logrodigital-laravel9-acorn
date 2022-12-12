@@ -28,110 +28,120 @@ use Illuminate\Support\Str;
 class SmtpMail extends Controller
 {
 
-    private static $subject;
-    private static $userName;
-    private static $userEmail;
+    protected $SCHOOL;
 
-    public static function sendEmailVerificationNotification(User $user)
+    protected $subject;
+    protected $userName;
+    protected $userEmail;
+
+    public function __construct(School $school = null)
+    {
+        $this->SCHOOL = $school;
+    }
+
+    public static function init()
+    {
+        return new static(SchoolController::myschool()->getData());
+    }
+
+    public function sendEmailVerificationNotification(User $user)
     {
         if ( $user->email !== NULL )
         {
 
-            static::$subject = Lang::get("Registration Notification");
-            static::$userName = $user->name;
-            static::$userEmail = $user->email;
+            $this->subject = Lang::get("Registration Notification");
+            $this->userName = $user->name;
+            $this->userEmail = $user->email;
 
-            $verificationUrl = static::verificationUrl($user);
+            $verificationUrl = $this->verificationUrl($user);
 
             $content = (new ContentMail)
-                ->title(Lang::get('Hi') . ', ' . $user->name)
+                ->title(Lang::get('Hi') .', '. $user->name)
                 ->line(Lang::get('Please click the button below to verify your email address.'))
                 ->action(Lang::get('Verify Email Address'), $verificationUrl)
                 ->line(Lang::get('If you did not create an account, no further action is required.'))
                 ->subcopy();
 
-            return static::send_email($content->toContent());
+            return $this->send_email($content->toContent());
         }
         return false;
     }
 
-    public static function sendPasswordResetNotification(User $user, $token)
+    public function sendPasswordResetNotification(User $user, $token)
     {
 
-        static::$subject = Lang::get("Reset Password Notification");
-        static::$userName = $user->name;
-        static::$userEmail = $user->email;
+        $this->subject = Lang::get("Reset Password Notification");
+        $this->userName = $user->name;
+        $this->userEmail = $user->email;
 
-        $resetUrl = static::resetUrl($user, $token);
+        $resetUrl = $this->resetUrl($user, $token);
 
         $content = (new ContentMail)
-            ->title(Lang::get('Hi') . ', ' . $user->name)
+            ->title(Lang::get('Hi') .', '. $user->name)
             ->line(Lang::get('You are receiving this email because we received a password reset request for your account.'))
             ->action(Lang::get('Reset Password'), $resetUrl)
             ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire')]))
             ->line(Lang::get('If you did not request a password reset, no further action is required.'))
             ->subcopy();
 
-        static::send_email($content->toContent());
+        $this->send_email($content->toContent());
     }
 
-    public static function sendEmailEnrollmentNotification(Student $student, Group $group)
+    public function sendEmailEnrollmentNotification(Student $student, Group $group)
     {
-
         if ($student->person_charge !== NULL) {
-            $tutor = PersonCharge::select('id', 'cellphone')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
-            $user = $tutor->user;
 
-            if ($user->email_verified_at !== NULL ) {
+            $tutor = $student->myTutorIs;
 
-                static::$subject = Lang::get("Enrollment Notification");
-                static::$userName = $user->name;
-                static::$userEmail = $user->email;
+            if ($tutor->user->email_verified_at !== NULL ) {
+
+                $this->subject = Lang::get("Enrollment Notification");
+                $this->userName = $tutor->name;
+                $this->userEmail = $tutor->email;
 
                 $content = (new ContentMail)
-                    ->title(Lang::get('Hi') . ', ' . $user->name)
+                    ->title(Lang::get('Hi') .', '. $tutor->name)
                     ->line(Lang::get('The student, :student, has been enrolled in the group :studyyear :groupname.', [
-                        'student' => $student->getFullName(),
+                        'student' => $student->getCompleteNames(),
                         'studyyear' => $group->studyYear->name,
                         'groupname' => $group->name
                     ]));
 
-                static::send_email($content->toContent());
+                $this->send_email($content->toContent());
             }
         }
     }
 
-    public static function sendCodeSecurityEmail($email, $code)
+    public function sendCodeSecurityEmail($email, $code)
     {
-        static::$subject = Lang::get("Security Code");
-        static::$userName = SchoolController::name();
-        static::$userEmail = $email;
+        $this->subject = Lang::get("Security Code");
+        $this->userName = $this->SCHOOL->name;
+        $this->userEmail = $email;
 
         $content = (new ContentMail)
-            ->title(Lang::get('Dear') . ' ' . static::$userName)
+            ->title(Lang::get('Dear') .' '. $this->SCHOOL->name)
             ->line(Lang::get('Here is the code you need:'))
             ->line('<b>'.$code.'</b>')
             ->line(Lang::get('This email was generated because the request was made for the activation of this email for the security of your platform.'));
 
-        return static::send_email($content->toContent());
+        return $this->send_email($content->toContent());
     }
 
-    public static function sendStudentRemovalCode(Student $student, $code)
+    public function sendStudentRemovalCode(Student $student, $code)
     {
-        $security = new SchoolController();
-        static::$subject = Lang::get("Student Removal Code");
-        static::$userName = $security::name();
-        static::$userEmail = $security::securityEmail();
+        $this->subject = Lang::get("Student Removal Code");
+        $this->userName = $this->SCHOOL->name;
+        $this->userEmail = $this->SCHOOL->security_email;
 
         $content = (new ContentMail)
-            ->title(Lang::get('Dear') . ' ' . static::$userName)
+            ->title(Lang::get('Dear') .' '. $this->SCHOOL->name)
             ->line('<hr>')
             ->line(Lang::get('Here is the code you need:'))
             ->line('<b>'.$code.'</b>')
             ->line(Lang::get('This code has been generated for the deletion of Student:'))
             ->line(Lang::get('names') .': <b>' . $student->getCompleteNames() . '</b><br />' . Lang::get('Document') .': <b>' . $student->document_type_code .' '. $student->document . '</b>');
 
-        return static::send_email($content->toContent());
+        return $this->send_email($content->toContent());
     }
 
 
@@ -141,9 +151,9 @@ class SmtpMail extends Controller
      * como el reporte que hace el docente a orientacion
      *
      * */
-    public static function sendMailAlert($title, $to, $recommendation)
+    public function sendMailAlert($title, $to, $recommendation)
     {
-        static::$subject = $title;
+        $this->subject = $title;
 
 
         if ($to instanceof Collection) {
@@ -156,17 +166,17 @@ class SmtpMail extends Controller
                  *  */
                 if ($collection instanceof TeacherSubjectGroup) {
 
-                    static::$userName = $collection->teacher->getFullName();
-                    static::$userEmail = $collection->teacher->institutional_email;
+                    $this->userName = $collection->teacher->getFullName();
+                    $this->userEmail = $collection->teacher->institutional_email;
 
                     if ($collection->teacher->user->email_verified_at !== NULL) {
 
                         $content = (new ContentMail)
-                            ->title(Lang::get('Hi') . ', ' . $collection->teacher->getFullName())
+                            ->title(Lang::get('Hi') .', '. $collection->teacher->getFullName())
                             ->line($title)
                             ->line($recommendation);
 
-                        static::send_email($content->toContent());
+                        $this->send_email($content->toContent());
                     }
 
                 }
@@ -177,17 +187,17 @@ class SmtpMail extends Controller
                  *  */
                 if ($collection instanceof Orientation) {
 
-                    static::$userName = $collection->getFullName();
-                    static::$userEmail = $collection->email;
+                    $this->userName = $collection->getFullName();
+                    $this->userEmail = $collection->email;
 
                     if ($collection->user->email_verified_at !== NULL) {
 
                         $content = (new ContentMail)
-                            ->title(Lang::get('Hi') . ', ' . $collection->getFullName())
+                            ->title(Lang::get('Hi') .', '. $collection->getFullName())
                             ->line($title)
                             ->line($recommendation);
 
-                        static::send_email($content->toContent());
+                        $this->send_email($content->toContent());
                     }
 
                 }
@@ -198,27 +208,26 @@ class SmtpMail extends Controller
 
         if ($to instanceof Coordination) {
 
-            static::$userName = $to->getFullName();
-            static::$userEmail = $to->email;
+            $this->userName = $to->getFullName();
+            $this->userEmail = $to->email;
 
             if ($to->user->email_verified_at !== NULL) {
                 $content = (new ContentMail)
-                        ->title(Lang::get('Hi') . ', ' . $to->getFullName())
+                        ->title(Lang::get('Hi') .', '. $to->getFullName())
                         ->line($title)
                         ->line($recommendation);
 
-                static::send_email($content->toContent());
+                return $this->send_email($content->toContent());
             }
 
         }
 
     }
 
-    private static function send_email($contentEmail)
+    private function send_email($contentEmail)
     {
 
         $mail = new PHPMailer(true);
-        $schoolName = (new SchoolController)->name();
 
         try {
             $mail->isSMTP();
@@ -229,10 +238,10 @@ class SmtpMail extends Controller
             $mail->Port = config('mail.mailers.smtp.port');
             $mail->Username = config('mail.mailers.smtp.username');
             $mail->Password = config('mail.mailers.smtp.password');
-            $mail->setFrom(config('mail.from.address'), $schoolName);
-            $mail->Subject = static::$subject;
+            $mail->setFrom(config('mail.from.address'), $this->SCHOOL->name);
+            $mail->Subject = $this->subject;
             $mail->MsgHTML($contentEmail);
-            $mail->addAddress(static::$userEmail, static::$userName);
+            $mail->addAddress($this->userEmail, $this->userName);
             $mail->send();
         } catch (Exception $e) {
             return false;
@@ -246,7 +255,7 @@ class SmtpMail extends Controller
      * @param  mixed  $notifiable
      * @return string
      */
-    private static function verificationUrl($user)
+    private function verificationUrl($user)
     {
         return URL::temporarySignedRoute(
             'verification.verify',
@@ -263,7 +272,7 @@ class SmtpMail extends Controller
      *
      * @return string
      */
-    private static function resetUrl($user, $token)
+    private function resetUrl($user, $token)
     {
         return url(route('password.reset', [
             'token' => $token,

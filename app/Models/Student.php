@@ -305,7 +305,7 @@ class Student extends Model
 
     public function getCompleteNames()
     {
-        return " {$this->first_last_name} {$this->second_last_name} {$this->first_name} {$this->second_name} ";
+        return "{$this->first_last_name} {$this->second_last_name} {$this->first_name} {$this->second_name}";
     }
 
     public function age()
@@ -320,13 +320,13 @@ class Student extends Model
         $this->tag = null;
 
         if ($this->inclusive) {
-            $this->tag .= '<span class="badge bg-outline-warning">'. __('inclusive') .'</span>';
+            $this->tag .= ' <span class="badge bg-outline-warning">'. __('inclusive') .'</span> ';
         }
 
         if ($this->status === 'new') {
-            $this->tag .= '<span class="badge bg-outline-primary">'. __('new') .'</span>';
+            $this->tag .= ' <span class="badge bg-outline-primary">'. __('new') .'</span> ';
         } elseif ($this->status === 'repeat') {
-            $this->tag .= '<span class="badge bg-outline-danger">'. __('repeat') .'</span>';
+            $this->tag .= ' <span class="badge bg-outline-danger">'. __('repeat') .'</span> ';
         }
 
 

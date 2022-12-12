@@ -83,7 +83,7 @@ class UserController extends Controller
             if (config('app.env') === 'production') {
                 $countEmail = User::where('email', $this->user->email)->count();
                 if ($countEmail == 1) {
-                    $sendmail = SmtpMail::sendEmailVerificationNotification($this->user);
+                    $sendmail = SmtpMail::init()->sendEmailVerificationNotification($this->user);
                 }
             }
 
@@ -136,7 +136,7 @@ class UserController extends Controller
 
             if ($user->email !== $email) {
 
-                $sendmail = SmtpMail::sendEmailVerificationNotification($user);
+                $sendmail = SmtpMail::init()->sendEmailVerificationNotification($user);
 
                 /* comprueba que el correo fué enviado y permite la actualización del correo */
                 if (!$sendmail) {

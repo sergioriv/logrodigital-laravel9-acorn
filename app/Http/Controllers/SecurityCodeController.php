@@ -49,7 +49,7 @@ class SecurityCodeController extends Controller
 
     private static function sendMail()
     {
-        return SmtpMail::sendCodeSecurityEmail(static::$email, static::$code);
+        return SmtpMail::init()->sendCodeSecurityEmail(static::$email, static::$code);
     }
 
     public static function mySecurityEmail()

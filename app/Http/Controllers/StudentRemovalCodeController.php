@@ -52,7 +52,7 @@ class StudentRemovalCodeController extends Controller
 
     private static function sendMail()
     {
-        return SmtpMail::sendStudentRemovalCode(static::$student, static::$code);
+        return SmtpMail::init()->sendStudentRemovalCode(static::$student, static::$code);
     }
 
 }

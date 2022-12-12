@@ -20,6 +20,7 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class GroupController extends Controller
@@ -340,6 +341,8 @@ class GroupController extends Controller
             'students' => ['required', 'array']
         ]);
 
+        DB::beginTransaction();
+
         foreach ($request->students as $student) {
 
             if ($group->specialty) {
@@ -385,11 +388,15 @@ class GroupController extends Controller
                 }
 
                 /* Send mail to Email Person Charge */
-                SmtpMail::sendEmailEnrollmentNotification($studentNoNull, $group);
+                SmtpMail::init()->sendEmailEnrollmentNotification($studentNoNull, $group);
             } else {
+
+                DB::rollBack();
                 return redirect()->back()->withErrors(__("Unexpected Error"));
             }
         }
+
+        DB::commit();
 
         Notify::success(__('Students matriculate!'));
         return redirect()->route('group.show', $group);

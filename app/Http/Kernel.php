@@ -66,5 +66,8 @@ class Kernel extends HttpKernel
 
         // SPATIE PERMISSIONS
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+
+        // CHECK STUDENTS NUMBER
+        'countStudents' => \App\Http\Middleware\CheckStudentCountMiddleware::class
     ];
 }

@@ -204,10 +204,10 @@ $title = __('Create') . ' ' . __('Student');
                                             <x-input :value="old('institutional_email')" name="institutional_email" id="institutional_email"
                                                 required />
 
-                                            @if (\App\Http\Controllers\SchoolController::email() !== null)
+                                            @if ($SCHOOL->institutional_email !== null)
                                                 <div class="form-text cursor-pointer underline-link"
                                                     id="addInstitutionalEmail"
-                                                    data-value="{{ \App\Http\Controllers\SchoolController::email() }}">
+                                                    data-value="{{ $SCHOOL->institutional_email }}">
                                                     {{ __('Add Institutional Email') }}
                                                 </div>
                                             @endif

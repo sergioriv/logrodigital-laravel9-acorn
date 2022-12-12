@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Mail\SmtpMail;
+use App\Http\Controllers\SchoolController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 
@@ -16,7 +17,11 @@ class PasswordResetLinkController extends Controller
      */
     public function create()
     {
-        return view('auth.forgot-password');
+        $SCHOOL = SchoolController::myschool();
+        return view('auth.forgot-password', [
+            'SCHOOL_name' => $SCHOOL->name(),
+            'SCHOOL_badge' => $SCHOOL->badge(),
+        ]);
     }
 
     /**
@@ -39,7 +44,7 @@ class PasswordResetLinkController extends Controller
         $status = Password::sendResetLink(
             $request->only('email'),
             function($user, $token) {
-                SmtpMail::sendPasswordResetNotification($user, $token);
+                SmtpMail::init()->sendPasswordResetNotification($user, $token);
             }
         );
 
