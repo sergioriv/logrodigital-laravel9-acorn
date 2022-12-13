@@ -2177,11 +2177,20 @@
                                             <div class="mb-3 position-relative form-group">
                                                 <x-label>{{ __('medical prediagnosis') }}</x-label>
                                                 <textarea name="medical_prediagnosis" rows="5" class="form-control">{{ $student->medical_prediagnosis }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <!--  Psychosocial Assessment Section End -->
 
+                            <!--  Button Save Psychosocial Start -->
                             <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
                                 <x-button class="btn-primary" type="submit">{{ __('Save psychosocial information') }}
                                 </x-button>
                             </div>
+                            <!--  Button Save Psychosocial End -->
+
                         </form>
                     </div>
                     <!-- Psychosocial Information Tab End -->
@@ -2305,7 +2314,7 @@
                     <!-- Tracking Tab End -->
 
                     <!-- PIAR Tab Start -->
-                    @if (1 === $student->inclusive)
+                    {{-- @if (1 === $student->inclusive)
                         <div class="tab-pane fade " id="piarTab" role="tabpanel">
                             <section class="scroll-section">
                                 <h2 class="small-title">PIAR</h2>
@@ -2388,7 +2397,7 @@
                                 </div>
                             </section>
                         </div>
-                    @endif
+                    @endif --}}
                     <!-- PIAR Tab End -->
                 @endcan
             </div>
