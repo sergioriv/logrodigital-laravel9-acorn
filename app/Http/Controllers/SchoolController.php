@@ -31,10 +31,11 @@ class SchoolController extends Controller
 
     public function show()
     {
+        $S = static::myschool();
         return view('logro.school.show', [
             'studentsCount' => Student::count(),
-            'school' => $this->myschool(),
-            'daysToUpdate' => self::daysToUpdate(),
+            'school' => $S->getData(),
+            'daysToUpdate' => $S->daysToUpdate(),
             'teachers' => Teacher::all(),
             'secretariats' => Secretariat::all(),
             'coordinations' => Coordination::all(),
@@ -44,7 +45,8 @@ class SchoolController extends Controller
 
     public function update(Request $request)
     {
-        if (self::daysToUpdate() > 0)
+        $S = static::myschool();
+        if ($S->daysToUpdate() > 0)
         {
             return redirect()->back()->withErrors(__('Not allowed'));
         }
@@ -59,7 +61,7 @@ class SchoolController extends Controller
             'badge' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048']
         ]);
 
-        static::myschool()->update([
+        $S->getData()->update([
             'name' => $request->name,
             'nit' => $request->nit,
             'contact_email' => $request->contact_email,
@@ -68,22 +70,20 @@ class SchoolController extends Controller
             'handbook_coexistence' => $request->handbook_coexistence,
         ]);
 
-        self::update_badge($request);
+        $this->update_badge($S, $request);
 
         Notify::success( __('Updated info!') );
         return redirect()->back();
     }
 
-    private function update_badge($request)
+    private function update_badge($S, $request)
     {
-        $school = static::myschool();
-
         if ($request->hasFile('badge'))
         {
             $path = $this->upload_badge($request);
-            File::delete(public_path($school->badge));
+            File::delete(public_path($S->badge()));
 
-            $school->update([
+            $S->getData()->update([
                 'badge' => $path
             ]);
         }
@@ -112,10 +112,11 @@ class SchoolController extends Controller
 
     private function daysToUpdate()
     {
-        $updatedAt = static::myschool()->updated_at;
+        // $updatedAt = static::myschool()->getData()->updated_at;
 
-        if ($updatedAt > now()->format('Y-m-d'))
-            return Carbon::now()->diffInDays($updatedAt);
+
+        if ($this->school->updated_at > now()->format('Y-m-d'))
+            return Carbon::now()->diffInDays($this->school->updated_at);
 
         return 0;
     }
@@ -172,7 +173,9 @@ class SchoolController extends Controller
     /* Security Email */
     public function security_email(Request $request)
     {
-        if (self::daysToUpdate() > 0 && self::securityEmail() !== NULL)
+        $S = static::myschool();
+
+        if ($S->daysToUpdate() > 0 && $S->securityEmail() !== NULL)
         {
             return redirect()->back()->withErrors(__('Not allowed'));
         }
@@ -184,8 +187,7 @@ class SchoolController extends Controller
 
         Str::lower($request->email);
 
-        $oldSecurityEmail = self::securityEmail();
-        if ($oldSecurityEmail === $request->security_email)
+        if ($S->securityEmail() === $request->security_email)
         {
             Notify::fail(__("Unchanged!"));
             return redirect()->back();
@@ -196,7 +198,7 @@ class SchoolController extends Controller
             ->first();
         if ( $checkCode !== NULL )
         {
-            self::myschool()->forceFill([
+            $S->getData()->forceFill([
                 'security_email' => $request->security_email
             ])->save();
         } else
@@ -217,12 +219,14 @@ class SchoolController extends Controller
             'email' => ['required', 'email']
         ]);
 
-        if (self::daysToUpdate() > 0 && self::securityEmail() !== NULL)
+        $S = static::myschool();
+
+        if ($S->daysToUpdate() > 0 && $S->securityEmail() !== NULL)
         {
             return ['status' => false, 'message' => 'fail|' . __('Not allowed')];
         }
 
-        if ($request->email === self::securityEmail())
+        if ($request->email === $S->securityEmail())
         {
             return ['status' => false, 'message' => 'fail|' . __('Unchanged!')];
         }

@@ -37,7 +37,7 @@
         <script src="/js/forms/student-profile.js"></script>
         <script src="/js/forms/person-charge.js"></script>
         <script src="/js/forms/signature.js?v=0.2"></script>
-        <script src="/js/cs/datatable.extend.js"></script>
+        <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
 
         @hasrole('STUDENT')
             @if (null === $student->signature_student)

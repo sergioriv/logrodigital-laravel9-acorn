@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\StudentsInstructuveExport;
+use App\Exports\StudentsNoenrolledExport;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\GenerateStudentCode;
 use App\Http\Controllers\support\Notify;
@@ -1126,6 +1127,11 @@ class StudentController extends Controller
     public function export_instructive()
     {
         return Excel::download(new StudentsInstructuveExport, __('instructive') . '.xlsx');
+    }
+
+    public function export_noenrolled()
+    {
+        return Excel::download(new StudentsNoenrolledExport, __('no-enrolled') . '.xlsx');
     }
 
     public function import()

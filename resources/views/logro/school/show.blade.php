@@ -23,7 +23,7 @@ $title = $school->name;
     <script src="/js/forms/myinstitutionform.js?v=0.2"></script>
 
     <!-- DataTable -->
-    <script src="/js/cs/datatable.extend.js"></script>
+    <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
     <script src="/js/plugins/datatable/datatables_myintitution.ajax.js?d=1668181091077"></script>
 @endsection
 
@@ -246,7 +246,7 @@ $title = $school->name;
                                 <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3 mb-1">
                                     <div
                                         class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
-                                        <input class="form-control datatable-search" placeholder="Search"
+                                        <input class="form-control datatable-search" placeholder="{{ __('Search') }}"
                                             data-datatable="#datatable_coordination" />
                                         <span class="search-magnifier-icon">
                                             <i data-acorn-icon="search"></i>
@@ -324,7 +324,7 @@ $title = $school->name;
                                 <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3 mb-1">
                                     <div
                                         class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
-                                        <input class="form-control datatable-search" placeholder="Search"
+                                        <input class="form-control datatable-search" placeholder="{{ __('Search') }}"
                                             data-datatable="#datatable_teachers" />
                                         <span class="search-magnifier-icon">
                                             <i data-acorn-icon="search"></i>
@@ -434,7 +434,7 @@ $title = $school->name;
                                 <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3 mb-1">
                                     <div
                                         class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
-                                        <input class="form-control datatable-search" placeholder="Search"
+                                        <input class="form-control datatable-search" placeholder="{{ __('Search') }}"
                                             data-datatable="#datatable_orientation" />
                                         <span class="search-magnifier-icon">
                                             <i data-acorn-icon="search"></i>
@@ -512,7 +512,7 @@ $title = $school->name;
                                 <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3 mb-1">
                                     <div
                                         class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
-                                        <input class="form-control datatable-search" placeholder="Search"
+                                        <input class="form-control datatable-search" placeholder="{{ __('Search') }}"
                                             data-datatable="#datatable_secretariat" />
                                         <span class="search-magnifier-icon">
                                             <i data-acorn-icon="search"></i>
@@ -600,7 +600,7 @@ $title = $school->name;
                                             :hasError="true" />
                                     </div>
                                 </div>
-                                @if ($school->security_email === NULL)
+                                @if ($school->security_email === NULL || $daysToUpdate <= 0)
                                 <div class="row mt-3 mb-3">
                                     <label for="inputSecurityCode" class="col-sm-3 col-form-label">
                                         {{ __('Code') }} <x-required />

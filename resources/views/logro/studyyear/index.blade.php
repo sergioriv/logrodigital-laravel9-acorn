@@ -14,8 +14,8 @@
 @endsection
 
 @section('js_page')
-    <script src="/js/cs/datatable.extend.js"></script>
-    <script src="/js/plugins/datatable/datatable_standard.ajax.js"></script>
+    <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
+    <script src="/js/plugins/datatable/datatable_standard.ajax.js?d=1670967386206"></script>
 @endsection
 
 @section('content')

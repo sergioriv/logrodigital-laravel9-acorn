@@ -105,7 +105,7 @@ $title = __('Groups');
                         <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-3 mb-1">
                             <div
                                 class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
-                                <input class="form-control" id="searchName" placeholder="Search" />
+                                <input class="form-control" id="searchName" placeholder="{{ __('Search') }}" />
                                 <span class="search-magnifier-icon">
                                     <i data-acorn-icon="search"></i>
                                 </span>

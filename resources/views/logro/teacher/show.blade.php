@@ -21,7 +21,7 @@
 @endsection
 
 @section('js_page')
-    <script src="/js/cs/datatable.extend.js"></script>
+    <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
     <script src="/js/plugins/datatable/datatables_boxed.js"></script>
     <script src="/js/forms/teacher-permit-create.js"></script>
 @endsection

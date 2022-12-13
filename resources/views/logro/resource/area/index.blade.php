@@ -14,9 +14,8 @@ $title = __('Areas list');
 @endsection
 
 @section('js_page')
-<script src="/js/cs/datatable.extend.js"></script>
-{{-- <script src="/js/plugins/datatable/areas_datatable.ajax.js"></script> --}}
-<script src="/js/plugins/datatable/datatable_standard.ajax.js"></script>
+<script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
+<script src="/js/plugins/datatable/datatable_standard.ajax.js?d=1670967386206"></script>
 @endsection
 
 @section('content')
@@ -55,7 +54,7 @@ $title = __('Areas list');
                     <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
                         <div
                             class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
-                            <input class="form-control datatable-search" placeholder="Search"
+                            <input class="form-control datatable-search" placeholder="{{ __('Search') }}"
                                 data-datatable="#datatable_areas" />
                             <span class="search-magnifier-icon">
                                 <i data-acorn-icon="search"></i>

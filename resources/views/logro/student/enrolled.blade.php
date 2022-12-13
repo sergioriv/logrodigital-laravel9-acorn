@@ -14,8 +14,8 @@ $title = __('Students') .' '. __('enrolled');
 @endsection
 
 @section('js_page')
-<script src="/js/cs/datatable.extend.js"></script>
-<script src="/js/plugins/datatable/datatable_standard.ajax.js"></script>
+<script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
+<script src="/js/plugins/datatable/datatable_standard.ajax.js?d=1670967386206"></script>
 @endsection
 
 @section('content')
@@ -27,7 +27,7 @@ $title = __('Students') .' '. __('enrolled');
                 <div class="row">
                     <!-- Title Start -->
                     <div class="col-12 col-md-7 mb-2 mb-md-0">
-                        <h1 class="mb-1 pb-0 display-4" id="title">{{ $title .' ('. $students->count() .')' }}</h1>
+                        <h1 class="mb-1 pb-0 display-4" id="title">{{ $title ." ({$students->count()})" }}</h1>
                     </div>
                     <!-- Title End -->
 
@@ -54,7 +54,7 @@ $title = __('Students') .' '. __('enrolled');
                     <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
                         <div
                             class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
-                            <input class="form-control datatable-search" placeholder="Search"
+                            <input class="form-control datatable-search" placeholder="{{ __('Search') }}"
                                 data-datatable="#datatable_students" />
                             <span class="search-magnifier-icon">
                                 <i data-acorn-icon="search"></i>
@@ -65,6 +65,31 @@ $title = __('Students') .' '. __('enrolled');
                         </div>
                     </div>
                     <!-- Search End -->
+
+                    <div class="col-sm-12 col-md-7 col-lg-9 col-xxl-10 text-end mb-1">
+                        <div class="d-inline-block">
+                            <!-- Length Start -->
+                            <div class="dropdown-as-select d-inline-block datatable-length"
+                                data-datatable="#datatable_students" data-childSelector="span">
+                                <button class="btn p-0 shadow" type="button" data-bs-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false" data-bs-offset="0,3">
+                                    <span class="btn btn-foreground-alternate dropdown-toggle" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-delay="0" title="{{ __('Item Count') }}">
+                                        10 Items
+                                    </span>
+                                </button>
+                                <div class="dropdown-menu shadow dropdown-menu-end">
+                                    <a class="dropdown-item active" href="#">10 Items</a>
+                                    <a class="dropdown-item" href="#">20 Items</a>
+                                    <a class="dropdown-item" href="#">50 Items</a>
+                                    <a class="dropdown-item" href="#">100 Items</a>
+                                    <a class="dropdown-item" href="#">200 Items</a>
+                                </div>
+                            </div>
+                            <!-- Length End -->
+                        </div>
+                    </div>
+
                 </div>
                 <!-- Controls End -->
 

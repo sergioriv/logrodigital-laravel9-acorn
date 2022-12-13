@@ -34,6 +34,7 @@
             scrollX: true,
             sDom: '<"row"<"col-sm-12"<"table-container"t>r>><"row"<"col-12"p>>', // Hiding all other dom elements except table and pagination
             pageLength: 10,
+            processing: true,
             order: false,
             language: {
                 url: '/json/datatable.spanish.json',
