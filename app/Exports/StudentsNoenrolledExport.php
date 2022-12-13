@@ -87,7 +87,7 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
         $titles = ["First name", "Second name", "First last name", "Second last name", "Phone number", "Email", "Doc type", "Document"];
         $this->studentFiles = StudentFileType::where('inclusive', 0)->get();
         foreach ($this->studentFiles as $SF) {
-            array_push($titles, $SF->name);
+            array_push($titles, $SF->required ? $SF->name .' *' : $SF->name);
         }
 
         return $titles;
