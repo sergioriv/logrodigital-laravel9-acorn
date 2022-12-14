@@ -131,6 +131,24 @@ class Student extends Model
         'wizard_complete'
     ];
 
+    public static function singleData()
+    {
+        return self::select(
+            'id',
+            'code',
+            'first_name',
+            'second_name',
+            'first_last_name',
+            'second_last_name',
+            'institutional_email',
+            'telephone',
+            'document_type_code',
+            'document',
+            'enrolled',
+            'status'
+        );
+    }
+
 
     /* ADICIONALES */
     public function enumTypeSchoolOrigin()
@@ -281,6 +299,10 @@ class Student extends Model
     public function tracking()
     {
         return $this->hasMany(StudentTracking::class, 'student_id', 'id');
+    }
+    public function attendanceStudent()
+    {
+        return $this->hasMany(AttendanceStudent::class, 'student_id', 'id');
     }
 
 

@@ -238,7 +238,7 @@ class TeacherController extends Controller
                             ->with('headquarters', 'studyTime', 'studyYear', 'teacher')
             ]);
 
-        // return $subjects->get();
+
         return view('logro.teacher.subjects.index', ['subjects' => $subjects->get()]);
     }
 
@@ -254,7 +254,16 @@ class TeacherController extends Controller
 
         $Y = SchoolYearController::current_year();
 
-        $studentsGroup = Student::whereHas('groupYear', fn($gr) => $gr->where('group_id', $subject->group_id))->get();
+        $studentsGroup = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $subject->group_id))
+            ->withCount([
+                'attendanceStudent' =>
+                    fn($attS) => $attS->whereIn('attend', ['N', 'JUSTIFIED'])
+                        ->whereHas('attendance',
+                        fn($att) => $att->where('teacher_subject_group_id', $subject->id)
+                    )
+                ])
+            ->get();
+
 
         $periods = Period::where('study_time_id', $subject->group->study_time_id)
                     ->withCount(['permits as permit' => fn ($p) => $p->teacher_subject_group_id = $subject->id])
@@ -274,7 +283,9 @@ class TeacherController extends Controller
 
 
 
-        $attendances = Attendance::where('teacher_subject_group_id', $subject->id)->get();
+        $attendances = Attendance::where('teacher_subject_group_id', $subject->id)
+            ->withCount('absences')
+            ->get();
 
         return view('logro.teacher.subjects.show', [
             'Y' => $Y,

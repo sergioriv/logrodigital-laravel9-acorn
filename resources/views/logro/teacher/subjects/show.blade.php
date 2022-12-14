@@ -108,6 +108,9 @@
                                                             <th>&nbsp;</th>
                                                             <th
                                                                 class="text-center text-muted text-small text-uppercase p-0 pb-2">
+                                                                {{ __('absences') }}</th>
+                                                            <th
+                                                                class="text-center text-muted text-small text-uppercase p-0 pb-2">
                                                                 {{ __('Definitive') }}</th>
                                                             <th
                                                                 class="text-center text-muted text-small text-uppercase p-0 pb-2">
@@ -123,6 +126,9 @@
                                                                         {{ $studentG->getCompleteNames() }}
                                                                     </a>
                                                                     {!! $studentG->tag() !!}
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    {{ $studentG->attendance_student_count ?: null }}
                                                                 </td>
                                                                 <td class="text-center">
                                                                     @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->id, $subject) @endphp
@@ -356,9 +362,9 @@
                                                             <tr>
                                                                 <td scope="row" class="text-capitalize">{{ $attendance->created_at }}</td>
                                                                 <td class="text-center">
-                                                                    {{ $attendance->absences->count() }}</td>
+                                                                    {{ $attendance->absences_count }}</td>
                                                                 <td class="text-end">
-                                                                    @if ($attendance->absences->count())
+                                                                    @if ($attendance->absences_count)
                                                                         <x-button class="btn-sm btn-outline-primary"
                                                                             absences='view'
                                                                             attendance-id="{{ $attendance->id }}">
