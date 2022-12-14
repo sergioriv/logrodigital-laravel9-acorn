@@ -347,7 +347,6 @@ class PersonChargeController extends Controller
             }
 
             if ($sendEmailTutor) {
-
                 if (!$tutorCreate->sendVerification()) {
 
                     DB::rollBack();

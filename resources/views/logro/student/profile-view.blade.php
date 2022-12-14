@@ -132,37 +132,37 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('first name') }}</x-label>
-                                    <div class="form-control">{{ $student->first_name }}</div>
+                                    <div class="form-control">{{ $student->first_name ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('second name') }}</x-label>
-                                    <div class="form-control">{{ $student->second_name }}</div>
+                                    <div class="form-control">{{ $student->second_name ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('first last name') }}</x-label>
-                                    <div class="form-control">{{ $student->first_last_name }}</div>
+                                    <div class="form-control">{{ $student->first_last_name ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('second last name') }}</x-label>
-                                    <div class="form-control">{{ $student->second_last_name }}</div>
+                                    <div class="form-control">{{ $student->second_last_name ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('institutional email') }}</x-label>
-                                    <div class="form-control">{{ $student->institutional_email }}</div>
+                                    <div class="form-control">{{ $student->institutional_email ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('telephone') }}</x-label>
-                                    <div class="form-control">{{ $student->telephone }}</div>
+                                    <div class="form-control">{{ $student->telephone ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -174,19 +174,20 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('document number') }}</x-label>
-                                    <div class="form-control">{{ $student->document }}</div>
+                                    <div class="form-control">{{ $student->document ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('expedition city') }}</x-label>
-                                    <div class="form-control">{{ $student->expeditionCity->name ?? null }}</div>
+                                    <div class="form-control">
+                                        {{ $student->expeditionCity->department->name ?? null }} | {{ $student->expeditionCity->name ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('number siblings') }}</x-label>
-                                    <div class="form-control">{{ $student->number_siblings }}</div>
+                                    <div class="form-control">{{ $student->number_siblings ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -198,13 +199,13 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('birth city') }}</x-label>
-                                    <div class="form-control">{{ $student->birthCity->name ?? null }}</div>
+                                    <div class="form-control">{{ $student->birthCity->department->name ?? null }} | {{ $student->birthCity->name ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label>{{ __('birthdate') }}</x-label>
-                                    <div class="form-control">{{ $student->birthdate }}</div>
+                                    <div class="form-control">{{ $student->birthdate ?? null }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -237,6 +238,267 @@
 
                 </div>
                 <!-- Information Tab End -->
+
+                <!-- Persons In Charge Tab Start -->
+                <div class="tab-pane fade" id="personsChargeTab" role="tabpanel">
+
+                    <!-- Mother Section Start -->
+                    @if ($student->mother)
+                    <h2 class="small-title">
+                        {{ __('Mother Information') }}
+                        @if ($student->person_charge == 1) ({{ __('Tutor') }}) @endif
+                    </h2>
+                    <section class="card mb-5">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('full name') }}
+                                        </x-label>
+                                        <div class="form-control">{{ $student->mother->name ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('email') }}
+                                        </x-label>
+                                        <div class="form-control">{{ $student->mother->email ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('document') }}</x-label>
+                                        <div class="form-control">{{ $student->mother->document ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('expedition city') }}</x-label>
+                                        <div class="form-control">{{ $student->mother->expeditionCity->department->name ?? null }} | {{ $student->mother->expeditionCity->name ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('residence city') }}</x-label>
+                                        <div class="form-control">{{ $student->mother->residenceCity->department->name ?? null }} | {{ $student->mother->residenceCity->name ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('address') }}</x-label>
+                                        <div class="form-control">{{ $student->mother->address ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('telephone') }}</x-label>
+                                        <div class="form-control">{{ $student->mother->telephone ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('cellphone') }}
+                                        </x-label>
+                                        <div class="form-control">{{ $student->mother->cellphone ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('birthdate') }}</x-label>
+                                        <div class="form-control">{{ $student->mother->birthdate ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('occupation') }}</x-label>
+                                        <div class="form-control">{{ $student->mother->occupation ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    @endif
+                    <!-- Mother Section End -->
+
+                    <!-- Father Section Start -->
+                    @if ($student->father)
+                    <h2 class="small-title">
+                        {{ __('Father Information') }}
+                        @if ($student->person_charge == 2) ({{ __('Tutor') }}) @endif
+                    </h2>
+                    <section class="card mb-5">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('full name') }}
+                                        </x-label>
+                                        <div class="form-control">{{ $student->father->name ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('email') }}
+                                        </x-label>
+                                        <div class="form-control">{{ $student->father->email ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('document') }}</x-label>
+                                        <div class="form-control">{{ $student->father->document ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('expedition city') }}</x-label>
+                                        <div class="form-control">{{ $student->father->expeditionCity->department->name ?? null }} | {{ $student->father->expeditionCity->name ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('residence city') }}</x-label>
+                                        <div class="form-control">{{ $student->father->residenceCity->department->name ?? null }} | {{ $student->father->residenceCity->name ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('address') }}</x-label>
+                                        <div class="form-control">{{ $student->father->address ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('telephone') }}</x-label>
+                                        <div class="form-control">{{ $student->father->telephone ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('cellphone') }}
+                                        </x-label>
+                                        <div class="form-control">{{ $student->father->cellphone ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('birthdate') }}</x-label>
+                                        <div class="form-control">{{ $student->father->birthdate ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('occupation') }}</x-label>
+                                        <div class="form-control">{{ $student->father->occupation ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    @endif
+                    <!-- Father Section End -->
+
+                    <!-- Tutor Section Start -->
+                    @if ($student->tutor)
+                    <h2 class="small-title">{{ __('Tutor Information') }}</h2>
+                    <section class="card mb-5">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('full name') }}
+                                        </x-label>
+                                        <div class="form-control">{{ $student->tutor->name ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('email') }}
+                                        </x-label>
+                                        <div class="form-control">{{ $student->tutor->email ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('document') }}</x-label>
+                                        <div class="form-control">{{ $student->tutor->document ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('expedition city') }}</x-label>
+                                        <div class="form-control">{{ $student->tutor->expeditionCity->department->name ?? null }} | {{ $student->tutor->expeditionCity->name ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 w-100 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('residence city') }}</x-label>
+                                        <div class="form-control">{{ $student->tutor->residenceCity->department->name ?? null }} | {{ $student->tutor->residenceCity->name ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('address') }}</x-label>
+                                        <div class="form-control">{{ $student->tutor->address ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('telephone') }}</x-label>
+                                        <div class="form-control">{{ $student->tutor->telephone ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('cellphone') }}
+                                        </x-label>
+                                        <div class="form-control">{{ $student->tutor->cellphone ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('birthdate') }}</x-label>
+                                        <div class="form-control">{{ $student->tutor->birthdate ?? null }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 tooltip-label-end position-relative form-group">
+                                        <x-label>{{ __('occupation') }}</x-label>
+                                        <div class="form-control">{{ $student->tutor->occupation ?? null }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    @endif
+                    <!-- Tutor Section End -->
+
+                </div>
+                <!-- Persons In Charge Tab End -->
 
             </div>
             <!-- Right Side End -->

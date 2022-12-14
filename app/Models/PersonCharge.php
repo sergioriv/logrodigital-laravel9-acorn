@@ -44,6 +44,10 @@ class PersonCharge extends Model
     {
         return $this->belongsTo(kinship::class);
     }
+    public function expeditionCity()
+    {
+        return $this->belongsTo(City::class, 'expedition_city_id');
+    }
     public function residenceCity()
     {
         return $this->belongsTo(City::class, 'residence_city_id');

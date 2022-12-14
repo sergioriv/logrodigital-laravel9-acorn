@@ -95,6 +95,8 @@ class UserController extends Controller
              */
             return $sendmail;
         }
+
+        return true;
     }
 
     public function show(User $user)
