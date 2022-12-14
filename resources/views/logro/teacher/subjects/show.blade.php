@@ -36,7 +36,7 @@
                         <div class="row">
 
                             <!-- Title Start -->
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-7 mb-2 mb-md-0">
                                 <h1 class="mb-1 pb-0 display-4">{{ __('Group') . ' | ' . $subject->group->name }}</h1>
                                 <div aria-label="breadcrumb">
                                     <div class="breadcrumb">
@@ -61,8 +61,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 text-end display-4 fw-bold">{{ $title }}</div>
                             <!-- Title End -->
+
+                            <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+
+                                <span class="display-4 fw-bold">{{ $title }}</span>
+
+                                <!-- Dropdown Button Start -->
+                                <div class="ms-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                        data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" data-submenu>
+                                        <i data-acorn-icon="more-horizontal"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('group.export.student-list', $subject->group) }}">
+                                            <i data-acorn-icon="download"></i>
+                                            <span>{{ __("Download student list") }}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- Dropdown Button End -->
+                            </div>
 
                         </div>
 

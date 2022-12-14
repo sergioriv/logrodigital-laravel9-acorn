@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\GroupStudentList;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
@@ -22,6 +23,7 @@ use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GroupController extends Controller
 {
@@ -34,7 +36,7 @@ class GroupController extends Controller
         // $this->middleware('can:groups.teachers');
         $this->middleware('can:groups.teachers.edit')->only('teacher_edit', 'teacher_update');
 
-        $this->middleware(YearCurrentMiddleware::class)->except('index', 'filter', 'show');
+        $this->middleware(YearCurrentMiddleware::class)->except('index', 'filter', 'show', 'exportStudentList');
     }
 
     public function index()
@@ -215,7 +217,7 @@ class GroupController extends Controller
             ->where('specialty', 1)
             ->whereNotNull('specialty_area_id')->count();
 
-        $studentsGroup = Student::whereHas('groupYear', fn($gr) => $gr->where('group_id', $group->id))->get();
+        $studentsGroup = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $group->id))->get();
 
         $areas = $this->subjects_teacher($Y->id, $group);
 
@@ -534,5 +536,12 @@ class GroupController extends Controller
                 ->where('study_year_id', $group->study_year_id)
                 ->where('specialty', 1)
         )->first()->group->name ?? null;
+    }
+
+
+    /* Export */
+    public function exportStudentList(Group $group)
+    {
+        return Excel::download(new GroupStudentList($group), __('student list :GROUP', ['GROUP' => $group->name]) . '.xlsx');
     }
 }

@@ -64,9 +64,9 @@
                             </div>
                             <!-- Title End -->
 
-                            @can('groups.create')
-                                <!-- Top Buttons Start -->
-                                <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                            <!-- Top Buttons Start -->
+                            <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                                @can('groups.create')
                                     <!-- Edit Name Button Start -->
                                     <a href="{{ route('group.edit', $group) }}"
                                         class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
@@ -74,9 +74,25 @@
                                         <span>{{ __('Edit') }}</span>
                                     </a>
                                     <!-- Edit Name Button End -->
+                                @endcan
+
+                                <!-- Dropdown Button Start -->
+                                <div class="ms-1">
+                                    <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only"
+                                        data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" data-submenu>
+                                        <i data-acorn-icon="more-horizontal"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('group.export.student-list', $group) }}">
+                                            <i data-acorn-icon="download"></i>
+                                            <span>{{ __("Download student list") }}</span>
+                                        </a>
+                                    </div>
                                 </div>
-                                <!-- Top Buttons End -->
-                            @endcan
+                                <!-- Dropdown Button End -->
+                            </div>
+                            <!-- Top Buttons End -->
                         </div>
 
                     </div>

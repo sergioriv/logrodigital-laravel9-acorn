@@ -181,7 +181,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('groups/{group}/matriculate', [GroupController::class, 'matriculate_update'])->name('group.matriculate.update');
     Route::get('groups/{group}/specialty', [GroupController::class, 'specialty'])->name('group.specialty');
     Route::post('groups/{group}/specialty', [GroupController::class, 'specialty_store'])->name('group.specialty.store');
-
+    Route::get('group/{group}/export-student-list', [GroupController::class, 'exportStudentList'])->name('group.export.student-list');
 
     /* Permit Period */
     Route::post('subject/permit', [PeriodPermitController::class, 'store'])->name('period.permit');
