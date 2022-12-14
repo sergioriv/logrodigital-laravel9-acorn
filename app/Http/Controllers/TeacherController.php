@@ -232,7 +232,14 @@ class TeacherController extends Controller
 
     public function mysubjects()
     {
-        return view('logro.teacher.subjects.index', ['subjects' => self::subjects()->get()]);
+        $subjects = $this->subjects()
+            ->with(['group' =>
+                fn($g) => $g->withCount('groupStudents as student_quantity')
+                            ->with('headquarters', 'studyTime', 'studyYear', 'teacher')
+            ]);
+
+        // return $subjects->get();
+        return view('logro.teacher.subjects.index', ['subjects' => $subjects->get()]);
     }
 
     public function mysubjects_show(TeacherSubjectGroup $subject)
@@ -248,7 +255,6 @@ class TeacherController extends Controller
         $Y = SchoolYearController::current_year();
 
         $studentsGroup = Student::whereHas('groupYear', fn($gr) => $gr->where('group_id', $subject->group_id))->get();
-        // $studentsGroup = GroupStudent::with('student')->where('group_id', $subject->group_id)->get();
 
         $periods = Period::where('study_time_id', $subject->group->study_time_id)
                     ->withCount(['permits as permit' => fn ($p) => $p->teacher_subject_group_id = $subject->id])

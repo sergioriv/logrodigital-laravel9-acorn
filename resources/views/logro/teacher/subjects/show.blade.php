@@ -326,9 +326,8 @@
 
                                             <!-- Add Attendance Button Start -->
                                             <button type="button"
-                                                @if ($attendanceAvailable) data-bs-toggle="modal"
-                                            data-bs-target="#addAttendance"
-                                            @else disabled @endif
+                                                @if ($attendanceAvailable) data-bs-toggle="modal" data-bs-target="#addAttendance"
+                                                @else disabled @endif
                                                 class="btn btn-primary">
                                                 <span>{{ __('Take attendance') }}</span>
                                             </button>
@@ -339,6 +338,7 @@
 
                                     <section class="scroll-section mt-2">
                                         <div class="card">
+                                            @if (!$attendances->isEmpty())
                                             <div class="card-body pt-2">
                                                 <table class="table table-striped mb-0">
                                                     <thead>
@@ -370,6 +370,7 @@
                                                     </tbody>
                                                 </table>
                                             </div>
+                                            @endif
                                         </div>
                                     </section>
 

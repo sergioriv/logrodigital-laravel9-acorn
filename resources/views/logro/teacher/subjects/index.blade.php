@@ -35,6 +35,7 @@ $title = __('My subjects');
                     <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
                         @foreach ($subjects as $subject)
                                 <x-group.subjects :subject="$subject">
+                                    <small class="mt-2 text-muted">{{ $subject->group->student_quantity .' '. __('students') }}</small>
                                     <span class="mt-3 text-black btn-icon-start">
                                         <i data-acorn-icon="notebook-1"
                                             class="icon"data-acorn-size="15"></i>
