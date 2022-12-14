@@ -57,7 +57,7 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
                 if ($file->isEmpty())
                     array_push($row, 'NO');
                 else {
-                    $docComplete = $docComplete + 1;
+                    $docComplete = $SF->required ?? $docComplete + 1;
                     array_push($row, 'SI');
                 }
             }
