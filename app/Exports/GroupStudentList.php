@@ -27,6 +27,7 @@ class GroupStudentList implements FromArray, ShouldAutoSize, WithStyles, WithEve
     {
         $array = [
             [__('Group') .': '. $this->group->name],
+            [__('headquarters') .': '. $this->group->headquarters->name .' | '. __('study time') .': '. $this->group->studyTime->name .' | '. __('study year') .': '. $this->group->studyYear->name ],
             [null],
             [__('Full name'), __('conceptual'), __('procedural'), __('attitudinal')]
         ];
@@ -46,7 +47,11 @@ class GroupStudentList implements FromArray, ShouldAutoSize, WithStyles, WithEve
                 'font' => ['bold' => true, 'size' => 14],
                 'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
             ],
-            3 => [
+            2 => [
+                'font' => ['size' => 9],
+                'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+            ],
+            4 => [
                 'font' => ['bold' => true, 'size' => 12],
                 'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
             ],
@@ -63,6 +68,7 @@ class GroupStudentList implements FromArray, ShouldAutoSize, WithStyles, WithEve
         return [
             AfterSheet::class    => function (AfterSheet $event) {
                 $event->sheet->mergeCells('A1:D1');
+                $event->sheet->mergeCells('A2:D2');
             }
         ];
     }
