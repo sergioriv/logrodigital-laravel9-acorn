@@ -347,10 +347,10 @@ class Student extends Model
         parent::boot();
 
         static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('first_last_name')
-                ->orderBy('second_last_name')
-                ->orderBy('first_name')
-                ->orderBy('second_name');
+            $builder->orderBy('students.first_last_name')
+                ->orderBy('students.second_last_name')
+                ->orderBy('students.first_name')
+                ->orderBy('students.second_name');
         });
     }
 }

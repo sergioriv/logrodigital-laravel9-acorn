@@ -247,8 +247,8 @@ class TeacherController extends Controller
 
         $Y = SchoolYearController::current_year();
 
-
-        $studentsGroup = GroupStudent::with('student')->where('group_id', $subject->group_id)->get();
+        $studentsGroup = Student::whereHas('groupYear', fn($gr) => $gr->where('group_id', $subject->group_id))->get();
+        // $studentsGroup = GroupStudent::with('student')->where('group_id', $subject->group_id)->get();
 
         $periods = Period::where('study_time_id', $subject->group->study_time_id)
                     ->withCount(['permits as permit' => fn ($p) => $p->teacher_subject_group_id = $subject->id])

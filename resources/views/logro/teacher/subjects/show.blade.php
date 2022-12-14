@@ -118,14 +118,14 @@
                                                         @foreach ($studentsGroup as $studentG)
                                                             <tr>
                                                                 <td scope="row">
-                                                                    <a href="{{ route('students.view', $studentG->student) }}"
+                                                                    <a href="{{ route('students.view', $studentG) }}"
                                                                         class="list-item-heading body">
-                                                                        {{ $studentG->student->getCompleteNames() }}
+                                                                        {{ $studentG->getCompleteNames() }}
                                                                     </a>
-                                                                    {!! $studentG->student->tag() !!}
+                                                                    {!! $studentG->tag() !!}
                                                                 </td>
                                                                 <td class="text-center">
-                                                                    @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->student_id, $subject) @endphp
+                                                                    @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->id, $subject) @endphp
                                                                     {{ $defStudent }}
                                                                 </td>
                                                                 <td class="text-center text-capitalize">
@@ -220,24 +220,24 @@
                                                                 @php $gradeNumber = 1; @endphp
                                                                 @foreach ($studentsGroup as $studentG)
                                                                     @php
-                                                                        $GxPS = \App\Http\Controllers\GradeController::forPeriod($subject->id, $period->id, $studentG->student->id);
+                                                                        $GxPS = \App\Http\Controllers\GradeController::forPeriod($subject->id, $period->id, $studentG->id);
                                                                     @endphp
 
                                                                     <tr>
                                                                         <td scope="row">
                                                                             @can('students.info')
-                                                                                <a href="{{ route('students.show', $studentG->student) }}"
+                                                                                <a href="{{ route('students.show', $studentG) }}"
                                                                                     class="list-item-heading body">
-                                                                                    {{ $studentG->student->getCompleteNames() }}
+                                                                                    {{ $studentG->getCompleteNames() }}
                                                                                 </a>
                                                                             @else
-                                                                                <a href="{{ route('students.view', $studentG->student) }}"
+                                                                                <a href="{{ route('students.view', $studentG) }}"
                                                                                     class="list-item-heading body">
-                                                                                    {{ $studentG->student->getCompleteNames() }}
+                                                                                    {{ $studentG->getCompleteNames() }}
                                                                                 </a>
                                                                             @endcan
 
-                                                                            {!! $studentG->student->tag() !!}
+                                                                            {!! $studentG->tag() !!}
 
                                                                         </td>
                                                                         <td scope="row" class="col-1">
@@ -247,7 +247,7 @@
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
-                                                                                    name="students[{{ $studentG->student->code }}][conceptual]"
+                                                                                    name="students[{{ $studentG->code }}][conceptual]"
                                                                                     value="{{ $GxPS->conceptual ?? null }}" />
                                                                             @else
                                                                                 <div class="form-control bg-light">
@@ -261,7 +261,7 @@
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
-                                                                                    name="students[{{ $studentG->student->code }}][procedural]"
+                                                                                    name="students[{{ $studentG->code }}][procedural]"
                                                                                     value="{{ $GxPS->procedural ?? null }}" />
                                                                             @else
                                                                                 <div class="form-control bg-light">
@@ -275,7 +275,7 @@
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
-                                                                                    name="students[{{ $studentG->student->code }}][attitudinal]"
+                                                                                    name="students[{{ $studentG->code }}][attitudinal]"
                                                                                     value="{{ $GxPS->attitudinal ?? null }}" />
                                                                             @else
                                                                                 <div class="form-control bg-light">
@@ -409,13 +409,13 @@
                                             <td>
                                                 <label class="form-check custom-icon mb-0 unchecked-opacity-25">
                                                     <input type="checkbox" class="form-check-input"
-                                                        name="studentsAttendance[{{ $studentG->student->code }}]" value="1"
+                                                        name="studentsAttendance[{{ $studentG->code }}]" value="1"
                                                         checked>
                                                     <span class="form-check-label">
                                                         <span class="content">
                                                             <span class="heading mb-1 d-block lh-1-25">
-                                                                {{ $studentG->student->getCompleteNames() }}
-                                                                <x-tag-student :student="$studentG->student" />
+                                                                {{ $studentG->getCompleteNames() }}
+                                                                <x-tag-student :student="$studentG" />
                                                             </span>
                                                         </span>
                                                     </span>

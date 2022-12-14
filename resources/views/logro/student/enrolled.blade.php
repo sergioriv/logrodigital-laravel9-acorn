@@ -95,7 +95,7 @@ $title = __('Students') .' '. __('enrolled');
 
                 <!-- Table Start -->
                 <div class="data-table-responsive-wrapper">
-                    <table id="datatable_students" class="data-table" logro="datatable">
+                    <table id="datatable_students" class="data-table nowrap hover" logro="datatable">
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>

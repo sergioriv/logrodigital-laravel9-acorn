@@ -207,8 +207,13 @@ class GroupController extends Controller
 
         $Y = SchoolYearController::current_year();
 
+        $existSpecialties = Group::where('study_year_id', $group->study_year_id)
+            ->where('headquarters_id', $group->headquarters_id)
+            ->where('study_time_id', $group->study_time_id)
+            ->where('specialty', 1)
+            ->whereNotNull('specialty_area_id')->count();
 
-        $studentsGroup = GroupStudent::with('student')->where('group_id', $group->id)->get();
+        $studentsGroup = Student::whereHas('groupYear', fn($gr) => $gr->where('group_id', $group->id))->get();
 
         $areas = $this->subjects_teacher($Y->id, $group);
 
@@ -225,6 +230,7 @@ class GroupController extends Controller
             'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
             'count_studentsMatriculateInStudyYear' => $this->countStudentMatriculateInStudyYear($Y, $group),
             'studentsGroup' => $studentsGroup,
+            'existSpecialties' => $existSpecialties,
             'areas' => $areas,
             'periods' => $periods
         ]);

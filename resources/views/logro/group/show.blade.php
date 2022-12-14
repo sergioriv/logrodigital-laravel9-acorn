@@ -142,22 +142,22 @@
                                                             <tr>
                                                                 <td scope="row">
                                                                     @can('students.info')
-                                                                        <a href="{{ route('students.show', $studentG->student) }}"
+                                                                        <a href="{{ route('students.show', $studentG) }}"
                                                                             class="list-item-heading body">
-                                                                            {{ $studentG->student->getCompleteNames() }}
+                                                                            {{ $studentG->getCompleteNames() }}
                                                                         </a>
                                                                     @else
-                                                                        <a href="{{ route('students.view', $studentG->student) }}"
+                                                                        <a href="{{ route('students.view', $studentG) }}"
                                                                             class="list-item-heading body">
-                                                                            {{ $studentG->student->getCompleteNames() }}
+                                                                            {{ $studentG->getCompleteNames() }}
                                                                         </a>
                                                                     @endcan
 
-                                                                    {!! $studentG->student->tag() !!}
+                                                                    {!! $studentG->tag() !!}
                                                                 </td>
-                                                                @if (is_null($group->specialty))
+                                                                @if (is_null($group->specialty) && $existSpecialties)
                                                                     <td>
-                                                                        {{ \App\Http\Controllers\GroupController::specialtyForStudent($studentG->student->id, $group) }}
+                                                                        {{ \App\Http\Controllers\GroupController::specialtyForStudent($studentG->id, $group) }}
                                                                     </td>
                                                                 @endif
                                                             </tr>

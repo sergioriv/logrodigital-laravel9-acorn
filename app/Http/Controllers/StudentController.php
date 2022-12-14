@@ -196,6 +196,7 @@ class StudentController extends Controller
             'headquarters' => ['required', Rule::exists('headquarters', 'id')],
             'studyTime' => ['required', Rule::exists('study_times', 'id')],
             'studyYear' => ['required', Rule::exists('study_years', 'id')],
+            'repeat' => ['nullable', 'boolean']
         ]);
 
         DB::beginTransaction();
@@ -230,7 +231,7 @@ class StudentController extends Controller
                 'headquarters_id' => $request->headquarters,
                 'study_time_id' => $request->studyTime,
                 'study_year_id' => $request->studyYear,
-                'status' => 'new',
+                'status' => $request->repeat == 1 ? 'repeat' : 'new',
                 'data_treatment' => TRUE
             ]);
 

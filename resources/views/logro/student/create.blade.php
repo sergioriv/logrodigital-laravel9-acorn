@@ -60,7 +60,7 @@ $title = __('Create') . ' ' . __('Student');
 
         jQuery('#addInstitutionalEmail').click(function() {
             var email = $('#institutional_email');
-            email.val(email.val().concat($(this).data('value')));
+            email.val(email.val().concat($(this).data('value'))).focus();
         });
     </script>
 @endsection
@@ -83,43 +83,36 @@ $title = __('Create') . ' ' . __('Student');
                         id="studentCreateForm" novalidate autocomplete="off">
                         @csrf
 
-                        <!-- Validation Errors -->
-                        {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
-
-                        <div class="card mb-5">
+                        <div class="card mb-3">
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('first name') }} <span class="text-danger">*</span></x-label>
                                             <x-input :value="old('firstName')" name="firstName" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('second name') }}</x-label>
                                             <x-input :value="old('secondName')" name="secondName" />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('first last name') }} <span class="text-danger">*</span>
                                             </x-label>
                                             <x-input :value="old('firstLastName')" name="firstLastName" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('second last name') }}</x-label>
                                             <x-input :value="old('secondLastName')" name="secondLastName" />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('document type') }} <span class="text-danger">*</span></x-label>
                                             <select name="document_type" id="document_type" logro="select2" required>
                                                 <option label="&nbsp;"></option>
@@ -133,16 +126,14 @@ $title = __('Create') . ' ' . __('Student');
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('document') }} <span class="text-danger">*</span>
                                             </x-label>
                                             <x-input :value="old('document')" name="document" required />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('home country') }}
                                                 <x-required />
                                             </x-label>
@@ -158,7 +149,7 @@ $title = __('Create') . ' ' . __('Student');
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('birth city') }}</x-label>
                                             <select name="birth_city" id="birth_city" logro="select2"
                                             @if (old('country', $nationalCountry->id) != $nationalCountry->id)
@@ -173,17 +164,15 @@ $title = __('Create') . ' ' . __('Student');
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('birthdate') }}</x-label>
                                             <x-input :value="old('birthdate')" logro="datePickerBefore" name="birthdate"
                                             data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('Do you have siblings in the institution?') }}</x-label>
                                             <select name="siblings_in_institution" logro="select2">
                                                 <option value="0" @selected(old('siblings_in_institution') == 0)>
@@ -195,10 +184,8 @@ $title = __('Create') . ' ' . __('Student');
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('institutional email') }} <span class="text-danger">*</span>
                                             </x-label>
                                             <x-input :value="old('institutional_email')" name="institutional_email" id="institutional_email"
@@ -214,7 +201,7 @@ $title = __('Create') . ' ' . __('Student');
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('headquarters') }} <span class="text-danger">*</span></x-label>
                                             <select name="headquarters" id="headquarters" class="filter" logro="select2">
                                                 <option label="&nbsp;"></option>
@@ -226,8 +213,6 @@ $title = __('Create') . ' ' . __('Student');
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('study time') }} <span class="text-danger">*</span></x-label>
@@ -255,6 +240,13 @@ $title = __('Create') . ' ' . __('Student');
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="repeat" name="repeat" value="1" />
+                                <label class="form-check-label" for="repeat">{{ __('Is the student repeating?') }}</label>
                             </div>
                         </div>
 
