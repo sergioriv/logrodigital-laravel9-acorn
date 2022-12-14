@@ -142,9 +142,6 @@ class StudentController extends Controller
         }
 
 
-        $students->orderBy('first_last_name')
-            ->orderBy('second_last_name');
-
         $countFileTypes = StudentFileType::where('required', 1)->count();
 
         return view('logro.student.noenrolled', [
@@ -451,8 +448,6 @@ class StudentController extends Controller
         )
             ->whereHas('groupYear', $fn_gs)
             ->with(['groupYear' => $fn_gs])
-            ->orderBy('first_last_name')
-            ->orderBy('second_last_name')
             ->get();
 
 
