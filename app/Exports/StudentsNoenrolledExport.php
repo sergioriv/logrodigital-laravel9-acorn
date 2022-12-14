@@ -38,10 +38,10 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
         $i = 2;
         foreach ($students as $student) {
             $row = [
-                $student->first_name,
-                $student->second_name,
                 $student->first_last_name,
                 $student->second_last_name,
+                $student->first_name,
+                $student->second_name,
                 $student->telephone,
                 $student->institutional_email,
                 $student->document_type_code,
@@ -84,7 +84,7 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
 
     public function headings(): array
     {
-        $titles = ["First name", "Second name", "First last name", "Second last name", "Phone number", "Email", "Doc type", "Document"];
+        $titles = ["First last name", "Second last name", "First name", "Second name", "Phone number", "Email", "Doc type", "Document"];
         $this->studentFiles = StudentFileType::where('inclusive', 0)->get();
         foreach ($this->studentFiles as $SF) {
             array_push($titles, $SF->required ? $SF->name .' *' : $SF->name);
