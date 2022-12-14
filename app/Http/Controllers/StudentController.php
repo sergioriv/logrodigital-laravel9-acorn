@@ -481,7 +481,9 @@ class StudentController extends Controller
             ->where('headquarters_id', $student->headquarters_id)
             ->where('study_time_id', $student->study_time_id)
             ->where('study_year_id', $student->study_year_id)
-            ->withCount(['groupStudents' => fn ($GS) => $GS->where('student_id', $student->id)])
+            ->withCount('groupStudents as student_quantity')
+            ->with('headquarters', 'studyTime', 'studyYear', 'teacher')
+            ->with(['groupStudents' => fn($GS) => $GS->with('student')])
             ->get();
 
         if (0 === count($groups)) {

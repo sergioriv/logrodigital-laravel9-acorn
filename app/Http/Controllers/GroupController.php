@@ -41,7 +41,9 @@ class GroupController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $groups = Group::with('headquarters', 'studyTime', 'studyYear', 'teacher')->where('school_year_id', $Y->id)
+        $groups = Group::with('headquarters', 'studyTime', 'studyYear', 'teacher')
+            ->withCount('groupStudents as student_quantity')
+            ->where('school_year_id', $Y->id)
             ->orderBy('headquarters_id')
             ->orderBy('study_time_id')
             ->orderBy('study_year_id')
