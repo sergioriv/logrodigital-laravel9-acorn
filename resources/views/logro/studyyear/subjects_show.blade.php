@@ -32,7 +32,7 @@ $title = $studyYear->name;
                         @if (null !== $Y->available)
                             <!-- Add New Button Start -->
                             <a href="{{ route('studyYear.subject.edit', $studyYear) }}"
-                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
                                 <i data-acorn-icon="edit-square"></i>
                                 <span>{{ __('Edit') }}</span>
                             </a>

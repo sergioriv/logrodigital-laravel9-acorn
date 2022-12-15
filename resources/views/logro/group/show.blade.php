@@ -69,7 +69,7 @@
                                 @can('groups.create')
                                     <!-- Edit Name Button Start -->
                                     <a href="{{ route('group.edit', $group) }}"
-                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
                                         <i data-acorn-icon="edit-square"></i>
                                         <span>{{ __('Edit') }}</span>
                                     </a>
@@ -78,13 +78,13 @@
 
                                 <!-- Dropdown Button Start -->
                                 <div class="ms-1">
-                                    <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only"
+                                    <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
                                         data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false" data-submenu>
                                         <i data-acorn-icon="more-horizontal"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('group.export.student-list', $group) }}">
+                                        <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="{{ route('group.export.student-list', $group) }}">
                                             <i data-acorn-icon="download"></i>
                                             <span>{{ __("Download student list") }}</span>
                                         </a>
@@ -136,7 +136,7 @@
                                                     <div class="col-12 d-flex align-items-start justify-content-end">
                                                         <!-- Matriculate Students Button Start -->
                                                         <a href="{{ route('group.matriculate', $group) }}"
-                                                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
                                                             <i data-acorn-icon="edit-square"></i>
                                                             <span>{{ __('Matriculate students') }}</span>
                                                         </a>
@@ -198,7 +198,7 @@
                                                 @if ($areas->count() !== 0)
                                                     <!-- Add New Button Start -->
                                                     <a href="{{ route('group.teachers.edit', $group) }}"
-                                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
                                                         <i data-acorn-icon="edit-square"></i>
                                                         <span>{{ __('Edit') . ' ' . __('Teachers') }}</span>
                                                     </a>
@@ -206,7 +206,7 @@
                                                 @elseif ($group->specialty === TRUE && $group->specialty_area_id === NULL)
                                                     <!-- Assing Area Specialty Button Start -->
                                                     <a href="{{ route('group.specialty', $group) }}"
-                                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
                                                         <i data-acorn-icon="edit-square"></i>
                                                         <span>{{ __('Assign specialty area') }}</span>
                                                     </a>
@@ -214,7 +214,7 @@
                                                 @else
                                                     <!-- Assing Teachers Button Start -->
                                                     <a href="{{ route('studyYear.subject.show', $group->studyYear) }}"
-                                                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
                                                         <i data-acorn-icon="edit-square"></i>
                                                         <span>{{ __('Assign') . ' ' . __('Subjects') . ' ' . $group->studyYear->name }}</span>
                                                     </a>
