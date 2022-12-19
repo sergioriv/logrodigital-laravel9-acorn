@@ -59,7 +59,7 @@
                                                                 class="logro-select2">
                                                                 <option label="&nbsp;"></option>
                                                                 @foreach ($teachers as $teacher)
-                                                                    <option @selected($TSG->teacher->id ?? null === $teacher->id)
+                                                                    <option @selected($TSG->teacher_id === $teacher->id)
                                                                         value="{{ $subject->id . '~' . $teacher->uuid }}">
                                                                         {{ $teacher->getFullName() }}
                                                                     </option>
