@@ -17,7 +17,7 @@
 @endsection
 
 @section('js_page')
-    <script src="/js/forms/studytime-create.js"></script>
+    <script src="/js/forms/studytime-create.js?d=1671455422797"></script>
     <script src="/js/forms/select2.js"></script>
 @endsection
 
@@ -182,14 +182,14 @@
                                         <div class="col small-gutter-col">
                                             <div class="border-2 rounded-md border border-warning">
                                                 <div class="card-body text-center">
-                                                    <h5 class="text-capitalize">{{ __('acceptable performance') }}</h5>
+                                                    <h5 class="text-capitalize">{{ __('basic performance') }}</h5>
                                                     <div class="row g-2">
                                                         <div class="col-6 position-relative form-group">
-                                                            <div id="minAcceptable" class="form-control bg-light text-muted">3.00</div>
+                                                            <div id="minBasic" class="form-control bg-light text-muted">3.00</div>
                                                         </div>
                                                         <div class="col-6 position-relative form-group">
-                                                            <x-input name="acceptable_performance"
-                                                                id="acceptable_performance" type="number" min="3.01"
+                                                            <x-input name="basic_performance"
+                                                                id="basic_performance" type="number" min="3.01"
                                                                 max="4.59" step="0.01" value="3.99"
                                                                 class="text-center" required />
                                                         </div>

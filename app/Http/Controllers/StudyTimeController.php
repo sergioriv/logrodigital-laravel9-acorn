@@ -44,7 +44,7 @@ class StudyTimeController extends Controller
             'attitudinal' => ['required', 'numeric', 'min:0', 'max:100'],
             'minimum_grade' => ['required', 'numeric', 'min:0'],
             'low_performance' => ['required', 'numeric', 'min:0'],
-            'acceptable_performance' => ['required', 'numeric', 'min:0'],
+            'basic_performance' => ['required', 'numeric', 'min:0'],
             'high_performance' => ['required', 'numeric', 'min:0'],
             'maximum_grade' => ['required', 'numeric', 'min:0', 'max:100'],
             'decimal' => ['required', 'integer', 'min:0', 'max:2'],
@@ -70,12 +70,12 @@ class StudyTimeController extends Controller
                         'performance' => __('low performance')
                     ]));
 
-        if ($request->low_performance > ($request->acceptable_performance - ($step * 2)))
+        if ($request->low_performance > ($request->basic_performance - ($step * 2)))
             return redirect()->back()->withErrors(__('Review the range of :performance', [
-                        'performance' => __('acceptable performance')
+                        'performance' => __('basic performance')
                     ]));
 
-        if ($request->acceptable_performance > ($request->high_performance - ($step * 2)))
+        if ($request->basic_performance > ($request->high_performance - ($step * 2)))
             return redirect()->back()->withErrors(__('Review the range of :performance', [
                         'performance' => __('high performance')
                     ]));
@@ -92,13 +92,13 @@ class StudyTimeController extends Controller
 
             $request->minimum_grade = round($request->minimum_grade, $request->decimal, PHP_ROUND_HALF_UP);
             $request->low_performance = round($request->low_performance, $request->decimal, PHP_ROUND_HALF_UP);
-            $request->acceptable_performance = round($request->acceptable_performance, $request->decimal, PHP_ROUND_HALF_UP);
+            $request->basic_performance = round($request->basic_performance, $request->decimal, PHP_ROUND_HALF_UP);
             $request->high_performance = round($request->high_performance, $request->decimal, PHP_ROUND_HALF_UP);
             $request->maximum_grade = round($request->maximum_grade, $request->decimal, PHP_ROUND_HALF_UP);
         } else {
             $request->minimum_grade = round($request->minimum_grade, $request->decimal, PHP_ROUND_HALF_DOWN);
             $request->low_performance = round($request->low_performance, $request->decimal, PHP_ROUND_HALF_DOWN);
-            $request->acceptable_performance = round($request->acceptable_performance, $request->decimal, PHP_ROUND_HALF_DOWN);
+            $request->basic_performance = round($request->basic_performance, $request->decimal, PHP_ROUND_HALF_DOWN);
             $request->high_performance = round($request->high_performance, $request->decimal, PHP_ROUND_HALF_DOWN);
             $request->maximum_grade = round($request->maximum_grade, $request->decimal, PHP_ROUND_HALF_DOWN);
         }
@@ -112,7 +112,7 @@ class StudyTimeController extends Controller
             'missing_areas' => $request->missing_areas,
             'minimum_grade' => $request->minimum_grade,
             'low_performance' => $request->low_performance,
-            'acceptable_performance' => $request->acceptable_performance,
+            'basic_performance' => $request->basic_performance,
             'high_performance' => $request->high_performance,
             'maximum_grade' => $request->maximum_grade,
             'decimal' => $request->decimal,

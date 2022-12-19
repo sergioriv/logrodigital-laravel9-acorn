@@ -162,8 +162,8 @@ class GradeController extends Controller
     public static function performance($studyTime, $value)
     {
         return $value > $studyTime->high_performance ? __('superior') :
-                ($value > $studyTime->acceptable_performance ? __('high') :
-                ($value > $studyTime->low_performance ? __('acceptable') :
+                ($value > $studyTime->basic_performance ? __('high') :
+                ($value > $studyTime->low_performance ? __('basic') :
                 '<span class="alert alert-danger px-2 py-1">'. __('low') .'</span>'  ));
     }
 }

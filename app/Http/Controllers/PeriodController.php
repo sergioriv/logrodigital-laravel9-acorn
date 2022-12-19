@@ -19,6 +19,7 @@ class PeriodController extends Controller
     public function create(StudyTime $studyTime)
     {
         return view('logro.studytime.wizard-periods')->with([
+            'Y' => SchoolYearController::current_year(),
             'studyTime' => $studyTime,
         ]);
     }

@@ -21,7 +21,7 @@ class StudyTime extends Model
         'missing_areas',
         'minimum_grade',
         'low_performance',
-        'acceptable_performance',
+        'basic_performance',
         'high_performance',
         'maximum_grade',
         'decimal',
@@ -43,7 +43,7 @@ class StudyTime extends Model
             get: fn ($value) => number_format( round($value, $this->decimal), $this->decimal )
         );
     }
-    protected function acceptablePerformance(): Attribute
+    protected function basicPerformance(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => number_format( round($value, $this->decimal), $this->decimal )
@@ -91,14 +91,14 @@ class StudyTime extends Model
         return "{$this->minimum_grade} - {$this->low_performance}";
     }
 
-    public function acceptableRange()
+    public function basicRange()
     {
-        return ($this->low_performance + $this->step) ." - {$this->acceptable_performance}";
+        return ($this->low_performance + $this->step) ." - {$this->basic_performance}";
     }
 
     public function highRange()
     {
-        return ($this->acceptable_performance + $this->step) ." - {$this->high_performance}";
+        return ($this->basic_performance + $this->step) ." - {$this->high_performance}";
     }
     public function superiorRange()
     {

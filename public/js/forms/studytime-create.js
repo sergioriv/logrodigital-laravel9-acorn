@@ -63,11 +63,11 @@ class StudyTimeCreateForm {
 
         _this.minGrade = jQuery("#minimum_grade");
         _this.lowPerformance = jQuery("#low_performance");
-        _this.acceptablePerformance = jQuery("#acceptable_performance");
+        _this.basicPerformance = jQuery("#basic_performance");
         _this.highPerformance = jQuery("#high_performance");
         _this.maxGrade = jQuery("#maximum_grade");
 
-        var minAcceptable = jQuery("#minAcceptable");
+        var minBasic = jQuery("#minBasic");
         var minHigh = jQuery("#minHigh");
         var minSuperior = jQuery("#minSuperior");
 
@@ -79,8 +79,8 @@ class StudyTimeCreateForm {
 
                 _this.minGrade.val(0.0).attr("_this.", _this.step);
                 _this.lowPerformance.val(2.99).attr("step", _this.step);
-                minAcceptable.html(3);
-                _this.acceptablePerformance.val(3.99).attr("step", _this.step);
+                minBasic.html(3);
+                _this.basicPerformance.val(3.99).attr("step", _this.step);
                 minHigh.html(4);
                 _this.highPerformance.val(4.59).attr("step", _this.step);
                 minSuperior.html(4.6);
@@ -93,8 +93,8 @@ class StudyTimeCreateForm {
 
                 _this.minGrade.val(0.0).attr("step", _this.step);
                 _this.lowPerformance.val(2.9).attr("step", _this.step);
-                minAcceptable.html(3);
-                _this.acceptablePerformance.val(3.9).attr("step", _this.step);
+                minBasic.html(3);
+                _this.basicPerformance.val(3.9).attr("step", _this.step);
                 minHigh.html(4);
                 _this.highPerformance.val(4.5).attr("step", _this.step);
                 minSuperior.html(4.6);
@@ -107,8 +107,8 @@ class StudyTimeCreateForm {
 
                 _this.minGrade.val(0).attr("step", _this.step);
                 _this.lowPerformance.val(29).attr("step", _this.step);
-                minAcceptable.html(30);
-                _this.acceptablePerformance.val(39).attr("step", _this.step);
+                minBasic.html(30);
+                _this.basicPerformance.val(39).attr("step", _this.step);
                 minHigh.html(40);
                 _this.highPerformance.val(45).attr("step", _this.step);
                 minSuperior.html(46);
@@ -122,13 +122,13 @@ class StudyTimeCreateForm {
             _this._maxmin();
         });
         _this.lowPerformance.on("change", function () {
-            minAcceptable.html(
+            minBasic.html(
                 (parseFloat($(this).val()) + _this.step).toFixed(_this.decimal)
             );
 
             _this._maxmin();
         });
-        _this.acceptablePerformance.on("change", function () {
+        _this.basicPerformance.on("change", function () {
             minHigh.html(
                 (parseFloat($(this).val()) + _this.step).toFixed(_this.decimal)
             );
@@ -159,9 +159,9 @@ class StudyTimeCreateForm {
             )
             .attr(
                 "max",
-                (parseFloat(this.acceptablePerformance.val()) - (this.step * 2)).toFixed(this.decimal)
+                (parseFloat(this.basicPerformance.val()) - (this.step * 2)).toFixed(this.decimal)
             );
-        this.acceptablePerformance
+        this.basicPerformance
             .attr(
                 "min",
                 (parseFloat(this.lowPerformance.val()) + (this.step * 2)).toFixed(this.decimal)
@@ -173,7 +173,7 @@ class StudyTimeCreateForm {
         this.highPerformance
             .attr(
                 "min",
-                (parseFloat(this.acceptablePerformance.val()) + (this.step * 2)).toFixed(this.decimal)
+                (parseFloat(this.basicPerformance.val()) + (this.step * 2)).toFixed(this.decimal)
             )
             .attr(
                 "max",

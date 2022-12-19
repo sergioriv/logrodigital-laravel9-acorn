@@ -105,8 +105,8 @@
                                 <div class="col small-gutter-col">
                                     <div class="card border-2 border-warning">
                                         <div class="card-body text-center">
-                                            <h5 class="text-capitalize">{{ __('acceptable') }}</h5>
-                                            <h4 class="font-weight-bold">{{ '(' . $studyTime->acceptableRange() . ')' }}
+                                            <h5 class="text-capitalize">{{ __('basic') }}</h5>
+                                            <h4 class="font-weight-bold">{{ '(' . $studyTime->basicRange() . ')' }}
                                             </h4>
                                         </div>
                                     </div>
