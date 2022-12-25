@@ -45,10 +45,10 @@ class Subject extends Model
     {
         return $this->hasMany(TeacherSubjectGroup::class);
     }
-    /* public function teacherSubject()
+    public function teacherSubject()
     {
         return $this->hasOne(TeacherSubjectGroup::class, 'subject_id', 'id');
-    } */
+    }
 
     public function academicWorkload()
     {

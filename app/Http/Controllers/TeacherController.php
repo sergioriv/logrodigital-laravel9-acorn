@@ -266,9 +266,8 @@ class TeacherController extends Controller
 
 
         $periods = Period::where('study_time_id', $subject->group->study_time_id)
-                    ->withCount(['permits as permit' => fn ($p) => $p->teacher_subject_group_id = $subject->id])
+                    ->withCount(['permits as permit' => fn ($p) => $p->where('teacher_subject_group_id', $subject->id)])
                     ->orderBy('ordering')->get();
-
 
         $weeklyLoad = AcademicWorkload::where('school_year_id', $Y->id)
                         ->where('study_year_id', $subject->group->study_year_id)

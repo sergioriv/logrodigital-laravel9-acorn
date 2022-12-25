@@ -146,7 +146,7 @@
                                                             <span class="mt-3 text-black btn-icon-start">
                                                                 <i data-acorn-icon="notebook-1" class="icon"
                                                                     data-acorn-size="15"></i>
-                                                                {!! $teacherSubject->subject->resourceSubject->name !!}
+                                                                {!! $teacherSubject->subject->resourceSubject->nameSpecialty() !!}
                                                             </span>
                                                         </x-group.card>
                                                     @endif

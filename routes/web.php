@@ -33,6 +33,7 @@ use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
+use App\Models\StudyTime;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -182,7 +183,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('groups/{group}/specialty', [GroupController::class, 'specialty'])->name('group.specialty');
     Route::post('groups/{group}/specialty', [GroupController::class, 'specialty_store'])->name('group.specialty.store');
     Route::get('group/{group}/export-student-list', [GroupController::class, 'exportStudentList'])->name('group.export.student-list');
-
+    Route::get('group/{group}/report-notes', [GradeController::class, 'reportForPeriod']);
+    Route::get('test-jornada', function(){
+        return StudyTime::find(2);
+    });
     /* Permit Period */
     Route::post('subject/permit', [PeriodPermitController::class, 'store'])->name('period.permit');
 

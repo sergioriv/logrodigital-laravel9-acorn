@@ -237,7 +237,7 @@
                                                                     @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($Y->id, $group->id, $subject->id) @endphp
                                                                     <tr>
                                                                         <td scope="row">
-                                                                            {!! $subject->resourceSubject->name !!}
+                                                                            {!! $subject->resourceSubject->nameSpecialty() !!}
                                                                         </td>
                                                                         <td>
                                                                             @if ($TSG)

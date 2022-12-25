@@ -61,7 +61,7 @@ $title = $studyYear->name;
                                                                         value="{{ $subject->resource_area_id . '~' . $subject->id }}"
                                                                         data-subject="{{ $subject->id }}"
                                                                         class="form-check-input" />
-                                                                    <span>{!! $subject->resourceSubject->name !!}</span>
+                                                                    <span>{!! $subject->resourceSubject->nameSpecialty() !!}</span>
                                                                 </label>
                                                             </div>
                                                         </td>

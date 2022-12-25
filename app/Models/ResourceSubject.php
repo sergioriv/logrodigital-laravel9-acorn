@@ -29,12 +29,17 @@ class ResourceSubject extends Model
         return null;
     }
 
-    public function name(): Attribute
+    /* public function name(): Attribute
     {
         $isSpecialty = $this->isSpecialty();
         return Attribute::make(
             get: fn ($v) => $isSpecialty . $v
         );
+    } */
+
+    public function nameSpecialty()
+    {
+        return $this->isSpecialty() . $this->name;
     }
 
 

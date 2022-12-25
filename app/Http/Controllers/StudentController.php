@@ -1081,7 +1081,10 @@ class StudentController extends Controller
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->studyTime,
             'study_year_id' => $request->studyYear,
-            'group_id' => NULL
+            'group_id' => NULL,
+            'group_specialty_id' => NULL,
+            'enrolled' => NULL,
+            'enrolled_date' => NULL
         ]);
 
         Notify::success(__('Transferred student!'));

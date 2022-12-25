@@ -56,7 +56,7 @@
                                             <div class="pt-1 pb-1 d-inline-flex flex-wrap gap-2 w-100 min-height-sm">
                                                 <span
                                                     class="logro-tag badge bg-light text-alternate font-weight-bold text-uppercase">
-                                                    {!! $subjectA->resourceSubject->name !!}
+                                                    {!! $subjectA->resourceSubject->nameSpecialty() !!}
                                                 </span>
                                             </div>
                                             @endforeach

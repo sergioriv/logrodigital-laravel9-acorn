@@ -50,7 +50,7 @@
                                             @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($Y->id, $group->id, $subject->id) @endphp
 
                                                 <tr>
-                                                    <td scope="row" class="col-4">{!! $subject->resourceSubject->name !!}
+                                                    <td scope="row" class="col-4">{!! $subject->resourceSubject->nameSpecialty() !!}
                                                     </td>
                                                     <td class="col-6">
                                                         <div class="w-100">
@@ -59,7 +59,7 @@
                                                                 class="logro-select2">
                                                                 <option label="&nbsp;"></option>
                                                                 @foreach ($teachers as $teacher)
-                                                                    <option @selected($TSG->teacher_id === $teacher->id)
+                                                                    <option @if($TSG) @selected($TSG->teacher->id === $teacher->id) @endif
                                                                         value="{{ $subject->id . '~' . $teacher->uuid }}">
                                                                         {{ $teacher->getFullName() }}
                                                                     </option>

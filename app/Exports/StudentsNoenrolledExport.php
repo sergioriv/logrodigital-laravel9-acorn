@@ -19,6 +19,11 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
     private $docCompletes = [1 => ['font' => ['bold' => true]]];
     private $studentFiles;
 
+    public function __construct()
+    {
+        $this->studentFiles = StudentFileType::where('inclusive', 0)->get();
+    }
+
     /**
      * @return \Illuminate\Support\Collection
      */
@@ -85,7 +90,7 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
     public function headings(): array
     {
         $titles = ["First last name", "Second last name", "First name", "Second name", "Phone number", "Email", "Doc type", "Document"];
-        $this->studentFiles = StudentFileType::where('inclusive', 0)->get();
+
         foreach ($this->studentFiles as $SF) {
             array_push($titles, $SF->required ? $SF->name .' *' : $SF->name);
         }

@@ -145,7 +145,8 @@ class Student extends Model
             'document_type_code',
             'document',
             'enrolled',
-            'status'
+            'status',
+            'inclusive'
         );
     }
 
@@ -184,6 +185,10 @@ class Student extends Model
     public function group()
     {
         return $this->belongsTo(Group::class);
+    }
+    public function groupSpecialty()
+    {
+        return $this->belongsTo(Group::class, 'group_specialty_id', 'id');
     }
     public function documentTypeCode()
     {

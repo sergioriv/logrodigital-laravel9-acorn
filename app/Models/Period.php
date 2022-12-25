@@ -52,9 +52,13 @@ class Period extends Model
     {
         return $this->hasMany(Grade::class);
     }
+    public function oneGrade()
+    {
+        return $this->hasOne(Grade::class);
+    }
     public function permits()
     {
-        return $this->hasMany(PeriodPermit::class);
+        return $this->hasMany(PeriodPermit::class, 'period_id', 'id');
     }
 
 

@@ -4,18 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\OnlyTeachersMiddleware;
+use App\Jobs\ReportGradeStudent;
 use App\Models\Grade;
+use App\Models\Group;
+use App\Models\GroupStudent;
 use App\Models\Period;
 use App\Models\PeriodPermit;
+use App\Models\ResourceArea;
 use App\Models\Student;
+use App\Models\StudyTime;
 use App\Models\TeacherSubjectGroup;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class GradeController extends Controller
 {
+
+    /* Usada para la generacion de reporte de notas */
+    private $countAreas = 0;
+
     public function __construct()
     {
         $this->middleware(OnlyTeachersMiddleware::class)->only('store');
@@ -37,8 +48,8 @@ class GradeController extends Controller
 
         /* Traemos el periodo para verificar si esta disponible para su calificacion */
         $period = Period::where('id', $request->period)
-                ->withCount(['permits as permit' => fn ($p) => $p->teacher_subject_group_id = $subject->id])
-                ->first();
+            ->withCount(['permits as permit' => fn ($p) => $p->teacher_subject_group_id = $subject->id])
+            ->first();
 
         if (!$period->active() && !$period->permit) {
             return redirect()->back()->withErrors(__('No active period'));
@@ -60,11 +71,13 @@ class GradeController extends Controller
             if (!$student) {
 
                 DB::rollBack();
-                return redirect()->back()->withErrors(__("The student (:STUDENT) doesn't belong to the group: :GROUP",
-                        [
-                            'STUDENT' => $code,
-                            'GROUP' => $group->name
-                        ]));
+                return redirect()->back()->withErrors(__(
+                    "The student (:STUDENT) doesn't belong to the group: :GROUP",
+                    [
+                        'STUDENT' => $code,
+                        'GROUP' => $group->name
+                    ]
+                ));
             }
 
             /*
@@ -76,8 +89,8 @@ class GradeController extends Controller
             $gradeAttitudinal = round($grades['attitudinal'], $studyTime->decimal, $round);
 
             $gradeFinal = (($gradeConceptual * $studyTime->conceptual) / 100)
-                    + (($gradeProcedural * $studyTime->procedural) / 100)
-                    + (($gradeAttitudinal * $studyTime->attitudinal) / 100);
+                + (($gradeProcedural * $studyTime->procedural) / 100)
+                + (($gradeAttitudinal * $studyTime->attitudinal) / 100);
 
             $gradeFinal = round($gradeFinal, $studyTime->decimal, $round);
 
@@ -98,21 +111,21 @@ class GradeController extends Controller
             } catch (Exception $e) {
 
                 DB::rollBack();
-                return redirect()->back()->withErrors(__("The student (:STUDENT) doesn't belong to the group: :GROUP",
-                        [
-                            'STUDENT' => $code,
-                            'GROUP' => $group->name
-                        ]));
+                return redirect()->back()->withErrors(__(
+                    "The student (:STUDENT) doesn't belong to the group: :GROUP",
+                    [
+                        'STUDENT' => $code,
+                        'GROUP' => $group->name
+                    ]
+                ));
             }
-
-
         }
 
         DB::commit();
 
         /* En caso de tener un permiso, este se eliminará */
         PeriodPermit::where('teacher_subject_group_id', $subject->id)
-                ->where('period_id', $period->id)->delete();
+            ->where('period_id', $period->id)->delete();
 
 
         Notify::success(__('Qualifications saved!'));
@@ -123,9 +136,9 @@ class GradeController extends Controller
     public static function forPeriod($subject, $period, $student)
     {
         return Grade::where('teacher_subject_group_id', $subject)
-                    ->where('period_id', $period)
-                    ->where('student_id', $student)
-                    ->first();
+            ->where('period_id', $period)
+            ->where('student_id', $student)
+            ->first();
     }
 
     /* Nota general por estudiante */
@@ -134,7 +147,7 @@ class GradeController extends Controller
         $studyTime = $subject->group->studyTimeSelectAll;
 
         $grades = Grade::select('period_id', 'final')->where('teacher_subject_group_id', $subject->id)
-                    ->where('student_id', $student)->get();
+            ->where('student_id', $student)->get();
 
         if (count($grades)) {
 
@@ -143,13 +156,12 @@ class GradeController extends Controller
                 $wl = ($g->period->workload / 100);
                 $def += $g->final * $wl;
             }
-
         } else {
             $def = $studyTime->minimum_grade;
         }
 
         /* Verifica decimales y PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
-        $def = number_format( round($def, $studyTime->decimal, static::round($studyTime->round)), $studyTime->decimal );
+        $def = number_format(round($def, $studyTime->decimal, static::round($studyTime->round)), $studyTime->decimal);
 
         return $def;
     }
@@ -161,9 +173,197 @@ class GradeController extends Controller
 
     public static function performance($studyTime, $value)
     {
-        return $value > $studyTime->high_performance ? __('superior') :
-                ($value > $studyTime->basic_performance ? __('high') :
-                ($value > $studyTime->low_performance ? __('basic') :
-                '<span class="alert alert-danger px-2 py-1">'. __('low') .'</span>'  ));
+        return $value > $studyTime->high_performance ? __('superior') : ($value > $studyTime->basic_performance ? __('high') : ($value > $studyTime->low_performance ? __('basic') :
+                    '<span class="alert alert-danger px-2 py-1">' . __('low') . '</span>'));
+    }
+    public static function performanceString($studyTime, $value)
+    {
+        return $value > $studyTime->high_performance ? __('superior') : ($value > $studyTime->basic_performance ? __('high') : ($value > $studyTime->low_performance ? __('basic') :
+                    __('low')));
+    }
+
+
+
+    /* REPORT OF NOTES */
+    public function reportForPeriod(Request $request, Group $group)
+    {
+        $Y = SchoolYearController::current_year();
+
+        $SCHOOL = SchoolController::myschool()->getData();
+
+        $request->validate([
+            'period' => ['required', Rule::exists('periods', 'id')->where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)]
+        ]);
+
+        $currentPeriod = Period::find($request->period);
+
+        /* Obtiene las areas y asignaturas del grupo que corresponde */
+        $areasWithSubjects = $this->teacher_subject($Y, $group);
+        $this->countAreas = $areasWithSubjects->count();
+
+
+        $studyTime = StudyTime::find($group->study_time_id);
+
+
+        /* Extraer los periodos del StudyTime del grupo */
+        $periods = Period::where('ordering', '<=', $currentPeriod->ordering)
+            ->where('school_year_id', $group->school_year_id)
+            ->where('study_time_id', $group->study_time_id)
+            ->orderBy('ordering')->get();
+
+
+
+
+        /* multiple */
+        $groupStudents = GroupStudent::where('group_id', $group->id)
+                ->with('student')
+                ->get();
+
+        foreach ($groupStudents as $GS) {
+            $this->reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $GS->student);
+        }
+
+        return view('logro.empty');
+
+    }
+
+    private function reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $student)
+    {
+
+        /* Nombre para el reporte de notas, en caso de ser el reporte final, dirá Final */
+        $titleReportNotes = 'P' . $currentPeriod->ordering . ' - ' . $Y->name;
+
+        /* Si el estudiante pertenece a un grupo de especialidad */
+
+        $existGroupSpecialty = Group::where('study_year_id', $group->study_year_id)
+            ->where('headquarters_id', $group->headquarters_id)
+            ->where('study_time_id', $group->study_time_id)
+            ->where('specialty', 1)
+            ->whereHas('groupStudents', function ($query) use ($student) {
+                return $query->where('student_id', $student->id);
+            })
+            ->whereNotNull('specialty_area_id')->first();
+
+
+
+        /* Si el estudiante tiene un grupo de especialidad, se agregará a la lista general con su area y asignatura de especialidad */
+        if ($existGroupSpecialty) {
+            $areasWithSubjects[$this->countAreas] = $this->teacher_subject($Y, $existGroupSpecialty)->first();
+        }
+
+
+
+        /* Notas del estudiante de los periodos y asignaturas del StudyYear actual */
+        $grades = Grade::where('student_id', $student->id)
+            ->whereIn('period_id', $periods->pluck('id'))
+            ->get();
+
+
+        $pdf = Pdf::loadView('logro.pdf.report-notes', [
+            'SCHOOL' => $SCHOOL,
+            'date' => now()->format('d/m/Y'),
+            'student' => $student,
+            'areas' => $areasWithSubjects,
+            'periods' => $periods,
+            'currentPeriod' => $currentPeriod,
+            'grades' => $grades,
+            'group' => $group,
+            'studyTime' => $studyTime,
+            'titleReportNotes' => $titleReportNotes,
+        ]);
+
+        $pdf->setPaper([0.0, 0.0, 612, 1008]);
+        // $pdf->setPaper([0.0, 0.0, 666.14, 977.95]);
+        $pdf->setOption('dpi', 72);
+
+        $pdf->save('reports/Reporte de notas - '. $student->getCompleteNames() . '.pdf');
+    }
+
+    public function teacher_subject($Y, $group)
+    {
+
+        $fn_sy = fn ($sy) =>
+        $sy->where('school_year_id', $Y->id)
+            ->where('study_year_id', $group->study_year_id);
+
+        $fn_tsg = fn ($tsg) =>
+        $tsg->where('school_year_id', $Y->id)
+            ->where('group_id', $group->id)
+            ->with('teacher');
+
+        $fn_sb = fn ($s) =>
+        $s->where('school_year_id', $Y->id)
+            ->withWhereHas('academicWorkload', $fn_sy)
+            ->with('resourceSubject')
+            ->with(['teacherSubject' => $fn_tsg]);
+
+
+        if (!$group->specialty) {
+
+            return ResourceArea::whereNull('specialty')
+                ->withWhereHas('subjects', $fn_sb)
+                ->orderBy('name')->get();
+        } else {
+
+            return ResourceArea::where('id', $group->specialty_area_id)
+                ->withWhereHas('subjects', $fn_sb)
+                ->orderBy('name')->get();
+        }
+    }
+
+    public static function areaNoteStudent($area, $periods, $grades, $studyTime)
+    {
+
+        $areaNotes = [];
+        $subjectNotes = [];
+
+        $i = 1;
+        foreach ($area->subjects as $subject) {
+
+            $j = 1;
+            foreach ($periods as $period) {
+
+                $note = $grades->filter(function ($g) use ($subject, $period) {
+                    if (!is_null($subject->teacherSubject))
+                        return $g->teacher_subject_group_id == $subject->teacherSubject->id
+                            && $g->period_id == $period->id;
+                })->first()->final ?? 0;
+
+                if (!is_null($subject->academicWorkload))
+                    $subjectNotes[$i][$j] = $note * ($subject->academicWorkload->course_load / 100);
+                else $subjectNotes[$i][$j] = 0;
+
+                $j++;
+            }
+
+            $i++;
+        }
+
+        for ($x = 1; $x <= count($periods); $x++) {
+            $suma = 0;
+            for ($y = 1; $y <= count($area->subjects); $y++) {
+                $suma += $subjectNotes[$y][$x];
+            }
+
+            /* Verifica decimales y PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
+            // $suma = number_format( round($suma, $studyTime->decimal, static::round($studyTime->round)), $studyTime->decimal );
+
+            $areaNotes[$x] = static::numberFormat($studyTime, $suma);
+        }
+
+        $overallAvg = static::numberFormat($studyTime, (array_sum($areaNotes) / count($periods)));
+
+        return ['overallAvg' => $overallAvg, 'area' => $areaNotes];
+    }
+
+    public static function numberFormat($studyTime, $value)
+    {
+        if ($value) {
+
+            $round = $studyTime->round === 1 ? PHP_ROUND_HALF_UP : PHP_ROUND_HALF_DOWN;
+            return number_format(round($value, $studyTime->decimal, $round), $studyTime->decimal);
+        }
+
+        return $studyTime->minimum_grade;
     }
 }
