@@ -60,6 +60,10 @@ class Period extends Model
     {
         return $this->hasMany(PeriodPermit::class, 'period_id', 'id');
     }
+    public function remarks()
+    {
+        return $this->hasMany(Remark::class);
+    }
 
 
     /* accesores */

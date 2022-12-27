@@ -470,7 +470,7 @@
 
     <section class="mt-1 p-1 card f-size-6">
             <b class="f-size-6">OBSERVACIONES:</b>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod doloremque libero exercitationem quas similique laudantium voluptatibus ad officiis, et illum earum! Vel eius sequi sunt et eligendi, voluptates velit soluta?
+            {{ $remark }}
     </section>
 
     <section class="p-1 card mt-1">

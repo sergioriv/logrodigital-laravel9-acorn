@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\OnlyTeachersMiddleware;
-use App\Jobs\ReportGradeStudent;
 use App\Models\Grade;
 use App\Models\Group;
 use App\Models\GroupStudent;
 use App\Models\Period;
 use App\Models\PeriodPermit;
+use App\Models\Remark;
 use App\Models\ResourceArea;
 use App\Models\Student;
 use App\Models\StudyTime;
@@ -17,9 +17,10 @@ use App\Models\TeacherSubjectGroup;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class GradeController extends Controller
 {
@@ -213,21 +214,28 @@ class GradeController extends Controller
 
 
 
-
-        /* multiple */
         $groupStudents = GroupStudent::where('group_id', $group->id)
                 ->with('student')
                 ->get();
 
+
+
+        /* Dirección para guardar los reportes generados */
+        $pathReport = "app/reports/". Str::uuid() ."/";
+
+        if (!File::isDirectory(public_path($pathReport))) {
+            File::makeDirectory(public_path($pathReport), 0755, true, true);
+        }
+
         foreach ($groupStudents as $GS) {
-            $this->reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $GS->student);
+            $this->reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $GS->student, $pathReport);
         }
 
         return view('logro.empty');
 
     }
 
-    private function reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $student)
+    private function reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $student, $pathReport)
     {
 
         /* Nombre para el reporte de notas, en caso de ser el reporte final, dirá Final */
@@ -259,6 +267,9 @@ class GradeController extends Controller
             ->get();
 
 
+        $remark = Remark::where('group_id', $group->id)->where('period_id', $currentPeriod->id)->where('student_id', $student->id)->first()->remark ?? null;
+
+
         $pdf = Pdf::loadView('logro.pdf.report-notes', [
             'SCHOOL' => $SCHOOL,
             'date' => now()->format('d/m/Y'),
@@ -270,13 +281,16 @@ class GradeController extends Controller
             'group' => $group,
             'studyTime' => $studyTime,
             'titleReportNotes' => $titleReportNotes,
+            'remark' => $remark
         ]);
 
         $pdf->setPaper([0.0, 0.0, 612, 1008]);
         // $pdf->setPaper([0.0, 0.0, 666.14, 977.95]);
         $pdf->setOption('dpi', 72);
 
-        $pdf->save('reports/Reporte de notas - '. $student->getCompleteNames() . '.pdf');
+
+
+        $pdf->save($pathReport . "Reporte de notas - ". $student->getCompleteNames() . '.pdf');
     }
 
     public function teacher_subject($Y, $group)

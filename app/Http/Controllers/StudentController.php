@@ -1160,6 +1160,12 @@ class StudentController extends Controller
         if (NULL !== $request->signature_tutor) {
 
             if ($request->hasFile('fileSigLoad-tutor')) {
+
+                /* Para que la imagen no exceda los limites para el resize con DomPDF */
+                $request->validate([
+                    'fileSigLoad-tutor' => ['dimensions:max_width=2000,max_height=2000']
+                ]);
+
                 $sigPath = self::signature_image_upload($student->id, $request->file('fileSigLoad-tutor'));
             } else {
                 $sigPath = self::signature_upload($student->id, $request->signature_tutor);

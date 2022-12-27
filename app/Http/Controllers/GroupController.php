@@ -202,31 +202,36 @@ class GroupController extends Controller
     {
 
         /*
-         * Para que el Rol TEACHER no pueda acceder a ningun grupo, solo tiene acceso a las asignaturas
+         * Para que el Rol TEACHER no pueda acceder a ningun grupo que no sea director de grupo
          *  */
-        if (UserController::role_auth() === RoleUser::TEACHER_ROL) {
+        if (RoleUser::TEACHER_ROL === UserController::role_auth()
+            && !in_array($group->id, TeacherController::myDirectorGroup()->pluck('id')->toArray())) {
+
             return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
         }
 
 
         $Y = SchoolYearController::current_year();
+        $roleAuth = UserController::role_auth();
 
-        $existSpecialties = Group::where('study_year_id', $group->study_year_id)
-            ->where('headquarters_id', $group->headquarters_id)
-            ->where('study_time_id', $group->study_time_id)
-            ->where('specialty', 1)
-            ->whereNotNull('specialty_area_id')->count();
 
-        $studentsGroup = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $group->id))->get();
+        $studentsGroup = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $group->id))
+                ->with('groupOfSpecialty')
+                ->get();
 
         $areas = $this->subjects_teacher($Y->id, $group);
 
         $periods = NULL;
-        if (UserController::role_auth() === RoleUser::COORDINATION_ROL) {
-            $periods = Period::select('id', 'name')->where('school_year_id', $Y->id)
+        if ($roleAuth === RoleUser::COORDINATION_ROL
+            || $roleAuth === RoleUser::TEACHER_ROL) {
+            $periods = Period::where('school_year_id', $Y->id)
                 ->where('study_time_id', $group->study_time_id)
+                ->when(RoleUser::TEACHER_ROL === $roleAuth, function ($query){
+                    return $query->with('remarks');
+                })
                 ->orderBy('ordering')->get();
         }
+        // return $periods;
 
         return view('logro.group.show')->with([
             'Y' => $Y,
@@ -234,7 +239,6 @@ class GroupController extends Controller
             'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
             'count_studentsMatriculateInStudyYear' => $this->countStudentMatriculateInStudyYear($Y, $group),
             'studentsGroup' => $studentsGroup,
-            'existSpecialties' => $existSpecialties,
             'areas' => $areas,
             'periods' => $periods
         ]);
@@ -525,17 +529,6 @@ class GroupController extends Controller
         }
 
         return null;
-    }
-
-    public static function specialtyForStudent($student, $group)
-    {
-        return GroupStudent::where('student_id', $student)->whereHas('group', fn($g) =>
-            $g->where('school_year_id', $group->school_year_id)
-                ->where('headquarters_id', $group->headquarters_id)
-                ->where('study_time_id', $group->study_time_id)
-                ->where('study_year_id', $group->study_year_id)
-                ->where('specialty', 1)
-        )->first()->group->name ?? null;
     }
 
 

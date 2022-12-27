@@ -18,6 +18,7 @@ use App\Models\Period;
 use App\Models\SchoolYear;
 use App\Models\Student;
 use App\Models\AcademicWorkload;
+use App\Models\Group;
 use App\Models\GroupStudent;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
@@ -39,7 +40,7 @@ class TeacherController extends Controller
         $this->middleware('can:teachers.create')->only('create', 'store');
         $this->middleware('can:teachers.index')->only('show');
         $this->middleware('can:teachers.import')->only('export', 'export_instructive', 'import', 'import_store');
-        $this->middleware(OnlyTeachersMiddleware::class)->only('profile', 'profile_update', 'mysubjects', 'mysubjects_show', 'subjects');
+        $this->middleware(OnlyTeachersMiddleware::class)->only('profile', 'profile_update', 'mysubjects', 'mysubjects_show', 'subjects', 'myDirectorGroup');
     }
 
     public function create()
@@ -238,8 +239,10 @@ class TeacherController extends Controller
                             ->with('headquarters', 'studyTime', 'studyYear', 'teacher')
             ]);
 
-
-        return view('logro.teacher.subjects.index', ['subjects' => $subjects->get()]);
+        return view('logro.teacher.subjects.index', [
+            'directGroup' => $this->myDirectorGroup()->get(),
+            'subjects' => $subjects->get()
+        ]);
     }
 
     public function mysubjects_show(TeacherSubjectGroup $subject)
@@ -265,7 +268,8 @@ class TeacherController extends Controller
             ->get();
 
 
-        $periods = Period::where('study_time_id', $subject->group->study_time_id)
+        $periods = Period::where('school_year_id', $Y->id)
+                    ->where('study_time_id', $subject->group->study_time_id)
                     ->withCount(['permits as permit' => fn ($p) => $p->where('teacher_subject_group_id', $subject->id)])
                     ->orderBy('ordering')->get();
 
@@ -311,6 +315,15 @@ class TeacherController extends Controller
             ->where('teacher_id', $teacher_id);
 
         return $subjects;
+    }
+
+    public static function myDirectorGroup()
+    {
+        $Y = SchoolYearController::available_year();
+        return Group::where('school_year_id', $Y->id)
+            ->where('teacher_id', Auth::id())
+            ->with('headquarters', 'studyTime', 'studyYear', 'teacher')
+            ->withCount('groupStudents as student_quantity');
     }
 
 

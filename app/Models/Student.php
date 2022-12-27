@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\SchoolYearController;
 use App\Traits\FormatDate;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -253,6 +254,15 @@ class Student extends Model
     public function groupStudents()
     {
         return $this->hasMany(GroupStudent::class);
+    }
+
+    public function groupOfSpecialty()
+    {
+        return $this->hasOne(GroupStudent::class)
+                ->withWhereHas('groupSpecialty');
+            /* ->withWhereHas('group',
+                fn ($gsGroup) => $gsGroup->where('school_year_id', SchoolYearController::current_year()->id)
+                                        ->where('specialty', 1)); */
     }
 
     public function grades()

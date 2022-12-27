@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\SchoolYearController;
 use App\Traits\FormatDate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,13 @@ class GroupStudent extends Model
     public function group()
     {
         return $this->belongsTo(Group::class);
+    }
+
+    public function groupSpecialty()
+    {
+        return $this->belongsTo(Group::class, 'group_id', 'id')
+                    ->where('school_year_id', SchoolYearController::current_year()->id)
+                    ->where('specialty', 1);
     }
 
     public function student()

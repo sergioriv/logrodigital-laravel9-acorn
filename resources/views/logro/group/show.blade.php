@@ -84,9 +84,10 @@
                                         <i data-acorn-icon="more-horizontal"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="{{ route('group.export.student-list', $group) }}">
+                                        <a class="dropdown-item btn-sm btn-icon btn-icon-start"
+                                            href="{{ route('group.export.student-list', $group) }}">
                                             <i data-acorn-icon="download"></i>
-                                            <span>{{ __("Download student list") }}</span>
+                                            <span>{{ __('Download student list') }}</span>
                                         </a>
                                     </div>
                                 </div>
@@ -118,6 +119,12 @@
                                             aria-selected="true">{{ __('Subjects') . ' & ' . __('Teachers') }}</a>
                                     </li>
                                 @endcan
+                                @hasrole('TEACHER')
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" data-bs-toggle="tab" href="#remarksTab" role="tab"
+                                            aria-selected="true">{{ __('Remarks') }}</a>
+                                    </li>
+                                @endhasrole
                             </ul>
                             <!-- Title Tabs End -->
 
@@ -129,9 +136,8 @@
                                     @can('groups.students.matriculate')
                                         <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
                                             @if (null !== $Y->available)
-                                                @if (( is_null($group->specialty) && $count_studentsNoEnrolled > 0 )
-                                                    || ( $group->specialty && $count_studentsMatriculateInStudyYear > 0 ))
-
+                                                @if ((is_null($group->specialty) && $count_studentsNoEnrolled > 0) ||
+                                                    ($group->specialty && $count_studentsMatriculateInStudyYear > 0))
                                                     <!-- Groups Buttons Start -->
                                                     <div class="col-12 d-flex align-items-start justify-content-end">
                                                         <!-- Matriculate Students Button Start -->
@@ -171,11 +177,11 @@
 
                                                                     {!! $studentG->tag() !!}
                                                                 </td>
-                                                                @if (is_null($group->specialty) && $existSpecialties)
-                                                                    <td>
-                                                                        {{ \App\Http\Controllers\GroupController::specialtyForStudent($studentG->id, $group) }}
-                                                                    </td>
-                                                                @endif
+                                                                <td>
+                                                                    @if (is_null($group->specialty) && !is_null($studentG->groupOfSpecialty))
+                                                                        {{ $studentG->groupOfSpecialty->groupSpecialty->name }}
+                                                                    @endif
+                                                                </td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -203,7 +209,7 @@
                                                         <span>{{ __('Edit') . ' ' . __('Teachers') }}</span>
                                                     </a>
                                                     <!-- Add New Button End -->
-                                                @elseif ($group->specialty === TRUE && $group->specialty_area_id === NULL)
+                                                @elseif ($group->specialty === true && $group->specialty_area_id === null)
                                                     <!-- Assing Area Specialty Button Start -->
                                                     <a href="{{ route('group.specialty', $group) }}"
                                                         class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
@@ -241,7 +247,7 @@
                                                                         </td>
                                                                         <td>
                                                                             @if ($TSG)
-                                                                                {{ $TSG->teacher->getFullName() ?? NULL }}
+                                                                                {{ $TSG->teacher->getFullName() ?? null }}
                                                                             @endif
                                                                         </td>
                                                                         <td class="col-1 text-center">
@@ -270,7 +276,7 @@
                                                                                     <div class="dropdown-menu dropdown-menu-end">
                                                                                         <x-dropdown-item type="button"
                                                                                             modal-period-permit
-                                                                                            data-subject-id="{{ $TSG->id ?? NULL }}">
+                                                                                            data-subject-id="{{ $TSG->id ?? null }}">
                                                                                             <span>{{ __('Activate note upload') }}</span>
                                                                                         </x-dropdown-item>
                                                                                     </div>
@@ -290,6 +296,164 @@
                                     </div>
                                     <!-- Subjects & Teachers Tab End -->
                                 @endcan
+
+                                @hasrole('TEACHER')
+                                    <!-- Periods Tab Start -->
+                                    <!-- Pera que el director de grupo pueda agregar las observaciones -->
+                                    <div class="tab-pane fade" id="remarksTab" role="tabpanel">
+
+                                        <section class="scroll-section mb-n2" id="remarksCard">
+
+                                            @foreach ($periods as $period)
+                                                @php $isActive = $period->active() || $period->permit ? TRUE : FALSE @endphp
+
+                                                <div class="card d-flex mt-2">
+                                                    <div class="d-flex flex-grow-1" role="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#period-{{ $period->id }}" aria-expanded="true"
+                                                        aria-controls="period-{{ $period->id }}">
+                                                        <div class="card-body py-4">
+                                                            <div class="list-item-heading p-0">
+                                                                <div class="row g-2">
+                                                                    <div class="col-md-6 text-md-start text-center">
+                                                                        <div
+                                                                            class="font-weight-bold h3 m-0 @if (!$isActive) text-light @endif">
+                                                                            {{ $period->name }}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
+                                                                        {{ __('Start date') }}<br /><b>{{ $period->start }}</b>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
+                                                                        {{ __('Enabled as from') }}<br /><b>{{ $period->dateUploadingNotes() }}</b>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
+                                                                        {{ __('Deadline date') }}<br /><b>{{ $period->end }}</b>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="period-{{ $period->id }}"
+                                                        class="collapse @if ($isActive) show @endif"
+                                                        data-bs-parent="#remarksCard">
+                                                        <div class="card-body accordion-content pt-0">
+
+                                                            @if ($isActive)
+                                                                <form action="{{ route('remark.store', $group) }}"
+                                                                    method="POST">
+                                                                    @csrf
+
+                                                                    <input type="hidden" name="period"
+                                                                        value="{{ $period->id }}">
+                                                            @endif
+
+                                                            <table class="table table-striped mb-0">
+                                                                <thead>
+                                                                    <tr class="text-small text-uppercase text-center">
+                                                                        <th>&nbsp;</th>
+                                                                        <th>&nbsp;</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    @foreach ($studentsGroup as $studentG)
+                                                                        <tr>
+                                                                            <td scope="row">
+                                                                                @can('students.info')
+                                                                                    <a href="{{ route('students.show', $studentG) }}"
+                                                                                        class="list-item-heading body">
+                                                                                        {{ $studentG->getCompleteNames() }}
+                                                                                    </a>
+                                                                                @else
+                                                                                    <a href="{{ route('students.view', $studentG) }}"
+                                                                                        class="list-item-heading body">
+                                                                                        {{ $studentG->getCompleteNames() }}
+                                                                                    </a>
+                                                                                @endcan
+
+                                                                                {!! $studentG->tag() !!}
+
+                                                                            </td>
+                                                                            <td scope="row" class="col-1">
+                                                                                <div class="form-control bg-light cursor-pointer"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#modalRemark-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
+                                                                                    {{ __('Remark') }}</div>
+
+                                                                                <!-- Modal Period Remark Start -->
+                                                                                <div class="modal fade" id="modalRemark-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
+                                                                                    aria-labelledby="modalTitleRemark-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
+                                                                                    data-bs-backdrop="static"
+                                                                                    data-bs-keyboard="false" tabindex="-1"
+                                                                                    aria-hidden="true">
+                                                                                    <div
+                                                                                        class="modal-dialog modal-dialog-centered">
+                                                                                        <div class="modal-content">
+                                                                                            <div class="modal-header">
+                                                                                                <h5 class="modal-title"
+                                                                                                    id="modalTitleRemark-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
+                                                                                                    {{ __('Remark') }} - {{ $studentG->getCompleteNames() }}
+                                                                                                </h5>
+                                                                                                <button type="button"
+                                                                                                    class="btn-close"
+                                                                                                    data-bs-dismiss="modal"
+                                                                                                    aria-label="Close"></button>
+                                                                                            </div>
+                                                                                            <div class="modal-body">
+
+                                                                                                @php
+                                                                                                    $remarkStudent =
+                                                                                                    $period->remarks->filter(function ($remark) use ($studentG){
+                                                                                                        return $remark->student_id == $studentG->id;
+                                                                                                    })->first()->remark ?? null
+                                                                                                @endphp
+                                                                                                @if ($isActive)
+                                                                                                    <textarea name="remark[{{ $studentG->code }}]" class="form-control" placeholder="{{ __('Write your remark here') }}" rows="3">{{ $remarkStudent }}</textarea>
+                                                                                                @else
+                                                                                                {{ $remarkStudent }}
+                                                                                                @endif
+
+                                                                                            </div>
+                                                                                            <div class="modal-footer">
+                                                                                                <button type="button" class="btn btn-outline-danger"
+                                                                                                    data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                                                                                @if ($isActive)
+                                                                                                <button type="button" class="btn btn-primary"
+                                                                                                    data-bs-dismiss="modal">
+                                                                                                    {{ __('Save') }}</button>
+                                                                                                @endif
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- Modal Period Remark End -->
+
+                                                                            </td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+
+                                                            @if ($isActive)
+                                                                <div class="mt-4 d-flex justify-content-end">
+                                                                    <x-button type="submit" class="btn-primary">
+                                                                        {{ __('Save') }}</x-button>
+                                                                </div>
+                                                                </form>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+
+                                        </section>
+
+                                    </div>
+                                    <!-- Periods Tab End -->
+                                @endhasrole
 
                             </div>
                         </div>
@@ -330,9 +494,9 @@
                                 <select logro='select2' name="period-permit">
                                     <option label="&nbsp;"></option>
                                     @foreach ($periods as $period)
-                                    <option value="{{ $period->id }}">
-                                        {{ $period->name }}
-                                    </option>
+                                        <option value="{{ $period->id }}">
+                                            {{ $period->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
