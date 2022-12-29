@@ -56,6 +56,9 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
         $i = 2;
         foreach ($students as $student) {
             $row = [
+                $student->headquarters->name,
+                $student->studyTime->name,
+                $student->studyYear->name,
                 $student->first_last_name,
                 $student->second_last_name,
                 $student->first_name,
@@ -63,10 +66,7 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
                 $student->telephone,
                 $student->institutional_email,
                 $student->document_type_code,
-                $student->document,
-                $student->headquarters->name,
-                $student->studyTime->name,
-                $student->studyYear->name
+                $student->document
             ];
 
             $docComplete = 0;
@@ -105,7 +105,19 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
 
     public function headings(): array
     {
-        $titles = ["Primer apellido", "Segundo apellido", "Primer nombre", "Segundo nombre", "Teléfono", "Correo electrónico", "Tipo doc.", "Documento", "Sede", "Jornada", "Año de estudio"];
+        $titles = [
+            "Sede",
+            "Jornada",
+            "Año de estudio",
+            "Primer apellido",
+            "Segundo apellido",
+            "Primer nombre",
+            "Segundo nombre",
+            "Teléfono",
+            "Correo electrónico",
+            "Tipo doc.",
+            "Documento",
+        ];
 
         foreach ($this->studentFiles as $SF) {
             array_push($titles, $SF->required ? $SF->name .' *' : $SF->name);
