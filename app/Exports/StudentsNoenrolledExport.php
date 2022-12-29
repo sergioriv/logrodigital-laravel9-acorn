@@ -32,8 +32,21 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
         $Y = SchoolYearController::current_year();
 
         $array = [];
-        $students = Student::select("id", "first_name", "second_name", "first_last_name", "second_last_name", "telephone", "institutional_email", "document_type_code", "document")
-            ->with('files')
+        $students = Student::select(
+            "id",
+            "first_name",
+            "second_name",
+            "first_last_name",
+            "second_last_name",
+            "telephone",
+            "institutional_email",
+            "document_type_code",
+            "document",
+            "headquarters_id",
+            "study_time_id",
+            "study_year_id"
+        )
+            ->with('headquarters', 'studyTime', 'studyYear', 'files')
             ->whereNull('enrolled')
             ->where('school_year_create', '<=', $Y->id)
             ->get();
@@ -51,6 +64,9 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
                 $student->institutional_email,
                 $student->document_type_code,
                 $student->document,
+                $student->headquarters->name,
+                $student->studyTime->name,
+                $student->studyYear->name
             ];
 
             $docComplete = 0;
@@ -89,7 +105,7 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
 
     public function headings(): array
     {
-        $titles = ["First last name", "Second last name", "First name", "Second name", "Phone number", "Email", "Doc type", "Document"];
+        $titles = ["Primer apellido", "Segundo apellido", "Primer nombre", "Segundo nombre", "Teléfono", "Correo electrónico", "Tipo doc.", "Documento", "Sede", "Jornada", "Año de estudio"];
 
         foreach ($this->studentFiles as $SF) {
             array_push($titles, $SF->required ? $SF->name .' *' : $SF->name);
