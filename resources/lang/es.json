@@ -537,7 +537,7 @@
     "Descriptor": "Descriptor",
     "Content": "Contenido",
     "Create descriptor": "Crear descriptor",
-    "Is it a descriptor for inclusion?": "¿Es un descriptor para la inclusión?",
+    "Is it an inclusion descriptor?": "¿Es un descriptor de inclusión?",
     "saving error": "error de guardado",
     "Descriptor saved!": "Descriptor guardado!",
     "Add descriptors": "Agregar descriptores",

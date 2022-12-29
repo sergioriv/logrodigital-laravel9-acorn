@@ -66,7 +66,7 @@
                                         <div class="form-check form-switch">
                                             <input class="form-check-input cursor-pointer" type="checkbox" id="switchInclusive"
                                             name="inclusive" value="1" />
-                                            <label class="form-check-label cursor-pointer" for="switchInclusive">{{ __('Is it a descriptor for inclusion?') }}</label>
+                                            <label class="form-check-label cursor-pointer" for="switchInclusive">{{ __('Is it an inclusion descriptor?') }}</label>
                                         </div>
                                     </div>
 
