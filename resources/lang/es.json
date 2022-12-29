@@ -1,4 +1,8 @@
 {
+    "export.headquarters": "Sede",
+    "export.study_time": "Jornada",
+    "export.study_year": "Año de estudio",
+
     "Headquarters": "Sedes",
     "Areas & Subjects": "Areas & Asignaturas",
     "Teachers": "Docentes",
@@ -330,8 +334,11 @@
     "summary": "resumen",
     "evaluation components": "componentes de evaluación",
     "conceptual": "conceptual",
+    "Conceptual": "Conceptual",
     "procedural": "procedimental",
+    "Procedural": "Procedimental",
     "attitudinal": "actitudinal",
+    "Attitudinal": "Actitudinal",
     "Missing areas": "Áreas perdidas",
     "evaluation components is not equal to 100%": "componentes de evaluación no es igual al 100%",
     "Security": "Seguridad",

@@ -27,9 +27,9 @@ class GroupStudentList implements FromArray, ShouldAutoSize, WithStyles, WithEve
     {
         $array = [
             [__('Group') .': '. $this->group->name],
-            [__('headquarters') .': '. $this->group->headquarters->name .' | '. __('study time') .': '. $this->group->studyTime->name .' | '. __('study year') .': '. $this->group->studyYear->name ],
+            [__('export.headquarters') .': '. $this->group->headquarters->name .' | '. __('export.study_time') .': '. $this->group->studyTime->name .' | '. __('export.study_year') .': '. $this->group->studyYear->name ],
             [null],
-            [__('Full name'), __('conceptual'), __('procedural'), __('attitudinal')]
+            [__('Full name'), __('Conceptual'), __('Procedural'), __('Attitudinal')]
         ];
 
         $studentsGroup = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $this->group->id))->get();
