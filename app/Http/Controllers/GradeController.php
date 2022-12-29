@@ -12,6 +12,7 @@ use App\Models\PeriodPermit;
 use App\Models\Remark;
 use App\Models\ResourceArea;
 use App\Models\Student;
+use App\Models\StudentDescriptor;
 use App\Models\StudyTime;
 use App\Models\TeacherSubjectGroup;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -119,6 +120,30 @@ class GradeController extends Controller
                         'GROUP' => $group->name
                     ]
                 ));
+            }
+
+
+            /* Guardando los descriptores */
+            if (isset($grades['descriptors']) && is_array( $grades['descriptors'] )) {
+                try {
+
+                    /* borrar los descriptores asignados para agregar los que vienen */
+                    StudentDescriptor::where('student_id', $student->id)->where('teacher_subject_group_id', $subject->id)->delete();
+
+                    foreach ($grades['descriptors'] as $descriptor) {
+                        StudentDescriptor::create([
+                            'teacher_subject_group_id' => $subject->id,
+                            'student_id' => $student->id,
+                            'descriptor_id' => $descriptor
+                        ]);
+                    }
+
+                } catch (\Throwable $th) {
+
+                    DB::rollBack();
+                    Notify::fail(__('saving error'));
+                    return back();
+                }
             }
         }
 

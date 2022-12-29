@@ -4,14 +4,19 @@
 @extends('layout', ['title' => $title])
 
 @section('css')
+    <link rel="stylesheet" href="/css/vendor/datatables.min.css" />
 @endsection
 
 @section('js_vendor')
     <script src="/js/cs/responsivetab.js"></script>
+    <script src="/js/vendor/datatables.min.js"></script>
 @endsection
 
 @section('js_page')
     <script src="/js/pages/pasteGrades.js?d=1669929322185"></script>
+    <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
+    <script src="/js/plugins/datatable/datatables_boxed.js"></script>
+
     <script>
         jQuery("[absences='view']").click(function() {
             var attendance = $(this).attr('attendance-id');
@@ -75,9 +80,10 @@
                                         <i data-acorn-icon="more-horizontal"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('group.export.student-list', $subject->group) }}">
+                                        <a class="dropdown-item btn-icon btn-icon-start"
+                                            href="{{ route('group.export.student-list', $subject->group) }}">
                                             <i data-acorn-icon="download"></i>
-                                            <span>{{ __("Download student list") }}</span>
+                                            <span>{{ __('Download student list') }}</span>
                                         </a>
                                     </div>
                                 </div>
@@ -188,7 +194,8 @@
                                                                     <div
                                                                         class="font-weight-bold h3 m-0 @if (!$isActive) text-light @endif">
                                                                         {{ $period->name }}
-                                                                        <div class="icon-14">{{ $period->workload }}%</div>
+                                                                        <div class="icon-14">{{ $period->workload }}%
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                                 <div
@@ -214,8 +221,9 @@
 
                                                         @if ($isActive)
                                                             <div class="mb-3 d-flex justify-content-end">
-                                                                <x-button type="button" class="btn-outline-primary btn-sm"
-                                                                    id="clickPaste" data-period-id="{{ $period->id }}">
+                                                                <x-button type="button"
+                                                                    class="btn-outline-primary btn-sm" id="clickPaste"
+                                                                    data-period-id="{{ $period->id }}">
                                                                     {{ __('Paste values from Excel') }}
                                                                 </x-button>
                                                             </div>
@@ -226,7 +234,8 @@
                                                                 class="qualify-period">
                                                                 @csrf
 
-                                                                <input type="hidden" name="period" value="{{ $period->id }}">
+                                                                <input type="hidden" name="period"
+                                                                    value="{{ $period->id }}">
                                                         @endif
 
                                                         <table class="table table-striped mb-0">
@@ -240,6 +249,7 @@
                                                                     <th>{{ __('attitudinal') }}<br />{{ $period->studyTime->attitudinal }}%
                                                                     </th>
                                                                     <th>{{ __('final') }}<br />100%</th>
+                                                                    <th>&nbsp;</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -313,6 +323,109 @@
                                                                             <div class="form-control bg-light">
                                                                                 {{ $GxPS->final ?? null }}</div>
                                                                         </td>
+
+                                                                        <td class="text-end">
+                                                                            @if ($isActive)
+                                                                                <!-- Dropdown Button Start -->
+                                                                                <div>
+                                                                                    <button type="button"
+                                                                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                                        data-bs-offset="0,3"
+                                                                                        data-bs-toggle="dropdown"
+                                                                                        aria-haspopup="true"
+                                                                                        aria-expanded="false" data-submenu>
+                                                                                        <i
+                                                                                            data-acorn-icon="more-vertical"></i>
+                                                                                    </button>
+                                                                                    <div
+                                                                                        class="dropdown-menu dropdown-menu-end">
+                                                                                        <x-dropdown-item type="button"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#modalDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
+                                                                                            <span>{{ __('Add descriptors') }}</span>
+                                                                                        </x-dropdown-item>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- Dropdown Button End -->
+
+                                                                                <!-- Modal Period Remark Start -->
+                                                                                <div class="modal fade"
+                                                                                    id="modalDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
+                                                                                    aria-labelledby="modalTitleDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
+                                                                                    data-bs-backdrop="static"
+                                                                                    data-bs-keyboard="false"
+                                                                                    tabindex="-1" aria-hidden="true">
+                                                                                    <div
+                                                                                        class="modal-dialog modal-dialog-centered">
+                                                                                        <div class="modal-content">
+                                                                                            <div class="modal-header text-start">
+                                                                                                <h5 class="modal-title"
+                                                                                                    id="modalTitleDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
+                                                                                                    {{ __('Descriptors') }}
+                                                                                                    -
+                                                                                                    {{ $studentG->getCompleteNames() }}
+                                                                                                </h5>
+                                                                                                <button type="button"
+                                                                                                    class="btn-close"
+                                                                                                    data-bs-dismiss="modal"
+                                                                                                    aria-label="Close"></button>
+                                                                                            </div>
+                                                                                            <div class="modal-body">
+                                                                                                <table
+                                                                                                    logro="dataTableBoxed"
+                                                                                                    class="data-table responsive nowrap stripe dataTable no-footer dtr-inline">
+                                                                                                    <thead>
+                                                                                                        <th class="empty">&nbsp;</th>
+                                                                                                        <th class="text-muted text-center text-small text-uppercase">{{ __('Content') }}</th>
+                                                                                                    </thead>
+                                                                                                    <tbody>
+                                                                                                    @if (is_null($studentG->inclusive))
+                                                                                                        @php
+                                                                                                            $descriptorsFor = $descriptors;
+                                                                                                        @endphp
+                                                                                                    @else
+                                                                                                        @php
+                                                                                                            $descriptorsFor = $descriptorsInclusive;
+                                                                                                        @endphp
+                                                                                                    @endif
+                                                                                                    @foreach ($descriptorsFor as $descriptor)
+
+                                                                                                    @php
+                                                                                                        $descriptorChecked = $studentG->studentDescriptors->filter(function ($filter) use ($descriptor) {
+                                                                                                            return $filter->descriptor_id == $descriptor->id;
+                                                                                                        })->first() ?? false
+                                                                                                    @endphp
+
+                                                                                                        <tr>
+                                                                                                            <td
+                                                                                                                class="text-alternate col-1">
+                                                                                                                <div
+                                                                                                                    class="form-check ms-2 mb-0">
+                                                                                                                    <input
+                                                                                                                        class="form-check-input"
+                                                                                                                        logro="studentCheck"
+                                                                                                                        type="checkbox"
+                                                                                                                        name="students[{{ $studentG->code }}][descriptors][]"
+                                                                                                                        id="P{{ $period->id }}-student{{ $studentG->id }}"
+                                                                                                                        value="{{ $descriptor->id }}"
+                                                                                                                        @checked($descriptorChecked)>
+                                                                                                                </div>
+                                                                                                            </td>
+                                                                                                            <td
+                                                                                                                class="text-alternate text-start">
+                                                                                                                <label
+                                                                                                                    for="P{{ $period->id }}-student{{ $studentG->id }}">{{ $descriptor->content }}</label>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    @endforeach
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endif
+                                                                        </td>
                                                                     </tr>
                                                                     @if ($isActive)
                                                                         @php $gradeNumber = $gradeNumber + 3 @endphp
@@ -365,37 +478,38 @@
                                     <section class="scroll-section mt-2">
                                         <div class="card">
                                             @if (!$attendances->isEmpty())
-                                            <div class="card-body pt-2">
-                                                <table class="table table-striped mb-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
-                                                                {{ __('date') }}</th>
-                                                            <th
-                                                                class="text-center text-muted text-small text-uppercase p-0 pb-2">
-                                                                {{ __('absences') }}</th>
-                                                            <th class="empty ps-spacing-sm pe-0">&nbsp;</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($attendances as $attendance)
+                                                <div class="card-body pt-2">
+                                                    <table class="table table-striped mb-0">
+                                                        <thead>
                                                             <tr>
-                                                                <td scope="row" class="text-capitalize">{{ $attendance->created_at }}</td>
-                                                                <td class="text-center">
-                                                                    {{ $attendance->absences_count }}</td>
-                                                                <td class="text-end">
-                                                                    @if ($attendance->absences_count)
-                                                                        <x-button class="btn-sm btn-outline-primary"
-                                                                            absences='view'
-                                                                            attendance-id="{{ $attendance->id }}">
-                                                                            {{ __('see absences') }}</x-button>
-                                                                    @endif
-                                                                </td>
+                                                                <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                                    {{ __('date') }}</th>
+                                                                <th
+                                                                    class="text-center text-muted text-small text-uppercase p-0 pb-2">
+                                                                    {{ __('absences') }}</th>
+                                                                <th class="empty ps-spacing-sm pe-0">&nbsp;</th>
                                                             </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($attendances as $attendance)
+                                                                <tr>
+                                                                    <td scope="row" class="text-capitalize">
+                                                                        {{ $attendance->created_at }}</td>
+                                                                    <td class="text-center">
+                                                                        {{ $attendance->absences_count }}</td>
+                                                                    <td class="text-end">
+                                                                        @if ($attendance->absences_count)
+                                                                            <x-button class="btn-sm btn-outline-primary"
+                                                                                absences='view'
+                                                                                attendance-id="{{ $attendance->id }}">
+                                                                                {{ __('see absences') }}</x-button>
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             @endif
                                         </div>
                                     </section>

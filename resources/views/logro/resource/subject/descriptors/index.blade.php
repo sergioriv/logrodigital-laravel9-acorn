@@ -1,5 +1,5 @@
 @php
-    $title = __('Subjects list');
+    $title = __('Descriptors') .' | '. $subject->name;
 @endphp
 @extends('layout', ['title' => $title])
 
@@ -34,7 +34,7 @@
                         <!-- Top Buttons Start -->
                         <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
                             <!-- Add New Button Start -->
-                            <a href="{{ route('resourceSubject.create') }}"
+                            <a href="{{ route('subject.descriptors.create', $subject) }}"
                                 class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
                                 <i data-acorn-icon="plus"></i>
                                 <span>{{ __('Add New') }}</span>
@@ -55,7 +55,7 @@
                             <div
                                 class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
                                 <input class="form-control datatable-search" placeholder="{{ __('Search') }}"
-                                    data-datatable="#datatable_subjects" />
+                                    data-datatable="#datatable_descriptors" />
                                 <span class="search-magnifier-icon">
                                     <i data-acorn-icon="search"></i>
                                 </span>
@@ -70,40 +70,22 @@
 
                     <!-- Table Start -->
                     <div class="data-table-responsive-wrapper">
-                        <table id="datatable_subjects" class="data-table" logro="datatable">
+                        <table id="datatable_descriptors" class="data-table" logro="datatable">
                             <thead>
                                 <tr>
-                                    <th class="text-muted text-small text-uppercase">{{ __('Descriptive name') }}</th>
-                                    <th class="text-muted text-small text-uppercase">{{ __('Public name') }}</th>
+                                    <th class="text-muted text-small text-uppercase">{{ __('Study Year') }}</th>
+                                    <th class="text-muted text-small text-uppercase">{{ __('Content') }}</th>
+                                    <th class="text-muted text-small text-uppercase">{{ __('inclusive') }}</th>
                                     <th class="text-muted text-small text-uppercase">{{ __('Created at') }}</th>
-                                    <th class="empty">&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($subjects as $subject)
+                                @foreach ($descriptors as $descriptor)
                                     <tr>
-                                        <td>{!! $subject->name !!}</td>
-                                        <td>{{ $subject->public_name }}</td>
-                                        <td class="text-small">{{ $subject->created_at }}</td>
-
-                                        <td class="col-1 text-end">
-                                            <!-- Dropdown Button Start -->
-                                            <div>
-                                                <button type="button"
-                                                    class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
-                                                    data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false" data-submenu>
-                                                    <i data-acorn-icon="more-vertical"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <x-dropdown-item type="button" :link="route('subject.descriptors', $subject->id)">
-                                                        <span>{{ __('Descriptors') }}</span>
-                                                    </x-dropdown-item>
-                                                </div>
-                                            </div>
-                                            <!-- Dropdown Button End -->
-                                        </td>
-
+                                        <td>{{ __($descriptor->resourceStudyYear->name) }}</td>
+                                        <td>{{ $descriptor->content }}</td>
+                                        <td>{{ $descriptor->inclusive ? __('inclusive') : null }}</td>
+                                        <td class="text-small">{{ $descriptor->created_at }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

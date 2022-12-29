@@ -4,6 +4,7 @@ use App\Http\Controllers\AttendanceStudentController;
 use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DescriptorController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
@@ -188,6 +189,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Remarks */
     Route::post('group/{group}/remark-students', [RemarkController::class, 'store'])->name('remark.store');
+
+
+    /* Descriptors */
+    Route::get('subject/{subject}/descriptors', [DescriptorController::class, 'index'])->name('subject.descriptors');
+    Route::get('subject/{subject}/descriptors/create', [DescriptorController::class, 'create'])->name('subject.descriptors.create');
+    Route::post('subject/{subject}/descriptors', [DescriptorController::class, 'store'])->name('subject.descriptors.store');
 
 
     /* Permit Period */

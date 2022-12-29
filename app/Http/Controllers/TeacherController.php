@@ -18,6 +18,7 @@ use App\Models\Period;
 use App\Models\SchoolYear;
 use App\Models\Student;
 use App\Models\AcademicWorkload;
+use App\Models\Descriptor;
 use App\Models\Group;
 use App\Models\GroupStudent;
 use App\Models\Teacher;
@@ -265,6 +266,7 @@ class TeacherController extends Controller
                         fn($att) => $att->where('teacher_subject_group_id', $subject->id)
                     )
                 ])
+            ->with(['studentDescriptors' => fn ($des) => $des->where('teacher_subject_group_id', $subject->id)->with('descriptor')])
             ->get();
 
 
@@ -290,13 +292,28 @@ class TeacherController extends Controller
             ->withCount('absences')
             ->get();
 
+
+        $descriptors = Descriptor::where('resource_subject_id', $subject->subject->resource_subject_id)
+                ->where('resource_study_year_id', $subject->group->studyYear->resource_study_year_id)
+                ->whereNull('inclusive')
+                ->get();
+
+        $descriptorsInclusive = Descriptor::where('resource_subject_id', $subject->subject->resource_subject_id)
+                ->where('resource_study_year_id', $subject->group->studyYear->resource_study_year_id)
+                ->where('inclusive', 1)
+                ->get();
+
+
+
         return view('logro.teacher.subjects.show', [
             'Y' => $Y,
             'subject' => $subject,
             'studentsGroup' => $studentsGroup,
             'periods' => $periods,
             'attendanceAvailable' => $weeklyLoad->hours_week - $attendancesWeek,
-            'attendances' => $attendances
+            'attendances' => $attendances,
+            'descriptors' => $descriptors,
+            'descriptorsInclusive' => $descriptorsInclusive
         ]);
     }
 
