@@ -548,6 +548,7 @@
     "saving error": "error de guardado",
     "Descriptor saved!": "Descriptor guardado!",
     "Add descriptors": "Agregar descriptores",
+    "The signature must not exceed 2000px": "La firma no debe superar los 2000px",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Item Count": "Cant. Items",
