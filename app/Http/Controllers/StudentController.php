@@ -1163,9 +1163,9 @@ class StudentController extends Controller
 
                 /* Para que la imagen no exceda los limites para el resize con DomPDF */
                 $request->validate([
-                    'fileSigLoad-tutor' => ['dimensions:max_width=2000,max_height=2000']
+                    'fileSigLoad-tutor' => ['dimensions:max_width=5000,max_height=5000']
                 ], [
-                    'dimensions' => __('The signature must not exceed 2000px')
+                    'dimensions' => __('The signature must not exceed 5000px')
                 ]);
 
                 $sigPath = self::signature_image_upload($student->id, $request->file('fileSigLoad-tutor'));
@@ -1184,9 +1184,9 @@ class StudentController extends Controller
 
                 /* Para que la imagen no exceda los limites para el resize con DomPDF */
                 $request->validate([
-                    'fileSigLoad-student' => ['dimensions:max_width=2000,max_height=2000']
+                    'fileSigLoad-student' => ['dimensions:max_width=5000,max_height=5000']
                 ], [
-                    'dimensions' => __('The signature must not exceed 2000px')
+                    'dimensions' => __('The signature must not exceed 5000px')
                 ]);
 
                 $sigPath = self::signature_image_upload($student->id, $request->file('fileSigLoad-student'));
