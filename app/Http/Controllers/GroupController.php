@@ -31,7 +31,7 @@ class GroupController extends Controller
     function __construct()
     {
         $this->middleware('can:groups.index')->only('index');
-        $this->middleware('can:groups.create')->only('create', 'store', 'edit', 'update');
+        $this->middleware('can:groups.create')->only('create', 'store', 'edit', 'update', 'delete');
         // $this->middleware('can:groups.students');
         $this->middleware('can:groups.students.matriculate')->only('matriculate', 'matriculate_update');
         // $this->middleware('can:groups.teachers');
@@ -50,6 +50,7 @@ class GroupController extends Controller
             ->orderBy('headquarters_id')
             ->orderBy('study_time_id')
             ->orderBy('study_year_id')
+            ->orderBy('name')
             ->get();
 
         $headquarters = Headquarters::all();
@@ -91,7 +92,8 @@ class GroupController extends Controller
         $groups->withCount('groupStudents as student_quantity')
             ->orderBy('headquarters_id')
             ->orderBy('study_time_id')
-            ->orderBy('study_year_id');
+            ->orderBy('study_year_id')
+            ->orderBy('name');
 
         return $groups->get();
     }
@@ -501,6 +503,18 @@ class GroupController extends Controller
                 ->orderBy('name')->get();
 
         }
+    }
+
+    public function delete(Request $request, Group $group)
+    {
+        if ($group->groupStudents->isEmpty()) {
+
+            $group->delete();
+
+            Notify::success(__('Group deleted!'));
+            return redirect()->route('group.index');
+        }
+
     }
 
 

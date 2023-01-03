@@ -161,6 +161,7 @@
 
                                     <!-- Students Content Tab Start -->
                                     <section class="scroll-section">
+
                                         <div class="card">
                                             <div class="card-body">
                                                 <table class="table table-striped mb-0">
@@ -193,6 +194,48 @@
                                                 </table>
                                             </div>
                                         </div>
+
+                                        @can('groups.create')
+                                            @if ($studentsGroup->isEmpty())
+                                                <div class="text-start mt-3">
+                                                    <x-button class="btn-outline-danger" type="button" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteGroupModal">{{ __('Delete group') }}</x-button>
+                                                </div>
+
+                                                <!-- Modal Delete Group -->
+                                                <div class="modal fade" id="deleteGroupModal"
+                                                    aria-labelledby="modalDeleteGroup" data-bs-backdrop="static"
+                                                    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="modalDeleteGroup">
+                                                                    {{ __('Delete group') }}</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <form action="{{ route('groups.delete', $group) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+
+                                                                <div class="modal-body">
+                                                                    <p>
+                                                                        {{ __('Are you sure you want to delete the group? Please note that the group will be permanently deleted.') }}
+                                                                    </p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-outline-primary"
+                                                                        data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                                                    <button type="submit" id="btn-confirmDelete"
+                                                                        class="btn btn-danger">{{ __('Confirm deletion') }}</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endcan
 
                                     </section>
                                     <!-- Students Content Tab End -->
@@ -384,12 +427,13 @@
                                                                             </td>
                                                                             <td scope="row" class="col-1">
                                                                                 <div class="form-control bg-light cursor-pointer"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#modalRemark-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#modalRemark-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
                                                                                     {{ __('Remark') }}</div>
 
                                                                                 <!-- Modal Period Remark Start -->
-                                                                                <div class="modal fade" id="modalRemark-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
+                                                                                <div class="modal fade"
+                                                                                    id="modalRemark-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
                                                                                     aria-labelledby="modalTitleRemark-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
                                                                                     data-bs-backdrop="static"
                                                                                     data-bs-keyboard="false" tabindex="-1"
@@ -400,7 +444,8 @@
                                                                                             <div class="modal-header">
                                                                                                 <h5 class="modal-title"
                                                                                                     id="modalTitleRemark-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
-                                                                                                    {{ __('Remark') }} - {{ $studentG->getCompleteNames() }}
+                                                                                                    {{ __('Remark') }} -
+                                                                                                    {{ $studentG->getCompleteNames() }}
                                                                                                 </h5>
                                                                                                 <button type="button"
                                                                                                     class="btn-close"
@@ -411,24 +456,29 @@
 
                                                                                                 @php
                                                                                                     $remarkStudent =
-                                                                                                    $period->remarks->filter(function ($remark) use ($studentG){
-                                                                                                        return $remark->student_id == $studentG->id;
-                                                                                                    })->first()->remark ?? null
+                                                                                                        $period->remarks
+                                                                                                            ->filter(function ($remark) use ($studentG) {
+                                                                                                                return $remark->student_id == $studentG->id;
+                                                                                                            })
+                                                                                                            ->first()->remark ?? null;
                                                                                                 @endphp
                                                                                                 @if ($isActive)
-                                                                                                    <textarea name="remark[{{ $studentG->code }}]" class="form-control" placeholder="{{ __('Write your remark here') }}" rows="3">{{ $remarkStudent }}</textarea>
+                                                                                                    <textarea name="remark[{{ $studentG->code }}]" class="form-control"
+                                                                                                        placeholder="{{ __('Write your remark here') }}" rows="3">{{ $remarkStudent }}</textarea>
                                                                                                 @else
-                                                                                                {{ $remarkStudent }}
+                                                                                                    {{ $remarkStudent }}
                                                                                                 @endif
 
                                                                                             </div>
                                                                                             <div class="modal-footer">
-                                                                                                <button type="button" class="btn btn-outline-danger"
+                                                                                                <button type="button"
+                                                                                                    class="btn btn-outline-danger"
                                                                                                     data-bs-dismiss="modal">{{ __('Close') }}</button>
                                                                                                 @if ($isActive)
-                                                                                                <button type="button" class="btn btn-primary"
-                                                                                                    data-bs-dismiss="modal">
-                                                                                                    {{ __('Save') }}</button>
+                                                                                                    <button type="button"
+                                                                                                        class="btn btn-primary"
+                                                                                                        data-bs-dismiss="modal">
+                                                                                                        {{ __('Save') }}</button>
                                                                                                 @endif
                                                                                             </div>
                                                                                         </div>

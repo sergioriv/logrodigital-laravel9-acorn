@@ -186,6 +186,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('group/{group}/export-student-list', [GroupController::class, 'exportStudentList'])->name('group.export.student-list');
     Route::get('group/{group}/export-information-student-list', [GroupController::class, 'exportStudentsWithFiles'])->name('group.export.information-student-list');
     Route::get('group/{group}/report-notes', [GradeController::class, 'reportForPeriod']);
+    Route::delete('groups/{group}', [GroupController::class, 'delete'])->name('groups.delete');
+
 
     /* Remarks */
     Route::post('group/{group}/remark-students', [RemarkController::class, 'store'])->name('remark.store');

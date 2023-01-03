@@ -551,6 +551,9 @@
     "The signature must not exceed 5000px": "La firma no debe superar los 5000px",
     "Information From Students in Group :GROUP": "Información de los Estudiantes del Grupo :GROUP",
     "Information general from student list": "Información de la lista de estudiantes",
+    "Delete group": "Eliminar grupo",
+    "Are you sure you want to delete the group? Please note that the group will be permanently deleted.": "¿Estás seguro de que quieres eliminar el grupo? Ten en cuenta que el grupo se eliminará de forma permanente.",
+    "Group deleted!": "Grupo eliminado!",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Item Count": "Cant. Items",
