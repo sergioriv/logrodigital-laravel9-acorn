@@ -145,6 +145,9 @@ class Student extends Model
             'telephone',
             'document_type_code',
             'document',
+            'headquarters_id',
+            'study_time_id',
+            'study_year_id',
             'enrolled',
             'status',
             'inclusive'

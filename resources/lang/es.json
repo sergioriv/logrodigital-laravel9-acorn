@@ -534,7 +534,7 @@
     "Register students": "Registrar estudiantes",
     "Is the student repeating?": "¿El estudiante es repitente?",
     "No assistances": "Sin asistencias",
-    "Download student list": "Descargar lista de estudiantes",
+    "Student list": "Lista de estudiantes",
     "student list :GROUP": "lista de estudiantes :GROUP",
     "Remarks": "Observaciones",
     "Remark": "Observación",
@@ -549,6 +549,8 @@
     "Descriptor saved!": "Descriptor guardado!",
     "Add descriptors": "Agregar descriptores",
     "The signature must not exceed 5000px": "La firma no debe superar los 5000px",
+    "Information From Students in Group :GROUP": "Información de los Estudiantes del Grupo :GROUP",
+    "Information general from student list": "Información de la lista de estudiantes",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Item Count": "Cant. Items",

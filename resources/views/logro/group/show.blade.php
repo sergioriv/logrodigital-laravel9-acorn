@@ -87,7 +87,12 @@
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                             href="{{ route('group.export.student-list', $group) }}">
                                             <i data-acorn-icon="download"></i>
-                                            <span>{{ __('Download student list') }}</span>
+                                            <span>{{ __('Student list') }}</span>
+                                        </a>
+                                        <a class="dropdown-item btn-sm btn-icon btn-icon-start"
+                                            href="{{ route('group.export.information-student-list', $group) }}">
+                                            <i data-acorn-icon="download"></i>
+                                            <span>{{ __('Information general from student list') }}</span>
                                         </a>
                                     </div>
                                 </div>

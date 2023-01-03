@@ -13,14 +13,16 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSize, WithStyles, WithEvents
+class StudentsWithFiles implements FromArray, WithHeadings, ShouldAutoSize, WithStyles, WithEvents
 {
 
     private $docCompletes = [1 => ['font' => ['bold' => true]]];
     private $studentFiles;
+    private $students;
 
-    public function __construct()
+    public function __construct($students)
     {
+        $this->students = $students;
         $this->studentFiles = StudentFileType::where('inclusive', 0)->get();
     }
 
@@ -29,32 +31,13 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
      */
     public function array(): array
     {
-        $Y = SchoolYearController::current_year();
 
         $array = [];
-        $students = Student::select(
-            "id",
-            "first_name",
-            "second_name",
-            "first_last_name",
-            "second_last_name",
-            "telephone",
-            "institutional_email",
-            "document_type_code",
-            "document",
-            "headquarters_id",
-            "study_time_id",
-            "study_year_id"
-        )
-            ->with('headquarters', 'studyTime', 'studyYear', 'files')
-            ->whereNull('enrolled')
-            ->where('school_year_create', '<=', $Y->id)
-            ->get();
 
         $docRequired = StudentFileType::where('required', 1)->count();
 
         $i = 2;
-        foreach ($students as $student) {
+        foreach ($this->students as $student) {
             $row = [
                 $student->headquarters->name,
                 $student->studyTime->name,
@@ -141,7 +124,7 @@ class StudentsNoenrolledExport implements FromArray, WithHeadings, ShouldAutoSiz
         return [
             AfterSheet::class    => function (AfterSheet $event) {
 
-                $event->sheet->getDelegate()->getStyle('I:Z')
+                $event->sheet->getDelegate()->getStyle('J:Z')
                     ->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 

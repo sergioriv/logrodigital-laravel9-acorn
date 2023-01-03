@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\StudentsInstructuveExport;
-use App\Exports\StudentsNoenrolledExport;
+use App\Exports\StudentsWithFiles;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\GenerateStudentCode;
 use App\Http\Controllers\support\Notify;
@@ -1132,7 +1132,15 @@ class StudentController extends Controller
 
     public function export_noenrolled()
     {
-        return Excel::download(new StudentsNoenrolledExport, __('no-enrolled') . '.xlsx');
+        $Y = SchoolYearController::current_year();
+
+        $students = Student::singleData()
+            ->with('headquarters', 'studyTime', 'studyYear', 'files')
+            ->whereNull('enrolled')
+            ->where('school_year_create', '<=', $Y->id)
+            ->get();
+
+        return Excel::download(new StudentsWithFiles($students), __('no-enrolled') . '.xlsx');
     }
 
     public function import()

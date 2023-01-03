@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\GroupStudentList;
+use App\Exports\StudentsWithFiles;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
@@ -536,5 +537,13 @@ class GroupController extends Controller
     public function exportStudentList(Group $group)
     {
         return Excel::download(new GroupStudentList($group), __('student list :GROUP', ['GROUP' => $group->name]) . '.xlsx');
+    }
+
+    public function exportStudentsWithFiles(Group $group)
+    {
+        $studentsGroup = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $group->id))
+                ->get();
+
+        return Excel::download(new StudentsWithFiles($studentsGroup), __('Information From Students in Group :GROUP', ['GROUP' => $group->name]) . '.xlsx');
     }
 }
