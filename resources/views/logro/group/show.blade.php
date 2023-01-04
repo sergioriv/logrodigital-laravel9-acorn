@@ -84,6 +84,13 @@
                                         <i data-acorn-icon="more-horizontal"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
+                                        @unless ($studentsGroup->isEmpty())
+                                            <a class="dropdown-item btn-sm btn-icon btn-icon-start"
+                                                href="{{ route('group.transfer-students', $group) }}">
+                                                <i data-acorn-icon="destination"></i>
+                                                <span>{{ __('Transfer students') }}</span>
+                                            </a>
+                                        @endunless
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                             href="{{ route('group.export.student-list', $group) }}">
                                             <i data-acorn-icon="download"></i>

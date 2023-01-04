@@ -33,6 +33,7 @@ use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
+use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
 use Illuminate\Support\Facades\Route;
@@ -187,6 +188,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('group/{group}/export-information-student-list', [GroupController::class, 'exportStudentsWithFiles'])->name('group.export.information-student-list');
     Route::get('group/{group}/report-notes', [GradeController::class, 'reportForPeriod']);
     Route::delete('groups/{group}', [GroupController::class, 'delete'])->name('groups.delete');
+    Route::get('groups/{group}/transfer-students', [TransferController::class, 'groupStudents'])->name('group.transfer-students');
+    Route::put('groups/{group}/transfer-students', [TransferController::class, 'groupStudents_selection'])->name('group.transfer-students.select-students');
+    Route::post('groups/{group}/transfer-students', [TransferController::class, 'groupStudents_hss'])->name('group.transfer-students.hss');
+    Route::post('groups/transfer-sel-group', [TransferController::class, 'selectionGroup'])->name('group.transfer-students.selGroup');
 
 
     /* Remarks */
