@@ -18,7 +18,6 @@ class TransferController extends Controller
 
     public function __construct()
     {
-
     }
     public function groupStudents(Group $group)
     {
@@ -45,7 +44,7 @@ class TransferController extends Controller
 
         $students = "";
         foreach ($request->students as $student) {
-            $students .= $student.',';
+            $students .= $student . ',';
         }
 
         $students = substr($students, 0, -1);
@@ -79,7 +78,7 @@ class TransferController extends Controller
             ->where('study_year_id', $group->study_year_id)
             ->withCount('groupStudents as student_quantity')
             ->with('headquarters', 'studyTime', 'studyYear', 'teacher')
-            ->with(['groupStudents' => fn($GS) => $GS->with('student')])
+            ->with(['groupStudents' => fn ($GS) => $GS->with('student')])
             ->get();
 
         if (0 === count($groups)) {
@@ -88,12 +87,10 @@ class TransferController extends Controller
         }
 
 
-            return view('logro.group.transfer-selGroup', [
-                'groups' => $groups,
-                'students' => $request->students,
-            ]);
-
-
+        return view('logro.group.transfer-selGroup', [
+            'groups' => $groups,
+            'students' => $request->students,
+        ]);
     }
 
     public function selectionGroup(Request $request)
@@ -110,28 +107,21 @@ class TransferController extends Controller
 
             $student = Student::find($stu);
 
-            $groupStudentExist = GroupStudent::where('group_id', $request->group)->where('student_id', $student->id)->first();
+            /* se elimina el grupo actual */
+            GroupStudent::where('group_id', $student->group_id)->where('student_id', $student->id)->delete();
 
-            if(is_null($groupStudentExist)) {
+            /* para crear la relacion con el nuevo grupo */
+            GroupStudent::create([
+                'group_id' => $request->group,
+                'student_id' => $student->id
+            ]);
 
-                GroupStudent::create([
-                    'group_id' => $request->group,
-                    'student_id' => $student->id
-                ]);
-
-            } else {
-
-                $groupStudentExist->update([
-                    'group_id' => $request->group
-                ]);
-            }
-
+            /* actualizamos el grupo de estudiante */
             $student->update([
                 'group_id' => $request->group,
                 'enrolled_date' => now(),
                 'enrolled' => TRUE
             ]);
-
         }
 
         Notify::success(__('Transfer students!'));

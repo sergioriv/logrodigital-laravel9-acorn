@@ -85,11 +85,13 @@
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
                                         @unless ($studentsGroup->isEmpty())
+                                        @if (!$group->specialty)
                                             <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                                 href="{{ route('group.transfer-students', $group) }}">
                                                 <i data-acorn-icon="destination"></i>
                                                 <span>{{ __('Transfer students') }}</span>
                                             </a>
+                                        @endif
                                         @endunless
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                             href="{{ route('group.export.student-list', $group) }}">
