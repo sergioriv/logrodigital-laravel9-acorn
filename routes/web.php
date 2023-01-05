@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DescriptorController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupStudentController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\OrientationController;
 use App\Http\Controllers\PeriodController;
@@ -193,6 +194,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('groups/{group}/transfer-students', [TransferController::class, 'groupStudents_hss'])->name('group.transfer-students.hss');
     Route::post('groups/transfer-sel-group', [TransferController::class, 'selectionGroup'])->name('group.transfer-students.selGroup');
 
+    Route::delete('group-students/{groupStudent}', [GroupStudentController::class, 'destroy'])->name('group.students.delete');
 
     /* Remarks */
     Route::post('group/{group}/remark-students', [RemarkController::class, 'store'])->name('remark.store');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\support\Notify;
 use App\Models\GroupStudent;
 use Illuminate\Http\Request;
 
@@ -80,6 +81,26 @@ class GroupStudentController extends Controller
      */
     public function destroy(GroupStudent $groupStudent)
     {
-        //
+
+        if ($groupStudent->student->group_id != $groupStudent->group_id)
+        {
+            $groupStudent->delete();
+            Notify::success('Estudiante eliminado');
+        }
+
+
+        return back();
+
+
+    }
+
+    public static function find($group, $student)
+    {
+        return GroupStudent::where('group_id', $group)->where('student_id', $student)->first();
+    }
+    public static function duplicate($student)
+    {
+        return GroupStudent::where('student_id', $student)->count();
+
     }
 }

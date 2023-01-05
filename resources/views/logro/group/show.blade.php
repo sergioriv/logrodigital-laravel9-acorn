@@ -84,14 +84,14 @@
                                         <i data-acorn-icon="more-horizontal"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
-                                        @unless ($studentsGroup->isEmpty())
-                                        @if (!$group->specialty)
-                                            <a class="dropdown-item btn-sm btn-icon btn-icon-start"
-                                                href="{{ route('group.transfer-students', $group) }}">
-                                                <i data-acorn-icon="destination"></i>
-                                                <span>{{ __('Transfer students') }}</span>
-                                            </a>
-                                        @endif
+                                        @unless($studentsGroup->isEmpty())
+                                            @if (!$group->specialty)
+                                                <a class="dropdown-item btn-sm btn-icon btn-icon-start"
+                                                    href="{{ route('group.transfer-students', $group) }}">
+                                                    <i data-acorn-icon="destination"></i>
+                                                    <span>{{ __('Transfer students') }}</span>
+                                                </a>
+                                            @endif
                                         @endunless
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                             href="{{ route('group.export.student-list', $group) }}">
@@ -176,6 +176,10 @@
                                                 <table class="table table-striped mb-0">
                                                     <tbody>
                                                         @foreach ($studentsGroup as $studentG)
+                                                            @php
+                                                                $duplicate = \App\Http\Controllers\GroupStudentController::duplicate($studentG->id);
+                                                                $GSId = \App\Http\Controllers\GroupStudentController::find($group->id, $studentG->id);
+                                                            @endphp
                                                             <tr>
                                                                 <td scope="row">
                                                                     @can('students.info')
@@ -197,6 +201,23 @@
                                                                         {{ $studentG->groupOfSpecialty->groupSpecialty->name }}
                                                                     @endif
                                                                 </td>
+                                                                <td class="col-1">
+
+                                                                    @if ($duplicate > 1 && $group->id != $studentG->group_id)
+                                                                        <form
+                                                                            action="{{ route('group.students.delete', $GSId) }}"
+                                                                            method="post">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <x-button type="submit" title="eliminar duplicado"
+                                                                                class="btn-sm btn-icon-only">
+                                                                                <i data-acorn-icon="bin"
+                                                                                    class="text-danger"></i>
+                                                                            </x-button>
+                                                                        </form>
+                                                                    @endif
+
+                                                                </td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -207,8 +228,9 @@
                                         @can('groups.create')
                                             @if ($studentsGroup->isEmpty())
                                                 <div class="text-start mt-3">
-                                                    <x-button class="btn-outline-danger" type="button" data-bs-toggle="modal"
-                                                        data-bs-target="#deleteGroupModal">{{ __('Delete group') }}</x-button>
+                                                    <x-button class="btn-outline-danger" type="button"
+                                                        data-bs-toggle="modal" data-bs-target="#deleteGroupModal">
+                                                        {{ __('Delete group') }}</x-button>
                                                 </div>
 
                                                 <!-- Modal Delete Group -->

@@ -148,6 +148,7 @@ class Student extends Model
             'headquarters_id',
             'study_time_id',
             'study_year_id',
+            'group_id',
             'enrolled',
             'status',
             'inclusive'
