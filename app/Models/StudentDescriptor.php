@@ -21,5 +21,9 @@ class StudentDescriptor extends Model
     {
         return $this->belongsTo(Descriptor::class);
     }
+    public function teacherSubject()
+    {
+        return $this->belongsTo(TeacherSubjectGroup::class, 'teacher_subject_group_id', 'id');
+    }
 
 }

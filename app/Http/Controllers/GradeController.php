@@ -228,6 +228,15 @@ class GradeController extends Controller
         $this->countAreas = $areasWithSubjects->count();
 
 
+        $teacherSubjects = [];
+        foreach ($areasWithSubjects as $area) {
+            foreach ($area->subjects as $sj) {
+                if (!is_null($sj->teacherSubject))
+                    array_push($teacherSubjects, $sj->teacherSubject->id);
+            }
+        }
+
+
         $studyTime = StudyTime::find($group->study_time_id);
 
 
@@ -253,14 +262,25 @@ class GradeController extends Controller
         }
 
         foreach ($groupStudents as $GS) {
-            $this->reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $GS->student, $pathReport);
+            $this->reportForStudentPeriod(
+                $Y,
+                $SCHOOL,
+                $group,
+                $studyTime,
+                $currentPeriod,
+                $periods,
+                $areasWithSubjects,
+                $teacherSubjects,
+                $GS->student,
+                $pathReport
+            );
         }
 
         return view('logro.empty');
 
     }
 
-    private function reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $student, $pathReport)
+    private function reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $teacherSubjects, $student, $pathReport)
     {
 
         /* Nombre para el reporte de notas, en caso de ser el reporte final, dirá Final */
@@ -281,7 +301,15 @@ class GradeController extends Controller
 
         /* Si el estudiante tiene un grupo de especialidad, se agregará a la lista general con su area y asignatura de especialidad */
         if ($existGroupSpecialty) {
-            $areasWithSubjects[$this->countAreas] = $this->teacher_subject($Y, $existGroupSpecialty)->first();
+
+            $areaSpecialty = $this->teacher_subject($Y, $existGroupSpecialty)->first();
+
+            foreach ($areaSpecialty->subjects as $subjectSpecialty) {
+                if (!is_null($subjectSpecialty->teacherSubject))
+                    array_push($teacherSubjects, $subjectSpecialty->teacherSubject->id);
+            }
+
+            $areasWithSubjects[$this->countAreas] = $areaSpecialty;
         }
 
 
@@ -295,6 +323,16 @@ class GradeController extends Controller
         $remark = Remark::where('group_id', $group->id)->where('period_id', $currentPeriod->id)->where('student_id', $student->id)->first()->remark ?? null;
 
 
+
+        $descriptors = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
+                ->withWhereHas('descriptorsStudent',
+                    fn ($descriptor) => $descriptor->where('student_id', $student->id)->with('descriptor')
+                )
+                ->with(['subject' => fn ($sj) => $sj->with('resourceSubject')])
+                ->get();
+
+
+
         $pdf = Pdf::loadView('logro.pdf.report-notes', [
             'SCHOOL' => $SCHOOL,
             'date' => now()->format('d/m/Y'),
@@ -306,11 +344,11 @@ class GradeController extends Controller
             'group' => $group,
             'studyTime' => $studyTime,
             'titleReportNotes' => $titleReportNotes,
-            'remark' => $remark
+            'remark' => $remark,
+            'descriptors' => $descriptors
         ]);
 
         $pdf->setPaper([0.0, 0.0, 612, 1008]);
-        // $pdf->setPaper([0.0, 0.0, 666.14, 977.95]);
         $pdf->setOption('dpi', 72);
 
 

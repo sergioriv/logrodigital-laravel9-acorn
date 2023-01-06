@@ -51,4 +51,9 @@ class TeacherSubjectGroup extends Model
     {
         return $this->hasMany(Grade::class);
     }
+
+    public function descriptorsStudent()
+    {
+        return $this->hasMany(StudentDescriptor::class, 'teacher_subject_group_id', 'id');
+    }
 }

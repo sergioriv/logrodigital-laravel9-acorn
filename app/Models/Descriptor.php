@@ -25,4 +25,8 @@ class Descriptor extends Model
     {
         return $this->belongsTo(ResourceStudyYear::class);
     }
+    public function resourceSubject()
+    {
+        return $this->belongsTo(ResourceSubject::class);
+    }
 }

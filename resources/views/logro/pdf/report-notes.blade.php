@@ -258,6 +258,9 @@
         .text-capitalize {
             text-transform: capitalize;
         }
+        .text-uppercase {
+            text-transform: uppercase;
+        }
 
         .table-title {
             background-color: #d9d9d9;
@@ -272,6 +275,10 @@
 
         .separator-bottom {
             border-bottom: .3px solid #c4c4c4;
+        }
+
+        .page-break {
+            page-break-after: always;
         }
     </style>
 </head>
@@ -487,6 +494,30 @@
         <div class="f-size-5"><b class="f-size-5">%</b> carga académica.
         | <b class="f-size-5">F</b> cantidad de fallas periodo.</div>
     </section>
+
+
+    <!-- Descriptors Section Start -->
+    @unless ($descriptors->isEmpty())
+
+        <!-- New Page -->
+        <div class="page-break"></div>
+
+        <section>
+            <p class="text-center text-uppercase">{{ __('Descriptors') }}</p>
+            @foreach ($descriptors as $descriptor)
+            <div class="card p-1">
+                <div class="text-center bold table-title">{{ $descriptor->subject->resourceSubject->name }}</div>
+                <ul>
+                    @foreach ($descriptor->descriptorsStudent as $descriptorStudent)
+                    <li>{{ $descriptorStudent->descriptor->content }} @if($descriptorStudent->descriptor->inclusive) {{ '('. __('inclusive') .')' }} @endif</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endforeach
+        </section>
+
+    @endunless
+    <!-- Descriptors Section End -->
 
 </body>
 
