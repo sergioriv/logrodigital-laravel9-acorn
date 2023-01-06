@@ -176,10 +176,6 @@
                                                 <table class="table table-striped mb-0">
                                                     <tbody>
                                                         @foreach ($studentsGroup as $studentG)
-                                                            @php
-                                                                $duplicate = \App\Http\Controllers\GroupStudentController::duplicate($studentG->id);
-                                                                $GSId = \App\Http\Controllers\GroupStudentController::find($group->id, $studentG->id);
-                                                            @endphp
                                                             <tr>
                                                                 <td scope="row">
                                                                     @can('students.info')
@@ -200,23 +196,6 @@
                                                                     @if (is_null($group->specialty) && !is_null($studentG->groupOfSpecialty))
                                                                         {{ $studentG->groupOfSpecialty->groupSpecialty->name }}
                                                                     @endif
-                                                                </td>
-                                                                <td class="col-1">
-
-                                                                    @if ($duplicate > 1 && $group->id != $studentG->group_id)
-                                                                        <form
-                                                                            action="{{ route('group.students.delete', $GSId) }}"
-                                                                            method="post">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <x-button type="submit" title="eliminar duplicado"
-                                                                                class="btn-sm btn-icon-only">
-                                                                                <i data-acorn-icon="bin"
-                                                                                    class="text-danger"></i>
-                                                                            </x-button>
-                                                                        </form>
-                                                                    @endif
-
                                                                 </td>
                                                             </tr>
                                                         @endforeach
