@@ -80,6 +80,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('roles', RoleController::class)->except('destroy','show')->names('support.roles');
         Route::get('roles.json', [RoleController::class, 'data']);
 
+        /* Students Import */
+        Route::get('students/import', [StudentController::class, 'import']);
+        Route::post('students/import', [StudentController::class, 'import_store'])->name('students.import.store');
+
+        /* Teacher Import */
+        Route::get('teachers/import', [TeacherController::class, 'import']);
+        Route::post('teachers/import', [TeacherController::class, 'import_store'])->name('teacher.import.store');
+
         /* Route Number Students */
         Route::get('number-students', [SchoolController::class, 'number_students_show'])->name('support.number_students');
         Route::put('number-students', [SchoolController::class, 'number_students_update'])->name('support.number_students.update');
@@ -111,7 +119,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route School Year */
     Route::resource('school-years', SchoolYearController::class)->except('destroy','edit','update')->names('schoolYear');
-    // ⛔ Route::get('school_years.json', [SchoolYearController::class, 'data']);
     Route::put('school-years', [SchoolYearController::class, 'choose'])->name('schoolYear.selected');
 
     /* Route Headquarters */
@@ -123,13 +130,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('study-times/{study_time}/periods', [PeriodController::class, 'create'])->name('studyTime.periods');
     Route::post('study-times/{study_time}/periods', [PeriodController::class, 'store'])->name('studyTime.periods.store');
     Route::get('study-times/{study_time}/periods/edit', [PeriodController::class, 'edit'])->name('studyTime.periods.edit');
-    // Route::put('study-times/{study_time}/periods', [PeriodController::class, 'store'])->name('studyTime.periods.edit');
-    // ⛔ Route::get('study-times/{study_time}/study-years', [StudyTimeController::class, 'studyYear_create'])->name('studyTime.studyYear');
-    // ⛔ Route::post('study-times/{study_time}/study-years', [StudyTimeController::class, 'studyYear_store'])->name('studyTime.studyYear.store');
 
     /* Route StudyYear */
     Route::resource('study-years', StudyYearController::class)->except('destroy')->names('studyYear');
-    // ⛔ Route::get('study_years.filter.study_time', [StudyYearController::class, 'filterStudyTime']);
     Route::get('study-years/{study_year}/subjects', [StudyYearController::class, 'subjects'])->name('studyYear.subject.show');
     Route::post('study-years/{study_year}/subjects', [StudyYearController::class, 'subjects_store'])->name('studyYear.subject.store');
     Route::get('study-years/{study_year}/subjects/edit', [StudyYearController::class, 'subjects_edit'])->name('studyYear.subject.edit');
@@ -150,10 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route Teachers */
     Route::controller(TeacherController::class)->group( function () {
-        // Route::get('teachers.json', 'data');
         Route::get('teachers/export', 'export')->name('teacher.export');
-        Route::get('teachers/import', 'import')->name('teacher.import');
-        Route::post('teachers/import', 'import_store')->name('teacher.import.store');
         Route::get('teachers/instructive', 'export_instructive')->name('teachers.instructive');
     });
     Route::resource('teachers', TeacherController::class)->except('destroy','index','edit','update')->names('teacher');
@@ -250,8 +250,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('students/data/instructive', 'data_instructive')->name('students.data.instructive');
         Route::get('students/export/instructive', 'export_instructive')->name('students.instructive');
         Route::get('students/export-noenrolled', 'export_noenrolled')->name('students.export_noenrolled');
-        Route::get('students/import', 'import')->name('students.import');
-        Route::post('students/import', 'import_store')->name('students.import.store');
 
         Route::put('students/{student}/piar', 'piar_update')->name('students.piar');
 
