@@ -7,7 +7,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DescriptorController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\GroupController;
-use App\Http\Controllers\GroupStudentController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\OrientationController;
 use App\Http\Controllers\PeriodController;
@@ -37,7 +36,6 @@ use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
-use App\Models\Student;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -70,28 +68,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Notify::success('Hecho');
             return redirect()->route('dashboard');
         });
-
-        /* corregir sede, jornada y grado del estudiante a corde con el grupo */
-        Route::get('fix-parents.students', function(){
-            $students = Student::with('group')->whereNotNull('group_id')->get();
-            $listStudents = [];
-            foreach ($students as $student) {
-                if ($student->headquarters_id !== $student->group->headquarters_id
-                    || $student->study_time_id !== $student->group->study_time_id
-                    || $student->study_year_id !== $student->group->study_year_id) {
-
-                        array_push($listStudents, $student->toArray());
-                        /* $student->update([
-                            'headquarters_id' => $student->group->headquarters_id,
-                            'study_time_id' => $student->group->study_time_id,
-                            'study_year_id' => $student->group->study_year_id
-                        ]); */
-
-                    }
-            }
-            dd($listStudents);
-        });
-
 
 
         /* Route Users */
