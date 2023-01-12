@@ -673,6 +673,8 @@ class StudentController extends Controller
         $data_treatment = $student->data_treatment;
         $studentEmail = $student->institutional_email;
 
+        DB::beginTransaction();
+
         if ('STUDENT' === $userRole) {
             $required = 'required';
             $data_treatment = $request->data_treatment;
@@ -735,7 +737,8 @@ class StudentController extends Controller
             'linked_process' => ['nullable', Rule::exists('linkage_processes', 'id')],
             'religion' => ['nullable', Rule::exists('religions', 'id')],
             'economic_dependence' => ['nullable', Rule::exists('economic_dependences', 'id')],
-            'data_treatment' => ['nullable', 'boolean']
+            'data_treatment' => ['nullable', 'boolean'],
+            'isRepeat' => ['nullable', 'boolean']
         ]);
 
         $studentUserName = $request->firstName . ' ' . $request->firstLastName;
@@ -747,13 +750,6 @@ class StudentController extends Controller
         }
 
         /* COMPROBACION DE CERTIFICADO DE DISCAPACIDAD */
-        /* OLD METHODE
-         * if ($request->hasFile('disability_certificate') && $request->disability > 1) {
-            return $disability_file = self::upload_disability_certificate($request, $student);
-            if (FALSE === $disability_file) {
-                $request->disability = NULL;
-            }
-        } */
         if ($request->disability > 1) {
 
             StudentFileController::upload_disability_file($request, $student);
@@ -814,8 +810,13 @@ class StudentController extends Controller
             'economic_dependence_id' => $request->economic_dependence,
 
             /* politica de tratamiento de datos */
-            'data_treatment' => $data_treatment
+            'data_treatment' => $data_treatment,
+
+            /* Status Repeat */
+            'status' => !empty($request->isRepeat) ? 'repeat' : $student->status
         ]);
+
+        DB::commit();
 
         if ($wizard === TRUE) {
             $student->forceFill([

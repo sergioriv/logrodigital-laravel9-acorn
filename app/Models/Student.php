@@ -168,6 +168,11 @@ class Student extends Model
         return $this->belongsTo(User::class, 'id');
     }
 
+    public function isRepeat() : bool
+    {
+        return $this->status === 'repeat';
+    }
+
     /*
      * PARENTS
      */

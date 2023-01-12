@@ -905,6 +905,13 @@
                                     </div>
                                 </section>
                                 <!-- Signatures View End -->
+
+                                <div class="mb-5">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" @checked($student->isRepeat()) type="checkbox" id="isRepeat" name="isRepeat" value="1" />
+                                        <label class="form-check-label" for="isRepeat">{{ __('Is the student repeating?') }}</label>
+                                    </div>
+                                </div>
                             @endunlessrole
 
                             @hasrole('STUDENT')
