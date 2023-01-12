@@ -73,9 +73,9 @@ class TransferController extends Controller
 
         $groups = Group::whereNull('specialty')
             ->where('school_year_id', $Y->id)
-            ->where('headquarters_id', $group->headquarters_id)
-            ->where('study_time_id', $group->study_time_id)
-            ->where('study_year_id', $group->study_year_id)
+            ->where('headquarters_id', $request->headquarters)
+            ->where('study_time_id', $request->studyTime)
+            ->where('study_year_id', $request->studyYear)
             ->withCount('groupStudents as student_quantity')
             ->with('headquarters', 'studyTime', 'studyYear', 'teacher')
             ->with(['groupStudents' => fn ($GS) => $GS->with('student')])
@@ -100,6 +100,7 @@ class TransferController extends Controller
             'group' => ['required', Rule::exists('groups', 'id')]
         ]);
 
+        $group = Group::find($request->group);
 
         $students = explode(',', $request->students);
 
@@ -107,24 +108,39 @@ class TransferController extends Controller
 
             $student = Student::find($stu);
 
-            /* se elimina el grupo actual */
-            GroupStudent::where('group_id', $student->group_id)->where('student_id', $student->id)->delete();
+            /* se consulta el groupStudent actual */
+            $groupStudent = GroupStudent::where('group_id', $student->group_id)->where('student_id', $student->id)->first();
 
-            /* para crear la relacion con el nuevo grupo */
-            GroupStudent::create([
-                'group_id' => $request->group,
-                'student_id' => $student->id
-            ]);
+            if (is_null($groupStudent)) {
+
+                /* para crear la relacion con el nuevo grupo */
+                GroupStudent::create([
+                    'group_id' => $group->id,
+                    'student_id' => $student->id
+                ]);
+            } else {
+
+                /* Para actualizar el grupo en el registro del groupStudent */
+                $groupStudent->update([
+                    'group_id' => $group->id
+                ]);
+
+            }
+
 
             /* actualizamos el grupo de estudiante */
             $student->update([
-                'group_id' => $request->group,
+                'headquarters_id' => $group->headquarters_id,
+                'study_time_id' => $group->study_time_id,
+                'study_year_id' => $group->study_year_id,
+                'group_id' => $group->id,
                 'enrolled_date' => now(),
                 'enrolled' => TRUE
             ]);
+
         }
 
         Notify::success(__('Transfer students!'));
-        return redirect()->route('group.show', $request->group);
+        return redirect()->route('group.show', $group->id);
     }
 }

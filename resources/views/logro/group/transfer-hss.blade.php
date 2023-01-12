@@ -25,7 +25,7 @@ $title = __('Transfer students');
 
         function studentParentFilter() {
 
-            $.get("../parents.filter", {
+            $.get(HOST + "/students/parents.filter", {
                 headquarters: jQuery("#headquarters").val(),
                 studyTime: jQuery("#studyTime").val(),
                 studyYear: jQuery("#studyYear").val(),
