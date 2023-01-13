@@ -161,6 +161,9 @@ class Scripts {
         if ("undefined" !== typeof boxedStudentsMatriculate) {
             new boxedStudentsMatriculate;
         }
+        if ("undefined" !== typeof ProgressBars) {
+            new ProgressBars;
+        }
 
     }
 

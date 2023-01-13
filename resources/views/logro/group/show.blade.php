@@ -10,11 +10,13 @@
 
 @section('js_vendor')
     <script src="/js/cs/responsivetab.js"></script>
+    <script src="/js/vendor/progressbar.min.js"></script>
     <script src="/js/vendor/select2.full.min.js"></script>
 @endsection
 
 @section('js_page')
     <script src="/js/forms/select2.js"></script>
+    <script src="/js/plugins/progressbars.js"></script>
     <script>
         jQuery('[modal-period-permit]').click(function() {
             let subjectId = $(this).data('subject-id');
@@ -529,12 +531,25 @@
                                 <!-- Summary Tab Start -->
                                 <div class="tab-pane fade" id="summaryTab" role="tabpanel">
 
-                                    <div class="row g-3 row-cols-12 mb-5">
-                                        <div class="col small-gutter-col">
+                                    <div class="row g-2">
+                                        <div class="col-12 mb-5">
                                             <div class="card">
-                                                <div class="card-body text-center">
-                                                    <h4 class="logro-label">{{ __('grade point average') }}</h4>
-                                                    <span class="display-1 text-primary">{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTimeSelectAll, $avgGrade) }}</span>
+                                                <div class="h-100 d-flex flex-column justify-content-between card-body align-items-center">
+                                                    <div class="sw-13">
+                                                        <div
+                                                                logro="progress"
+                                                                role="progressbar"
+                                                                class="progress-bar-circle position-relative text-muted text-sm"
+                                                                data-trail-color=""
+                                                                aria-valuemax="{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTimeSelectAll, $group->studyTimeSelectAll->maximum_grade) }}"
+                                                                aria-valuenow="{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTimeSelectAll, $avgGrade) }}"
+                                                                data-hide-all-text="false"
+                                                                data-stroke-width="3"
+                                                                data-trail-width="1"
+                                                                data-duration="0"
+                                                        ></div>
+                                                    </div>
+                                                    <div class="heading text-center mb-0 sh-8 d-flex align-items-center lh-1-25">{{ __('Grade point average') }}</div>
                                                 </div>
                                             </div>
                                         </div>
