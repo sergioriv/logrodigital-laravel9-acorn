@@ -60,6 +60,32 @@
         @endcan
     @endunlessrole
 
+    @can('students.documents.checked')
+        <script>
+            var studentFileDelete = $('.openModalFileDelete');
+            var modalDeleteFile = $('#modalStudentFileDelete');
+
+            var studentReportBookDelete = $('.openModalReportBookDelete');
+            var modalDeleteReportBook = $('#modalStudentReportBookDelete');
+
+            studentFileDelete.click(function () {
+                $('#studentFileDeleteInput').val($(this).data('file-id'));
+                $('#studentFileDeleteName').html($(this).data('file-name'));
+
+                modalDeleteFile.modal('show');
+            });
+
+            studentReportBookDelete.click(function () {
+                $('#studentReportBookDeleteInput').val($(this).data('file-id'));
+                $('#studentReportBookDeleteName').html($(this).data('file-name'));
+
+                modalDeleteReportBook.modal('show');
+            });
+
+
+        </script>
+    @endcan
+
     <!-- PSYCHOSOCIAL -->
     @can('students.psychosocial')
         <script src="/js/plugins/datatable/datatables_boxed.js"></script>
@@ -908,8 +934,10 @@
 
                                 <div class="mb-5">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" @checked($student->isRepeat()) type="checkbox" id="isRepeat" name="isRepeat" value="1" />
-                                        <label class="form-check-label" for="isRepeat">{{ __('Is the student repeating?') }}</label>
+                                        <input class="form-check-input" @checked($student->isRepeat()) type="checkbox"
+                                            id="isRepeat" name="isRepeat" value="1" />
+                                        <label class="form-check-label"
+                                            for="isRepeat">{{ __('Is the student repeating?') }}</label>
                                     </div>
                                 </div>
                             @endunlessrole
@@ -1675,7 +1703,7 @@
                                         class="tooltip-label-end" novalidate>
                                         @csrf
                                         @method('PUT')
-                                    @endcan
+                                @endcan
 
                                     <div class="row g-2 row-cols-3 row-cols-md-5">
                                         @foreach ($studentFileTypes as $studentFile)
@@ -1710,6 +1738,16 @@
                                                                             value="{{ $studentFile->studentFile->id }}"
                                                                             type="checkbox" />
                                                                     </div>
+                                                                @else
+                                                                    <!-- Eliminar Documento -->
+                                                                    <div class="text-center cursor-pointer openModalFileDelete"
+                                                                        title="{{ __('Delete document') }}"
+                                                                        data-file-id="{{ $studentFile->studentFile->id }}"
+                                                                        data-file-name="{{ $studentFile->name }}">
+                                                                        <i data-acorn-icon="bin" data-acorn-size="14"
+                                                                            class="text-danger"></i>
+                                                                    </div>
+
                                                                 @endif
                                                             @endif
                                                         @endcan
@@ -1720,7 +1758,7 @@
                                         @endforeach
                                     </div>
 
-                                    @can('students.documents.checked')
+                                @can('students.documents.checked')
                                         <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
                                             <x-button class="btn-primary" type="submit">{{ __('Save checked documents') }}
                                             </x-button>
@@ -1823,6 +1861,15 @@
                                                                             name="reportbooks_checked[]"
                                                                             value="{{ $resourceSYview->studentReportBook->id }}"
                                                                             type="checkbox" />
+                                                                    </div>
+                                                                @else
+                                                                    <!-- Eliminar Boleín -->
+                                                                    <div class="text-center cursor-pointer openModalReportBookDelete"
+                                                                        title="{{ __('Delete report book') }}"
+                                                                        data-file-id="{{ $resourceSYview->studentReportBook->id }}"
+                                                                        data-file-name="{{ __($resourceSYview->name) }}">
+                                                                        <i data-acorn-icon="bin" data-acorn-size="14"
+                                                                            class="text-danger"></i>
                                                                     </div>
                                                                 @endif
                                                             @endif
@@ -2434,6 +2481,90 @@
             </div>
         </div>
     </div>
+
+    @can('students.documents.checked')
+        <!-- Modal Delete Student File -->
+        <div class="modal fade"
+            id="modalStudentFileDelete"
+            aria-labelledby="modalDeleteStudentFile"
+            data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"
+                            id="modalDeleteStudentFile">
+                            {{ __('Delete document') }}</h5>
+                        <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <form
+                        action="{{ route('students.file.delete', $student) }}"
+                        method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <input type="hidden" value="" id="studentFileDeleteInput" name="studentFileDeleteInput">
+
+                        <div class="modal-body">
+                            Confirma la eliminación del documento <span id="studentFileDeleteName"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"
+                                class="btn btn-outline-primary"
+                                data-bs-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit"
+                                class="btn btn-danger">
+                                {{ __('Confirm deletion') }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Delete Student Report-book -->
+        <div class="modal fade"
+            id="modalStudentReportBookDelete"
+            aria-labelledby="modalDeleteStudentReportBook"
+            data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"
+                            id="modalDeleteStudentReportBook">
+                            {{ __('Delete report book') }}</h5>
+                        <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <form
+                        action="{{ route('students.reportBook.delete', $student) }}"
+                        method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <input type="hidden" value="" id="studentReportBookDeleteInput" name="studentReportBookDeleteInput">
+
+                        <div class="modal-body">
+                            Confirma la eliminación del boletín <span id="studentReportBookDeleteName"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"
+                                class="btn btn-outline-primary"
+                                data-bs-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit"
+                                class="btn btn-danger">
+                                {{ __('Confirm deletion') }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endcan
 
     @unlessrole('STUDENT')
         @can('students.delete')

@@ -150,6 +150,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'studentFileDeleteInput' => 'document to delete',
+        'studentReportBookDeleteInput' => 'report book to delete'
+    ],
 
 ];

@@ -20,7 +20,7 @@ class StudentFileController extends Controller
     function __construct()
     {
         $this->middleware('can:students.documents.edit');
-        $this->middleware('can:students.documents.checked')->only('checked');
+        $this->middleware('can:students.documents.checked')->only('checked', 'delete');
     }
 
     public function update(Student $student, Request $request)
@@ -147,6 +147,21 @@ class StudentFileController extends Controller
         static::tab();
         Notify::success(__('Files updated!'));
         return redirect()->back();
+    }
+
+    public function delete(Student $student, Request $request)
+    {
+        $request->validate([
+            'studentFileDeleteInput' => ['required', Rule::exists('student_files', 'id')->where('student_id', $student->id)]
+        ]);
+
+        $file = StudentFile::find($request->studentFileDeleteInput);
+
+        $this->delete_studentFile($file);
+
+        Notify::success(__('document deleted!'));
+        $this->tab();
+        return back();
     }
 
     private function delete_studentFile($file)

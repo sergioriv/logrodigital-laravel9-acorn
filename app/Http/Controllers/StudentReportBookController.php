@@ -98,6 +98,21 @@ class StudentReportBookController extends Controller
         return redirect()->back();
     }
 
+    public function delete(Student $student, Request $request)
+    {
+        $request->validate([
+            'studentReportBookDeleteInput' => ['required', Rule::exists('student_report_books', 'id')->where('student_id', $student->id)]
+        ]);
+
+        $file = StudentReportBook::find($request->studentReportBookDeleteInput);
+
+        $this->delete_reportBook($file);
+
+        Notify::success(__('report book deleted!'));
+        $this->tab();
+        return back();
+    }
+
     private function delete_reportBook($book)
     {
         File::delete(public_path($book->url_absolute));

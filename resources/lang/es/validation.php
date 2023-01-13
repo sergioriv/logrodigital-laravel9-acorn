@@ -255,7 +255,10 @@ return [
         'descriptive_name' => 'nombre descriptivo',
         'public_name' => 'nombre público',
         'specialty' => 'de especialidad',
-        'area_specialty' => 'área de especialidad'
+        'area_specialty' => 'área de especialidad',
+
+        'studentFileDeleteInput' => 'documento a eliminar',
+        'studentReportBookDeleteInput' => 'boletín a eliminar'
     ],
 
 ];

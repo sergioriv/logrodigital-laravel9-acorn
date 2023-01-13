@@ -266,10 +266,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('students.file');
     Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('students.file.checked');
+    Route::delete('student/{student}/files', [StudentFileController::class, 'delete'])->name('students.file.delete');
 
 
     Route::put('students/{student}/report-book', [StudentReportBookController::class, 'update'])->name('students.reportBook');
     Route::put('students/{student}/report-book/checked', [StudentReportBookController::class, 'checked'])->name('students.reportBooks.checked');
+    Route::delete('student/{student}/report-book', [StudentReportBookController::class, 'delete'])->name('students.reportBook.delete');
 
 
 
