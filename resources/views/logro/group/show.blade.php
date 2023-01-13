@@ -139,6 +139,10 @@
                                             aria-selected="true">{{ __('Remarks') }}</a>
                                     </li>
                                 @endhasrole
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link text-capitalize" data-bs-toggle="tab" href="#summaryTab" role="tab"
+                                        aria-selected="true">{{ __('summary') }}</a>
+                                </li>
                             </ul>
                             <!-- Title Tabs End -->
 
@@ -297,16 +301,16 @@
                                                         <h2 class="small-title">{{ $area->name }}</h2>
                                                         <table class="table table-striped mb-0">
                                                             <tbody>
+
                                                                 @foreach ($area->subjects as $subject)
-                                                                    @php $TSG = \App\Http\Controllers\TeacherSubjectGroupController::forSubject($Y->id, $group->id, $subject->id) @endphp
                                                                     <tr>
                                                                         <td scope="row">
                                                                             {!! $subject->resourceSubject->nameSpecialty() !!}
                                                                         </td>
                                                                         <td>
-                                                                            @if ($TSG)
-                                                                                {{ $TSG->teacher->getFullName() ?? null }}
-                                                                            @endif
+                                                                            @unless (is_null($subject->teacherSubject))
+                                                                                {{ $subject->teacherSubject->teacher->getFullName() ?? null }}
+                                                                            @endunless
                                                                         </td>
                                                                         <td class="col-1 text-center">
                                                                             {{ $subject->academicWorkload->hours_week }}
@@ -334,7 +338,7 @@
                                                                                     <div class="dropdown-menu dropdown-menu-end">
                                                                                         <x-dropdown-item type="button"
                                                                                             modal-period-permit
-                                                                                            data-subject-id="{{ $TSG->id ?? null }}">
+                                                                                            data-subject-id="{{ $subject->teacherSubject->id ?? null }}">
                                                                                             <span>{{ __('Activate note upload') }}</span>
                                                                                         </x-dropdown-item>
                                                                                     </div>
@@ -344,6 +348,7 @@
                                                                         @endhasrole
                                                                     </tr>
                                                                 @endforeach
+
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -354,6 +359,7 @@
                                     </div>
                                     <!-- Subjects & Teachers Tab End -->
                                 @endcan
+
 
                                 @hasrole('TEACHER')
                                     <!-- Periods Tab Start -->
@@ -519,6 +525,23 @@
                                     </div>
                                     <!-- Periods Tab End -->
                                 @endhasrole
+
+                                <!-- Summary Tab Start -->
+                                <div class="tab-pane fade" id="summaryTab" role="tabpanel">
+
+                                    <div class="row g-3 row-cols-12 mb-5">
+                                        <div class="col small-gutter-col">
+                                            <div class="card">
+                                                <div class="card-body text-center">
+                                                    <h4 class="logro-label">{{ __('grade point average') }}</h4>
+                                                    <span class="display-1 text-primary">{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTimeSelectAll, $avgGrade) }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- Summary Tab End -->
 
                             </div>
                         </div>

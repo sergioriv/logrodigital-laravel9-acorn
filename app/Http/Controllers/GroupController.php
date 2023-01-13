@@ -10,6 +10,7 @@ use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\AcademicWorkload;
 use App\Models\Data\RoleUser;
+use App\Models\Grade;
 use App\Models\Group;
 use App\Models\GroupStudent;
 use App\Models\Headquarters;
@@ -222,7 +223,19 @@ class GroupController extends Controller
                 ->with('groupOfSpecialty')
                 ->get();
 
-        $areas = $this->subjects_teacher($Y->id, $group);
+        $areas = $this->subjects_teacher($Y, $group);
+
+
+        /* Para obtener el promedio de las notas generales del grupo */
+        $teacherSubject = [];
+        foreach ($areas as $area) {
+            foreach ($area->subjects as $subject) {
+                if (!is_null($subject->teacherSubject))
+                    array_push($teacherSubject, $subject->teacherSubject->id);
+            }
+        }
+        $avgGrade = Grade::whereIn('teacher_subject_group_id', $teacherSubject)->avg('final');
+
 
         $periods = NULL;
         if ($roleAuth === RoleUser::COORDINATION_ROL
@@ -243,7 +256,8 @@ class GroupController extends Controller
             'count_studentsMatriculateInStudyYear' => $this->countStudentMatriculateInStudyYear($Y, $group),
             'studentsGroup' => $studentsGroup,
             'areas' => $areas,
-            'periods' => $periods
+            'periods' => $periods,
+            'avgGrade' => $avgGrade
         ]);
     }
 
@@ -425,7 +439,7 @@ class GroupController extends Controller
 
         $teachers = Teacher::where('active', TRUE)->get();
 
-        $areas = $this->subjects_teacher($Y->id, $group);
+        $areas = $this->subjects_teacher($Y, $group);
 
         return view('logro.group.teachers_edit')->with([
             'Y' => $Y,
@@ -473,9 +487,30 @@ class GroupController extends Controller
         return redirect()->route('group.show', $group);
     }
 
-    private function subjects_teacher($Y_id, $group)
+    private function subjects_teacher($Y, $group)
     {
-        $sy_id = $group->study_year_id;
+        $fn_sy = fn ($sy) =>
+        $sy->where('school_year_id', $Y->id)
+            ->where('study_year_id', $group->study_year_id);
+
+        $fn_tsg = fn ($tsg) =>
+        $tsg->where('school_year_id', $Y->id)
+            ->where('group_id', $group->id)
+            ->with('teacher');
+
+        $fn_sb = fn ($s) =>
+        $s->where('school_year_id', $Y->id)
+            ->withWhereHas('academicWorkload', $fn_sy)
+            ->with('resourceSubject')
+            ->with(['teacherSubject' => $fn_tsg]);
+
+
+
+        /* ******************************* */
+
+
+
+        /* $sy_id = $group->study_year_id;
 
         $fn_sy = fn ($sy) =>
         $sy->where('school_year_id', $Y_id)
@@ -484,12 +519,13 @@ class GroupController extends Controller
         $fn_sb = fn ($s) =>
         $s->where('school_year_id', $Y_id)
             ->whereHas('academicWorkload', $fn_sy)
-            ->with(['academicWorkload' => $fn_sy]);
+            ->with(['academicWorkload' => $fn_sy]); */
 
         if (is_null($group->specialty)) {
 
-            return ResourceArea::whereNull('specialty')->with(['subjects' => $fn_sb])
-                ->whereHas('subjects', $fn_sb)
+            return ResourceArea::whereNull('specialty')
+                // ->with(['subjects' => $fn_sb])
+                ->withWhereHas('subjects', $fn_sb)
                 ->orderBy('name')->get();
 
         } else {
@@ -498,8 +534,9 @@ class GroupController extends Controller
                 return ResourceArea::whereNull('id')->get();
             }
 
-            return ResourceArea::where('id', $group->specialty_area_id)->with(['subjects' => $fn_sb])
-                ->whereHas('subjects', $fn_sb)
+            return ResourceArea::where('id', $group->specialty_area_id)
+                // ->with(['subjects' => $fn_sb])
+                ->withWhereHas('subjects', $fn_sb)
                 ->orderBy('name')->get();
 
         }
