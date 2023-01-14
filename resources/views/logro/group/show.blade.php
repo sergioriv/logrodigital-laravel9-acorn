@@ -110,14 +110,14 @@
                                             <span>{{ __('Information general from student list') }}</span>
                                         </a>
                                         @hasrole('SUPPORT')
-                                        @unless ($periods->isEmpty())
+                                        @if (!$group->specialty && !$periods->isEmpty())
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
                                             id="openModelGenerateGradeReport"
                                             data-bs-toggle="modal" data-bs-target="#generateGradeReport">
                                             <i data-acorn-icon="file-text"></i>
                                             <span>{{ __('Grade report') }}</span>
                                         </a>
-                                        @endunless
+                                        @endif
                                         @endhasrole
                                     </div>
                                 </div>
@@ -632,7 +632,7 @@
     @endhasrole
 
     @hasrole('SUPPORT')
-    @unless ($periods->isEmpty())
+    @if (!$group->specialty && !$periods->isEmpty())
         <!-- Modal Delete Group -->
         <div class="modal fade" id="generateGradeReport"
             aria-labelledby="modalGenerateGradeReport" data-bs-backdrop="static"
@@ -673,6 +673,6 @@
                 </div>
             </div>
         </div>
-    @endunless
+    @endif
     @endhasrole
 @endsection
