@@ -233,6 +233,11 @@ class GradeController extends Controller
         $areasWithSubjects = $this->teacher_subject($Y, $group);
         $this->countAreas = $areasWithSubjects->count();
 
+        if (!$this->countAreas) {
+            Notify::fail(__('An error has occurred'));
+            return back();
+        }
+
 
         $teacherSubjects = [];
         foreach ($areasWithSubjects as $area) {
