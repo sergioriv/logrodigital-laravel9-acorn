@@ -32,16 +32,22 @@ class ZipController extends Controller
 
                 $files = File::files(public_path($path));
 
-                foreach ($files as $file) {
+                if (count($files)) {
 
-                    if (!$file->isDir())
-                    $zip->addFile($file, basename($file));
+                    foreach ($files as $file) {
+
+                        if (!$file->isDir())
+                        $zip->addFile($file, basename($file));
+                    }
+
+                    $zip->close();
+
                 }
-
-                $zip->close();
-
                 File::deleteDirectory(public_path($path));
-                return response()->download($pathZip)->deleteFileAfterSend();
+
+                if (count($files))
+                    return response()->download($pathZip)->deleteFileAfterSend();
+
             }
         }
 
