@@ -258,7 +258,8 @@ return [
         'area_specialty' => 'área de especialidad',
 
         'studentFileDeleteInput' => 'documento a eliminar',
-        'studentReportBookDeleteInput' => 'boletín a eliminar'
+        'studentReportBookDeleteInput' => 'boletín a eliminar',
+        'periodGradeReport' => 'Periodo'
     ],
 
 ];

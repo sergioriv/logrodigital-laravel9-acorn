@@ -210,18 +210,24 @@ class GradeController extends Controller
 
 
 
-    /* REPORT OF NOTES */
-    public function reportForPeriod(Request $request, Group $group)
+    /*
+     *
+     *
+     *  REPORT OF NOTES
+     *
+     *
+     * */
+    public function reportForGroup(Request $request, Group $group)
     {
         $Y = SchoolYearController::current_year();
 
         $SCHOOL = SchoolController::myschool()->getData();
 
         $request->validate([
-            'period' => ['required', Rule::exists('periods', 'id')->where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)]
+            'periodGradeReport' => ['required', Rule::exists('periods', 'id')->where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)]
         ]);
 
-        $currentPeriod = Period::find($request->period);
+        $currentPeriod = Period::find($request->periodGradeReport);
 
         /* Obtiene las areas y asignaturas del grupo que corresponde */
         $areasWithSubjects = $this->teacher_subject($Y, $group);
@@ -255,7 +261,8 @@ class GradeController extends Controller
 
 
         /* Dirección para guardar los reportes generados */
-        $pathReport = "app/reports/". Str::uuid() ."/";
+        $pathUuid = Str::uuid();
+        $pathReport = "app/reports/". $pathUuid ."/";
 
         if (!File::isDirectory(public_path($pathReport))) {
             File::makeDirectory(public_path($pathReport), 0755, true, true);
@@ -276,7 +283,9 @@ class GradeController extends Controller
             );
         }
 
-        return view('logro.empty');
+
+        /* Generate Zip and Download */
+        return (new ZipController($pathUuid, $group->name))->downloadGradesGroup();
 
     }
 

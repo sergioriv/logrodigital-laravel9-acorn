@@ -26,6 +26,10 @@
                 $('#addPeriodPermit').modal('show');
             }
         });
+
+        jQuery('#openModelGenerateGradeReport').click(function () {
+            $('button#btn-generateGradeReport').prop('disabled', false);
+        });
     </script>
 @endsection
 
@@ -105,6 +109,16 @@
                                             <i data-acorn-icon="download"></i>
                                             <span>{{ __('Information general from student list') }}</span>
                                         </a>
+                                        @hasrole('SUPPORT')
+                                        @unless ($periods->isEmpty())
+                                        <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
+                                            id="openModelGenerateGradeReport"
+                                            data-bs-toggle="modal" data-bs-target="#generateGradeReport">
+                                            <i data-acorn-icon="file-text"></i>
+                                            <span>{{ __('Grade report') }}</span>
+                                        </a>
+                                        @endunless
+                                        @endhasrole
                                     </div>
                                 </div>
                                 <!-- Dropdown Button End -->
@@ -615,5 +629,50 @@
                 </div>
             </div>
         </div>
+    @endhasrole
+
+    @hasrole('SUPPORT')
+    @unless ($periods->isEmpty())
+        <!-- Modal Delete Group -->
+        <div class="modal fade" id="generateGradeReport"
+            aria-labelledby="modalGenerateGradeReport" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalGenerateGradeReport">
+                            {{ __('Generate grade report') }}</h5>
+                        <button type="button" class="btn-close"
+                            data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('group.reportGrade', $group) }}"
+                        method="POST">
+                        @csrf
+
+                        <div class="modal-body">
+
+                            <div class="form-group">
+                                <x-label>{{ __('select period') }}</x-label>
+                                <select logro='select2' name="periodGradeReport">
+                                    <option label="&nbsp;"></option>
+                                    @foreach ($periods as $period)
+                                        <option value="{{ $period->id }}">
+                                            {{ $period->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger"
+                                data-bs-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" id="btn-generateGradeReport" class="btn btn-primary">{{ __('Generate') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endunless
     @endhasrole
 @endsection

@@ -237,17 +237,19 @@ class GroupController extends Controller
         $avgGrade = Grade::whereIn('teacher_subject_group_id', $teacherSubject)->avg('final');
 
 
-        $periods = NULL;
+        /* $periods = NULL;
         if ($roleAuth === RoleUser::COORDINATION_ROL
-            || $roleAuth === RoleUser::TEACHER_ROL) {
+            || $roleAuth === RoleUser::TEACHER_ROL) { */
             $periods = Period::where('school_year_id', $Y->id)
                 ->where('study_time_id', $group->study_time_id)
                 ->when(RoleUser::TEACHER_ROL === $roleAuth, function ($query){
-                    return $query->with('remarks');
+                    return $query->with('remarks')->where('start', '>=', today()->format('Y-m-d'));
+                }, function ($query) {
+                    return $query->where('end', '<=', today()->format('Y-m-d'));
                 })
                 ->orderBy('ordering')->get();
-        }
-        // return $periods;
+        // }
+
 
         return view('logro.group.show')->with([
             'Y' => $Y,

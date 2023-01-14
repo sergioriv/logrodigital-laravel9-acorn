@@ -191,6 +191,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('groups/{group}/transfer-students', [TransferController::class, 'groupStudents_selection'])->name('group.transfer-students.select-students');
     Route::post('groups/{group}/transfer-students', [TransferController::class, 'groupStudents_hss'])->name('group.transfer-students.hss');
     Route::post('groups/transfer-sel-group', [TransferController::class, 'selectionGroup'])->name('group.transfer-students.selGroup');
+    Route::post('groups/{group}/grade-report', [GradeController::class, 'reportForGroup'])->name('group.reportGrade');
 
 
     /* Remarks */

@@ -152,7 +152,8 @@ return [
 
     'attributes' => [
         'studentFileDeleteInput' => 'document to delete',
-        'studentReportBookDeleteInput' => 'report book to delete'
+        'studentReportBookDeleteInput' => 'report book to delete',
+        'periodGradeReport' => 'Period'
     ],
 
 ];
