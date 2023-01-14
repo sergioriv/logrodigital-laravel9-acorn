@@ -471,7 +471,7 @@
 
         <div class="text-center bold table-title">
             PROMEDIO GENERAL:
-            {{ \App\Http\Controllers\GradeController::numberFormat($studyTime, $overallAvg / count($areas)) }}
+            {{ \App\Http\Controllers\GradeController::numberFormat($studyTime, $overallAvg / count($areas)) ?? null }}
         </div>
     </section>
 
