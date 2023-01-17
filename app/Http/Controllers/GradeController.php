@@ -223,11 +223,18 @@ class GradeController extends Controller
 
         $SCHOOL = SchoolController::myschool()->getData();
 
-        $request->validate([
-            'periodGradeReport' => ['required', Rule::exists('periods', 'id')->where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)]
-        ]);
+        if ($request->has('periodGradeReport') && $request->periodGradeReport !== 'FINAL') {
+            $request->validate([
+                'periodGradeReport' => ['required', Rule::exists('periods', 'id')->where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)]
+            ]);
 
-        $currentPeriod = Period::find($request->periodGradeReport);
+
+            $currentPeriod = Period::find($request->periodGradeReport);
+        } else {
+            $currentPeriod = 'FINAL';
+        }
+
+
 
         /* Obtiene las areas y asignaturas del grupo que corresponde */
         $areasWithSubjects = $this->teacher_subject($Y, $group);
@@ -252,9 +259,11 @@ class GradeController extends Controller
 
 
         /* Extraer los periodos del StudyTime del grupo */
-        $periods = Period::where('ordering', '<=', $currentPeriod->ordering)
-            ->where('school_year_id', $group->school_year_id)
+        $periods = Period::where('school_year_id', $group->school_year_id)
             ->where('study_time_id', $group->study_time_id)
+            ->when($currentPeriod !== 'FINAL', function ($query) use ($currentPeriod) {
+                return $query->where('ordering', '<=', $currentPeriod->ordering);
+            })
             ->orderBy('ordering')->get();
 
 
@@ -298,7 +307,11 @@ class GradeController extends Controller
     {
 
         /* Nombre para el reporte de notas, en caso de ser el reporte final, dirá Final */
-        $titleReportNotes = 'P' . $currentPeriod->ordering . ' - ' . $Y->name;
+        $titleReportNotes = $currentPeriod !== 'FINAL'
+            ? 'P' . $currentPeriod->ordering . ' - ' . $Y->name
+            : $currentPeriod . ' - ' . $Y->name;
+
+
 
         /* Si el estudiante pertenece a un grupo de especialidad */
 
@@ -333,17 +346,24 @@ class GradeController extends Controller
             ->whereIn('period_id', $periods->pluck('id'))
             ->get();
 
+        if ($currentPeriod !== 'FINAL') {
 
-        $remark = Remark::where('group_id', $group->id)->where('period_id', $currentPeriod->id)->where('student_id', $student->id)->first()->remark ?? null;
+            $remark = Remark::where('group_id', $group->id)->where('period_id', $currentPeriod->id)->where('student_id', $student->id)->first()->remark ?? null;
 
-
-
-        $descriptors = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
+            $descriptors = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
                 ->withWhereHas('descriptorsStudent',
                     fn ($descriptor) => $descriptor->where('student_id', $student->id)->with('descriptor')
                 )
                 ->with(['subject' => fn ($sj) => $sj->with('resourceSubject')])
                 ->get();
+        }
+        else {
+            $remark = NULL;
+            $descriptors = NULL;
+        }
+
+
+
 
 
 
@@ -408,10 +428,18 @@ class GradeController extends Controller
         $areaNotes = [];
         $subjectNotes = [];
 
+        //final
+        $total = 0;
+        $totalSubject = [];
+
         $i = 1;
         foreach ($area->subjects as $subject) {
 
             $j = 1;
+
+            //final
+            $totalSubject[$subject->id] = 0;
+
             foreach ($periods as $period) {
 
                 $note = $grades->filter(function ($g) use ($subject, $period) {
@@ -420,12 +448,18 @@ class GradeController extends Controller
                             && $g->period_id == $period->id;
                 })->first()->final ?? 0;
 
-                if (!is_null($subject->academicWorkload))
-                    $subjectNotes[$i][$j] = $note * ($subject->academicWorkload->course_load / 100);
-                else $subjectNotes[$i][$j] = 0;
+                $notePeriod = $note * ($subject->academicWorkload->course_load / 100);
+                $subjectNotes[$i][$j] = $notePeriod;
+
+                // final
+                $total += $notePeriod * ($period->workload / 100);
+                $totalSubject[$subject->id] += $note * ($period->workload / 100);
 
                 $j++;
             }
+
+            //final
+            $totalSubject[$subject->id] = static::numberFormat($studyTime, $totalSubject[$subject->id]);
 
             $i++;
         }
@@ -435,16 +469,15 @@ class GradeController extends Controller
             for ($y = 1; $y <= count($area->subjects); $y++) {
                 $suma += $subjectNotes[$y][$x];
             }
-
-            /* Verifica decimales y PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
-            // $suma = number_format( round($suma, $studyTime->decimal, static::round($studyTime->round)), $studyTime->decimal );
-
             $areaNotes[$x] = static::numberFormat($studyTime, $suma);
         }
 
         $overallAvg = static::numberFormat($studyTime, (array_sum($areaNotes) / count($periods)));
 
-        return ['overallAvg' => $overallAvg, 'area' => $areaNotes];
+        //final
+        $total = static::numberFormat($studyTime, $total);
+
+        return ['overallAvg' => $overallAvg, 'area' => $areaNotes, 'total' => $total, 'totalSubject' => $totalSubject];
     }
 
     public static function numberFormat($studyTime, $value)

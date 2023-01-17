@@ -660,6 +660,11 @@
                                             {{ $period->name }}
                                         </option>
                                     @endforeach
+
+                                    {{-- Para generar el reporte final --}}
+                                    @if ($periods->count() === $countPeriods)
+                                    <option value="FINAL">FINAL</option>
+                                    @endif
                                 </select>
                             </div>
 

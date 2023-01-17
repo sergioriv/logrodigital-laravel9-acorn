@@ -237,18 +237,15 @@ class GroupController extends Controller
         $avgGrade = Grade::whereIn('teacher_subject_group_id', $teacherSubject)->avg('final');
 
 
-        /* $periods = NULL;
-        if ($roleAuth === RoleUser::COORDINATION_ROL
-            || $roleAuth === RoleUser::TEACHER_ROL) { */
-            $periods = Period::where('school_year_id', $Y->id)
-                ->where('study_time_id', $group->study_time_id)
-                ->when(RoleUser::TEACHER_ROL === $roleAuth, function ($query){
-                    return $query->with('remarks')->where('start', '>=', today()->format('Y-m-d'));
-                }, function ($query) {
-                    return $query->where('end', '<=', today()->format('Y-m-d'));
-                })
-                ->orderBy('ordering')->get();
-        // }
+        $countPeriods = Period::where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)->count();
+        $periods = Period::where('school_year_id', $Y->id)
+            ->where('study_time_id', $group->study_time_id)
+            ->when(RoleUser::TEACHER_ROL === $roleAuth, function ($query){
+                return $query->with('remarks')->where('start', '>=', today()->format('Y-m-d'));
+            }, function ($query) {
+                return $query->where('end', '<=', today()->format('Y-m-d'));
+            })
+            ->orderBy('ordering')->get();
 
 
         return view('logro.group.show')->with([
@@ -258,6 +255,7 @@ class GroupController extends Controller
             'count_studentsMatriculateInStudyYear' => $this->countStudentMatriculateInStudyYear($Y, $group),
             'studentsGroup' => $studentsGroup,
             'areas' => $areas,
+            'countPeriods' => $countPeriods,
             'periods' => $periods,
             'avgGrade' => $avgGrade
         ]);

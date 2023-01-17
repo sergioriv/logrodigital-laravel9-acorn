@@ -365,7 +365,7 @@
                     @endif
                     <th>
                         <div class="table-title">DESEMPEÑO
-                            {{ $currentPeriod === 'FINAL' ?: 'P' . $currentPeriod->ordering }}</div>
+                            {{ $currentPeriod !== 'FINAL' ? 'P' . $currentPeriod->ordering : 'FINAL' }}</div>
                     </th>
                 </tr>
             </thead>
@@ -375,6 +375,9 @@
                     @foreach ($periods as $period)
                         <td class="f-size-5">{{ "{$period->workload}%" }}</td>
                     @endforeach
+                    @if ('FINAL' === $currentPeriod)
+                        <td class="f-size-5">&nbsp;</td>
+                    @endif
                 </tr>
                 <tr>
                     <td class="h-5p"></td>
@@ -396,19 +399,18 @@
                         @foreach ($periods as $period)
                             <td class="text-center" style="width: 20px">{{ $areaNotes['area'][$period->ordering] }}
                             </td>
-                            @if ($loop->last)
+                            @if ($loop->last && $currentPeriod !== 'FINAL')
                                 @php $lastAreaGrade = $areaNotes['area'][$period->ordering] @endphp
                             @endif
                         @endforeach
                         @if ('FINAL' === $currentPeriod)
-                            <td class="text-center">FINAL</td>
+                            @php $lastAreaGrade = $areaNotes['total'] @endphp
+                            <td class="text-center">{{ $areaNotes['total'] }}</td>
                         @endif
                         <td class="text-center text-capitalize">
-                            @unless('FINAL' === $currentPeriod)
-                                @if ($lastAreaGrade)
-                                    {{ \App\Http\Controllers\GradeController::performanceString($studyTime, $lastAreaGrade) }}
-                                @endif
-                            @endunless
+                            @if ($lastAreaGrade)
+                                {{ \App\Http\Controllers\GradeController::performanceString($studyTime, $lastAreaGrade) }}
+                            @endif
                         </td>
                     </tr>
 
@@ -442,7 +444,7 @@
                                             ->first()->final ?? $studyTime->minimum_grade;
                                 @endphp
 
-                                @if ($loop->last)
+                                @if ($loop->last && $currentPeriod !== 'FINAL')
                                     @php $lastPeriodGrade = $gradePeriod @endphp
                                 @endif
 
@@ -452,13 +454,14 @@
                             @endforeach
 
                             @if ('FINAL' === $currentPeriod)
-                                <td class="f-size-6 text-center">FINAL</td>
+                            @php $lastPeriodGrade = $areaNotes['totalSubject'][$subject->id] @endphp
+                                <td class="f-size-6 text-center">{{ $areaNotes['totalSubject'][$subject->id] }}</td>
                             @endif
 
                             <td class="f-size-6 text-center text-capitalize">
-                                @unless('FINAL' === $currentPeriod)
+                                {{-- @unless('FINAL' === $currentPeriod) --}}
                                     {{ \App\Http\Controllers\GradeController::performanceString($studyTime, $lastPeriodGrade) }}
-                                @endunless
+                                {{-- @endunless --}}
                             </td>
                         </tr>
                     @endforeach
@@ -475,10 +478,12 @@
         </div>
     </section>
 
+    @if ('FINAL' !== $currentPeriod)
     <section class="mt-1 p-1 card f-size-6">
             <b class="f-size-6">OBSERVACIONES:</b>
             {{ $remark }}
     </section>
+    @endif
 
     <section class="p-1 card mt-1">
         <div class="f-size-5">
@@ -497,7 +502,7 @@
 
 
     <!-- Descriptors Section Start -->
-    @unless ($descriptors->isEmpty())
+    @unless (is_null($descriptors))
 
         <!-- New Page -->
         <div class="page-break"></div>
