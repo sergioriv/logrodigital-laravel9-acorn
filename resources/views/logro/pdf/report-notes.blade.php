@@ -502,7 +502,8 @@
 
 
     <!-- Descriptors Section Start -->
-    @unless (is_null($descriptors))
+    @if ('FINAL' !== $currentPeriod)
+    @if (!$descriptors->isEmpty())
 
         <!-- New Page -->
         <div class="page-break"></div>
@@ -521,7 +522,8 @@
             @endforeach
         </section>
 
-    @endunless
+    @endif
+    @endif
     <!-- Descriptors Section End -->
 
 </body>

@@ -364,9 +364,6 @@ class GradeController extends Controller
 
 
 
-
-
-
         $pdf = Pdf::loadView('logro.pdf.report-notes', [
             'SCHOOL' => $SCHOOL,
             'date' => now()->format('d/m/Y'),
