@@ -4,6 +4,7 @@
 @extends('layout', ['title' => $title])
 
 @section('css')
+    <link rel="stylesheet" href="/css/vendor/datatables.min.css" />
     <link rel="stylesheet" href="/css/vendor/select2.min.css" />
     <link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" />
     <link rel="stylesheet" href="/css/vendor/bootstrap-datepicker3.standalone.min.css" />
@@ -13,6 +14,7 @@
     <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
     <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
     <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
+    <script src="/js/vendor/datatables.min.js"></script>
     <script src="/js/vendor/select2.full.min.js"></script>
     <script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
     <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
@@ -20,8 +22,10 @@
 @endsection
 
 @section('js_page')
-    <script src="/js/forms/genericforms.js"></script>
+    <script src="/js/forms/teacher-edit.js?d=1673974275586"></script>
     <script src="/js/forms/select2.js"></script>
+    <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
+    <script src="/js/plugins/datatable/datatables_boxed.js?d=1670967386206"></script>
     <script>
         IMask(document.querySelector('[name="document"]'), {
             mask: Number,
@@ -37,247 +41,619 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
-            <div class="col">
-                <!-- Title and Top Buttons Start -->
-                <section class="page-title-container">
-                    <div class="row">
-                        <!-- Title Start -->
-                        <div class="col-12 col-md-7 mb-2 mb-md-0">
-                            <h1 class="mb-1 pb-0 display-4" id="title">{{ $title }}</h1>
+
+        <!-- Title and Top Buttons Start -->
+        <section class="page-title-container">
+            <div class="row">
+                <!-- Title Start -->
+                <div class="col-12 col-md-7 mb-2 mb-md-0">
+                    <h1 class="mb-1 pb-0 display-4" id="title">{{ $title }}</h1>
+                </div>
+                <!-- Title End -->
+
+                <!-- Top Buttons Start -->
+                <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+
+                    <!-- Add New Button Start -->
+                    <a href="{{ route('profile.auth.avatar.edit') }}"
+                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                        <i data-acorn-icon="edit-square"></i>
+                        <span>{{ __('Edit avatar') }}</span>
+                    </a>
+                    <!-- Add New Button End -->
+
+                </div>
+                <!-- Top Buttons End -->
+            </div>
+        </section>
+        <!-- Title and Top Buttons End -->
+
+        <section class="row">
+            <!-- Left Side Start -->
+            <div class="col-12 col-xl-3">
+
+                <!-- Biography Start -->
+                <h2 class="small-title">{{ __('Profile') }}</h2>
+                <div class="card mb-5">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center flex-column">
+                            <div class="mb-5 d-flex align-items-center flex-column">
+
+                                <!-- Avatar Form Start -->
+                                <x-avatar-profile :avatar="$teacher->user->avatar" class="mb-3" />
+                                <!-- Avatar Form End -->
+
+                                <div class="h5">{{ $teacher->getFullName() }}</div>
+                                <div class="text-muted">{{ __($teacher->type_appointment) }}</div>
+                                <div class="text-muted">{{ __($teacher->type_admin_act) }}</div>
+                            </div>
                         </div>
-                        <!-- Title End -->
 
-                        <!-- Top Buttons Start -->
-                        <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                        <div class="nav flex-column mb-5" role="tablist">
 
-                            <!-- Add New Button Start -->
-                            <a href="{{ route('profile.auth.avatar.edit') }}"
-                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
-                                <i data-acorn-icon="edit-square"></i>
-                                <span>{{ __('Edit avatar') }}</span>
+                            <a class="nav-link @empty(session('tab')) active @endempty logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#infoTab" role="tab">
+                                <span class="align-middle">{{ __('Information') }}</span>
                             </a>
-                            <!-- Add New Button End -->
-
+                            <a class="nav-link @if (session('tab') === 'hierarchies') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#hierarchyTab" role="tab">
+                                <span class="align-middle">{{ __('Hierarchies') }}</span>
+                            </a>
+                            <a class="nav-link @if (session('tab') === 'degrees') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#degreeTab" role="tab">
+                                <span class="align-middle">{{ __('Degrees') }}</span>
+                            </a>
+                            <a class="nav-link @if (session('tab') === 'employments') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#employmentsTab" role="tab">
+                                <span class="align-middle">{{ __('Employment history') }}</span>
+                            </a>
 
                         </div>
-                        <!-- Top Buttons End -->
+
+                        <div class="mb-5">
+                            <p class="text-small text-uppercase text-muted mb-2">{{ __('contact') }}</p>
+                            @if ($teacher->telephone)
+                                <div class="d-block mb-1">
+                                    <i data-acorn-icon="phone" class="me-2" data-acorn-size="17"></i>
+                                    <span class="align-middle">{{ $teacher->telephone }}</span>
+                                </div>
+                            @endif
+                            @if ($teacher->cellphone)
+                                <div class="d-block mb-1">
+                                    <i data-acorn-icon="phone" class="me-2" data-acorn-size="17"></i>
+                                    <span class="align-middle">{{ $teacher->cellphone }}</span>
+                                </div>
+                            @endif
+                            <div class="d-block">
+                                <i data-acorn-icon="email" class="me-2" data-acorn-size="17"></i>
+                                <span class="align-middle">{{ $teacher->institutional_email }}</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column">
+                            <text class="text-muted text-small">{{ __('created at') }}:</text>
+                            <text class="text-muted text-small">{{ $teacher->created_at }}</text>
+                        </div>
+
                     </div>
-                </section>
-                <!-- Title and Top Buttons End -->
+                </div>
+                <!-- Biography End -->
 
-                <!-- Content Start -->
-                <section class="scroll-section">
-                    <form method="post" action="{{ route('user.profile.update') }}" class="tooltip-label-end"
-                        id="teacherProfileForm" novalidate>
-                        @csrf
-                        @method('PUT')
+            </div>
+            <!-- Left Side End -->
 
-                        <div class="card mb-5">
-                            <div class="card-body row g-3">
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('names') }}</x-label>
-                                        <x-input :value="old('names', $teacher)" name="names" required />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('last names') }}</x-label>
-                                        <x-input :value="old('lastNames', $teacher->last_names)" name="lastNames" required />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('document number') }}</x-label>
-                                        <x-input :value="old('document', $teacher)" name="document" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="w-100 position-relative form-group">
-                                        <x-label>{{ __('expedition city') }}</x-label>
-                                        <select name="expedition_city" logro="select2">
-                                            <option label="&nbsp;"></option>
-                                            @foreach ($cities as $city)
-                                                <option value="{{ $city->id }}" @selected(old('expedition_city', $teacher) == $city->id)>
-                                                    {{ $city->department->name . ' | ' . $city->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="w-100 position-relative form-group">
-                                        <x-label>{{ __('birth city') }}</x-label>
-                                        <select name="birth_city" logro="select2">
-                                            <option label="&nbsp;"></option>
-                                            @foreach ($cities as $city)
-                                                <option value="{{ $city->id }}" @selected(old('birth_city', $teacher) == $city->id)>
-                                                    {{ $city->department->name . ' | ' . $city->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('birthdate') }}</x-label>
-                                        <x-input :value="old('birthdate', $teacher)" logro="datePickerBefore" name="birthdate"
-                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="w-100 position-relative form-group">
-                                        <x-label>{{ __('residence city') }}</x-label>
-                                        <select name="residence_city" logro="select2">
-                                            <option label="&nbsp;"></option>
-                                            @foreach ($cities as $city)
-                                                <option value="{{ $city->id }}" @selected(old('residence_city', $teacher) == $city->id)>
-                                                    {{ $city->department->name . ' | ' . $city->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('residence address') }}</x-label>
-                                        <x-input :value="old('address', $teacher)" name="address" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('telephone') }}</x-label>
-                                        <x-input :value="old('telephone', $teacher)" name="telephone" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('cellphone') }}</x-label>
-                                        <x-input :value="old('cellphone', $teacher)" mask="number" name="cellphone" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('institutional email') }}</x-label>
-                                        <x-input :value="old('institutional_email', $teacher)" name="institutional_email" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="w-100 position-relative form-group">
-                                        <x-label>{{ __('marital status') }}</x-label>
-                                        <select name="marital_status" logro="select2">
-                                            <option label="&nbsp;"></option>
-                                            @foreach ($maritalStatus as $marital)
-                                                <option value="{{ $marital }}" @selected(old('marital_status', $teacher) == $marital)>
-                                                    {{ __($marital) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
+            <!-- Right Side Start -->
+            <div class="col-12 col-xl-9 mb-5 tab-content">
 
-                            </div>
-                        </div>
+                <!-- Info Tab Start -->
+                <div class="tab-pane fade @empty(session('tab')) active show @endempty" id="infoTab"
+                    role="tabpanel">
 
-                        <div class="card mb-5">
-                            <div class="card-body row g-3">
-                                <div class="col-md-6">
-                                    <div class="w-100 position-relative form-group">
-                                        <x-label>{{ __('appointment number') }}</x-label>
-                                        <x-input :value="old('appointment_number', $teacher)" name="appointment_number" />
+                    <!-- Info Content Tab Start -->
+                    <h2 class="small-title">{{ __('Information') }}</h2>
+                    <section class="scroll-section mb-5">
+                        <form method="post" action="{{ route('user.profile.update') }}" class="tooltip-label-end"
+                            id="teacherProfileForm" enctype="multipart/form-data" novalidate>
+                            @csrf
+                            @method('PUT')
+
+                            <div class="card mb-5">
+                                <div class="card-body row g-3">
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label required>{{ __('names') }}</x-label>
+                                            <x-input :value="old('names', $teacher)" name="names" required />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('date') }}</x-label>
-                                        <x-input :value="old('date_appointment', $teacher)" logro="datePickerBefore" name="date_appointment"
-                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label required>{{ __('last names') }}</x-label>
+                                            <x-input :value="old('lastNames', $teacher->last_names)" name="lastNames" required />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="w-100 position-relative form-group">
-                                        <x-label>{{ __('possession certificate number') }}</x-label>
-                                        <x-input :value="old('possession_certificate', $teacher)" name="possession_certificate" />
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label required>{{ __('document number') }}</x-label>
+                                            <x-input :value="old('document', $teacher)" name="document" required />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('date') }}</x-label>
-                                        <x-input :value="old('date_possession_certificate', $teacher)" logro="datePickerBefore"
-                                            name="date_possession_certificate" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                    <div class="col-md-6">
+                                        <div class="w-100 position-relative form-group">
+                                            <x-label>{{ __('expedition city') }}</x-label>
+                                            <select name="expedition_city" logro="select2">
+                                                <option label="&nbsp;"></option>
+                                                @foreach ($cities as $city)
+                                                    <option value="{{ $city->id }}" @selected(old('expedition_city', $teacher) == $city->id)>
+                                                        {{ $city->department->name . ' | ' . $city->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="w-100 position-relative form-group">
-                                        <x-label>{{ __('transfer resolution number') }}</x-label>
-                                        <x-input :value="old('transfer_resolution', $teacher)" name="transfer_resolution" />
+                                    <div class="col-md-6">
+                                        <div class="w-100 position-relative form-group">
+                                            <x-label>{{ __('birth city') }}</x-label>
+                                            <select name="birth_city" logro="select2">
+                                                <option label="&nbsp;"></option>
+                                                @foreach ($cities as $city)
+                                                    <option value="{{ $city->id }}" @selected(old('birth_city', $teacher) == $city->id)>
+                                                        {{ $city->department->name . ' | ' . $city->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('date') }}</x-label>
-                                        <x-input :value="old('date_transfer_resolution', $teacher)" logro="datePickerBefore"
-                                            name="date_transfer_resolution" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('birthdate') }}</x-label>
+                                            <x-input :value="old('birthdate', $teacher)" logro="datePickerBefore" name="birthdate"
+                                                data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                        </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="w-100 position-relative form-group">
+                                            <x-label>{{ __('residence city') }}</x-label>
+                                            <select name="residence_city" logro="select2">
+                                                <option label="&nbsp;"></option>
+                                                @foreach ($cities as $city)
+                                                    <option value="{{ $city->id }}" @selected(old('residence_city', $teacher) == $city->id)>
+                                                        {{ $city->department->name . ' | ' . $city->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('residence address') }}</x-label>
+                                            <x-input :value="old('address', $teacher)" name="address" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('telephone') }}</x-label>
+                                            <x-input :value="old('telephone', $teacher)" name="telephone" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('cellphone') }}</x-label>
+                                            <x-input :value="old('cellphone', $teacher)" mask="number" name="cellphone" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label required>{{ __('institutional email') }}</x-label>
+                                            <x-input :value="old('institutional_email', $teacher)" name="institutional_email" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="w-100 position-relative form-group">
+                                            <x-label>{{ __('marital status') }}</x-label>
+                                            <select name="marital_status" logro="select2">
+                                                <option label="&nbsp;"></option>
+                                                @foreach ($maritalStatus as $marital)
+                                                    <option value="{{ $marital }}" @selected(old('marital_status', $teacher) == $marital)>
+                                                        {{ __($marital) }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="card mb-5">
-                            <div class="card-body row g-3">
-                                <div class="col-md-4">
-                                    <div class="w-100 position-relative form-group">
-                                        <x-label>{{ __('hierarchy grade') }}</x-label>
-                                        <x-input :value="old('hierarchy_grade', $teacher)" name="hierarchy_grade" />
+                            <!-- Appointment, possession, transfer Start -->
+                            <div class="card mb-5">
+                                <div class="card-body row g-3">
+                                    <div class="col-md-6">
+                                        <div class="w-100 position-relative form-group">
+                                            <x-label>{{ __('appointment number') }}</x-label>
+                                            <x-input :value="old('appointment_number', $teacher)" name="appointment_number" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('resolution number') }}</x-label>
-                                        <x-input :value="old('resolution_hierarchy', $teacher)" name="resolution_hierarchy" />
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('date') }}</x-label>
+                                            <x-input :value="old('date_appointment', $teacher)" logro="datePickerBefore" name="date_appointment"
+                                                data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('date') }}</x-label>
-                                        <x-input :value="old('date_resolution_hierarchy', $teacher)" logro="datePickerBefore"
-                                            name="date_resolution_hierarchy" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('upload file') }}</x-label>
+                                            <x-input type="file" accept=".pdf" name="file_appointment"
+                                                class="d-block" />
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card mb-5">
-                            <div class="card-body row g-3">
-                                <div class="col-md-4">
-                                    <div class="w-100 position-relative form-group">
-                                        <x-label>{{ __('last diploma earned') }}</x-label>
-                                        <x-input :value="old('last_diploma', $teacher)" name="last_diploma" />
+                                    <div class="col-md-6">
+                                        <div class="w-100 position-relative form-group">
+                                            <x-label>{{ __('possession certificate number') }}</x-label>
+                                            <x-input :value="old('possession_certificate', $teacher)" name="possession_certificate" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('institution') }}</x-label>
-                                        <x-input :value="old('institution_last_diploma', $teacher)" name="institution_last_diploma" />
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('date') }}</x-label>
+                                            <x-input :value="old('date_possession_certificate', $teacher)" logro="datePickerBefore"
+                                                name="date_possession_certificate" data-placeholder="yyyy-mm-dd"
+                                                placeholder="yyyy-mm-dd" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="position-relative form-group">
-                                        <x-label>{{ __('date') }}</x-label>
-                                        <x-input :value="old('date_last_diploma', $teacher)" logro="datePickerBefore" name="date_last_diploma"
-                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('upload file') }}</x-label>
+                                            <x-input type="file" accept=".pdf" name="file_possession_certificate"
+                                                class="d-block" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="w-100 position-relative form-group">
+                                            <x-label>{{ __('transfer resolution number') }}</x-label>
+                                            <x-input :value="old('transfer_resolution', $teacher)" name="transfer_resolution" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('date') }}</x-label>
+                                            <x-input :value="old('date_transfer_resolution', $teacher)" logro="datePickerBefore"
+                                                name="date_transfer_resolution" data-placeholder="yyyy-mm-dd"
+                                                placeholder="yyyy-mm-dd" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('upload file') }}</x-label>
+                                            <x-input type="file" accept=".pdf" name="file_transfer_resolution"
+                                                class="d-block" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <!-- Appointment, possession, transfer End -->
+
+                            <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+
+                        </form>
+                    </section>
+                    <!-- Info Content Tab End -->
+
+                </div>
+
+                <!-- Hierarchy Tab Start -->
+                <div class="tab-pane fade show @if (session('tab') === 'hierarchies') active show @endempty" id="hierarchyTab"
+                    role="tabpanel">
+
+                    <h2 class="small-title">{{ __('Hierarchies') }}</h2>
+                    <section class="scroll-section mb-5">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div id="addHierarchy" class="d-flex justify-content-end">
+                                    <div data-bs-toggle="modal" data-bs-target="#addHierarchyModal"
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                        <i data-acorn-icon="plus"></i>
+                                        <span>{{ __('Add New') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
+                                    data-order='[[ 2, "desc" ]]'>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('number') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('Resolution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                            <th class="empty">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($teacher->hierarchies as $hierarchy)
+                                            <tr>
+                                                <td>{{ $hierarchy->number }}</td>
+                                                <td>{{ $hierarchy->resolution }}</td>
+                                                <td class="text-small">{{ $hierarchy->date }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ config('app.url') .'/'. $hierarchy->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                        {{ __('open') }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
-                        <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                    </section>
 
-                    </form>
-                </section>
-                <!-- Content End -->
+                </div>
+                <!-- Hierarchy Tab End -->
+
+                <!-- Degree Tab Start -->
+                <div class="tab-pane fade show @if (session('tab') === 'degrees') active show @endempty" id="degreeTab"
+                    role="tabpanel">
+
+                    <h2 class="small-title">{{ __('Degrees') }}</h2>
+                    <section class="scroll-section mb-5">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div id="addHierarchy" class="d-flex justify-content-end">
+                                    <div data-bs-toggle="modal" data-bs-target="#addDegreeModal"
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                        <i data-acorn-icon="plus"></i>
+                                        <span>{{ __('Add New') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
+                                    data-order='[[ 2, "desc" ]]'>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('institution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('degree') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                            <th class="empty">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($teacher->degrees as $degree)
+                                            <tr>
+                                                <td>{{ $degree->institution }}</td>
+                                                <td>{{ $degree->degree }}</td>
+                                                <td class="text-small">{{ $degree->date }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ config('app.url') .'/'. $degree->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                        {{ __('open') }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </section>
+
+                </div>
+                <!-- Degree Tab End -->
+
+                <!-- Employment History Tab Start -->
+                <div class="tab-pane fade show @if (session('tab') === 'employments') active show @endempty" id="employmentsTab"
+                    role="tabpanel">
+
+                    <h2 class="small-title">{{ __('Employment history') }}</h2>
+                    <section class="scroll-section mb-5">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div id="addHierarchy" class="d-flex justify-content-end">
+                                    <div data-bs-toggle="modal" data-bs-target="#addEmploymentsModal"
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
+                                        <i data-acorn-icon="plus"></i>
+                                        <span>{{ __('Add New') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
+                                    data-order='[[ 2, "desc" ]]'>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('institution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date of entry') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date of withdrawal') }}</th>
+                                            <th class="empty">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($teacher->employments as $employment)
+                                            <tr>
+                                                <td>{{ $employment->institution }}</td>
+                                                <td class="text-small">{{ $employment->date_start }}</td>
+                                                <td class="text-small">{{ $employment->date_end }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ config('app.url') .'/'. $employment->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                        {{ __('open') }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </section>
+
+                </div>
+                <!-- Employment History Tab End -->
+
+            </div>
+            <!-- Right Side End -->
+
+        </section>
+
+    </div>
+
+    <!-- Modal Add Hierarchy -->
+    <div class="modal fade" id="addHierarchyModal" aria-labelledby="modalAddHierarchy" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAddHierarchy">{{ __('Add hierarchy') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('teacher.hierarchy.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('number') }}</x-label>
+                                    <x-input name="hierarchy_number" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('Resolution') }}</x-label>
+                                    <x-input name="hierarchy_resolution" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('date') }}</x-label>
+                                    <x-input name="hierarchy_date" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('file') }}</x-label>
+                                    <x-input type="file" accept=".pdf" class="d-block" name="hierarchy_file" required />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    <!-- Modal Add Hierarchy End -->
+
+    <!-- Modal Add Degree -->
+    <div class="modal fade" id="addDegreeModal" aria-labelledby="modalAddDegree" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAddDegree">{{ __('Add degree') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('teacher.degree.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('degree') }}</x-label>
+                                    <x-input name="degree_name" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('institution where obtained') }}</x-label>
+                                    <x-input name="degree_institution" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('date') }}</x-label>
+                                    <x-input name="degree_date" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('file') }}</x-label>
+                                    <x-input type="file" accept=".pdf" class="d-block" name="degree_file" required />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Add Degree End -->
+
+    <!-- Modal Add Employment History -->
+    <div class="modal fade" id="addEmploymentsModal" aria-labelledby="modalAddEmployments" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAddEmployments">{{ __('Add employments history') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('teacher.employment.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('institution') }}</x-label>
+                                    <x-input name="employment_institution" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('date of entry') }}</x-label>
+                                    <x-input name="employment_date_start" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('date of withdrawal') }}</x-label>
+                                    <x-input name="employment_date_end" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <x-label required>{{ __('file') }}</x-label>
+                                    <x-input type="file" accept=".pdf" class="d-block" name="employment_file" required />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Add Degree End -->
 @endsection

@@ -31,6 +31,9 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\RoleController;
 use App\Http\Controllers\support\UserController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TeacherDegreeController;
+use App\Http\Controllers\TeacherEmploymentHistoryController;
+use App\Http\Controllers\TeacherHierarchyController;
 use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\TransferController;
@@ -216,7 +219,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /* Route TeacherSubjectGroups */
     Route::resource('teachers/{teacher}/subjects', TeacherSubjectGroupController::class)->names('teacher.subjects');
-
+    Route::post('teachers/hierarchy', [TeacherHierarchyController::class, 'store'])->name('teacher.hierarchy.store');
+    Route::post('teachers/degree', [TeacherDegreeController::class, 'store'])->name('teacher.degree.store');
+    Route::post('teachers/employment', [TeacherEmploymentHistoryController::class, 'store'])->name('teacher.employment.store');
 
 
 

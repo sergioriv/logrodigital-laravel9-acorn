@@ -56,17 +56,26 @@ class TeacherCreateForm {
                 date_appointment: {
                     date: true
                 },
+                file_appointment: {
+                    accept: "pdf"
+                },
                 possession_certificate: {
                     maxlength: 20
                 },
                 date_possession_certificate: {
                     date: true
                 },
+                file_possession_certificate: {
+                    accept: "pdf"
+                },
                 transfer_resolution: {
                     maxlength: 20
                 },
                 date_transfer_resolution: {
                     date: true
+                },
+                file_transfer_resolution: {
+                    accept: "pdf"
                 }
             },
 

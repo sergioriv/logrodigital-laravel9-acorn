@@ -38,18 +38,13 @@ class Teacher extends Model
         'type_admin_act',
         'appointment_number',
         'date_appointment',
+        'file_appointment',
         'possession_certificate',
         'date_possession_certificate',
+        'file_possession_certificate',
         'transfer_resolution',
         'date_transfer_resolution',
-
-        'hierarchy_grade',
-        'resolution_hierarchy',
-        'date_resolution_hierarchy',
-
-        'last_diploma',
-        'institution_last_diploma',
-        'date_last_diploma',
+        'file_transfer_resolution',
 
         'active'
     ];
@@ -77,6 +72,21 @@ class Teacher extends Model
         return $this->hasMany(TeacherPermit::class, 'teacher_id', 'id');
     }
 
+    public function hierarchies()
+    {
+        return $this->hasMany(TeacherHierarchy::class, 'teacher_id', 'id');
+    }
+
+    public function degrees()
+    {
+        return $this->hasMany(TeacherDegree::class, 'teacher_id', 'id');
+    }
+
+    public function employments()
+    {
+        return $this->hasMany(TeacherEmploymentHistory::class, 'teacher_id', 'id');
+    }
+
 
     /* Accesores */
     public function getFullName()
@@ -92,36 +102,6 @@ class Teacher extends Model
         );
     }
     protected function dateEntry(): Attribute
-    {
-        return Attribute::make(
-            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
-        );
-    }
-    protected function dateAppointment(): Attribute
-    {
-        return Attribute::make(
-            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
-        );
-    }
-    protected function datePossessionCertificate(): Attribute
-    {
-        return Attribute::make(
-            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
-        );
-    }
-    protected function dateTransferResolution(): Attribute
-    {
-        return Attribute::make(
-            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
-        );
-    }
-    protected function dateResolutionHierarchy(): Attribute
-    {
-        return Attribute::make(
-            set: fn($v) => Carbon::parse($v)->format('Y-m-d')
-        );
-    }
-    protected function dateLastDiploma(): Attribute
     {
         return Attribute::make(
             set: fn($v) => Carbon::parse($v)->format('Y-m-d')

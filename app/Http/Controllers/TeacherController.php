@@ -30,6 +30,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
@@ -62,11 +63,14 @@ class TeacherController extends Controller
             'type_appointment' => ['required', new TypeAppointmentRule],
             'type_admin_act' => ['required', new TypeAdminActRule],
             'appointment_number' => ['nullable', 'max:20'],
-            'date_appointment' => ['nullable', 'date'],
+            'date_appointment' => ['required_with:appointment_number'],
+            'file_appointment' => ['required_with:appointment_number', 'file', 'mimes:pdf', 'max:2048'],
             'possession_certificate' => ['nullable', 'max:20'],
-            'date_possession_certificate' => ['nullable', 'date'],
+            'date_possession_certificate' => ['required_with:possession_certificate'],
+            'file_possession_certificate' => ['required_with:possession_certificate', 'file', 'mimes:pdf', 'max:2048'],
             'transfer_resolution' => ['nullable', 'max:20'],
-            'date_transfer_resolution' => ['nullable', 'date'],
+            'date_transfer_resolution' => ['required_with:transfer_resolution'],
+            'file_transfer_resolution' => ['required_with:transfer_resolution', 'file', 'mimes:pdf', 'max:2048'],
         ]);
 
         DB::beginTransaction();
@@ -81,11 +85,15 @@ class TeacherController extends Controller
             return redirect()->back();
         }
 
+        $teacherUuid = Str::uuid()->toString();
+
         try {
 
-            Teacher::create([
+
+
+            $teacher = Teacher::create([
                 'id' => $teacherCreate->getUser()->id,
-                'uuid' => Str::uuid()->toString(),
+                'uuid' => $teacherUuid,
                 'names' => $request->names,
                 'last_names' => $request->lastNames,
                 'institutional_email' => $request->institutional_email,
@@ -103,7 +111,26 @@ class TeacherController extends Controller
                 'active' => TRUE
             ]);
 
+            if ($request->hasFile('file_appointment')) {
+                $teacher->update([
+                    'file_appointment' => $this->uploadFile($request, $teacher, 'file_appointment')
+                ]);
+            }
+            if ($request->hasFile('file_possession_certificate')) {
+                $teacher->update([
+                    'file_possession_certificate' => $this->uploadFile($request, $teacher, 'file_possession_certificate')
+                ]);
+            }
+            if ($request->hasFile('file_transfer_resolution')) {
+                $teacher->update([
+                    'file_transfer_resolution' => $this->uploadFile($request, $teacher, 'file_transfer_resolution')
+                ]);
+            }
+
+
         } catch (\Throwable $th) {
+
+            $this->deleteDirectory($teacherUuid);
 
             DB::rollBack();
             Notify::fail(__('Something went wrong.'));
@@ -111,6 +138,8 @@ class TeacherController extends Controller
         }
 
         if (!$teacherCreate->sendVerification()) {
+
+            $this->deleteDirectory($teacherUuid);
 
             DB::rollBack();
             Notify::fail( __('Invalid email (:email)', ['email' => $request->institutional_email]) );
@@ -125,6 +154,15 @@ class TeacherController extends Controller
         return redirect()->route('myinstitution');
     }
 
+    /*
+     *
+     *
+     *
+     *
+     * por mejorar
+     *
+     *
+     * */
     public function show(Teacher $teacher)
     {
         $schoolYear = SchoolYear::whereHas(
@@ -144,7 +182,7 @@ class TeacherController extends Controller
         if (RoleUser::TEACHER_ROL === UserController::role_auth()) {
             return view('logro.teacher.profile.edit', [
                 'teacher' => $teacher,
-                'cities' => City::all(),
+                'cities' => City::with('department')->get(),
                 'maritalStatus' => MaritalStatus::data(),
             ]);
         } else {
@@ -159,7 +197,7 @@ class TeacherController extends Controller
             $request->validate([
                 'names' => ['required', 'string', 'max:191'],
                 'lastNames' => ['required', 'string', 'max:191'],
-                'document' => ['nullable', 'max:20', Rule::unique('teachers', 'document')],
+                'document' => ['nullable', 'max:20', Rule::unique('teachers', 'document')->ignore($teacher->id)],
                 'expedition_city' => ['nullable', Rule::exists('cities', 'id')],
                 'birth_city' => ['nullable', Rule::exists('cities', 'id')],
                 'birthdate' => ['nullable', 'date', 'before:today'],
@@ -171,20 +209,17 @@ class TeacherController extends Controller
                 'marital_status' => ['nullable', new MaritalStatusRule],
 
                 'appointment_number' => ['nullable', 'max:20'],
-                'date_appointment' => ['nullable', 'date', 'before:today'],
+                'date_appointment' => ['required_with:appointment_number'],
+                'file_appointment' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
                 'possession_certificate' => ['nullable', 'max:20'],
-                'date_possession_certificate' => ['nullable', 'date', 'before:today'],
+                'date_possession_certificate' => ['required_with:possession_certificate'],
+                'file_possession_certificate' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
                 'transfer_resolution' => ['nullable', 'max:20'],
-                'date_transfer_resolution' => ['nullable', 'date', 'before:today'],
-
-                'hierarchy_grade' => ['nullable', 'max:20'],
-                'resolution_hierarchy' => ['nullable', 'max:20'],
-                'date_resolution_hierarchy' => ['nullable', 'date', 'before:today'],
-
-                'last_diploma' => ['nullable', 'max:191'],
-                'institution_last_diploma' => ['nullable', 'max:191'],
-                'date_last_diploma' => ['nullable', 'date', 'before:today']
+                'date_transfer_resolution' => ['required_with:transfer_resolution'],
+                'file_transfer_resolution' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
             ]);
+
+            DB::beginTransaction();
 
             $techaerName = $request->names . ' ' . $request->lastNames;
             $user = UserController::_update($teacher->id, $techaerName, $request->institutional_email);
@@ -194,36 +229,65 @@ class TeacherController extends Controller
                 return redirect()->back();
             }
 
-            $teacher->update([
-                'names' => $request->names,
-                'last_names' => $request->lastNames,
-                'institutional_email' => $request->institutional_email,
+            try {
 
-                'document' => $request->document,
-                'expedition_city' => $request->expedition_city,
-                'birth_city' => $request->birth_city,
-                'birthdate' => $request->birthdate,
-                'residence_city' => $request->residence_city,
-                'address' => $request->address,
-                'telephone' => $request->telephone,
-                'cellphone' => $request->cellphone,
-                'marital_status' => $request->marital_status,
+                $teacher->update([
+                    'names' => $request->names,
+                    'last_names' => $request->lastNames,
+                    'institutional_email' => $request->institutional_email,
 
-                'appointment_number' => $request->appointment_number,
-                'date_appointment' => $request->date_appointment,
-                'possession_certificate' => $request->possession_certificate,
-                'date_possession_certificate' => $request->date_possession_certificate,
-                'transfer_resolution' => $request->transfer_resolution,
-                'date_transfer_resolution' => $request->date_transfer_resolution,
+                    'document' => $request->document,
+                    'expedition_city' => $request->expedition_city,
+                    'birth_city' => $request->birth_city,
+                    'birthdate' => $request->birthdate,
+                    'residence_city' => $request->residence_city,
+                    'address' => $request->address,
+                    'telephone' => $request->telephone,
+                    'cellphone' => $request->cellphone,
+                    'marital_status' => $request->marital_status,
 
-                'hierarchy_grade' => $request->hierarchy_grade,
-                'resolution_hierarchy' => $request->resolution_hierarchy,
-                'date_resolution_hierarchy' => $request->date_resolution_hierarchy,
+                    'appointment_number' => $request->appointment_number,
+                    'date_appointment' => $request->date_appointment,
+                    'possession_certificate' => $request->possession_certificate,
+                    'date_possession_certificate' => $request->date_possession_certificate,
+                    'transfer_resolution' => $request->transfer_resolution,
+                    'date_transfer_resolution' => $request->date_transfer_resolution,
+                ]);
 
-                'last_diploma' => $request->last_diploma,
-                'institution_last_diploma' => $request->institution_last_diploma,
-                'date_last_diploma' => $request->date_last_diploma
-            ]);
+                if ($request->hasFile('file_appointment')) {
+                    $teacher->update([
+                        'file_appointment' => $this->uploadFile($request, $teacher, 'file_appointment')
+                    ]);
+                }
+                if ($request->hasFile('file_possession_certificate')) {
+                    $teacher->update([
+                        'file_possession_certificate' => $this->uploadFile($request, $teacher, 'file_possession_certificate')
+                    ]);
+                }
+                if ($request->hasFile('file_transfer_resolution')) {
+                    $teacher->update([
+                        'file_transfer_resolution' => $this->uploadFile($request, $teacher, 'file_transfer_resolution')
+                    ]);
+                }
+
+            } catch (\Throwable $th) {
+
+                DB::rollBack();
+                Notify::fail(__('Something went wrong.'));
+                return redirect()->back();
+            }
+
+            if ($request->institutional_email !== $teacher->institutional_email) {
+
+                if (!$teacher->sendVerification()) {
+
+                    DB::rollBack();
+                    Notify::fail( __('Invalid email (:email)', ['email' => $request->institutional_email]) );
+                    return redirect()->back();
+                }
+            }
+
+            DB::commit();
 
             Notify::success(__('Updated profile!'));
             return redirect()->route('user.profile.edit');
@@ -378,5 +442,24 @@ class TeacherController extends Controller
     private function tab()
     {
         session()->flash('tab', 'teachers');
+    }
+
+    private function uploadFile($request, $teacher, $file)
+    {
+        if ($request->hasFile($file)) {
+
+            if (!is_null($teacher->$file)) {
+                File::delete(public_path($teacher->$file));
+            }
+
+            $path = $request->file($file)->store('teachers/' . $teacher->uuid, 'public');
+            return config('filesystems.disks.public.url') . '/' . $path;
+        } else return null;
+    }
+
+    private function deleteDirectory($uuid)
+    {
+        if (is_dir(public_path('app/teachers/' . $uuid)))
+            File::deleteDirectory(public_path('app/teachers/' . $uuid));
     }
 }

@@ -19,7 +19,7 @@ $title = __('Create Teacher');
 @endsection
 
 @section('js_page')
-    <script src="/js/forms/teacher-create.js"></script>
+    <script src="/js/forms/teacher-create.js?d=1673974275586"></script>
     <script src="/js/forms/select2.js"></script>
 @endsection
 
@@ -38,34 +38,32 @@ $title = __('Create Teacher');
                 <!-- Content Start -->
                 <section class="scroll-section">
                     <form method="post" action="{{ route('teacher.store') }}" class="tooltip-label-end"
-                        id="teacherCreateForm" novalidate>
+                        id="teacherCreateForm" enctype="multipart/form-data" novalidate>
                         @csrf
 
                         <div class="card mb-5">
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label required>{{ __('names') }}</x-label>
                                             <x-input :value="old('names')" name="names" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label required>{{ __('last names') }}</x-label>
                                             <x-input :value="old('lastNames')" name="lastNames" required />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label required>{{ __('institutional email') }}</x-label>
                                             <x-input :value="old('institutional_email')" name="institutional_email" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                        <div class="position-relative form-group">
                                             <x-label required>{{ __('date of entry into the institution') }}</x-label>
                                             <x-input :value="old('date_entry')" name="date_entry" logro="datePickerAll" required />
                                         </div>
@@ -79,7 +77,7 @@ $title = __('Create Teacher');
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label required>{{ __('type of appointment') }}</x-label>
                                             <select name="type_appointment" logro="select2">
                                                 <option label="&nbsp;"></option>
@@ -92,7 +90,7 @@ $title = __('Create Teacher');
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label required>{{ __('type of administrative act') }}</x-label>
                                             <select name="type_admin_act" logro="select2">
                                                 <option label="&nbsp;"></option>
@@ -104,49 +102,61 @@ $title = __('Create Teacher');
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('appointment number') }}</x-label>
                                             <x-input :value="old('appointment_number')" name="appointment_number" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
                                             <x-input :value="old('date_appointment')" logro="datePickerBefore" name="date_appointment"
                                             data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('upload file') }}</x-label>
+                                            <x-input type="file" accept=".pdf" name="file_appointment" class="d-block" />
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('possession certificate number') }}</x-label>
                                             <x-input :value="old('possession_certificate')" name="possession_certificate" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
                                             <x-input :value="old('date_possession_certificate')" logro="datePickerBefore" name="date_possession_certificate"
                                             data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('upload file') }}</x-label>
+                                            <x-input type="file" accept=".pdf" name="file_possession_certificate" class="d-block" />
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 w-100 position-relative form-group">
+                                        <div class="w-100 position-relative form-group">
                                             <x-label>{{ __('transfer resolution number') }}</x-label>
                                             <x-input :value="old('transfer_resolution')" name="transfer_resolution" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3 position-relative form-group">
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
                                             <x-input :value="old('date_transfer_resolution')" logro="datePickerBefore" name="date_transfer_resolution"
                                             data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('upload file') }}</x-label>
+                                            <x-input type="file" accept=".pdf" name="file_transfer_resolution" class="d-block" />
                                         </div>
                                     </div>
                                 </div>

@@ -259,7 +259,33 @@ return [
 
         'studentFileDeleteInput' => 'documento a eliminar',
         'studentReportBookDeleteInput' => 'boletín a eliminar',
-        'periodGradeReport' => 'Periodo'
+        'periodGradeReport' => 'Periodo',
+
+        'appointment_number' => 'número de nombramiento',
+        'date_appointment' => 'fecha de nombramiento',
+        'file_appointment' => 'archivo de nombramiento',
+        'file_appointment' => 'archivo de nombramiento',
+        'possession_certificate' => 'acta de posesión',
+        'date_possession_certificate' => 'fecha del acta de posesión',
+        'file_possession_certificate' => 'archivo del acta de posesión',
+        'transfer_resolution' => 'resolución de traslado',
+        'date_transfer_resolution' => 'fecha de la resolución de traslado',
+        'file_transfer_resolution' => 'archivo de la resolución de traslado',
+
+        'hierarchy_number' => "número del escalafón",
+        'hierarchy_resolution' => "resolución del escalafón",
+        'hierarchy_date' => "fecha del escalafón",
+        'hierarchy_file' => "archivo del escalafón",
+
+        'degree_name' => 'título',
+        'degree_institution' => 'institución donde lo obtuvo',
+        'degree_date' => 'fecha del título',
+        'degree_file' => 'archivo de título',
+
+        'employment_institution' => 'institución laboral',
+        'employment_date_start' => 'fecha de ingreso',
+        'employment_date_end' => 'fecha de retiro',
+        'employment_file' => 'archivo de la institución',
     ],
 
 ];

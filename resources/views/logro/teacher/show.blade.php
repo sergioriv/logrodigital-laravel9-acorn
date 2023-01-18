@@ -162,50 +162,6 @@
                 <!-- Subjects Tab End -->
 
                 <!-- Permits Tab Start -->
-                {{-- <div class="tab-pane fade @if (session('tab') === 'permits') active show @endif" id="permitsTab"
-                    role="tabpanel">
-                    <!-- Teachers Content Start -->
-                    <h2 class="small-title">{{ __('Teachers') }}</h2>
-
-                    <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
-                        <!-- Permits Buttons Start -->
-                        <a type="button" data-bs-toggle="modal" data-bs-target="#addPermitTeacherModal"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                            <i data-acorn-icon="plus"></i>
-                            <span>{{ __('Add permit') }}</span>
-                        </a>
-                        <!-- Permits Buttons End -->
-                    </div>
-
-                    <!-- Permits Table Start -->
-                    <section class="card mb-5">
-                        <div class="card-body">
-                            <table class="data-table dataTable responsive stripe no-footer dtr-inline"
-                                data-order='[[ 0, "asc" ]]' logro="datatable">
-                                <thead>
-                                    <tr>
-                                        <th class="text-muted text-small text-uppercase p-0 pb-2">
-                                            {{ __('short description') }}</th>
-                                        <th class="text-muted text-small text-uppercase p-0 pb-2">
-                                            {{ __('date range') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($teacher->permits as $permit)
-                                        <tr>
-                                            <td>{{ $permit->description }}</td>
-                                            <td>{{ $permit->dateRange() }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-                    <!-- Permits Table End -->
-                </div> --}}
-                <!-- Permits Tab End -->
-
-                <!-- Permits Tab Start -->
                 <div class="tab-pane fade @if (session('tab') === 'permits') active show @endif" id="permitsTab"
                     role="tabpanel">
 

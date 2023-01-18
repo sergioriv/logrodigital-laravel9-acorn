@@ -7,7 +7,7 @@
  *
  */
 
-class TeacherCreateForm {
+class TeacherEditForm {
     constructor() {
         // Initialization of the page plugins
         if (!jQuery().validate) {
@@ -15,13 +15,13 @@ class TeacherCreateForm {
             return;
         }
 
-        this._initTeacherCreateForm();
+        this._initTeacherProfileForm();
     }
 
-    _initTeacherCreateForm() {
-        const form = document.getElementById("teacherCreateForm");
+    _initTeacherProfileForm() {
+        const form = document.getElementById("teacherProfileForm");
         if (!form) {
-            console.log("teacherCreateForm is null");
+            console.log("teacherProfileForm is null");
             return;
         }
 
@@ -35,20 +35,29 @@ class TeacherCreateForm {
                     required: true,
                     maxlength: 191,
                 },
-                email: {
+                document: {
+                    required: true,
+                    maxlength: 20
+                },
+                expedition_city: {
+                    date: true
+                },
+                birthdate: {
+                    date: true
+                },
+                address: {
+                    maxlength: 100,
+                },
+                telephone: {
+                    maxlength: 20,
+                },
+                cellphone: {
+                    maxlength: 20,
+                },
+                institutional_email: {
                     required: true,
                     email: true,
                     maxlength: 191,
-                },
-                date_entry: {
-                    required: true,
-                    date: true
-                },
-                type_appointment: {
-                    required: true
-                },
-                type_admin_act: {
-                    required: true
                 },
                 appointment_number: {
                     maxlength: 20

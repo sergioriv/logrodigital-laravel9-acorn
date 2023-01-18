@@ -117,6 +117,9 @@ class Scripts {
       if ("undefined" !== typeof TeacherCreateForm) {
         new TeacherCreateForm;
       }
+      if ("undefined" !== typeof TeacherEditForm) {
+        new TeacherEditForm;
+      }
       if ("undefined" !== typeof TeacherPermitCreateForm) {
         new TeacherPermitCreateForm;
       }
