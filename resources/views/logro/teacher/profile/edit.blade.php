@@ -22,7 +22,7 @@
 @endsection
 
 @section('js_page')
-    <script src="/js/forms/teacher-edit.js?d=1673974275586"></script>
+    <script src="/js/forms/teacher-edit.js?d=1674053239410"></script>
     <script src="/js/forms/select2.js"></script>
     <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
     <script src="/js/plugins/datatable/datatables_boxed.js?d=1670967386206"></script>
@@ -97,7 +97,7 @@
                             </a>
                             <a class="nav-link @if (session('tab') === 'hierarchies') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#hierarchyTab" role="tab">
-                                <span class="align-middle">{{ __('Hierarchies') }}</span>
+                                <span class="align-middle">{{ __('Hierarchy') }}</span>
                             </a>
                             <a class="nav-link @if (session('tab') === 'degrees') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#degreeTab" role="tab">
@@ -345,7 +345,8 @@
                 <div class="tab-pane fade show @if (session('tab') === 'hierarchies') active show @endempty" id="hierarchyTab"
                     role="tabpanel">
 
-                    <h2 class="small-title">{{ __('Hierarchies') }}</h2>
+                    <!-- Hierarchy Content Tab Start -->
+                    <h2 class="small-title">{{ __('Hierarchy') }}</h2>
                     <section class="scroll-section mb-5">
 
                         <div class="card">
@@ -377,6 +378,7 @@
                                                 <td class="text-small">{{ $hierarchy->date }}</td>
                                                 <td class="text-center">
                                                     <a href="{{ config('app.url') .'/'. $hierarchy->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                        <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
                                                 </td>
@@ -388,6 +390,7 @@
                         </div>
 
                     </section>
+                    <!-- Hierarchy Content Tab End -->
 
                 </div>
                 <!-- Hierarchy Tab End -->
@@ -396,6 +399,7 @@
                 <div class="tab-pane fade show @if (session('tab') === 'degrees') active show @endempty" id="degreeTab"
                     role="tabpanel">
 
+                    <!-- Degree Content Tab Start -->
                     <h2 class="small-title">{{ __('Degrees') }}</h2>
                     <section class="scroll-section mb-5">
 
@@ -428,6 +432,7 @@
                                                 <td class="text-small">{{ $degree->date }}</td>
                                                 <td class="text-center">
                                                     <a href="{{ config('app.url') .'/'. $degree->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                        <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
                                                 </td>
@@ -439,6 +444,7 @@
                         </div>
 
                     </section>
+                    <!-- Degree Content Tab End -->
 
                 </div>
                 <!-- Degree Tab End -->
@@ -447,6 +453,7 @@
                 <div class="tab-pane fade show @if (session('tab') === 'employments') active show @endempty" id="employmentsTab"
                     role="tabpanel">
 
+                    <!-- Employment History Content Tab Start -->
                     <h2 class="small-title">{{ __('Employment history') }}</h2>
                     <section class="scroll-section mb-5">
 
@@ -479,6 +486,7 @@
                                                 <td class="text-small">{{ $employment->date_end }}</td>
                                                 <td class="text-center">
                                                     <a href="{{ config('app.url') .'/'. $employment->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                        <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
                                                 </td>
@@ -490,6 +498,7 @@
                         </div>
 
                     </section>
+                    <!-- Employment History Content Tab End -->
 
                 </div>
                 <!-- Employment History Tab End -->
@@ -510,7 +519,8 @@
                     <h5 class="modal-title" id="modalAddHierarchy">{{ __('Add hierarchy') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('teacher.hierarchy.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="teacherHierarchyForm" class="tooltip-end-top"
+                    action="{{ route('teacher.hierarchy.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-body">
@@ -530,7 +540,8 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('date') }}</x-label>
-                                    <x-input name="hierarchy_date" required />
+                                    <x-input name="hierarchy_date" required
+                                    logro="datePickerBefore" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -562,7 +573,8 @@
                     <h5 class="modal-title" id="modalAddDegree">{{ __('Add degree') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('teacher.degree.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="teacherDegreeForm" class="tooltip-end-top"
+                    action="{{ route('teacher.degree.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-body">
@@ -582,7 +594,8 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('date') }}</x-label>
-                                    <x-input name="degree_date" required />
+                                    <x-input name="degree_date" required
+                                    logro="datePickerBefore" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -614,7 +627,8 @@
                     <h5 class="modal-title" id="modalAddEmployments">{{ __('Add employments history') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('teacher.employment.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="teacherEmploymentFrom" class="tooltip-end-top"
+                    action="{{ route('teacher.employment.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-body">
@@ -628,13 +642,15 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('date of entry') }}</x-label>
-                                    <x-input name="employment_date_start" required />
+                                    <x-input name="employment_date_start"
+                                    logro="datePickerBefore" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('date of withdrawal') }}</x-label>
-                                    <x-input name="employment_date_end" required />
+                                    <x-input name="employment_date_end" required
+                                    logro="datePickerBefore" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                 </div>
                             </div>
                             <div class="col-md-6">
