@@ -42,7 +42,7 @@ $title = __('Study times list');
 
                 <!-- Content Start -->
                 <section class="scroll-section">
-                    <div class="row g-3 row-cols-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6">
+                    <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6">
                         @foreach ($studyTimes as $studyTime)
                             <div class="col small-gutter-col">
                                 <div class="card hover-border-primary">

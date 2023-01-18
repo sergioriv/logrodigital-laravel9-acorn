@@ -39,8 +39,8 @@
                             <div class="card-body">
                                 <div class="nav flex-column mb-5" role="tablist">
                                     <a class="nav-link active logro-toggle px-0 border-bottom border-separator-light"
-                                        data-bs-toggle="tab" href="#primaryTab" role="tab">
-                                        <span class="align-middle">{{ __('Primary') }}</span>
+                                        data-bs-toggle="tab" href="#generalTab" role="tab">
+                                        <span class="align-middle">{{ __('General') }}</span>
                                     </a>
                                     <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
                                         data-bs-toggle="tab" href="#periodsTab" role="tab">
@@ -64,7 +64,7 @@
                     <div class="col-12 col-xl-9 col-xxl-10 mb-5 tab-content">
 
                         <!-- Primary Tab Start -->
-                        <div class="tab-pane fade active show" id="primaryTab" role="tabpanel">
+                        <div class="tab-pane fade active show" id="generalTab" role="tabpanel">
                             <div class="row g-3 row-cols-3 mb-5">
                                 <div class="col small-gutter-col">
                                     <div class="card">
