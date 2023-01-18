@@ -546,7 +546,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
-                                    <x-label required>{{ __('file') }}</x-label>
+                                    <x-label required>{{ __('file') }} (pdf)</x-label>
                                     <x-input type="file" accept=".pdf" class="d-block" name="hierarchy_file" required />
                                 </div>
                             </div>
@@ -600,7 +600,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
-                                    <x-label required>{{ __('file') }}</x-label>
+                                    <x-label required>{{ __('file') }} (pdf)</x-label>
                                     <x-input type="file" accept=".pdf" class="d-block" name="degree_file" required />
                                 </div>
                             </div>
@@ -655,7 +655,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
-                                    <x-label required>{{ __('file') }}</x-label>
+                                    <x-label required>{{ __('file') }} (pdf)</x-label>
                                     <x-input type="file" accept=".pdf" class="d-block" name="employment_file" required />
                                 </div>
                             </div>
