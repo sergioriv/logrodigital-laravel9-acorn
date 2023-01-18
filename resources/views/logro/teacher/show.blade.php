@@ -72,6 +72,18 @@
                                 data-bs-toggle="tab" href="#permitsTab" role="tab">
                                 <span class="align-middle">{{ __('Permits') }}</span>
                             </a>
+                            <a class="nav-link @if (session('tab') === 'hierarchies') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#hierarchyTab" role="tab">
+                                <span class="align-middle">{{ __('Hierarchy') }}</span>
+                            </a>
+                            <a class="nav-link @if (session('tab') === 'degrees') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#degreeTab" role="tab">
+                                <span class="align-middle">{{ __('Degrees') }}</span>
+                            </a>
+                            <a class="nav-link @if (session('tab') === 'employments') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#employmentsTab" role="tab">
+                                <span class="align-middle">{{ __('Employment history') }}</span>
+                            </a>
 
                         </div>
 
@@ -136,20 +148,18 @@
                                         class="collapse @if ($loop->first) show @endif"
                                         data-bs-parent="#accordionCardsSubjects">
                                         <div class="card-body accordion-content">
-                                            @if ($teacher->teacherSubjectGroups->count() === 0)
+                                            @if ($schy->teacherSubjectGroups->count() === 0)
                                                 <h5 class="text-muted">{{ __('No Subjects') }}</h5>
                                             @endif
                                             <div class="row g-2 row-cols-3 row-cols-md-4">
-                                                @foreach ($teacher->teacherSubjectGroups as $teacherSubject)
-                                                    @if ($teacherSubject->school_year_id === $schy->id)
-                                                        <x-group.card :group="$teacherSubject->group">
-                                                            <span class="mt-3 text-black btn-icon-start">
-                                                                <i data-acorn-icon="notebook-1" class="icon"
-                                                                    data-acorn-size="15"></i>
-                                                                {!! $teacherSubject->subject->resourceSubject->nameSpecialty() !!}
-                                                            </span>
-                                                        </x-group.card>
-                                                    @endif
+                                                @foreach ($schy->teacherSubjectGroups as $teacherSubject)
+                                                    <x-group.card :group="$teacherSubject->group">
+                                                        <span class="mt-3 text-black btn-icon-start">
+                                                            <i data-acorn-icon="notebook-1" class="icon"
+                                                                data-acorn-size="15"></i>
+                                                            {!! $teacherSubject->subject->resourceSubject->nameSpecialty() !!}
+                                                        </span>
+                                                    </x-group.card>
                                                 @endforeach
                                             </div>
                                         </div>
@@ -199,7 +209,9 @@
                                                 <td>{{ $permit->description }}</td>
                                                 <td>{{ $permit->dateRange() }}</td>
                                                 <td class="text-center">
-                                                    <a target="_blank" title="{{ __('Download') }}" href="{{ $permit->url }}"><i data-acorn-icon="download" data-acorn-size="14"></i></a>
+                                                    <a target="_blank" title="{{ __('Download') }}"
+                                                        href="{{ $permit->url }}"><i data-acorn-icon="download"
+                                                            data-acorn-size="14"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -213,6 +225,142 @@
 
                 </div>
                 <!-- Permits Tab End -->
+
+                <!-- Hierarchy Tab Start -->
+                <div class="tab-pane fade show @if (session('tab') === 'hierarchies') active show @endempty" id="hierarchyTab"
+                    role="tabpanel">
+
+                    <!-- Hierarchy Content Tab Start -->
+                    <h2 class="small-title">{{ __('Hierarchy') }}</h2>
+                    <section class="scroll-section mb-5">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
+                                    data-order='[[ 2, "desc" ]]'>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('number') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('Resolution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                            <th class="empty">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($teacher->hierarchies as $hierarchy)
+                                            <tr>
+                                                <td>{{ $hierarchy->number }}</td>
+                                                <td>{{ $hierarchy->resolution }}</td>
+                                                <td class="text-small">{{ $hierarchy->date }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ config('app.url') .'/'. $hierarchy->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                        <i class="icon bi-box-arrow-up-right me-1"></i>
+                                                        {{ __('open') }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </section>
+                    <!-- Hierarchy Content Tab End -->
+
+                </div>
+                <!-- Hierarchy Tab End -->
+
+                <!-- Degree Tab Start -->
+                <div class="tab-pane fade show @if (session('tab') === 'degrees') active show @endempty" id="degreeTab"
+                    role="tabpanel">
+
+                    <!-- Degree Content Tab Start -->
+                    <h2 class="small-title">{{ __('Degrees') }}</h2>
+                    <section class="scroll-section mb-5">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
+                                    data-order='[[ 2, "desc" ]]'>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('institution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('degree') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                            <th class="empty">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($teacher->degrees as $degree)
+                                            <tr>
+                                                <td>{{ $degree->institution }}</td>
+                                                <td>{{ $degree->degree }}</td>
+                                                <td class="text-small">{{ $degree->date }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ config('app.url') .'/'. $degree->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                        <i class="icon bi-box-arrow-up-right me-1"></i>
+                                                        {{ __('open') }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </section>
+                    <!-- Degree Content Tab End -->
+
+                </div>
+                <!-- Degree Tab End -->
+
+                <!-- Employment History Tab Start -->
+                <div class="tab-pane fade show @if (session('tab') === 'employments') active show @endempty" id="employmentsTab"
+                    role="tabpanel">
+
+                    <!-- Employment History Content Tab Start -->
+                    <h2 class="small-title">{{ __('Employment history') }}</h2>
+                    <section class="scroll-section mb-5">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
+                                    data-order='[[ 2, "desc" ]]'>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('institution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date of entry') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date of withdrawal') }}</th>
+                                            <th class="empty">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($teacher->employments as $employment)
+                                            <tr>
+                                                <td>{{ $employment->institution }}</td>
+                                                <td class="text-small">{{ $employment->date_start }}</td>
+                                                <td class="text-small">{{ $employment->date_end }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ config('app.url') .'/'. $employment->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                        <i class="icon bi-box-arrow-up-right me-1"></i>
+                                                        {{ __('open') }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </section>
+                    <!-- Employment History Content Tab End -->
+
+                </div>
+                <!-- Employment History Tab End -->
+
             </div>
             <!-- Right Side End -->
         </section>

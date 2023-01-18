@@ -165,10 +165,9 @@ class TeacherController extends Controller
      * */
     public function show(Teacher $teacher)
     {
-        $schoolYear = SchoolYear::whereHas(
-            'teacherSubjectGroups',
-            fn ($subject) => $subject->where('teacher_id', $teacher->id)
-        )
+        $schoolYear = SchoolYear::withWhereHas('teacherSubjectGroups',
+                fn ($subject) => $subject->where('teacher_id', $teacher->id)->with('subject', 'group')
+            )
             ->orderByDesc('id')->get();
 
         return view('logro.teacher.show')->with([

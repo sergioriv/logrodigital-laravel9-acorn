@@ -35,12 +35,12 @@ class TeacherSubjectGroup extends Model
 
     public function subject()
     {
-        return $this->belongsTo(Subject::class); //->with('resourceArea', 'resourceSubject');
+        return $this->belongsTo(Subject::class)->with('resourceSubject');
     }
 
     public function group()
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsTo(Group::class)->with('headquarters', 'studyTime', 'studyYear');
     }
 
 
