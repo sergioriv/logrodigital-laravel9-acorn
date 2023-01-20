@@ -255,7 +255,7 @@
         Se expide la presente certificación a los {{ $date->format('d') }} días del mes {{ $date->format('m') }} de {{ $date->format('Y') }}, para sus trámites pertinentes.
     </section>
     <section class="mt-2 bold">
-        Este certificado únicamente es valido con sello de rectoría en original.
+        Este certificado únicamente es válido con sello de rectoría en original.
     </section>
 
     <section class="card mt-6">
