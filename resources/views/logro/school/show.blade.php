@@ -171,6 +171,15 @@ $title = $school->name;
                                     </div>
                                 </div>
                                 <div class="row mb-3 position-relative">
+                                    <label for="inputDane" class="col-sm-3 col-form-label">Dane
+                                        <x-required />
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <x-input :value="$school->dane" name="dane" id="inputDane" :hasError="true"
+                                            required />
+                                    </div>
+                                </div>
+                                <div class="row mb-3 position-relative">
                                     <label for="inputContactEmail"
                                         class="col-sm-3 col-form-label">{{ __('Contact Email') }}
                                         <x-required />

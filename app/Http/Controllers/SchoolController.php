@@ -54,6 +54,7 @@ class SchoolController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:191'],
             'nit' => ['required', 'string', 'max:20'],
+            'dane' => ['required', 'string', 'max:191'],
             'contact_email' => ['required', 'email', 'max:100'],
             'contact_telephone' => ['required', 'string', 'max:20'],
             'institutional_email' => ['nullable', 'string', 'max:191'],
@@ -64,6 +65,7 @@ class SchoolController extends Controller
         $S->getData()->update([
             'name' => $request->name,
             'nit' => $request->nit,
+            'dane' => $request->dane,
             'contact_email' => $request->contact_email,
             'contact_telephone' => $request->contact_telephone,
             'institutional_email' => $request->institutional_email,
@@ -128,6 +130,14 @@ class SchoolController extends Controller
     public function badge()
     {
         return $this->school->badge ?? null;
+    }
+    public function nit()
+    {
+        return $this->school->nit ?? null;
+    }
+    public function dane()
+    {
+        return $this->school->dane ?? null;
     }
     public function email()
     {
