@@ -264,6 +264,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('students/parents.filter','create_parents_filter');
 
         Route::get('students/{student}/download/matriculate', 'pdf_matriculate')->name('students.pdf.matriculate');
+        Route::get('students/download/certificate/{student?}', 'pdf_certificate')->name('students.pdf.certificate');
 
     });
 

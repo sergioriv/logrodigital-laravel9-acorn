@@ -87,7 +87,7 @@ $title = $school->name;
                             </a>
                             <a class="nav-link @if(session('tab') === 'signature') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#signaureTab" role="tab">
-                                <span class="align-middle">{{ __('Signature Rector') }}</span>
+                                <span class="align-middle">{{ __('Info Rector') }}</span>
                             </a>
                         </div>
 
@@ -579,46 +579,6 @@ $title = $school->name;
                 </div>
                 <!-- Secretariat Tab End -->
 
-                <!-- Signature Tab Start -->
-                <div class="tab-pane fade @if(session('tab') === 'signature') active show @endif" id="signaureTab">
-                    <form method="POST" action="{{ route('myinstitution.security.signature') }}" class="tooltip-end-bottom"
-                        id="mySignatureForm" enctype="multipart/form-data" novalidate>
-                        @csrf
-                        @method('PATCH')
-
-                        <!-- Security Email Start -->
-                        <h2 class="small-title">{{ __('Signature Rector') }}</h2>
-                        <section class="card mb-5">
-                            <div class="card-body">
-                                <div id="signatureRector" class="text-center">
-                                    <div class='position-relative d-inline-block tooltip-center-top'>
-                                        @if (!is_null($school->signature_rector))
-                                            <img src="{{ config('app.url') . '/' . $school->signature_rector }}" alt="signature"
-                                                class="form-signature rounded-0 max-w-100 sh-19 object-scale-down" />
-                                        @else
-                                            <img src="{{ config('app.url') . '/img/logo/logo-logro-gray.svg' }}"
-                                                alt="signature" class="form-signature rounded-0 max-w-100 sh-19 object-scale-down">
-                                        @endif
-                                        <button
-                                            class="btn btn-sm btn-icon btn-icon-only btn-separator-light rounded-xl position-absolute e-0 b-0"
-                                            type="button">
-                                            <i data-acorn-icon="upload"></i>
-                                        </button>
-                                        <input name="signature_rector" class="file-upload d-none" type="file"
-                                            accept="image/jpg, image/jpeg, image/png, image/webp" />
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
-                            <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
-                        </div>
-
-                    </form>
-                </div>
-                <!-- Security Tab End -->
-
                 <!-- Security Tab Start -->
                 <div class="tab-pane fade @if(session('tab') === 'security') active show @endif" id="securityTab">
                     <form method="POST" action="{{ route('myinstitution.security.email') }}" class="tooltip-end-bottom"
@@ -691,6 +651,58 @@ $title = $school->name;
                 </div>
                 <!-- Security Tab End -->
 
+                <!-- Info Rector Tab Start -->
+                <div class="tab-pane fade @if(session('tab') === 'signature') active show @endif" id="signaureTab">
+                    <form method="POST" action="{{ route('myinstitution.security.signature') }}" class="tooltip-end-bottom"
+                        id="mySignatureForm" enctype="multipart/form-data" novalidate>
+                        @csrf
+                        @method('PATCH')
+
+                        <!-- Security Email Start -->
+                        <h2 class="small-title">{{ __('Info Rector') }}</h2>
+                        <section class="card mb-5">
+                            <div class="card-body">
+                                <label class="form-label" for="signature_rector">{{ __('Signature Rector') }}</label>
+                                <div class="d-flex justify-content-center">
+                                    <div id="signatureRector" class="col-12 text-center">
+                                        <div class='position-relative d-inline-block tooltip-center-top'>
+                                            @if (!is_null($school->signature_rector))
+                                                <img src="{{ config('app.url') . '/' . $school->signature_rector }}" alt="signature"
+                                                    class="form-signature rounded-0 max-w-100 sh-19 object-scale-down" />
+                                            @else
+                                                <img src="{{ config('app.url') . '/img/logo/logo-logro-gray.svg' }}"
+                                                    alt="signature" class="form-signature rounded-0 max-w-100 sh-19 object-scale-down">
+                                            @endif
+                                            <button
+                                                class="btn btn-sm btn-icon btn-icon-only btn-separator-light rounded-xl position-absolute e-0 b-0"
+                                                type="button">
+                                                <i data-acorn-icon="upload"></i>
+                                            </button>
+                                            <input name="signature_rector" id="signature_rector" class="file-upload d-none" type="file"
+                                                accept="image/jpg, image/jpeg, image/png, image/webp" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mb-3">
+                                    <div class="form-text">
+                                        {{ __('formarts') }}: jpg, jpeg, png, webp
+                                    </div>
+                                </div>
+                                <div class="position-relative form-group">
+                                    <label class="form-label" for="rectorName" required>{{ __('Rector name') }}<x-required /></label>
+                                    <x-input :value="$school->rector_name" name="rector_name" id="rectorName" :hasError="true"
+                                        required />
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                            <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                        </div>
+
+                    </form>
+                </div>
+                <!-- Info Rector Tab End -->
 
             </div>
             <!-- Right Side End -->

@@ -167,6 +167,10 @@
                                         <i data-acorn-icon="download"></i>
                                         <span>{{ __('Download enrollment sheet') }}</span>
                                     </x-dropdown-item>
+                                    <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student)">
+                                        <i data-acorn-icon="download"></i>
+                                        <span>{{ __('Download certificate study') }}</span>
+                                    </x-dropdown-item>
                                     <x-dropdown-item type="button" :link="route('students.transfer', $student)">
                                         <i data-acorn-icon="destination"></i>
                                         <span>{{ __('Transfer') }}</span>
@@ -186,6 +190,20 @@
                         <a class="btn btn-outline-info" href="{{ route('student.pdf.matriculate') }}">
                             {{ __('Download enrollment sheet') }}
                         </a>
+
+                        <!-- Dropdown Button Start -->
+                        <div class="ms-1">
+                            <button type="button" class="btn btn-outline-info btn-icon btn-icon-only" data-bs-offset="0,3"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
+                                <i data-acorn-icon="more-horizontal"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <x-dropdown-item type="button" :link="route('students.pdf.certificate')">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>{{ __('Download certificate study') }}</span>
+                                </x-dropdown-item>
+                            </div>
+                        </div>
                     </div>
                 @endhasrole
 

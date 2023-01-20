@@ -248,24 +248,24 @@ class SchoolController extends Controller
     public function signature_rector(Request $request)
     {
         $request->validate([
-            'signature_rector' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048']
+            'rector_name' => ['required', 'string', 'max:191'],
+            'signature_rector' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048']
         ]);
 
         $S = static::myschool()->getData();
 
         $path = $this->uploadSignature($request, 'signature_rector', $S);
         if (is_null($path)) {
-            session()->flash('tab', 'signature');
-            Notify::fail(__('An error has occurred'));
-            return back();
+            $path = $S->signature_rector;
         }
 
         $S->forceFill([
+            'rector_name' => $request->rector_name,
             'signature_rector' => $path
         ])->save();
 
         session()->flash('tab', 'signature');
-        Notify::success(__("Signature updated!"));
+        Notify::success(__("Info Rector updated!"));
         return back();
     }
     private function uploadSignature($request, $file, $S)

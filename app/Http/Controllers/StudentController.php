@@ -79,7 +79,8 @@ class StudentController extends Controller
             'wizard_person_charge_request',
             'wizard_personal_info_request',
             'wizard_complete_request',
-            'pdf_matriculate');
+            'pdf_matriculate',
+            'pdf_certificate');
         $this->middleware('can:students.import')->only(
             'data_instructive',
             'export_instructive',
@@ -93,7 +94,8 @@ class StudentController extends Controller
         $this->middleware('can:students.info')->only(
             'show',
             'update',
-            'pdf_matriculate');
+            'pdf_matriculate',
+            'pdf_certificate');
         $this->middleware('can:students.view')->only('view');
         $this->middleware('can:students.psychosocial')->only(
             'psychosocial_update',
@@ -1249,8 +1251,21 @@ class StudentController extends Controller
         }
 
         return self::pdfMatriculateGenerate($student->id);
+    }
 
+    public function pdf_certificate(Student $student = null)
+    {
+        if ('STUDENT' == UserController::role_auth())
+        {
+            $student = Student::find(Auth::id());
+        }
 
+        if (is_null($student->enrolled)) {
+            Notify::fail(__('El estudiante no ha sido matriculado'));
+            return back();
+        }
+
+        return $this->pdfCertificateGenerate($student);
     }
 
     private function pdfMatriculateGenerate($student)
@@ -1273,6 +1288,22 @@ class StudentController extends Controller
         $pdf->setOption('dpi', 72);
 
         return $pdf->download($student->getFullName() .'.pdf');
+    }
+
+    private function pdfCertificateGenerate($student)
+    {
+        $SCHOOL = SchoolController::myschool()->getData();
+        $date = Carbon::now();
+
+        $pdf = Pdf::loadView('logro.pdf.student-certificate', [
+            'SCHOOL' => $SCHOOL,
+            'date' => $date,
+            'student' => $student
+        ]);
+        $pdf->setPaper('letter', 'portrait');
+        $pdf->setOption('dpi', 72);
+
+        return $pdf->download(__('Certificate') .' - '. $student->getFullName() .'.pdf');
     }
 
     /* private function send_msg($student, $group)
