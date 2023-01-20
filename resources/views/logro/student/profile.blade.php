@@ -163,13 +163,15 @@
                                     <i data-acorn-icon="more-horizontal"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end">
+                                    @if ($student->enrolled)
+                                        <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student)">
+                                            <i data-acorn-icon="download"></i>
+                                            <span>{{ __('Download certificate study') }}</span>
+                                        </x-dropdown-item>
+                                    @endif
                                     <x-dropdown-item type="button" :link="route('students.pdf.matriculate', $student)">
                                         <i data-acorn-icon="download"></i>
                                         <span>{{ __('Download enrollment sheet') }}</span>
-                                    </x-dropdown-item>
-                                    <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student)">
-                                        <i data-acorn-icon="download"></i>
-                                        <span>{{ __('Download certificate study') }}</span>
                                     </x-dropdown-item>
                                     <x-dropdown-item type="button" :link="route('students.transfer', $student)">
                                         <i data-acorn-icon="destination"></i>
@@ -186,11 +188,6 @@
                 @hasrole('STUDENT')
                     <!-- Top Buttons Start -->
                     <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
-                        <!-- Download Matriculate Button -->
-                        <a class="btn btn-outline-info" href="{{ route('student.pdf.matriculate') }}">
-                            {{ __('Download enrollment sheet') }}
-                        </a>
-
                         <!-- Dropdown Button Start -->
                         <div class="ms-1">
                             <button type="button" class="btn btn-outline-info btn-icon btn-icon-only" data-bs-offset="0,3"
@@ -198,9 +195,15 @@
                                 <i data-acorn-icon="more-horizontal"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <x-dropdown-item type="button" :link="route('students.pdf.certificate')">
+                                @if ($student->enrolled)
+                                    <x-dropdown-item type="button" :link="route('students.pdf.certificate')">
+                                        <i data-acorn-icon="download"></i>
+                                        <span>{{ __('Download certificate study') }}</span>
+                                    </x-dropdown-item>
+                                @endif
+                                <x-dropdown-item type="button" :link="route('student.pdf.matriculate')">
                                     <i data-acorn-icon="download"></i>
-                                    <span>{{ __('Download certificate study') }}</span>
+                                    <span>{{ __('Download enrollment sheet') }}</span>
                                 </x-dropdown-item>
                             </div>
                         </div>
