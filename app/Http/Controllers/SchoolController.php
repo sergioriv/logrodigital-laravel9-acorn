@@ -22,8 +22,8 @@ class SchoolController extends Controller
 
     function __construct(School $school = null)
     {
-        $this->middleware('can:myinstitution')->except('name', 'badge', 'email', 'handbook', 'numberStudents');
-        $this->middleware('can:myinstitution.edit')->only('update');
+        $this->middleware('can:myinstitution')->except('name', 'badge', 'email', 'handbook', 'signatureRector', 'numberStudents');
+        $this->middleware('can:myinstitution.edit')->only('update', 'security_email', 'sendConfirmationEmail', 'signature_rector');
         $this->middleware('can:support.access')->only('number_students_show', 'number_students_update');
 
         $this->school = $school;
@@ -141,6 +141,10 @@ class SchoolController extends Controller
     {
         return $this->school->security_email ?? null;
     }
+    public function signatureRector()
+    {
+        return $this->school->signature_rector ?? null;
+    }
     public function numberStudents()
     {
         return $this->school->number_students;
@@ -237,5 +241,43 @@ class SchoolController extends Controller
             return ['status' => true, 'message' => 'info|' . __("A code was sent to the registered email")];
         else
             return ['status' => false, 'message' => 'fail|' . $generateCodeSecurity];
+    }
+
+
+    /* Signature Rector */
+    public function signature_rector(Request $request)
+    {
+        $request->validate([
+            'signature_rector' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048']
+        ]);
+
+        $S = static::myschool()->getData();
+
+        $path = $this->uploadSignature($request, 'signature_rector', $S);
+        if (is_null($path)) {
+            session()->flash('tab', 'signature');
+            Notify::fail(__('An error has occurred'));
+            return back();
+        }
+
+        $S->forceFill([
+            'signature_rector' => $path
+        ])->save();
+
+        session()->flash('tab', 'signature');
+        Notify::success(__("Signature updated!"));
+        return back();
+    }
+    private function uploadSignature($request, $file, $S)
+    {
+        if ($request->hasFile($file)) {
+
+            if (!is_null($S->$file)) {
+                File::delete(public_path($S->$file));
+            }
+
+            $path = $request->file($file)->store('school/', 'public');
+            return config('filesystems.disks.public.url') . '/' . $path;
+        } else return null;
     }
 }

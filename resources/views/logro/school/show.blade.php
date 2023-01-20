@@ -25,6 +25,9 @@ $title = $school->name;
     <!-- DataTable -->
     <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
     <script src="/js/plugins/datatable/datatables_myintitution.ajax.js?d=1668181091077"></script>
+    <script>
+        new SingleImageUpload(document.getElementById('signatureRector'))
+    </script>
 @endsection
 
 @section('content')
@@ -81,6 +84,10 @@ $title = $school->name;
                             <a class="nav-link @if(session('tab') === 'security') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#securityTab" role="tab">
                                 <span class="align-middle">{{ __('Security') }}</span>
+                            </a>
+                            <a class="nav-link @if(session('tab') === 'signature') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#signaureTab" role="tab">
+                                <span class="align-middle">{{ __('Signature Rector') }}</span>
                             </a>
                         </div>
 
@@ -571,6 +578,46 @@ $title = $school->name;
 
                 </div>
                 <!-- Secretariat Tab End -->
+
+                <!-- Signature Tab Start -->
+                <div class="tab-pane fade @if(session('tab') === 'signature') active show @endif" id="signaureTab">
+                    <form method="POST" action="{{ route('myinstitution.security.signature') }}" class="tooltip-end-bottom"
+                        id="mySignatureForm" enctype="multipart/form-data" novalidate>
+                        @csrf
+                        @method('PATCH')
+
+                        <!-- Security Email Start -->
+                        <h2 class="small-title">{{ __('Signature Rector') }}</h2>
+                        <section class="card mb-5">
+                            <div class="card-body">
+                                <div id="signatureRector" class="text-center">
+                                    <div class='position-relative d-inline-block tooltip-center-top'>
+                                        @if (!is_null($school->signature_rector))
+                                            <img src="{{ config('app.url') . '/' . $school->signature_rector }}" alt="signature"
+                                                class="form-signature rounded-0 max-w-100 sh-19 object-scale-down" />
+                                        @else
+                                            <img src="{{ config('app.url') . '/img/logo/logo-logro-gray.svg' }}"
+                                                alt="signature" class="form-signature rounded-0 max-w-100 sh-19 object-scale-down">
+                                        @endif
+                                        <button
+                                            class="btn btn-sm btn-icon btn-icon-only btn-separator-light rounded-xl position-absolute e-0 b-0"
+                                            type="button">
+                                            <i data-acorn-icon="upload"></i>
+                                        </button>
+                                        <input name="signature_rector" class="file-upload d-none" type="file"
+                                            accept="image/jpg, image/jpeg, image/png, image/webp" />
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                            <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                        </div>
+
+                    </form>
+                </div>
+                <!-- Security Tab End -->
 
                 <!-- Security Tab Start -->
                 <div class="tab-pane fade @if(session('tab') === 'security') active show @endif" id="securityTab">

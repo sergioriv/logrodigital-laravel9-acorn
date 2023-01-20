@@ -117,6 +117,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('myinstitution', [SchoolController::class, 'update'])->name('myinstitution.update');
     Route::get('myinstitution/send-confirmation', [SchoolController::class, 'sendConfirmationEmail']);
     Route::patch('myinstitution', [SchoolController::class, 'security_email'])->name('myinstitution.security.email');
+    Route::patch('myinstitution/signature', [SchoolController::class, 'signature_rector'])->name('myinstitution.security.signature');
 
     /* Route School Year */
     Route::resource('school-years', SchoolYearController::class)->except('destroy','edit','update')->names('schoolYear');
