@@ -17,6 +17,27 @@
             margin: 5em;
         }
 
+        .header,
+        .footer {
+            width: 100%;
+            text-align: center;
+            position: fixed;
+        }
+
+        .header {
+            top: 0px;
+        }
+
+        .footer {
+            bottom: 0px;
+        }
+
+        .content {
+            position: relative;
+            margin-top: 100px;
+            margin-bottom: 80px;
+        }
+
         .w-70p {
             width: 70px;
         }
@@ -119,6 +140,12 @@
             padding-left: 0;
             padding-right: 0;
         }
+        .pt-4 {
+            padding-top: 20px;
+        }
+        .pt-6 {
+            padding-top: 30px;
+        }
 
         .mt-1 {
             margin-top: 2em;
@@ -135,11 +162,29 @@
         .mt-4 {
             margin-top: 20px;
         }
+
         .mt-5 {
             margin-top: 25px;
         }
+
         .mt-6 {
             margin-top: 30px;
+        }
+
+        .mt-7 {
+            margin-top: 35px;
+        }
+
+        .mt-8 {
+            margin-top: 40px;
+        }
+
+        .mt-9 {
+            margin-top: 45px;
+        }
+
+        .mt-10 {
+            margin-top: 50px;
         }
 
         .align-sub {
@@ -202,11 +247,21 @@
         .text-center {
             text-align: center;
         }
+
         .text-justify {
             text-align: justify;
         }
+
         .f-size-8 {
             font-size: 8;
+        }
+
+        .f-size-9 {
+            font-size: 9;
+        }
+
+        .f-size-10 {
+            font-size: 10;
         }
     </style>
 </head>
@@ -214,7 +269,7 @@
 <body>
 
 
-    <table class="table w-100" border="0">
+    <table class="table header" border="0">
         <tr>
             <td class="h-70p w-70p text-center align-sub">
                 @if ($SCHOOL->badge)
@@ -229,51 +284,68 @@
                     Creado mediante acuerdo No. 033 de Octubre de 1996 Resolución de Reconocimiento No.
                     4657 de Noviembre de 2003, Resolución No. 006319 de Noviembre 17 de 2006, Resolución No. 0011778 de
                     Diciembre de 2007 Resolución No. 005850 del 10 de Julio de 2009.
+                    @if (!is_null($SCHOOL->dane))
+                    <br />
+                    DANE {{ $SCHOOL->dane }}
+                    @endif
                 </p>
             </td>
             <td class="h-70p w-70p align-sub text-center">&nbsp;</td>
         </tr>
     </table>
 
-    <section class="mt-6 text-center bold">
-        EL SUSCRITO RECTOR/A DE LA INSTITUCIÓN
-        <br />
-        {{ $SCHOOL->name ?? null }}
-        <br />
-        <div class="mt-4">CERTIFICA QUE:</div>
+    <section class="content pt-6">
+        <div class="text-center bold">
+            EL SUSCRITO RECTOR/A DE LA INSTITUCIÓN
+            <br />
+            {{ $SCHOOL->name ?? null }}
+            <br />
+            <div class="mt-10">CERTIFICA QUE:</div>
+        </div>
+
+        <div class="mt-10 text-justify">
+            El (La) Estudiante {{ $student->getCompleteNames() }},
+            identificado(a) con {{ $student->document_type_code ?? '_______' }} No.
+            {{ $student->document ?? '_______________________' }}
+            se encuentra matriculado(a) en esta Institución,
+            cursando {{ __($student->studyYear->resource->name) }}
+            durante el presente año lectivo {{ $date->format('Y') }},
+            en la sede {{ $student->headquarters->name }} jornada {{ $student->studyTime->name }} grupo
+            {{ $student->group->name }}.
+        </div>
+        <div class="mt-2">
+            Se expide la presente certificación a los {{ $date->format('d') }} días del mes {{ $date->format('m') }}
+            de {{ $date->format('Y') }}, para sus trámites pertinentes.
+        </div>
+        <div class="mt-2 bold">
+            Este certificado únicamente es válido con sello de rectoría en original.
+        </div>
+
+        <div class="card mt-10">
+            <table class="table w-100">
+                <tr>
+                    <td class="t-center w-50">
+                        <div class="signature">
+                            @if ($SCHOOL->signature_rector !== null)
+                                <img src="{{ asset($SCHOOL->signature_rector) }}">
+                            @endif
+                        </div>
+                        <div class="signature_name bold">
+                            {{ $SCHOOL->rector_name ?? null }}
+                        </div>
+                        <div class="bold">RECTOR</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </section>
 
-    <section class="mt-4 text-justify">
-        El (La) Estudiante {{ $student->getCompleteNames() }},
-        identificado(a) con {{ $student->document_type_code ?? '_______' }} No. {{ $student->document ?? '_______________________' }}
-        se encuentra matriculado(a) en esta Institución,
-        cursando {{ __($student->studyYear->resource->name) }}
-        durante el presente año lectivo {{ $date->format('Y') }},
-        en la sede {{ $student->headquarters->name }} jornada {{ $student->studyTime->name }} grupo {{ $student->group->name }}.
-    </section>
-    <section class="mt-2">
-        Se expide la presente certificación a los {{ $date->format('d') }} días del mes {{ $date->format('m') }} de {{ $date->format('Y') }}, para sus trámites pertinentes.
-    </section>
-    <section class="mt-2 bold">
-        Este certificado únicamente es válido con sello de rectoría en original.
-    </section>
-
-    <section class="card mt-6">
-        <table class="table w-100">
-            <tr>
-                <td class="t-center w-50">
-                    <div class="signature">
-                        @if ($SCHOOL->signature_rector !== null)
-                            <img src="{{ asset($SCHOOL->signature_rector) }}">
-                        @endif
-                    </div>
-                    <div class="signature_name bold">
-                        {{ $SCHOOL->rector_name ?? null }}
-                    </div>
-                    <div class="bold">RECTOR</div>
-                </td>
-            </tr>
-        </table>
+    <section class="footer f-size-8">
+        Carrera 22 No. 4 - 44 Sur Barrio El Sociego - Madrid - Cundinamarca
+        <br />
+        Tel. 6018282027
+        <br />
+        www.ietecnologico-madrid-cundinamarca.edu.co - instituciontecnologico@gmail.com
     </section>
 
 </body>
