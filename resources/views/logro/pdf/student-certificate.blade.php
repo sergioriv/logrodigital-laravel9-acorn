@@ -345,7 +345,7 @@
         <br />
         Tel. 6018282027
         <br />
-        www.ietecnologico-madrid-cundinamarca.edu.co - instituciontecnologico@gmail.com
+        www.ietecnologico-madrid-cundinamarca.edu.co - admintecnologico@ietecnologico-madrid.edu.co
     </section>
 
 </body>
