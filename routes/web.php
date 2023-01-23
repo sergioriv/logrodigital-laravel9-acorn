@@ -39,6 +39,7 @@ use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
+use App\Models\Student;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -265,6 +266,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('students/{student}/download/matriculate', 'pdf_matriculate')->name('students.pdf.matriculate');
         Route::get('students/download/certificate/{student?}', 'pdf_certificate')->name('students.pdf.certificate');
+
+        Route::get('enrolled-export', 'export_enrolled_view')->name('students.export.enrolled');
+        Route::post('enrolled-export', 'export_enrolled_generate')->name('students.export.enrolled.generate');
 
     });
 

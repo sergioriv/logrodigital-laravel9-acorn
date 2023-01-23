@@ -1841,6 +1841,18 @@
 
                             <div class="card-body">
 
+                                @hasanyrole('STUDENT|SUPPORT')
+                                <div class="text-center">
+                                    <div class="alert alert-info" role="alert">
+                                        <b>Estos boletines NO son obligatorios.</b>
+                                        <br />
+                                        Si estás en primaria, recomendamos subir boletines de años anteriores.
+                                        <br />
+                                        Para grado sexto o superior, recomendamos subir el boletín de Quinto grado.
+                                    </div>
+                                </div>
+                                @endhasanyrole
+
                                 @can('students.documents.checked')
                                     <div class="text-center">
                                         <div class="alert alert-warning" role="alert">

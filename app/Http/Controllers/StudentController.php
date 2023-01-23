@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\StudentsEnrolledExport;
 use App\Exports\StudentsInstructuveExport;
 use App\Exports\StudentsWithFiles;
 use App\Http\Controllers\Mail\SmtpMail;
@@ -1144,6 +1145,56 @@ class StudentController extends Controller
             ->get();
 
         return Excel::download(new StudentsWithFiles($students), __('no-enrolled') . '.xlsx');
+    }
+
+    public function export_enrolled_view()
+    {
+        return view('logro.student.export.enrolled', [
+            'headquarters' => Headquarters::all(),
+            'studyTimes' => StudyTime::all(),
+            'studyYears' => StudyYear::all(),
+        ]);
+    }
+
+    public function export_enrolled_generate(Request $request)
+    {
+        $request->validate([
+            'headquarters' => ['required'],
+            'headquarters.*' => ['required', 'exists:headquarters,id'],
+
+            'study_time' => ['required'],
+            'study_time.*' => ['required', 'exists:study_times,id'],
+
+            'study_year' => ['required'],
+            'study_year.*' => ['required', 'exists:study_years,id'],
+        ], [
+            '*.*.exists' => __('An error has occurred'),
+        ]);
+
+        $attributes = [
+            'headquarters' => $request->has('columns.headquarters'),
+            'study_time' => $request->has('columns.study_time'),
+            'study_year' => $request->has('columns.study_year'),
+            'group' => $request->has('columns.group'),
+            'document' => $request->has('columns.document'),
+            'email' => $request->has('columns.email'),
+            'telephone' => $request->has('columns.telephone'),
+            'country' => $request->has('columns.country'),
+            'bith_city' => $request->has('columns.bith_city'),
+            'birthdate' => $request->has('columns.birthdate'),
+            'age' => $request->has('columns.age'),
+            'gender' => $request->has('columns.gender'),
+            'rh' => $request->has('columns.rh'),
+            'zone' => $request->has('columns.zone'),
+            'residence_city' => $request->has('columns.residence_city'),
+            'address' => $request->has('columns.address'),
+            'social_stratum' => $request->has('columns.social_stratum'),
+            'dwelling_type' => $request->has('columns.dwelling_type'),
+            'neighborhood' => $request->has('columns.neighborhood'),
+            'sisben' => $request->has('columns.sisben'),
+        ];
+
+        return Excel::download(new StudentsEnrolledExport($attributes, $request), __('enrolled') . time() . '.xlsx');
     }
 
     public function import()

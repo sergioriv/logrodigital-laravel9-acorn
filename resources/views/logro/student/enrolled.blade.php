@@ -40,6 +40,22 @@ $title = __('Students') .' '. __('enrolled');
                             <span>{{ __('Add New') }}</span>
                         </a>
                         <!-- Add New Button End -->
+
+                        <!-- Dropdown Button Start -->
+                        <div class="ms-1">
+                            <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only"
+                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false" data-submenu>
+                                <i data-acorn-icon="more-horizontal"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('students.export.enrolled') }}">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>{{ __("Generate") }} Excel</span>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Dropdown Button End -->
                     </div>
                     <!-- Top Buttons End -->
                 </div>
