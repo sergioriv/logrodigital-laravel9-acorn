@@ -318,7 +318,7 @@
             de {{ $date->format('Y') }}, para sus trámites pertinentes.
         </div>
         <div class="mt-2 bold">
-            Este certificado únicamente es válido con sello de rectoría en original.
+            Este certificado únicamente es válido con sello de secretaría.
         </div>
 
         <div class="card mt-10">
