@@ -1194,7 +1194,7 @@ class StudentController extends Controller
             'sisben' => $request->has('columns.sisben'),
         ];
 
-        return Excel::download(new StudentsEnrolledExport($attributes, $request), __('enrolled') . time() . '.xlsx');
+        return Excel::download(new StudentsEnrolledExport($attributes, $request), __('enrolled') . '.xlsx');
     }
 
     public function import()
