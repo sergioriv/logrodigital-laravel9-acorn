@@ -45,6 +45,7 @@ use App\Models\TypesConflict;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use iio\libmergepdf\Merger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -1327,6 +1328,21 @@ class StudentController extends Controller
         return $this->pdfObservationsGenerate($student);
     }
 
+    public function pdf_carnet(Student $student = null)
+    {
+        if ('STUDENT' == UserController::role_auth())
+        {
+            $student = Student::find(Auth::id());
+        }
+
+        if (is_null($student->enrolled)) {
+            Notify::fail(__('El estudiante no ha sido matriculado'));
+            return back();
+        }
+
+        return $this->pdfCarnetGenerate($student);
+    }
+
 
 
     private function pdfMatriculateGenerate($student)
@@ -1369,16 +1385,62 @@ class StudentController extends Controller
     {
         $SCHOOL = SchoolController::myschool()->getData();
 
-        $pdf = Pdf::loadView('logro.pdf.student-observations', [
+        $tutor = PersonCharge::select('id', 'name')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
+
+        $matricula = Pdf::loadView('logro.pdf.matriculate', [
+            'SCHOOL' => $SCHOOL,
+            'date' => now()->format('d/m/Y'),
+            'student' => $student,
+            'tutor' => $tutor,
+            'nationalCountry' => NationalCountry::country()
+        ])->setPaper('letter', 'portrait')->setOption('dpi', 72)->output();
+
+        $observer = Pdf::loadView('logro.pdf.student-observations', [
             'SCHOOL' => $SCHOOL,
             'date' => now()->format('d/m/Y'),
             'student' => $student
-        ]);
+        ])->setPaper('letter', 'landscape')->setOption('dpi', 72)->output();
 
-        $pdf->setPaper('letter', 'landscape');
-        $pdf->setOption('dpi', 72);
+        $merge = new Merger();
+        $merge->addRaw($matricula);
+        $merge->addRaw($observer);
 
-        return $pdf->download(__('Observer') .' - '. $student->getFullName() .'.pdf');
+        $nameFile = 'app/' . Str::uuid() . '.pdf';
+
+        file_put_contents($nameFile, $merge->merge());
+
+        return response()->download(
+                public_path($nameFile),
+                __('Observer') .' - '. $student->getFullName() .'.pdf'
+            )->deleteFileAfterSend();
+
+    }
+
+    private function pdfCarnetGenerate($student)
+    {
+        $SCHOOL = SchoolController::myschool()->getData();
+
+        $merge = new Merger();
+
+        $pdf = Pdf::loadView('logro.pdf.student-carnet', [
+            'SCHOOL' => $SCHOOL,
+            'student' => $student
+        ])->setPaper('letter', 'portrait')->setOption('dpi', 72)->output();
+
+        $pdf2 = Pdf::loadView('logro.pdf.student-carnet', [
+            'SCHOOL' => $SCHOOL,
+            'student' => $student
+        ])->setPaper('letter', 'landscape')->setOption('dpi', 72)->output();
+
+
+        $merge->addRaw($pdf);
+        $merge->addRaw($pdf2);
+
+        $nameFile = 'app/' . Str::uuid() . '.pdf';
+
+        file_put_contents($nameFile, $merge->merge());
+
+        return response()->download(public_path($nameFile), $student->getFullName() . '.pdf')->deleteFileAfterSend();
     }
 
     /* private function send_msg($student, $group)
