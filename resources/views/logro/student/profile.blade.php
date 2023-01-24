@@ -173,12 +173,12 @@
                                         <i data-acorn-icon="download"></i>
                                         <span>{{ __('Download enrollment sheet') }}</span>
                                     </x-dropdown-item>
-                                    {{-- @if ($student->enrolled)
+                                    @if ($student->enrolled)
                                         <x-dropdown-item type="button" :link="route('students.pdf.observations', $student)">
                                             <i data-acorn-icon="download"></i>
                                             <span>{{ __('Download observer') }}</span>
                                         </x-dropdown-item>
-                                    @endif --}}
+                                    @endif
                                     <x-dropdown-item type="button" :link="route('students.transfer', $student)">
                                         <i data-acorn-icon="destination"></i>
                                         <span>{{ __('Transfer') }}</span>
@@ -206,10 +206,10 @@
                                         <i data-acorn-icon="download"></i>
                                         <span>{{ __('Download certificate study') }}</span>
                                     </x-dropdown-item>
-                                    {{-- <x-dropdown-item type="button" :link="route('students.pdf.observations')">
+                                    <x-dropdown-item type="button" :link="route('students.pdf.observations')">
                                         <i data-acorn-icon="download"></i>
                                         <span>{{ __('Download observer') }}</span>
-                                    </x-dropdown-item> --}}
+                                    </x-dropdown-item>
                                 @endif
                                 <x-dropdown-item type="button" :link="route('student.pdf.matriculate')">
                                     <i data-acorn-icon="download"></i>
