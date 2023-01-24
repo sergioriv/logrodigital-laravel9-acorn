@@ -9,12 +9,7 @@ use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\GenerateStudentCode;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
-use App\Http\Controllers\support\WAController;
-use App\Http\Middleware\CheckStudentCountMiddleware;
-use App\Http\Middleware\StudentAccessTeacherMiddleware;
-use App\Http\Middleware\StudentActionRoleMiddleware;
 use App\Http\Middleware\YearCurrentMiddleware;
-use App\Http\Requests\TeacherAccessStudent;
 use App\Imports\StudentsImport;
 use App\Models\City;
 use App\Models\Coordination;
@@ -40,16 +35,12 @@ use App\Models\Religion;
 use App\Models\Reservation;
 use App\Models\ResourceStudyYear;
 use App\Models\Rh;
-use App\Models\School;
 use App\Models\Sisben;
 use App\Models\Student;
-use App\Models\StudentFile;
 use App\Models\StudentFileType;
 use App\Models\StudentRemovalCode;
-use App\Models\StudentReportBook;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
-use App\Models\Teacher;
 use App\Models\TypesConflict;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -1319,6 +1310,23 @@ class StudentController extends Controller
         return $this->pdfCertificateGenerate($student);
     }
 
+    public function pdf_observations(Student $student = null)
+    {
+        if ('STUDENT' == UserController::role_auth())
+        {
+            $student = Student::find(Auth::id());
+        }
+
+        if (is_null($student->enrolled)) {
+            Notify::fail(__('El estudiante no ha sido matriculado'));
+            return back();
+        }
+
+        return $this->pdfObservationsGenerate($student);
+    }
+
+
+
     private function pdfMatriculateGenerate($student)
     {
         $SCHOOL = SchoolController::myschool()->getData();
@@ -1327,16 +1335,14 @@ class StudentController extends Controller
         $student = Student::find($student);
         $tutor = PersonCharge::select('id', 'name')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
 
-
         $pdf = Pdf::loadView('logro.pdf.matriculate', [
             'SCHOOL' => $SCHOOL,
             'date' => $date,
             'student' => $student,
             'tutor' => $tutor,
             'nationalCountry' => NationalCountry::country()
-        ]);
-        $pdf->setPaper('letter', 'portrait');
-        $pdf->setOption('dpi', 72);
+        ])->setPaper('letter', 'portrait')->setOption('dpi', 72);
+
 
         return $pdf->download($student->getFullName() .'.pdf');
     }
@@ -1355,6 +1361,22 @@ class StudentController extends Controller
         $pdf->setOption('dpi', 72);
 
         return $pdf->download(__('Certificate') .' - '. $student->getFullName() .'.pdf');
+    }
+
+    private function pdfObservationsGenerate($student)
+    {
+        $SCHOOL = SchoolController::myschool()->getData();
+
+        $pdf = Pdf::loadView('logro.pdf.student-observations', [
+            'SCHOOL' => $SCHOOL,
+            'date' => now()->format('d/m/Y'),
+            'student' => $student
+        ]);
+
+        $pdf->setPaper('letter', 'landscape');
+        $pdf->setOption('dpi', 72);
+
+        return $pdf->download(__('Observations') .' - '. $student->getFullName() .'.pdf');
     }
 
     /* private function send_msg($student, $group)
