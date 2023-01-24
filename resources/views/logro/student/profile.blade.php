@@ -178,6 +178,10 @@
                                             <i data-acorn-icon="download"></i>
                                             <span>{{ __('Download observer') }}</span>
                                         </x-dropdown-item>
+                                        <x-dropdown-item type="button" :link="route('students.pdf.carnet', $student)">
+                                            <i data-acorn-icon="download"></i>
+                                            <span>{{ __('Download identification card') }}</span>
+                                        </x-dropdown-item>
                                     @endif
                                     <x-dropdown-item type="button" :link="route('students.transfer', $student)">
                                         <i data-acorn-icon="destination"></i>
@@ -209,6 +213,10 @@
                                     <x-dropdown-item type="button" :link="route('students.pdf.observations')">
                                         <i data-acorn-icon="download"></i>
                                         <span>{{ __('Download observer') }}</span>
+                                    </x-dropdown-item>
+                                    <x-dropdown-item type="button" :link="route('students.pdf.carnet')">
+                                        <i data-acorn-icon="download"></i>
+                                        <span>{{ __('Download identification card') }}</span>
                                     </x-dropdown-item>
                                 @endif
                                 <x-dropdown-item type="button" :link="route('student.pdf.matriculate')">

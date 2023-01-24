@@ -74,7 +74,8 @@ class StudentController extends Controller
             'wizard_complete_request',
             'pdf_matriculate',
             'pdf_certificate',
-            'pdf_observations');
+            'pdf_observations',
+            'pdf_carnet');
         $this->middleware('can:students.import')->only(
             'data_instructive',
             'export_instructive',
@@ -90,7 +91,8 @@ class StudentController extends Controller
             'update',
             'pdf_matriculate',
             'pdf_certificate',
-            'pdf_observations');
+            'pdf_observations',
+            'pdf_carnet');
         $this->middleware('can:students.view')->only('view');
         $this->middleware('can:students.psychosocial')->only(
             'psychosocial_update',
@@ -1420,27 +1422,13 @@ class StudentController extends Controller
     {
         $SCHOOL = SchoolController::myschool()->getData();
 
-        $merge = new Merger();
-
         $pdf = Pdf::loadView('logro.pdf.student-carnet', [
             'SCHOOL' => $SCHOOL,
             'student' => $student
-        ])->setPaper('letter', 'portrait')->setOption('dpi', 72)->output();
-
-        $pdf2 = Pdf::loadView('logro.pdf.student-carnet', [
-            'SCHOOL' => $SCHOOL,
-            'student' => $student
-        ])->setPaper('letter', 'landscape')->setOption('dpi', 72)->output();
+        ])->setPaper('letter', 'portrait')->setOption('dpi', 72);
 
 
-        $merge->addRaw($pdf);
-        $merge->addRaw($pdf2);
-
-        $nameFile = 'app/' . Str::uuid() . '.pdf';
-
-        file_put_contents($nameFile, $merge->merge());
-
-        return response()->download(public_path($nameFile), $student->getFullName() . '.pdf')->deleteFileAfterSend();
+        return $pdf->download('Carnet - '. $student->getFullName() .'.pdf');
     }
 
     /* private function send_msg($student, $group)

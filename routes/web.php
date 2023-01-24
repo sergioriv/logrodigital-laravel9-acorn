@@ -267,6 +267,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('students/{student}/download/matriculate', 'pdf_matriculate')->name('students.pdf.matriculate');
         Route::get('students/download/certificate/{student?}', 'pdf_certificate')->name('students.pdf.certificate');
         Route::get('students/download/observations/{student?}', 'pdf_observations')->name('students.pdf.observations');
+        Route::get('students/download/carnet/{student?}', 'pdf_carnet')->name('students.pdf.carnet');
 
         Route::get('enrolled-export', 'export_enrolled_view')->name('students.export.enrolled');
         Route::post('enrolled-export', 'export_enrolled_generate')->name('students.export.enrolled.generate');
