@@ -72,7 +72,8 @@ class StudentController extends Controller
             'wizard_personal_info_request',
             'wizard_complete_request',
             'pdf_matriculate',
-            'pdf_certificate');
+            'pdf_certificate',
+            'pdf_observations');
         $this->middleware('can:students.import')->only(
             'data_instructive',
             'export_instructive',
@@ -87,7 +88,8 @@ class StudentController extends Controller
             'show',
             'update',
             'pdf_matriculate',
-            'pdf_certificate');
+            'pdf_certificate',
+            'pdf_observations');
         $this->middleware('can:students.view')->only('view');
         $this->middleware('can:students.psychosocial')->only(
             'psychosocial_update',

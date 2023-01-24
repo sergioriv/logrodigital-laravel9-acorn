@@ -204,6 +204,10 @@
                                         <i data-acorn-icon="download"></i>
                                         <span>{{ __('Download certificate study') }}</span>
                                     </x-dropdown-item>
+                                    <x-dropdown-item type="button" :link="route('students.pdf.observations')">
+                                        <i data-acorn-icon="download"></i>
+                                        <span>{{ __('Download observations') }}</span>
+                                    </x-dropdown-item>
                                 @endif
                                 <x-dropdown-item type="button" :link="route('student.pdf.matriculate')">
                                     <i data-acorn-icon="download"></i>
