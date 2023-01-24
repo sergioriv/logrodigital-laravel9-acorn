@@ -77,7 +77,7 @@
         }
 
         .mt-2 {
-            margin-top: 3mm;
+            margin-top: 1.5mm;
         }
 
         .text-uppercase {
