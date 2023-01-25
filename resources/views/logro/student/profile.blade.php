@@ -183,10 +183,20 @@
                                             <span>{{ __('Download identification card') }}</span>
                                         </x-dropdown-item>
                                     @endif
+                                    <div class="dropdown-divider"></div>
                                     <x-dropdown-item type="button" :link="route('students.transfer', $student)">
                                         <i data-acorn-icon="destination"></i>
                                         <span>{{ __('Transfer') }}</span>
                                     </x-dropdown-item>
+                                    @can('students.delete')
+                                        @if (!$student->isRetired())
+                                            <x-dropdown-item type="button" data-bs-toggle="modal"
+                                            data-bs-target="#withdrawStudentModal">
+                                            <i data-acorn-icon="multiply" class="text-danger"></i>
+                                            <span>{{ __('Withdraw student') }}</span>
+                                        </x-dropdown-item>
+                                        @endif
+                                    @endcan
                                 </div>
                             </div>
                             <!-- Dropdown Button End -->
@@ -2683,6 +2693,35 @@
                                     data-bs-dismiss="modal">{{ __('Close') }}</button>
                                 <button type="submit" id="btn-confirmDelete" class="btn btn-danger"
                                     disabled>{{ __('Confirm deletion') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Withdraw Student -->
+            <div class="modal fade" id="withdrawStudentModal" aria-labelledby="modalWithdrawStudent" data-bs-backdrop="static"
+                data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalWithdrawStudent">{{ __('Withdraw student') }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('student.withdraw', $student) }}" id="studentWithdrawForm" method="POST">
+                            @csrf
+                            @method('PATCH')
+
+                            <div class="modal-body">
+                                <p>
+                                    {{ __('Are you sure to withdraw the Student :STUDENT?', ['STUDENT' => $student->getCompleteNames()]) }}
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-primary"
+                                    data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                <button type="submit" class="btn btn-danger"
+                                    >{{ __('Confirm') }}</button>
                             </div>
                         </form>
                     </div>

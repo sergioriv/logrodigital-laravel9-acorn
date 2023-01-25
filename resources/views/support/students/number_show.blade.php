@@ -27,9 +27,6 @@ $title = __('Students Number');
 
                 <section class="scroll-section">
 
-                    <!-- Validation Errors -->
-                    {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
-
                     <form id="registerForm" method="POST" action="{{ route('support.number_students.update') }}"
                         class="tooltip-end-bottom" novalidate>
                         @csrf

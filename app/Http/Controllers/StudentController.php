@@ -97,7 +97,7 @@ class StudentController extends Controller
         $this->middleware('can:students.psychosocial')->only(
             'psychosocial_update',
             'piar_update');
-        $this->middleware('can:students.delete')->only('send_delete_code', 'delete');
+        $this->middleware('can:students.delete')->only('send_delete_code', 'delete', 'withdraw');
 
         $this->middleware(YearCurrentMiddleware::class)->only('matriculate', 'matriculate_update');
         $this->middleware('countStudents')->only('create', 'store', 'import', 'import_store');
@@ -109,7 +109,6 @@ class StudentController extends Controller
     public function no_enrolled()
     {
         $Y = SchoolYearController::current_year();
-
 
         $students = Student::select(
             'id',
@@ -130,6 +129,9 @@ class StudentController extends Controller
             ->with('headquarters', 'studyTime', 'studyYear')
             ->withCount('filesRequired')
             ->where('school_year_create', '<=', $Y->id)
+            ->where(function ($query) {
+                $query->whereIn('status', ['new', 'repeat'])->orWhereNull('status');
+            })
             ->whereNot(
                 fn ($q) =>
                 $q->whereHas('groupYear', fn ($gs) =>
@@ -155,14 +157,15 @@ class StudentController extends Controller
 
 
         /* notificación de estudiantes restantes */
-        $CC = Student::count();
-        $SCHOOL = SchoolController::myschool()->getData();
-        if ($CC >= ($SCHOOL->number_students - 100)) {
-            Notify::info(__(":count students remain from the contracted plan.", ['count' => $SCHOOL->number_students - $CC]));
+        $S = SchoolController::myschool()->getData();
+        $numberStudents = Student::available()->count();
+
+        if ($numberStudents >= ($S->number_students - 100)) {
+            Notify::info(__(":count students remain from the contracted plan.", ['count' => $S->number_students - $numberStudents]));
         }
 
         return view("logro.student.create", [
-            'SCHOOL' => $SCHOOL,
+            'SCHOOL' => $S,
             'headquarters' => Headquarters::all(),
             'studyTime' => StudyTime::all(),
             'studyYear' => StudyYear::all(),
@@ -1463,6 +1466,89 @@ class StudentController extends Controller
             return ['status' => true, 'message' => 'info|' . __("A code was sent to the security email")];
         else
             return ['status' => false, 'message' => 'fail|' . $generateCodeRemoval];
+    }
+
+    public function withdrawn()
+    {
+        $Y = SchoolYearController::current_year();
+
+        $students = Student::select(
+            'id',
+            'first_name',
+            'second_name',
+            'first_last_name',
+            'second_last_name',
+            'institutional_email',
+            'document_type_code',
+            'document',
+            'status',
+            'inclusive',
+            'headquarters_id',
+            'study_time_id',
+            'study_year_id',
+            'created_at'
+        )->with('headquarters', 'studyYear', 'studyTime')
+        ->where('status', 'retired')
+        ->get();
+
+
+        return view('logro.student.withdrawn')->with('students', $students);
+    }
+
+    public function withdraw(Student $student)
+    {
+
+        $Y = SchoolYearController::current_year();
+
+        DB::beginTransaction();
+
+        try {
+
+            $student->reportBooks()->delete();
+            $student->files()->delete();
+
+            if (!is_null($student->enrolled)) {
+                $student->groupYear()->whereHas('group', fn($group) => $group->where('school_year_id', $Y->id))->delete();
+                $student->groupOfSpecialty()?->whereHas('group', fn($group) => $group->where('school_year_id', $Y->id))->delete();
+            }
+
+            $student->forceFill([
+                'group_id' => null,
+                'group_specialty_id' => null,
+                'enrolled_date' => null,
+                'enrolled' => null,
+                'status' => 'retired',
+                'signature_tutor' => null,
+                'signature_student' => null,
+                'wizard_documents' => null,
+                'wizard_report_books' => null,
+                'wizard_person_charge' => null,
+                'wizard_personal_info' => null,
+                'wizard_complete' => null
+            ])->save();
+
+            $student->user->forceFill([
+                'avatar' => null,
+                'email_verified_at' => null,
+                'password' => null,
+                'remember_token' => null
+            ])->save();
+
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+            Notify::fail(__('An error has occurred'));
+            return back();
+        }
+
+        DB::commit();
+
+        if (File::isDirectory(public_path('app/students/' . $student->id . '/'))) {
+            File::deleteDirectory(public_path('app/students/' . $student->id . '/'));
+        }
+
+        Notify::success('Estudiante retirado!');
+        return back();
     }
 
     public function delete(Student $student, Request $request)

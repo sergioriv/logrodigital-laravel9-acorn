@@ -97,6 +97,11 @@
                             <span class="label text-capitalize">{{ __("enrolled") }}</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route("students.withdraw") }}">
+                            <span class="label text-capitalize">{{ __("withdrawn") }}</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endcan

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Http\Controllers\SchoolYearController;
+use App\Http\Controllers\SchoolController;
 use App\Traits\FormatDate;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -151,7 +151,8 @@ class Student extends Model
             'group_id',
             'enrolled',
             'status',
-            'inclusive'
+            'inclusive',
+            'created_at'
         );
     }
 
@@ -171,6 +172,11 @@ class Student extends Model
     public function isRepeat() : bool
     {
         return $this->status === 'repeat';
+    }
+
+    public function isRetired() : bool
+    {
+        return $this->status === 'retired';
     }
 
     /*
@@ -269,9 +275,6 @@ class Student extends Model
     {
         return $this->hasOne(GroupStudent::class)
                 ->withWhereHas('groupSpecialty');
-            /* ->withWhereHas('group',
-                fn ($gsGroup) => $gsGroup->where('school_year_id', SchoolYearController::current_year()->id)
-                                        ->where('specialty', 1)); */
     }
 
     public function grades()
@@ -381,6 +384,22 @@ class Student extends Model
 
 
         return $this->tag;
+    }
+
+
+
+    /* contar retirados o no */
+    public static function available()
+    {
+        $S = SchoolController::myschool();
+
+        $available = self::when($S->getData()->withdraw, function ($withdraw) {
+            $withdraw->where(function ($query) {
+                $query->whereIn('status', ['new', 'repeat'])->orWhereNull('status');
+            });
+        });
+
+        return $available;
     }
 
 

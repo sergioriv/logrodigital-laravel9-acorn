@@ -31,6 +31,12 @@ class School extends Model
         'security_email'
     ];
 
+    /*
+     * 0 = se tienen en cuenta los estudiantes retirados
+     * 1 = NO se tienen en cuenta los estudiantes retirados
+     * */
+    protected $casts = ['withdraw' => 'boolean'];
+
     /* Mutadores y Accesores */
     protected function updatedAt(): Attribute
     {

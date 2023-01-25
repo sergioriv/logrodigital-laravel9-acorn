@@ -22,7 +22,7 @@ class SchoolController extends Controller
 
     function __construct(School $school = null)
     {
-        $this->middleware('can:myinstitution')->except('name', 'badge', 'email', 'handbook', 'signatureRector', 'numberStudents');
+        $this->middleware('can:myinstitution')->except('name', 'badge', 'email', 'handbook', 'signatureRector');
         $this->middleware('can:myinstitution.edit')->only('update', 'security_email', 'sendConfirmationEmail', 'signature_rector');
         $this->middleware('can:support.access')->only('number_students_show', 'number_students_update');
 
@@ -32,8 +32,9 @@ class SchoolController extends Controller
     public function show()
     {
         $S = static::myschool();
+
         return view('logro.school.show', [
-            'studentsCount' => Student::count(),
+            'studentsCount' => Student::available()->count(),
             'school' => $S->getData(),
             'daysToUpdate' => $S->daysToUpdate(),
             'teachers' => Teacher::all(),
@@ -155,33 +156,34 @@ class SchoolController extends Controller
     {
         return $this->school->signature_rector ?? null;
     }
-    public function numberStudents()
-    {
-        return $this->school->number_students;
-    }
+
+
+    /* Update number students */
     public function number_students_show()
     {
-        return view('support.students.number_show', ['number_students' => $this->numberStudents()]);
+        $myschool = static::myschool()->getData();
+        return view('support.students.number_show', ['number_students' => $myschool->number_students]);
     }
     public function number_students_update(Request $request)
     {
-        $request->validate(['students' => 'required', 'numeric']);
+        $request->validate([
+            'students' => ['required', 'numeric']
+        ]);
 
-        $numberCurrent = self::numberStudents();
+        $myschool = static::myschool()->getData();
 
-        if ($numberCurrent == $request->students)
-        {
+        if ($myschool->number_students == $request->students){
+
             Notify::info( __('Unchanged!') );
             return redirect()->back();
         }
 
-        self::myschool()->forceFill(
-            ['number_students' => $request->students]
-        )->save();
+        $myschool->forceFill([
+            'number_students' => $request->students
+        ])->save();
 
         Notify::success( __('Saved!') );
         return redirect()->back();
-
     }
 
     /* Security Email */

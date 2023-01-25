@@ -30,10 +30,9 @@ class StudentsImport implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
 
-        $CC = Student::count();
-        $MCS = SchoolController::myschool()->numberStudents();
+        $S = SchoolController::myschool()->getData();
 
-        if ( $CC + count($rows) > $MCS )
+        if ( Student::available()->count() + count($rows) > $S->number_students )
         {
             throw ValidationException::withMessages(['custom' => __('Imported students exceed contracted limit.')]);
         }

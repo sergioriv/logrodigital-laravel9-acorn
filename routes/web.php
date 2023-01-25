@@ -272,6 +272,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('enrolled-export', 'export_enrolled_view')->name('students.export.enrolled');
         Route::post('enrolled-export', 'export_enrolled_generate')->name('students.export.enrolled.generate');
 
+        Route::get('students/withdrawn', 'withdrawn')->name('students.withdraw');
+        Route::patch('students/{student}/withdraw', 'withdraw')->name('student.withdraw');
     });
 
 

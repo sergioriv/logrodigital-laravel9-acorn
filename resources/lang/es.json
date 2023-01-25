@@ -603,6 +603,10 @@
     "Observer": "Observador",
     "Download observer": "Descargar observador",
     "Download identification card": "Descargar carnet de identificación",
+    "Withdraw student": "Retirar estudiante",
+    "Are you sure to withdraw the Student :STUDENT?": "¿Está seguro de retirar al Estudiante :STUDENT",
+    "withdrawn": "retirados",
+    "Withdrawn students": "Estudiantes retirados",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Item Count": "Cant. Items",

@@ -22,10 +22,9 @@ class CheckStudentCountMiddleware
     public function handle(Request $request, Closure $next)
     {
 
-        $CC = Student::count();
-        $MCS = SchoolController::myschool()->numberStudents();
+        $S = SchoolController::myschool()->getData();
 
-        if ($CC >= $MCS)
+        if ( Student::available()->count() >= $S->number_students)
         {
             Notify::fail(__('Has reached the limit of the contracted plan.'));
             return redirect()->back();
