@@ -121,7 +121,7 @@
         }
 
         .mt-1 {
-            margin-top: 2em;
+            margin-top: 5px;
         }
 
         .mt-2 {
@@ -247,8 +247,24 @@
                 </td>
                 <td class="p-1 p-tb-0">
                     <div class="form-control">
+                        <b>Grupo:</b>
+                        {{ $student->group?->name }}
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table class="table w-100 mt-1" border="0">
+            <tr>
+                <td class="p-1 p-tb-0 w-50">
+                    <div class="form-control">
                         <b>Sede:</b>
                         {{ $student->headquarters->name ?? '' }}
+                    </div>
+                </td>
+                <td class="p-1 p-tb-0 w-50">
+                    <div class="form-control">
+                        <b>Jornada:</b>
+                        {{ $student->studyTime->name }}
                     </div>
                 </td>
             </tr>
