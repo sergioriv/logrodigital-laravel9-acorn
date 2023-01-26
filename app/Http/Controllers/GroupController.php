@@ -437,7 +437,8 @@ class GroupController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-        $teachers = Teacher::where('active', TRUE)->get();
+        $teachers = Teacher::where('active', TRUE)
+            ->orderBy('names')->orderBy('last_names')->get();
 
         $areas = $this->subjects_teacher($Y, $group);
 
