@@ -14,7 +14,6 @@
 <script src="/js/base/globals.js"></script>
 <script src="/js/base/nav.js"></script>
 <script src="/js/base/settings.js"></script>
-<script src="/js/base/loader.js"></script>
 <!-- Template Base Scripts End -->
 <!-- Page Specific Scripts Start -->
 <script src="/js/app.js?d=1666621931302"></script>
