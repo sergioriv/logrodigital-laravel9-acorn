@@ -5,9 +5,11 @@ namespace App\Imports;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Support\Str;
 
 class TeachersImport implements ToCollection, WithHeadingRow
 {
@@ -23,11 +25,11 @@ class TeachersImport implements ToCollection, WithHeadingRow
             /*
              * Validating that the columns exist.
              */
-            if(!isset( $row['first_name'] )) {
-                throw ValidationException::withMessages(['data' => 'La columna (first_name) no existe']);
+            if(!isset( $row['names'] )) {
+                throw ValidationException::withMessages(['data' => 'La columna (names) no existe']);
             } else
-            if(!isset( $row['first_last_name'] )) {
-                throw ValidationException::withMessages(['data' => 'La columna (first_last_name) no existe']);
+            if(!isset( $row['last_names'] )) {
+                throw ValidationException::withMessages(['data' => 'La columna (last_names) no existe']);
             } else
             if(!isset( $row['email'] )) {
                 throw ValidationException::withMessages(['data' => 'La columna (email) no existe']);
@@ -37,11 +39,11 @@ class TeachersImport implements ToCollection, WithHeadingRow
             /*
              * Validating that the email is not empty.
              */
-            if (empty(trim($row['first_name']))) {
-                throw ValidationException::withMessages(['data' => 'hay un (first_name) vacio']);
+            if (empty(trim($row['names']))) {
+                throw ValidationException::withMessages(['data' => 'hay un (names) vacio']);
             }
-            if (empty(trim($row['first_last_name']))) {
-                throw ValidationException::withMessages(['data' => 'hay un (first_last_name) vacio']);
+            if (empty(trim($row['last_names']))) {
+                throw ValidationException::withMessages(['data' => 'hay un (last_names) vacio']);
             }
             if (empty(trim($row['email']))) {
                 throw ValidationException::withMessages(['data' => 'hay un (email) vacio']);
@@ -51,6 +53,7 @@ class TeachersImport implements ToCollection, WithHeadingRow
             /*
              * Validating that the email is unique.
              */
+            $row['email'] = Str::lower($row['email']);
             $validEmail = User::where('email', $row['email'])->first();
 
             if ($validEmail) {
@@ -61,17 +64,19 @@ class TeachersImport implements ToCollection, WithHeadingRow
             /*
              * Creating a new user and a new teacher.
              */
-            $newUser = User::create([
-                'name'     => $row['first_name'] . ' ' . $row['first_last_name'],
+            $newUser = new User();
+            $newUser->forceFill([
+                'name'     => $row['names'],
                 'email'    => $row['email'],
-            ])->assignRole(6);
+                'email_verified_at' => now(),
+                'password' => Hash::make('123456')
+            ])->save();
+            $newUser->assignRole(6);
 
             Teacher::create([
                 'id'                    => $newUser->id,
-                'first_name'            => $row['first_name'],
-                'second_name'           => $row['second_name'],
-                'first_last_name'       => $row['first_last_name'],
-                'second_last_name'      => $row['second_last_name'],
+                'names'                 => $row['names'],
+                'last_names'            => $row['last_names'],
                 'telephone'             => $row['phone_number'],
                 'institutional_email'   => $row['email']
             ]);

@@ -19,12 +19,12 @@ class TeachersExport implements FromCollection, WithHeadings, WithColumnWidths, 
     */
     public function collection()
     {
-        return Teacher::select("first_name", "second_name", "first_last_name", "second_last_name", "telephone", "institutional_email", "document", "birthdate")->get();
+        return Teacher::select("names", "last_names", "telephone", "institutional_email", "document")->get();
     }
 
     public function headings(): array
     {
-        return ["First name", "Second name", "First last name", "Second last name", "Phone number", "Email", "Document", "Birthdate"];
+        return ["Nombres", "Apellidos", "Telefono", "Email", "Documento"];
     }
 
     public function columnWidths(): array

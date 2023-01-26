@@ -31,8 +31,8 @@ $title = __('Import') . ' ' . __('teachers');
                             <p>
                                 Los datos requeridos son:
                             <ul>
-                                <li>first_name</li>
-                                <li>first_last_name</li>
+                                <li>names</li>
+                                <li>last_names</li>
                                 <li>email</li>
                             </ul>
 

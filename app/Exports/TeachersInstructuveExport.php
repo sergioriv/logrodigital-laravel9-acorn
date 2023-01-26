@@ -12,10 +12,8 @@ class TeachersInstructuveExport implements WithHeadings, WithColumnWidths, WithS
     public function headings(): array
     {
         return [
-            "first_name",
-            "second_name",
-            'first_last_name',
-            'second_last_name',
+            "names",
+            "last_names",
             'phone_number',
             'email',
 
