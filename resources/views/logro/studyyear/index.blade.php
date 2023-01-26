@@ -4,18 +4,14 @@
 @extends('layout', ['title' => $title])
 
 @section('css')
-    <link rel="stylesheet" href="/css/vendor/datatables.min.css" />
 @endsection
 
 @section('js_vendor')
     <script src="/js/vendor/bootstrap-submenu.js"></script>
-    <script src="/js/vendor/datatables.min.js"></script>
     <script src="/js/vendor/mousetrap.min.js"></script>
 @endsection
 
 @section('js_page')
-    <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
-    <script src="/js/plugins/datatable/datatable_standard.ajax.js?d=1670967386206"></script>
 @endsection
 
 @section('content')
