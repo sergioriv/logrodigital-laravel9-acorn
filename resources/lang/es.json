@@ -608,6 +608,7 @@
     "withdrawn": "retirados",
     "Withdrawn students": "Estudiantes retirados",
     "Download student list": "Descargar lista de Estudiantes",
+    "Student activated!": "Estudiante activado!",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Item Count": "Cant. Items",
@@ -635,6 +636,9 @@
     "Action Target": "Objetivo de la acción",
     "Actions": "Acciones",
     "Account verified successfully": "Cuenta verificada con éxito",
+    "Account deactivated": "Cuenta desactivada",
+    "Activate": "Activar",
+    "To activate your account and log in to the platform, you must go to the institution's offices.": "Para activar su cuenta e iniciar sesión en la plataforma, debe acudir a las oficinas de la institución.",
     "Add": "Añadir",
     "Add a new team member to your team, allowing them to collaborate with you.": "Agregue un nuevo miembro a su equipo, permitiéndole colaborar con usted.",
     "Add additional security to your account using two factor authentication.": "Agregue seguridad adicional a su cuenta mediante la autenticación de dos factores.",

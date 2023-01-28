@@ -1602,4 +1602,23 @@ class StudentController extends Controller
         Notify::fail(__('Not allowed'));
         return redirect()->back();
     }
+
+    public function activate(Student $student)
+    {
+        if (!$student->isRetired()) {
+            Notify::fail(__('The student is already active'));
+            return back();
+        }
+
+        $student->update([
+            'status' => null
+        ]);
+        $student->user->forceFill([
+            'email_verified_at' => now(),
+            'active' => 1
+        ])->save();
+
+        Notify::success(__('Student activated!'));
+        return back();
+    }
 }

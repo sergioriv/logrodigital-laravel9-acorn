@@ -53,7 +53,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'show'])->name('dashboard');
 
@@ -71,6 +71,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Grade::getQuery()->delete();
             Notify::success('Hecho');
             return redirect()->route('dashboard');
+        });
+
+        Route::get('fix-students-retired', function () {
+            $students = Student::where('status', 'retired')->get();
+            foreach ($students as $student) {
+                $student->user->forceFill([
+                    'active' => 0
+                ])->save();
+            }
+
+            dd($students);
         });
 
 
@@ -274,6 +285,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('students/withdrawn', 'withdrawn')->name('students.withdraw');
         Route::patch('students/{student}/withdraw', 'withdraw')->name('student.withdraw');
+
+        Route::patch('students/{student}/activate', 'activate')->name('students.activate');
     });
 
 

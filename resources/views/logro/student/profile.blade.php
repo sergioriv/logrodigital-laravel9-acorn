@@ -146,60 +146,74 @@
                     @if (null !== $Y->available)
                         <!-- Top Buttons Start -->
                         <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
-                            <!-- Matriculate Button Start -->
-                            <a class="btn btn-outline-info" href="{{ route('students.matriculate', $student) }}">
+                            @if (!$student->isRetired())
+                                <!-- Matriculate Button Start -->
+                                <a class="btn btn-outline-info" href="{{ route('students.matriculate', $student) }}">
                                 @if (null === $student->group_id)
-                                    {{ __('Matriculate') }}
+                                {{ __('Matriculate') }}
                                 @else
                                     {{ __('Change group') }}
-                                @endif
-                            </a>
-                            <!-- Matriculate Button End -->
+                                    @endif
+                                </a>
+                                <!-- Matriculate Button End -->
 
-                            <!-- Dropdown Button Start -->
-                            <div class="ms-1">
-                                <button type="button" class="btn btn-outline-info btn-icon btn-icon-only" data-bs-offset="0,3"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
-                                    <i data-acorn-icon="more-horizontal"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    @if ($student->enrolled)
-                                        <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student)">
-                                            <i data-acorn-icon="download"></i>
-                                            <span>{{ __('Download certificate study') }}</span>
-                                        </x-dropdown-item>
-                                    @endif
-                                    <x-dropdown-item type="button" :link="route('students.pdf.matriculate', $student)">
-                                        <i data-acorn-icon="download"></i>
-                                        <span>{{ __('Download enrollment sheet') }}</span>
-                                    </x-dropdown-item>
-                                    @if ($student->enrolled)
-                                        <x-dropdown-item type="button" :link="route('students.pdf.observations', $student)">
-                                            <i data-acorn-icon="download"></i>
-                                            <span>{{ __('Download observer') }}</span>
-                                        </x-dropdown-item>
-                                        <x-dropdown-item type="button" :link="route('students.pdf.carnet', $student)">
-                                            <i data-acorn-icon="download"></i>
-                                            <span>{{ __('Download identification card') }}</span>
-                                        </x-dropdown-item>
-                                    @endif
-                                    <div class="dropdown-divider"></div>
-                                    <x-dropdown-item type="button" :link="route('students.transfer', $student)">
-                                        <i data-acorn-icon="destination"></i>
-                                        <span>{{ __('Transfer') }}</span>
-                                    </x-dropdown-item>
-                                    @can('students.delete')
-                                        @if (!$student->isRetired())
-                                            <x-dropdown-item type="button" data-bs-toggle="modal"
-                                            data-bs-target="#withdrawStudentModal">
-                                            <i data-acorn-icon="multiply" class="text-danger"></i>
-                                            <span>{{ __('Withdraw student') }}</span>
-                                        </x-dropdown-item>
-                                        @endif
-                                    @endcan
+                                <!-- Dropdown Button Start -->
+                                <div class="ms-1">
+                                    <button type="button" class="btn btn-outline-info btn-icon btn-icon-only" data-bs-offset="0,3"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
+                                        <i data-acorn-icon="more-horizontal"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                            @if ($student->enrolled)
+                                                <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student)">
+                                                    <i data-acorn-icon="download"></i>
+                                                    <span>{{ __('Download certificate study') }}</span>
+                                                </x-dropdown-item>
+                                            @endif
+                                            <x-dropdown-item type="button" :link="route('students.pdf.matriculate', $student)">
+                                                <i data-acorn-icon="download"></i>
+                                                <span>{{ __('Download enrollment sheet') }}</span>
+                                            </x-dropdown-item>
+                                            @if ($student->enrolled)
+                                                <x-dropdown-item type="button" :link="route('students.pdf.observations', $student)">
+                                                    <i data-acorn-icon="download"></i>
+                                                    <span>{{ __('Download observer') }}</span>
+                                                </x-dropdown-item>
+                                                <x-dropdown-item type="button" :link="route('students.pdf.carnet', $student)">
+                                                    <i data-acorn-icon="download"></i>
+                                                    <span>{{ __('Download identification card') }}</span>
+                                                </x-dropdown-item>
+                                            @endif
+                                            <div class="dropdown-divider"></div>
+                                            <x-dropdown-item type="button" :link="route('students.transfer', $student)">
+                                                <i data-acorn-icon="destination"></i>
+                                                <span>{{ __('Transfer') }}</span>
+                                            </x-dropdown-item>
+                                        @can('students.delete')
+                                            @if (!$student->isRetired())
+                                                <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                data-bs-target="#withdrawStudentModal">
+                                                <i data-acorn-icon="multiply" class="text-danger"></i>
+                                                <span>{{ __('Withdraw student') }}</span>
+                                            </x-dropdown-item>
+                                            @endif
+                                        @endcan
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- Dropdown Button End -->
+                                <!-- Dropdown Button End -->
+
+                            @else
+
+                                <!-- Activate Button Start -->
+                                <form action="{{ route('students.activate', $student) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <x-button type="submit" class="btn-success">{{ __('Activate') }}</x-button>
+                                </form>
+                                <!-- Activate Button End -->
+
+                            @endif
                         </div>
                         <!-- Top Buttons End -->
                     @endif

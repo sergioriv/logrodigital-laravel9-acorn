@@ -45,7 +45,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime:Y-m-d h:i:s',
         'created_at' => 'datetime:Y-m-d h:i:s',
+        'active' => 'boolean'
     ];
+
+    public function isActive() : bool
+    {
+        return $this->active;
+    }
 
 
     /**
