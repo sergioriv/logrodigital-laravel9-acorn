@@ -324,7 +324,7 @@ class TeacherController extends Controller
         $studentsGroup = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $subject->group_id))
             ->withCount([
                 'attendanceStudent' =>
-                    fn($attS) => $attS->whereIn('attend', ['N', 'JUSTIFIED'])
+                    fn($attS) => $attS->whereIn('attend', ['N', 'J', 'L'])
                         ->whereHas('attendance',
                         fn($att) => $att->where('teacher_subject_group_id', $subject->id)
                     )

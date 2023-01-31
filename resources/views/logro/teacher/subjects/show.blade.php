@@ -19,7 +19,7 @@
 
     <script>
         jQuery("[absences='view']").click(function() {
-            var attendance = $(this).attr('attendance-id');
+            let attendance = $(this).attr('attendance-id');
             $.get(HOST + '/attendance/absences', {
                 attendance: attendance
             }, function(data) {
@@ -27,6 +27,27 @@
                 $('#modalContentViewAbsences').html(data.content);
                 $('#viewAbsences').modal('show');
             })
+        });
+
+        jQuery("[absences='edit']").click(function () {
+            let attendance = $(this).attr('attendance-id');
+            $.get(HOST + '/attendance/' + attendance + '/edit', null, function(content) {
+                $('#editAttendance .modal-content').html(content);
+                $('#editAttendance').modal('show');
+            })
+        });
+
+        jQuery("[attendanceStudent].form-check-input").click(function () {
+
+            var studentCode = $(this).data('code');
+
+            $("#dropdown" + studentCode + " input").prop('checked', false);
+
+            if ($(this).prop('checked')) {
+                $('#dropdown' + studentCode).addClass('d-none');
+            } else {
+                $('#dropdown' + studentCode).removeClass('d-none');
+            }
         });
     </script>
 @endsection
@@ -504,6 +525,14 @@
                                                                                 attendance-id="{{ $attendance->id }}">
                                                                                 {{ __('see absences') }}</x-button>
                                                                         @endif
+
+
+                                                                        <x-button class="btn-sm btn-outline-primary"
+                                                                                absences='edit'
+                                                                                attendance-id="{{ $attendance->id }}">
+                                                                                {{ __('Edit') }}</x-button>
+
+
                                                                     </td>
                                                                 </tr>
                                                             @endforeach
@@ -551,6 +580,8 @@
                                                 <label class="form-check custom-icon mb-0 unchecked-opacity-25">
                                                     <input type="checkbox" class="form-check-input"
                                                         name="studentsAttendance[{{ $studentG->code }}]" value="1"
+                                                        attendanceStudent
+                                                        data-code="{{ $studentG->code }}"
                                                         checked>
                                                     <span class="form-check-label">
                                                         <span class="content">
@@ -561,6 +592,34 @@
                                                         </span>
                                                     </span>
                                                 </label>
+                                            </td>
+                                            <td>
+                                                <!-- Dropdown Button Start -->
+                                                <div id="dropdown{{ $studentG->code }}" class="d-none">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                        data-bs-offset="0,3"
+                                                        data-bs-toggle="dropdown"
+                                                        aria-haspopup="true"
+                                                        aria-expanded="false"
+                                                        data-bs-auto-close="inside">
+                                                        <i class="icon bi-three-dots-vertical"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <div class="dropdown-item">
+                                                            <label class="form-label cursor-pointer">
+                                                                <input type="radio" name="studentsAttendance[{{ $studentG->code }}][type]" value="late-arrival" />
+                                                                {{ __('Late arrival') }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="dropdown-item">
+                                                            <label class="form-label cursor-pointer">
+                                                                <input type="radio" name="studentsAttendance[{{ $studentG->code }}][type]" value="justified" />
+                                                                {{ __('Justified') }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Dropdown Button End -->
                                             </td>
                                         </tr>
                                     @endforeach
@@ -595,6 +654,16 @@
                         data-bs-dismiss="modal">{{ __('Close') }}</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Attendance -->
+    <div class="modal fade" id="editAttendance"
+    aria-labelledby="modalEditAbsences"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content"></div>
         </div>
     </div>
 @endsection

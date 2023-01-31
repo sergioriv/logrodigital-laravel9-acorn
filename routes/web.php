@@ -244,6 +244,8 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('mysubjects/{subject}', [TeacherController::class, 'mysubjects_show'])->name('teacher.my.subjects.show');
     Route::post('attendance/{subject}', [AttendanceStudentController::class, 'subject'])->name('attendance.subject');
     Route::get('attendance/absences', [AttendanceStudentController::class, 'absences_view']);
+    Route::get('attendance/{attendance}/edit', [AttendanceStudentController::class, 'absences_edit']);
+    Route::put('attendance/{attendance}/edit', [AttendanceStudentController::class, 'absences_update'])->name('attendance.update');
 
 
     /* Route Students */

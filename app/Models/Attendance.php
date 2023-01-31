@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\FormatDate;
 use App\Traits\Uuid;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
 {
     use Uuid;
-    use FormatDate;
 
     protected $fillable = [
         'teacher_subject_group_id',
@@ -32,6 +32,14 @@ class Attendance extends Model
 
     public function absences()
     {
-        return $this->students()->whereIn('attend', ['N', 'JUSTIFIED']);
+        return $this->students()->whereIn('attend', ['N', 'J', 'L']);
+    }
+
+
+    protected function createdAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => ucwords( Carbon::parse($value)->translatedFormat('d M H:i:s') )
+        );
     }
 }
