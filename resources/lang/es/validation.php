@@ -286,6 +286,8 @@ return [
         'employment_date_start' => 'fecha de ingreso',
         'employment_date_end' => 'fecha de retiro',
         'employment_file' => 'archivo de la institución',
+
+        'date' => 'fecha'
     ],
 
 ];

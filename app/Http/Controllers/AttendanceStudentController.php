@@ -8,7 +8,6 @@ use App\Models\Attendance;
 use App\Models\AttendanceStudent;
 use App\Models\Student;
 use App\Models\TeacherSubjectGroup;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -23,13 +22,17 @@ class AttendanceStudentController extends Controller
     public function subject(TeacherSubjectGroup $subject, Request $request)
     {
         $request->validate([
+            'date' => ['required', 'date', 'date_format:Y-m-d', 'before:tomorrow'],
             'studentsAttendance' => ['nullable', 'array'],
             'studentsAttendance.*.type' => ['in:late-arrival,justified']
         ]);
 
         DB::beginTransaction();
 
-        $attendance = Attendance::create(['teacher_subject_group_id' => $subject->id]);
+        $attendance = Attendance::create([
+            'teacher_subject_group_id' => $subject->id,
+            'date' => $request->date
+        ]);
 
         $studentsGroup = $subject->group->groupStudents;
         $studentsAttendace = [];
@@ -75,7 +78,7 @@ class AttendanceStudentController extends Controller
                 fn ($att) => $att->where('attendance_id', $attendance->id)->whereIn('attend', ['N', 'J', 'L'])
             )->get();
 
-        $title = __('Attendance') . ': ' . $attendance->created_at;
+        $title = __('Attendance') . ': ' . $attendance->date;
 
         $content = '<table class="table table-striped mb-0"><tbody>';
 

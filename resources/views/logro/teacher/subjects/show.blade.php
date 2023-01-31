@@ -5,11 +5,14 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/vendor/datatables.min.css" />
+    <link rel="stylesheet" href="/css/vendor/bootstrap-datepicker3.standalone.min.css" />
 @endsection
 
 @section('js_vendor')
     <script src="/js/cs/responsivetab.js"></script>
     <script src="/js/vendor/datatables.min.js"></script>
+    <script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
 @endsection
 
 @section('js_page')
@@ -515,23 +518,35 @@
                                                             @foreach ($attendances as $attendance)
                                                                 <tr>
                                                                     <td scope="row" class="text-capitalize">
-                                                                        {{ $attendance->created_at }}</td>
+                                                                        {{ $attendance->date }}</td>
                                                                     <td class="text-center">
                                                                         {{ $attendance->absences_count }}</td>
                                                                     <td class="text-end">
-                                                                        @if ($attendance->absences_count)
-                                                                            <x-button class="btn-sm btn-outline-primary"
-                                                                                absences='view'
-                                                                                attendance-id="{{ $attendance->id }}">
-                                                                                {{ __('see absences') }}</x-button>
-                                                                        @endif
+                                                                        <div class="d-flex align-items-start justify-content-end">
+                                                                            @if ($attendance->absences_count)
+                                                                                <x-button class="btn-sm btn-outline-primary"
+                                                                                    absences='view'
+                                                                                    attendance-id="{{ $attendance->id }}">
+                                                                                    {{ __('see absences') }}</x-button>
+                                                                            @endif
 
-
-                                                                        <x-button class="btn-sm btn-outline-primary"
-                                                                                absences='edit'
-                                                                                attendance-id="{{ $attendance->id }}">
-                                                                                {{ __('Edit') }}</x-button>
-
+                                                                            <!-- Dropdown Button Start -->
+                                                                            <div class="ms-2">
+                                                                                <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                                    data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                                    aria-expanded="false" data-submenu>
+                                                                                    <i data-acorn-icon="more-horizontal"></i>
+                                                                                </button>
+                                                                                <div class="dropdown-menu dropdown-menu-end">
+                                                                                    <div class="dropdown-item">
+                                                                                        <div
+                                                                                            absences='edit'
+                                                                                            attendance-id="{{ $attendance->id }}">{{ __('Edit') }}</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- Dropdown Button End -->
+                                                                        </div>
 
                                                                     </td>
                                                                 </tr>
@@ -545,7 +560,6 @@
 
                                 </div>
                                 <!-- Attendance Tab End -->
-
 
                             </div>
                         </div>
@@ -571,6 +585,14 @@
                         @csrf
 
                         <div class="modal-body">
+
+                            <div class="row mb-3 position-relative">
+                                <x-label for="date" class="col-sm-3 col-form-label text-sm-start text-center">{{ __('Choose date') }}</x-label>
+                                <div class="col-sm-9">
+                                    <x-input :value="old('date', today()->format('Y-m-d'))" logro="datePickerBefore" name="date"
+                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" class="text-center" required />
+                                </div>
+                            </div>
 
                             <table class="table table-striped mb-0">
                                 <tbody>

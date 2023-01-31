@@ -13,6 +13,7 @@ class Attendance extends Model
 
     protected $fillable = [
         'teacher_subject_group_id',
+        'date'
     ];
 
 
@@ -36,10 +37,10 @@ class Attendance extends Model
     }
 
 
-    protected function createdAt(): Attribute
+    protected function date(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ucwords( Carbon::parse($value)->translatedFormat('d M H:i:s') )
+            get: fn ($value) => ucwords( Carbon::parse($value)->translatedFormat('d M') )
         );
     }
 }

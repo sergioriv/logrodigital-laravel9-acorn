@@ -353,6 +353,8 @@ class TeacherController extends Controller
 
         $attendances = Attendance::where('teacher_subject_group_id', $subject->id)
             ->withCount('absences')
+            ->orderByDesc('date')
+            ->orderByDesc('created_at')
             ->get();
 
 
