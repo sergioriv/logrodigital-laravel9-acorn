@@ -74,7 +74,7 @@ Route::middleware(['auth', 'active'])->group(function () {
             return redirect()->route('dashboard');
         });
 
-        Route::get('verification/{id}', function (User $user) {
+        Route::get('verification/{user}', function (User $user) {
             if (is_null($user->email_verified_at)) {
                 if ( (new UserController($user))->sendVerification() ) {
 

@@ -8,10 +8,10 @@ class TypeAppointment
     public static function data()
     {
         return [
-            "probationary period",
-            "temporary provisional",
-            "provisional definitive",
-            "property"
+            "Probationary period",
+            "Temporary provisional",
+            "Provisional definitive",
+            "Property"
         ];
     }
 }
