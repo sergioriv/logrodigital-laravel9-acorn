@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Http\Controllers\support\UserController;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -34,6 +35,9 @@ class TeachersImport implements ToCollection, WithHeadingRow
             if(!isset( $row['email'] )) {
                 throw ValidationException::withMessages(['data' => 'La columna (email) no existe']);
             }
+            if(!isset( $row['type_appointment'] )) {
+                throw ValidationException::withMessages(['data' => 'La columna (type_appointment) no existe']);
+            }
 
 
             /*
@@ -47,6 +51,9 @@ class TeachersImport implements ToCollection, WithHeadingRow
             }
             if (empty(trim($row['email']))) {
                 throw ValidationException::withMessages(['data' => 'hay un (email) vacio']);
+            }
+            if (empty(trim($row['type_appointment']))) {
+                throw ValidationException::withMessages(['data' => 'hay un (type_appointment) vacio']);
             }
 
 
@@ -64,21 +71,19 @@ class TeachersImport implements ToCollection, WithHeadingRow
             /*
              * Creating a new user and a new teacher.
              */
-            $newUser = new User();
-            $newUser->forceFill([
-                'name'     => $row['names'],
-                'email'    => $row['email'],
-                'email_verified_at' => now(),
-                'password' => Hash::make('123456')
-            ])->save();
-            $newUser->assignRole(6);
+            $teacherCreate = UserController::__create($row['names'], $row['email'], 6);
+
+            if (!$teacherCreate->getUser()) {
+                throw ValidationException::withMessages(['data' => __('The e-mail :EMAIL is invalid', ['EMAIL' => $row['email']])]);
+            }
 
             Teacher::create([
-                'id'                    => $newUser->id,
+                'id'                    => $teacherCreate->getUser()->id,
                 'names'                 => $row['names'],
                 'last_names'            => $row['last_names'],
-                'telephone'             => $row['phone_number'],
-                'institutional_email'   => $row['email']
+                'cellphone'             => $row['phone_number'],
+                'institutional_email'   => $row['email'],
+                'type_appointment'      => $row['type_appointment'],
             ]);
         }
     }

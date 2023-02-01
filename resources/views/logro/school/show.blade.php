@@ -399,7 +399,7 @@ $title = $school->name;
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('email') }}
                                             </th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
-                                                {{ __('telephone') }}</th>
+                                                {{ __('cellphone') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -418,7 +418,7 @@ $title = $school->name;
                                                     </a>
                                                 </td>
                                                 <td>{{ $teacher->institutional_email }}</td>
-                                                <td>{{ $teacher->telephone }}</td>
+                                                <td>{{ $teacher->cellphone }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

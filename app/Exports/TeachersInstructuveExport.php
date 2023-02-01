@@ -2,12 +2,12 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class TeachersInstructuveExport implements WithHeadings, WithColumnWidths, WithStyles
+class TeachersInstructuveExport implements WithHeadings, ShouldAutoSize, WithStyles
 {
     public function headings(): array
     {
@@ -16,19 +16,8 @@ class TeachersInstructuveExport implements WithHeadings, WithColumnWidths, WithS
             "last_names",
             'phone_number',
             'email',
-
-        ];
-    }
-
-    public function columnWidths(): array
-    {
-        return [
-            'A' => 20,
-            'B' => 20,
-            'C' => 20,
-            'D' => 20,
-            'E' => 20,
-            'F' => 20
+            'date_entry',
+            'type_appointment'
         ];
     }
 

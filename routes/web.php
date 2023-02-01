@@ -40,6 +40,7 @@ use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,19 @@ Route::middleware(['auth', 'active'])->group(function () {
             Grade::getQuery()->delete();
             Notify::success('Hecho');
             return redirect()->route('dashboard');
+        });
+
+        Route::get('verification/{id}', function (User $user) {
+            if (is_null($user->email_verified_at)) {
+                if ( (new UserController($user))->sendVerification() ) {
+
+                    Notify::success('Correo enviado');
+                    return back();
+                }
+
+                Notify::fail('Error');
+                return back();
+            }
         });
 
         /* Route Users */
