@@ -73,18 +73,6 @@ Route::middleware(['auth', 'active'])->group(function () {
             return redirect()->route('dashboard');
         });
 
-        Route::get('fix-students-retired', function () {
-            $students = Student::where('status', 'retired')->get();
-            foreach ($students as $student) {
-                $student->user->forceFill([
-                    'active' => 0
-                ])->save();
-            }
-
-            dd($students);
-        });
-
-
         /* Route Users */
         Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');
         Route::get('users.json', [UserController::class, 'data']);
