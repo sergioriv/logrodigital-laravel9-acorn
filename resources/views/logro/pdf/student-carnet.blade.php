@@ -110,6 +110,13 @@
             border-collapse: collapse;
             border: 0px;
         }
+        .signature {
+            height: 12mm;
+        }
+        .signature img {
+            max-width: 45mm;
+            height: 11mm;
+        }
     </style>
 </head>
 
@@ -175,9 +182,13 @@
 
                         <div class="mt-2 f-size-5 bold">Válido durante el año lectivo {{ now()->format('Y') }}</div>
 
-                        <div>&nbsp;</div>
-                        <div>&nbsp;</div>
-                        <div>&nbsp;</div>
+                        <div class="text-center">
+                            <div class="signature">
+                                @if ($SCHOOL->signature_rector !== null)
+                                    <img src="{{ asset($SCHOOL->signature_rector) }}">
+                                @endif
+                            </div>
+                        </div>
 
                         <div class="line"></div>
 
