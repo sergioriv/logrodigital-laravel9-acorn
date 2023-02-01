@@ -1531,7 +1531,8 @@ class StudentController extends Controller
                 'avatar' => null,
                 'email_verified_at' => null,
                 'password' => null,
-                'remember_token' => null
+                'remember_token' => null,
+                'active' => 0
             ])->save();
 
         } catch (\Throwable $th) {
