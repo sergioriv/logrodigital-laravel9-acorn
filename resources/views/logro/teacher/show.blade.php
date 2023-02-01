@@ -57,8 +57,8 @@
                                 <!-- Avatar Form End -->
 
                                 <div class="h5">{{ $teacher->getFullName() }}</div>
-                                <div class="text-muted">{{ __($teacher->type_appointment) }}</div>
-                                <div class="text-muted">{{ __($teacher->type_admin_act) }}</div>
+                                <div class="text-muted text-capitalize">{{ __($teacher->type_appointment) }}</div>
+                                <div class="text-muted text-capitalize">{{ __($teacher->type_admin_act) }}</div>
                             </div>
                         </div>
 
