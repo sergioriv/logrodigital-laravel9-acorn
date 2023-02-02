@@ -254,6 +254,10 @@ class Student extends Model
     {
         return $this->belongsTo(TypesConflict::class, 'type_conflic_id');
     }
+    public function disability()
+    {
+        return $this->belongsTo(Disability::class, 'disability_id');
+    }
 
 
 

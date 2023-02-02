@@ -102,6 +102,13 @@
                             <span class="label text-capitalize">{{ __("withdrawn") }}</span>
                         </a>
                     </li>
+                    @hasanyrole('SUPPORT|ORIENTATION')
+                    <li>
+                        <a href="{{ route("students.inclusive") }}">
+                            <span class="label text-capitalize">{{ __("Inclusive") }}</span>
+                        </a>
+                    </li>
+                    @endhasanyrole
                 </ul>
             </li>
             @endcan

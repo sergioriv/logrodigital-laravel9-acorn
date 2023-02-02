@@ -841,6 +841,22 @@ class StudentController extends Controller
      *
      *
      * */
+    public function inclusive_students()
+    {
+        $students = Student::where(function ($query) {
+                $query->where('inclusive', 1)
+                        ->orWhere(function ($orQuery) {
+                            $orQuery->whereHas('files', function ($files) {
+                                $files->whereHas('studentFileType', function ($fileType) {
+                                    $fileType->where('inclusive', 1);
+                                });
+                            });
+                        });
+            })->get();
+
+        return view('logro.student.list-inclusive', ['students' => $students]);
+
+    }
     public function psychosocial_update(Request $request, Student $student)
     {
         $request->validate([

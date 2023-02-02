@@ -15,7 +15,7 @@
 @section('js_page')
     <script>
         jQuery('.logro-select2').select2({
-            minimumResultsForSearch: Infinity
+            minimumResultsForSearch: true
         });
     </script>
 @endsection
