@@ -24,7 +24,8 @@ class User extends Authenticatable
         'email',
         'avatar',
         'provider',
-        'school_year_id'
+        'school_year_id',
+        'change_password'
     ];
 
     /**
@@ -34,7 +35,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'remember_token'
     ];
 
     /**
@@ -51,6 +52,11 @@ class User extends Authenticatable
     public function isActive() : bool
     {
         return $this->active;
+    }
+
+    public function changedYourPassword() : bool
+    {
+        return $this->change_password;
     }
 
 

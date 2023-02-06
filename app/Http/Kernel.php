@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         'active' => \App\Http\Middleware\UserActive::class,
+        'changedYourPassword' => \App\Http\Middleware\ChangedYourPassword::class,
 
         // SPATIE PERMISSIONS
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,

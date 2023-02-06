@@ -55,14 +55,11 @@ class UserController extends Controller
             'provider' => $provider,
             'name' => $name,
             'email' => $email,
+            'change_password' => $role === RoleUser::PARENT ? 1 : 0
         ])->assignRole($role);
 
-        if ($role === RoleUser::STUDENT) {
 
-            $user->forceFill(['email_verified_at' => now()])->save();
-
-            event(new Registered($user));
-        }
+        event(new Registered($user));
 
         return new static($user);
     }

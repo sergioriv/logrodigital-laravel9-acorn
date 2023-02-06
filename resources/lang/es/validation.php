@@ -287,7 +287,9 @@ return [
         'employment_date_end' => 'fecha de retiro',
         'employment_file' => 'archivo de la institución',
 
-        'date' => 'fecha'
+        'date' => 'fecha',
+
+        'current_password' => 'contraseña actual',
     ],
 
 ];

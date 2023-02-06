@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\auth\ChangedYourPasswordController;
 // use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -61,6 +62,9 @@ Route::middleware('auth')->group(function () {
                 ->name('logout');
 
     Route::get('confirm-email', [ConfirmEmailController::class, 'show']);
+
+    Route::get('change-password', [ChangedYourPasswordController::class, 'show'])->name('user.change-password');
+    Route::patch('change-password', [ChangedYourPasswordController::class, 'verified'])->name('user.change-password.verified');
 });
 
 Route::withoutMiddleware(['guest','auth'])->group(function () {

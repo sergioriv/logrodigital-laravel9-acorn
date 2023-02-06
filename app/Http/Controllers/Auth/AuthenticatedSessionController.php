@@ -108,6 +108,10 @@ class AuthenticatedSessionController extends Controller
         }
     }
 
+    public function redirect()
+    {
+        return $this->login_redirect();
+    }
 
     private function login_redirect()
     {

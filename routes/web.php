@@ -54,7 +54,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::middleware(['auth', 'active'])->group(function () {
+Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'show'])->name('dashboard');
 

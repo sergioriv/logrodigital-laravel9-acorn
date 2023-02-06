@@ -55,16 +55,16 @@ class ConfirmEmailController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::min(6)],
         ]);
 
-        $user = User::find(Auth::id());
+        $user = auth()->user();
 
         $user->forceFill([
             'password' => Hash::make($request->password),
             'remember_token' => Str::random(60),
+            'change_password' => 1
         ])->save();
 
         event(new PasswordReset($user));
 
-        Notify::success('Welcome ' . $user->name);
-        return redirect()->route('dashboard');
+        return (new AuthenticatedSessionController)->redirect();
     }
 }
