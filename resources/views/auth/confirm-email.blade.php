@@ -53,7 +53,11 @@
                             <x-input id="password_confirmation" name="password_confirmation" type="password" required />
                         </div>
 
-                        <x-button type="submit" class="btn-primary">{{ __('Confirm') }}</x-button>
+                        <div class="text-end">
+                            <x-button type="submit" class="btn-primary">
+                                {{ __('Confirm') }}
+                            </x-button>
+                        </div>
                     </form>
                 @else
                     <p class="h6 mb-4">{{ __('Your account has already been verified') }}</p>

@@ -71,7 +71,7 @@ $description = 'Forgot Password Page'
 
                 <div class="text-end">
                     <x-button type="submit" class="btn-primary">
-                        {{ __('Log In') }}
+                        {{ __('Confirm') }}
                     </x-button>
                 </div>
 
