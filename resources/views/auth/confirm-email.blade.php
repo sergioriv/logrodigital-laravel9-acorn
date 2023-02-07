@@ -42,15 +42,23 @@
                         @method('PUT')
 
                         <!-- Password -->
-                        <div class="mb-3">
-                            <x-label>{{ __('New password') }}</x-label>
-                            <x-input id="password" name="password" type="password" required />
+                        <div class="mb-3 filled form-group">
+                            <i data-acorn-icon="lock-on"></i>
+                            <x-input
+                                type="password"
+                                name="password"
+                                placeholder="{{ __('New password') }}"
+                                required />
                         </div>
 
                         <!-- Confirm Password -->
-                        <div class="mb-3">
-                            <x-label>{{ __('Confirm Password') }}</x-label>
-                            <x-input id="password_confirmation" name="password_confirmation" type="password" required />
+                        <div class="mb-3 filled form-group">
+                            <i data-acorn-icon="lock-on"></i>
+                            <x-input
+                                type="password"
+                                name="password_confirmation"
+                                placeholder="{{ __('Confirm Password') }}"
+                                required />
                         </div>
 
                         <div class="text-end">
