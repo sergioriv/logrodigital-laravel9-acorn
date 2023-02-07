@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 
 class ChangedYourPassword
@@ -18,9 +17,9 @@ class ChangedYourPassword
      */
     public function handle(Request $request, Closure $next)
     {
-        if (! $request->user() || ! $request->user()->changedYourPassword()) {
+        if ( ! $request->user() || ! $request->user()->changedYourPassword()) {
 
-            return Redirect::guest(URL::route('user.change-password'));
+            return redirect(URL::route('user.change-password'));
         }
 
         return $next($request);

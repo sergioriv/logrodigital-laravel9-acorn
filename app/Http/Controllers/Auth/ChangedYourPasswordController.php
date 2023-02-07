@@ -6,7 +6,6 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\support\Notify;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +17,12 @@ class ChangedYourPasswordController extends Controller
 {
     public function show()
     {
+        if ( auth()->user()->changedYourPassword() ) {
+
+            Notify::fail(__('Not allowed'));
+            return back();
+        }
+
         $S = SchoolController::myschool();
         return view('auth.changed-your-password', [
             'SCHOOL_name' => $S->name(),
@@ -27,7 +32,11 @@ class ChangedYourPasswordController extends Controller
 
     public function verified(Request $request)
     {
-        // dd($request);
+        if ( auth()->user()->changedYourPassword() ) {
+
+            Notify::fail(__('Not allowed'));
+            return back();
+        }
 
         $request->validate([
             'current_password' => ['required'],
