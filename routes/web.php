@@ -87,6 +87,10 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
             }
         });
 
+        Route::get('cache', function() {
+            dd(Route::clearResolvedInstances());
+        });
+
         /* Route Users */
         Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');
         Route::get('users.json', [UserController::class, 'data']);
