@@ -47,18 +47,6 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->setRootControllerNamespace();
-
-        /* Route Cache */
-        if ($this->app->routesAreCached()) {
-            $this->loadCachedRoutes();
-        } else {
-            $this->loadRoutes();
-
-            $this->app->booted(function () {
-                $this->app['router']->getRoutes()->refreshNameLookups();
-                $this->app['router']->getRoutes()->refreshActionLookups();
-            });
-        }
     }
 
     /**

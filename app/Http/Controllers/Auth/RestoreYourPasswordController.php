@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\auth;
+namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\support\Notify;
@@ -13,16 +12,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Str;
 
-class ChangedYourPasswordController extends Controller
+class RestoreYourPasswordController extends Controller
 {
     public function show()
     {
-        if ( auth()->user()->changedYourPassword() ) {
-
-            Notify::fail(__('Not allowed'));
-            return back();
-        }
-
         $S = SchoolController::myschool();
         return view('auth.changed-your-password', [
             'SCHOOL_name' => $S->name(),
@@ -32,12 +25,6 @@ class ChangedYourPasswordController extends Controller
 
     public function verified(Request $request)
     {
-        if ( auth()->user()->changedYourPassword() ) {
-
-            Notify::fail(__('Not allowed'));
-            return back();
-        }
-
         $request->validate([
             'current_password' => ['required'],
             'password' => ['required', 'confirmed', Rules\Password::min(6)]

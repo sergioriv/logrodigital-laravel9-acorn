@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\auth\ChangedYourPasswordController;
 use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\RestoreYourPasswordController;
 use App\Http\Controllers\Auth\UserInactiveController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
@@ -35,11 +35,6 @@ Route::middleware('guest')->group(function () {
 
     Route::get('inactive', [UserInactiveController::class, '__invoke'])
                 ->name('inactive.notice');
-
-    Route::get('restore-password', [ChangedYourPasswordController::class, 'show'])
-                ->name('user.changedPassword');
-    Route::patch('restore-password', [ChangedYourPasswordController::class, 'verified'])
-                ->name('user.changedPassword.verified');
 });
 
 Route::middleware('auth')->group(function () {
@@ -56,7 +51,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('confirm-email', [ConfirmEmailController::class, 'show']);
 
-
+    Route::get('restore-password', [RestoreYourPasswordController::class, 'show'])
+                ->name('user.changedPassword');
+    Route::patch('restore-password', [RestoreYourPasswordController::class, 'verified'])
+                ->name('user.changedPassword.verified');
 });
 
 Route::withoutMiddleware(['guest','auth'])->group(function () {
