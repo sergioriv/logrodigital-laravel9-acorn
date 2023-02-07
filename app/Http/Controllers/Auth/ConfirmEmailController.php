@@ -4,10 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SchoolController;
-use App\Http\Controllers\support\Notify;
-use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\PasswordReset;
@@ -58,6 +54,7 @@ class ConfirmEmailController extends Controller
         $user = auth()->user();
 
         $user->forceFill([
+            'email_verified_at' => now(),
             'password' => Hash::make($request->password),
             'remember_token' => Str::random(60),
             'change_password' => 1

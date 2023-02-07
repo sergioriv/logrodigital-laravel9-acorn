@@ -51,6 +51,7 @@ class RestoreYourPasswordController extends Controller
         $user = auth()->user();
 
         $user->forceFill([
+            'email_verified_at' => now(),
             'password' => Hash::make($request->password),
             'remember_token' => Str::random(60),
             'change_password' => 1
