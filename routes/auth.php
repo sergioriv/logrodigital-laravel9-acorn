@@ -42,6 +42,10 @@ Route::middleware('guest')->group(function () {
 
     Route::get('inactive', [UserInactiveController::class, '__invoke'])
                 ->name('inactive.notice');
+
+                Route::get('change-password', [ChangedYourPasswordController::class, 'show'])->name('user.change-password');
+                Route::patch('change-password', [ChangedYourPasswordController::class, 'verified'])->name('user.change-password.verified');
+
 });
 
 Route::middleware('auth')->group(function () {
@@ -63,8 +67,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('confirm-email', [ConfirmEmailController::class, 'show']);
 
-    Route::get('change-password', [ChangedYourPasswordController::class, 'show'])->name('user.change-password');
-    Route::patch('change-password', [ChangedYourPasswordController::class, 'verified'])->name('user.change-password.verified');
 });
 
 Route::withoutMiddleware(['guest','auth'])->group(function () {
