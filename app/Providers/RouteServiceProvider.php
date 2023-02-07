@@ -45,6 +45,20 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+        $this->setRootControllerNamespace();
+
+        /* Route Cache */
+        if ($this->app->routesAreCached()) {
+            $this->loadCachedRoutes();
+        } else {
+            $this->loadRoutes();
+
+            $this->app->booted(function () {
+                $this->app['router']->getRoutes()->refreshNameLookups();
+                $this->app['router']->getRoutes()->refreshActionLookups();
+            });
+        }
     }
 
     /**

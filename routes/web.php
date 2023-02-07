@@ -41,6 +41,7 @@ use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
 use App\Models\Student;
 use App\Models\User;
+use Illuminate\Foundation\Console\RouteCacheCommand;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -85,10 +86,6 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
                 Notify::fail('Error');
                 return back();
             }
-        });
-
-        Route::get('cache', function() {
-            dd(Route::clearResolvedInstances());
         });
 
         /* Route Users */
