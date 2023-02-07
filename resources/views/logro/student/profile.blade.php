@@ -57,6 +57,16 @@
     @unlessrole('STUDENT')
         @can('students.delete')
             <script src="/js/forms/student-delete.js"></script>
+            <script>
+                jQuery("[delete-signature]").click(function () {
+                    const _this = $(this);
+                    const _person = _this.attr('delete-signature');
+
+                    $('#sigDeleteInput').val(_person);
+                    $('#sigDeleteImg').attr('src', _this.data('img'));
+                    $('#deleteSignatureModal').modal('show');
+                });
+            </script>
         @endcan
     @endunlessrole
 
@@ -977,6 +987,14 @@
                                                         <img src="{{ env('APP_URL') . '/' . $student->signature_tutor }}"
                                                             class="max-w-100 sh-19 border rounded-md" alt="signature" />
                                                     </div>
+                                                    <div class="mt-2">
+                                                        <x-button
+                                                            type="button"
+                                                            class="btn-sm btn-outline-danger"
+                                                            delete-signature="tutor"
+                                                            data-img="{{ env('APP_URL') . '/' . $student->signature_tutor }}"
+                                                            >{{ __('Delete') }}</x-button>
+                                                    </div>
                                                 @endif
                                             </div>
                                             <div class="col-md-6">
@@ -987,6 +1005,14 @@
                                                     <div class="text-center mb-3 mb-md-0">
                                                         <img src="{{ env('APP_URL') . '/' . $student->signature_student }}"
                                                             class="max-w-100 sh-19 border rounded-md" alt="signature" />
+                                                    </div>
+                                                    <div class="mt-2">
+                                                        <x-button
+                                                            type="button"
+                                                            class="btn-sm btn-outline-danger"
+                                                            delete-signature="student"
+                                                            data-img="{{ env('APP_URL') . '/' . $student->signature_student }}"
+                                                            >{{ __('Delete') }}</x-button>
                                                     </div>
                                                 @endif
                                             </div>
@@ -2736,6 +2762,41 @@
                                     data-bs-dismiss="modal">{{ __('Close') }}</button>
                                 <button type="submit" class="btn btn-danger"
                                     >{{ __('Confirm') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Delete Signature -->
+            <div class="modal fade" id="deleteSignatureModal" aria-labelledby="modalDeleteSignature" data-bs-backdrop="static"
+                data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalDeleteSignature">{{ __('Delete signature') }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('students.signature.delete', $student) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+
+                            <input type="hidden" id="sigDeleteInput" name="delete_signature" value="">
+
+                            <div class="modal-body">
+                                <div class="text-center mb-3 mb-md-0">
+                                    <img src="" id="sigDeleteImg"
+                                        class="max-w-100 sh-19 border rounded-md" alt="signature" />
+                                </div>
+                                <div class="mt-2 text-center">
+                                    {{ __('Are you sure to remove the signature?') }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-primary"
+                                    data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                <button type="submit" class="btn btn-danger"
+                                    >{{ __('Delete') }}</button>
                             </div>
                         </form>
                     </div>

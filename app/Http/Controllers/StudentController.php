@@ -1306,6 +1306,37 @@ class StudentController extends Controller
         return null;
     }
 
+    public function signature_delete(Request $request, Student $student)
+    {
+        $request->validate([
+            'delete_signature' => ['required', 'in:student,tutor']
+        ]);
+
+        if ($request->delete_signature === 'student') {
+
+            if (File::isFile(public_path($student->signature_student))) {
+                File::delete(public_path($student->signature_student));
+
+                $student->forceFill([
+                    'signature_student' => NULL
+                ])->save();
+            }
+        }
+        if ($request->delete_signature === 'tutor') {
+
+            if (File::isFile(public_path($student->signature_tutor))) {
+                File::delete(public_path($student->signature_tutor));
+
+                $student->forceFill([
+                    'signature_tutor' => NULL
+                ])->save();
+            }
+        }
+
+        Notify::success(__('Signature deleted!'));
+        return back();
+    }
+
 
     /* PDF */
     public function pdf_matriculate(Student $student = null)

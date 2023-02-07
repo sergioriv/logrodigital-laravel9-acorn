@@ -291,6 +291,8 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::patch('students/{student}/withdraw', 'withdraw')->name('student.withdraw');
 
         Route::patch('students/{student}/activate', 'activate')->name('students.activate');
+
+        Route::delete('students/{student}/delete-signature', 'signature_delete')->name('students.signature.delete');
     });
 
 
