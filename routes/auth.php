@@ -51,9 +51,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('confirm-email', [ConfirmEmailController::class, 'show']);
 
-    Route::get('changed-password', [ChangedYourPasswordController::class, 'show'])
+    Route::get('restore-password', [ChangedYourPasswordController::class, 'show'])
                 ->name('user.changedPassword');
-    Route::patch('changed-password', [ChangedYourPasswordController::class, 'verified'])
+    Route::patch('restore-password', [ChangedYourPasswordController::class, 'verified'])
                 ->name('user.changedPassword.verified');
 });
 
