@@ -16,6 +16,12 @@ class RestoreYourPasswordController extends Controller
 {
     public function show()
     {
+        if ( auth()->user()->changedYourPassword() ) {
+
+            Notify::fail(__('Not allowed'));
+            return back();
+        }
+
         $S = SchoolController::myschool();
         return view('auth.changed-your-password', [
             'SCHOOL_name' => $S->name(),
@@ -25,6 +31,12 @@ class RestoreYourPasswordController extends Controller
 
     public function verified(Request $request)
     {
+        if ( auth()->user()->changedYourPassword() ) {
+
+            Notify::fail(__('Not allowed'));
+            return back();
+        }
+
         $request->validate([
             'current_password' => ['required'],
             'password' => ['required', 'confirmed', Rules\Password::min(6)]
