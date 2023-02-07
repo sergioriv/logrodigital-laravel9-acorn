@@ -24,8 +24,7 @@ class User extends Authenticatable
         'email',
         'avatar',
         'provider',
-        'school_year_id',
-        'change_password'
+        'school_year_id'
     ];
 
     /**
@@ -46,7 +45,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime:Y-m-d h:i:s',
         'created_at' => 'datetime:Y-m-d h:i:s',
-        'active' => 'boolean'
+        'active' => 'boolean',
+        'change_password' => 'boolean'
     ];
 
     public function isActive() : bool

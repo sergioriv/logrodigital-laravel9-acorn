@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -51,12 +52,22 @@ class UserController extends Controller
             $provider = ProviderUser::provider_validate($email);
         }
 
-        $user = User::create([
+        $password = Str::random(6);
+
+        $user = new User;
+        $user->forceFill([
             'provider' => $provider,
             'name' => $name,
             'email' => $email,
+            'password' => $role === RoleUser::PARENT ? null : Hash::make($password),
             'change_password' => $role === RoleUser::PARENT ? 1 : 0
-        ])->assignRole($role);
+        ])->save();
+
+        $user->assignRole($role);
+
+        if ($role !== RoleUser::PARENT) {
+            $user->temporalPassword = $password;
+        }
 
 
         event(new Registered($user));

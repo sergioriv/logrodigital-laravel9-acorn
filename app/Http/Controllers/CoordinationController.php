@@ -78,10 +78,16 @@ class CoordinationController extends Controller
 
         DB::commit();
 
-
-        Notify::success( __('Created coordination user!') );
-        self::tab();
-        return redirect()->route('myinstitution');
+        return view('logro.created', [
+            'role' => 'coordination',
+            'title' => __('Created coordination user!'),
+            'email' => $request->email,
+            'password' => $coordinationCreate->getUser()->temporalPassword,
+            'redirect' => [
+                'title' => __('Go back'),
+                'action' => route('myinstitution')
+            ]
+        ]);
     }
 
     /**

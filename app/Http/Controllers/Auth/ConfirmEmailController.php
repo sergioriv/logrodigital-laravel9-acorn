@@ -26,10 +26,10 @@ class ConfirmEmailController extends Controller
      */
     public function show()
     {
-        $auth = Auth::user();
         $SCHOOL = SchoolController::myschool();
+        $auth = auth()->user();
 
-        if ( NULL === $auth->password )
+        if ( ! $auth->change_password || is_null($auth->password) )
         {
             return view('auth.confirm-email', [
                 'SCHOOL_name' => $SCHOOL->name(),
