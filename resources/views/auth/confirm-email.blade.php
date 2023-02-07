@@ -17,7 +17,7 @@
     <div
         class="sw-lg-70 min-h-100 bg-foreground d-flex justify-content-center align-items-center shadow-deep py-5 full-page-content-right-border">
         <div class="sw-lg-50 px-5">
-            <div class="sh-13 mb-7 d-flex justify-content-center">
+            <div class="sh-13 mb-5 d-flex justify-content-center">
                 <x-auth.logo :badge="$SCHOOL_badge" />
             </div>
             <div class="mb-5 text-center">
@@ -27,13 +27,15 @@
             <div class="mb-5">
 
                 @if ($status == 'password')
-                    <p class="h6 mb-4">
+
+                    <div class="h6 mb-3">
                         <i data-acorn-icon="shield-check" class="me-1 text-success"></i>
                         {{ __('Account verified successfully') }}
-                    </p>
-
-                    <!-- Validation Errors -->
-                    {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
+                    </div>
+                    <div class="mb-3">
+                        <h2 class="cta-1">{{ __('Assign password') }}</h2>
+                    </div>
+                    <div class="mb-3 text-alternate">{{ auth()->user()->email }}</div>
 
                     <form method="POST" action="{{ route('support.users.password') }}">
                         @csrf
@@ -41,7 +43,7 @@
 
                         <!-- Password -->
                         <div class="mb-3">
-                            <x-label>{{ __('Password') }}</x-label>
+                            <x-label>{{ __('New password') }}</x-label>
                             <x-input id="password" name="password" type="password" required />
                         </div>
 
