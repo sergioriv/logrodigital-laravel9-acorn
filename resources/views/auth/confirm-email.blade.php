@@ -28,12 +28,12 @@
 
                 @if ($status == 'password')
 
-                    <div class="h6 mb-3">
+                    <div class="h6 mb-3 text-center">
                         <i data-acorn-icon="shield-check" class="me-1 text-success"></i>
                         {{ __('Account verified successfully') }}
                     </div>
-                    <div class="mb-3">
-                        <h2 class="cta-1">{{ __('Assign password') }}</h2>
+                    <div class="">
+                        <h2 class="cta-1 mb-0">{{ __('Assign password') }}</h2>
                     </div>
                     <div class="mb-3 text-alternate">{{ auth()->user()->email }}</div>
 

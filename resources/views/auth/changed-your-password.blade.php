@@ -27,8 +27,8 @@ $description = 'Forgot Password Page'
             <h2 class="cta-1 text-primary">
                 {{ $SCHOOL_name }}</h2>
         </div>
-        <div class="mb-3">
-            <h2 class="cta-1">{{ $title }}</h2>
+        <div class="">
+            <h2 class="cta-1 mb-0">{{ $title }}</h2>
         </div>
         <div class="mb-3 text-alternate">{{ auth()->user()->email }}</div>
         <div class="mb-3 text-alternate">
