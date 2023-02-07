@@ -51,6 +51,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('confirm-email', [ConfirmEmailController::class, 'show']);
 
+
+    /*
+     *
+     * Restore Password
+     *
+     *  */
+
+    /* Asigna la contraseña luego de confirmar el correo */
+    Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');
+
     Route::get('restore-password', [RestoreYourPasswordController::class, 'show'])
                 ->name('user.changedPassword');
     Route::patch('restore-password', [RestoreYourPasswordController::class, 'verified'])

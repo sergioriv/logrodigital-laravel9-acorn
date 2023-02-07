@@ -109,8 +109,6 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::put('number-students', [SchoolController::class, 'number_students_update'])->name('support.number_students.update');
     });
 
-    /* Asigna la contraseña luego de confirmar el correo */
-    Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');
 
 
     /* Route Profile */
