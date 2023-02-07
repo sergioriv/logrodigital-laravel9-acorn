@@ -1320,6 +1320,9 @@ class StudentController extends Controller
                 $student->forceFill([
                     'signature_student' => NULL
                 ])->save();
+
+
+                Notify::success(__('Signature deleted!'));
             }
         }
         if ($request->delete_signature === 'tutor') {
@@ -1330,10 +1333,12 @@ class StudentController extends Controller
                 $student->forceFill([
                     'signature_tutor' => NULL
                 ])->save();
+
+
+                Notify::success(__('Signature deleted!'));
             }
         }
 
-        Notify::success(__('Signature deleted!'));
         return back();
     }
 
