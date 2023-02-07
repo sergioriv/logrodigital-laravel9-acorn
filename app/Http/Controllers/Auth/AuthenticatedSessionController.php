@@ -96,7 +96,8 @@ class AuthenticatedSessionController extends Controller
             }
 
             $user->forceFill([
-                'remember_token' => Str::random(60)
+                'remember_token' => Str::random(60),
+                'change_password' => 1
             ])->save();
 
             Auth::login($user);
