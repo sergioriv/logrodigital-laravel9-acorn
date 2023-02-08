@@ -177,9 +177,13 @@ class StudyYearController extends Controller
             $hours_week = $subject . '~hours_week';
             $course_load = $subject . '~course_load';
 
-            if (empty($request->$hours_week) || empty($request->$course_load)) {
+            if ( empty($request->$course_load) ) {
                 DB::rollBack();
-                return redirect()->back()->withErrors(__("empty fields"));
+                return redirect()->back()->withErrors(__("workload empty"));
+            }
+            if ( $request->$hours_week < 0 ) {
+                DB::rollBack();
+                return redirect()->back()->withErrors(__("there are negative hours"));
             }
 
             if ($request->$course_load > 100) {
