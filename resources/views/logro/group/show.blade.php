@@ -90,15 +90,17 @@
                                         <i data-acorn-icon="more-horizontal"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
-                                        @unless($studentsGroup->isEmpty())
-                                            @if (!$group->specialty)
-                                                <a class="dropdown-item btn-sm btn-icon btn-icon-start"
-                                                    href="{{ route('group.transfer-students', $group) }}">
-                                                    <i data-acorn-icon="destination"></i>
-                                                    <span>{{ __('Transfer students') }}</span>
-                                                </a>
-                                            @endif
-                                        @endunless
+                                        @can('groups.students.matriculate')
+                                            @unless($studentsGroup->isEmpty())
+                                                @if (!$group->specialty)
+                                                    <a class="dropdown-item btn-sm btn-icon btn-icon-start"
+                                                        href="{{ route('group.transfer-students', $group) }}">
+                                                        <i data-acorn-icon="destination"></i>
+                                                        <span>{{ __('Transfer students') }}</span>
+                                                    </a>
+                                                @endif
+                                            @endunless
+                                        @endcan
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                             href="{{ route('group.export.student-list', $group) }}">
                                             <i data-acorn-icon="download"></i>
@@ -198,17 +200,10 @@
                                                         @foreach ($studentsGroup as $studentG)
                                                             <tr>
                                                                 <td scope="row">
-                                                                    @can('students.info')
-                                                                        <a href="{{ route('students.show', $studentG) }}"
-                                                                            class="list-item-heading body">
-                                                                            {{ $studentG->getCompleteNames() }}
-                                                                        </a>
-                                                                    @else
-                                                                        <a href="{{ route('students.view', $studentG) }}"
-                                                                            class="list-item-heading body">
-                                                                            {{ $studentG->getCompleteNames() }}
-                                                                        </a>
-                                                                    @endcan
+                                                                    <a href="{{ route('students.show', $studentG) }}"
+                                                                        class="list-item-heading body">
+                                                                        {{ $studentG->getCompleteNames() }}
+                                                                    </a>
 
                                                                     {!! $studentG->tag() !!}
                                                                 </td>
@@ -272,38 +267,41 @@
                                 </div>
                                 <!-- Students Tab End -->
 
-                                @can('groups.teachers.edit')
+                                @can('groups.teachers')
                                     <!-- Subjects & Teachers Tab Start -->
                                     <div class="tab-pane fade" id="subjectsTab" role="tabpanel">
 
                                         @if (null !== $Y->available)
                                             <!-- Groups Buttons Start -->
                                             <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
-                                                @if ($areas->count() !== 0)
-                                                    <!-- Add New Button Start -->
-                                                    <a href="{{ route('group.teachers.edit', $group) }}"
-                                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                                        <i data-acorn-icon="edit-square"></i>
-                                                        <span>{{ __('Edit') . ' ' . __('Teachers') }}</span>
-                                                    </a>
-                                                    <!-- Add New Button End -->
-                                                @elseif ($group->specialty === true && $group->specialty_area_id === null)
-                                                    <!-- Assing Area Specialty Button Start -->
-                                                    <a href="{{ route('group.specialty', $group) }}"
-                                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                                        <i data-acorn-icon="edit-square"></i>
-                                                        <span>{{ __('Assign specialty area') }}</span>
-                                                    </a>
-                                                    <!-- Assing Area Specialty Button End -->
-                                                @else
-                                                    <!-- Assing Teachers Button Start -->
-                                                    <a href="{{ route('studyYear.subject.show', $group->studyYear) }}"
-                                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                                        <i data-acorn-icon="edit-square"></i>
-                                                        <span>{{ __('Assign') . ' ' . __('Subjects') . ' ' . $group->studyYear->name }}</span>
-                                                    </a>
-                                                    <!-- Assing Teachers Button End -->
-                                                @endif
+
+                                                @can('groups.teachers.edit')
+                                                    @if ($areas->count() !== 0)
+                                                        <!-- Add New Button Start -->
+                                                        <a href="{{ route('group.teachers.edit', $group) }}"
+                                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                            <i data-acorn-icon="edit-square"></i>
+                                                            <span>{{ __('Edit') . ' ' . __('Teachers') }}</span>
+                                                        </a>
+                                                        <!-- Add New Button End -->
+                                                    @elseif ($group->specialty === true && $group->specialty_area_id === null)
+                                                        <!-- Assing Area Specialty Button Start -->
+                                                        <a href="{{ route('group.specialty', $group) }}"
+                                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                            <i data-acorn-icon="edit-square"></i>
+                                                            <span>{{ __('Assign specialty area') }}</span>
+                                                        </a>
+                                                        <!-- Assing Area Specialty Button End -->
+                                                    @else
+                                                        <!-- Assing Teachers Button Start -->
+                                                        <a href="{{ route('studyYear.subject.show', $group->studyYear) }}"
+                                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                                            <i data-acorn-icon="edit-square"></i>
+                                                            <span>{{ __('Assign') . ' ' . __('Subjects') . ' ' . $group->studyYear->name }}</span>
+                                                        </a>
+                                                        <!-- Assing Teachers Button End -->
+                                                    @endif
+                                                @endcan
 
                                             </div>
                                             <!-- Groups Buttons End -->
@@ -442,17 +440,10 @@
                                                                     @foreach ($studentsGroup as $studentG)
                                                                         <tr>
                                                                             <td scope="row">
-                                                                                @can('students.info')
-                                                                                    <a href="{{ route('students.show', $studentG) }}"
-                                                                                        class="list-item-heading body">
-                                                                                        {{ $studentG->getCompleteNames() }}
-                                                                                    </a>
-                                                                                @else
-                                                                                    <a href="{{ route('students.view', $studentG) }}"
-                                                                                        class="list-item-heading body">
-                                                                                        {{ $studentG->getCompleteNames() }}
-                                                                                    </a>
-                                                                                @endcan
+                                                                                <a href="{{ route('students.show', $studentG) }}"
+                                                                                    class="list-item-heading body">
+                                                                                    {{ $studentG->getCompleteNames() }}
+                                                                                </a>
 
                                                                                 {!! $studentG->tag() !!}
 

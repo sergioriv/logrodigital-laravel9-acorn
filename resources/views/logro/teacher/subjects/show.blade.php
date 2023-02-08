@@ -171,7 +171,7 @@
                                                         @foreach ($studentsGroup as $studentG)
                                                             <tr>
                                                                 <td scope="row">
-                                                                    <a href="{{ route('students.view', $studentG) }}"
+                                                                    <a href="{{ route('students.show', $studentG) }}"
                                                                         class="list-item-heading body">
                                                                         {{ $studentG->getCompleteNames() }}
                                                                     </a>
@@ -285,17 +285,10 @@
 
                                                                     <tr>
                                                                         <td scope="row">
-                                                                            @can('students.info')
-                                                                                <a href="{{ route('students.show', $studentG) }}"
-                                                                                    class="list-item-heading body">
-                                                                                    {{ $studentG->getCompleteNames() }}
-                                                                                </a>
-                                                                            @else
-                                                                                <a href="{{ route('students.view', $studentG) }}"
-                                                                                    class="list-item-heading body">
-                                                                                    {{ $studentG->getCompleteNames() }}
-                                                                                </a>
-                                                                            @endcan
+                                                                            <a href="{{ route('students.show', $studentG) }}"
+                                                                                class="list-item-heading body">
+                                                                                {{ $studentG->getCompleteNames() }}
+                                                                            </a>
 
                                                                             {!! $studentG->tag() !!}
 

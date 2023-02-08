@@ -28,11 +28,18 @@ class SubjectController extends Controller
         $Y = SchoolYearController::current_year();
 
         if (NULL === $Y->available) {
-            $resourceAreas = ResourceArea::whereNull('specialty')->whereHas('subjects', fn ($s) => $s->where('school_year_id', $Y->id))
+            $resourceAreas = ResourceArea::whereNull('specialty')->whereHas(
+                    'subjects',
+                    fn ($s) => $s->where('school_year_id', $Y->id)->with('resourceSubject')
+                )
                 ->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
                 ->orderBy('name')->get();
         } else {
-            $resourceAreas = ResourceArea::whereNull('specialty')->with(['subjects' => fn ($s) => $s->where('school_year_id', $Y->id)])
+            $resourceAreas = ResourceArea::whereNull('specialty')->with(
+                    [
+                        'subjects' => fn ($s) => $s->where('school_year_id', $Y->id)->with('resourceSubject')
+                    ]
+                )
                 ->orderBy('name')->get();
         }
 

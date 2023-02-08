@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AttendanceStudentController;
-use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DescriptorController;
@@ -39,9 +38,7 @@ use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
-use App\Models\Student;
 use App\Models\User;
-use Illuminate\Foundation\Console\RouteCacheCommand;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +64,11 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::get('permissions-reset', function() {
             app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
             return redirect()->back();
+        });
+
+        Route::get('update-permissions', function () {
+            (new \Database\Seeders\PermissionsSeeder)->run();
+            dd('hecho');
         });
 
         Route::get('grades-reset', function () {
@@ -254,11 +256,12 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
         Route::get('students/create', 'create')->name('students.create');
         Route::post('students/no-enrolled', 'store')->name('students.store');
-        Route::get('students/{student}/edit', 'show')->name('students.show');
-        Route::get('students/{student}/view', 'view')->name('students.view');
-        Route::put('students/{student}', 'update')->name('students.update');
-        Route::delete('students/{student}', 'delete')->name('students.delete');
-        Route::get('students/{student}/code-confirmation', 'send_delete_code');
+        Route::get('student/{student}', 'show')->name('students.show');
+        Route::get('student/{student}/edit', 'show');
+        Route::get('student/{student}/view', 'show');
+        Route::put('student/{student}', 'update')->name('students.update');
+        Route::delete('student/{student}', 'delete')->name('students.delete');
+        Route::get('student/{student}/code-confirmation', 'send_delete_code');
 
         Route::put('students/{student}/psychosocial', 'psychosocial_update')->name('students.psychosocial.update');
         Route::get('students/{student}/transfer', 'transfer')->name('students.transfer');

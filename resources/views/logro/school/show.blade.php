@@ -274,19 +274,22 @@ $title = $school->name;
                                 </div>
                                 <!-- Search End -->
 
-                                <!-- Top Buttons Start -->
-                                <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
+                                @can('coordination.create')
+                                    <!-- Top Buttons Start -->
+                                    <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
 
-                                    <!-- Add New Button Start -->
-                                    <a href="{{ route('coordination.create') }}"
-                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                        <i data-acorn-icon="plus"></i>
-                                        <span>{{ __('Add New') }}</span>
-                                    </a>
-                                    <!-- Add New Button End -->
+                                        <!-- Add New Button Start -->
+                                        <a href="{{ route('coordination.create') }}"
+                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                            <i data-acorn-icon="plus"></i>
+                                            <span>{{ __('Add New') }}</span>
+                                        </a>
+                                        <!-- Add New Button End -->
 
-                                </div>
-                                <!-- Top Buttons End -->
+                                    </div>
+                                    <!-- Top Buttons End -->
+                                @endcan
+
                             </div>
                             <!-- Controls End -->
 
@@ -355,13 +358,15 @@ $title = $school->name;
                                 <!-- Top Buttons Start -->
                                 <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
 
-                                    <!-- Add New Button Start -->
-                                    <a href="{{ route('teacher.create') }}"
-                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                        <i data-acorn-icon="plus"></i>
-                                        <span>{{ __('Add New') }}</span>
-                                    </a>
-                                    <!-- Add New Button End -->
+                                    @can('teachers.create')
+                                        <!-- Add New Button Start -->
+                                        <a href="{{ route('teacher.create') }}"
+                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                            <i data-acorn-icon="plus"></i>
+                                            <span>{{ __('Add New') }}</span>
+                                        </a>
+                                        <!-- Add New Button End -->
+                                    @endcan
 
                                     <!-- Dropdown Button Start -->
                                     <div class="ms-1">
@@ -457,19 +462,22 @@ $title = $school->name;
                                 </div>
                                 <!-- Search End -->
 
-                                <!-- Top Buttons Start -->
-                                <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
+                                @can('orientation.create')
+                                    <!-- Top Buttons Start -->
+                                    <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
 
-                                    <!-- Add New Button Start -->
-                                    <a href="{{ route('orientation.create') }}"
-                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                        <i data-acorn-icon="plus"></i>
-                                        <span>{{ __('Add New') }}</span>
-                                    </a>
-                                    <!-- Add New Button End -->
+                                        <!-- Add New Button Start -->
+                                        <a href="{{ route('orientation.create') }}"
+                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                            <i data-acorn-icon="plus"></i>
+                                            <span>{{ __('Add New') }}</span>
+                                        </a>
+                                        <!-- Add New Button End -->
 
-                                </div>
-                                <!-- Top Buttons End -->
+                                    </div>
+                                    <!-- Top Buttons End -->
+                                @endcan
+
                             </div>
                             <!-- Controls End -->
 
@@ -535,19 +543,22 @@ $title = $school->name;
                                 </div>
                                 <!-- Search End -->
 
-                                <!-- Top Buttons Start -->
-                                <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
+                                @can('secretariat.create')
+                                    <!-- Top Buttons Start -->
+                                    <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
 
-                                    <!-- Add New Button Start -->
-                                    <a href="{{ route('secreatariat.create') }}"
-                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                        <i data-acorn-icon="plus"></i>
-                                        <span>{{ __('Add New') }}</span>
-                                    </a>
-                                    <!-- Add New Button End -->
+                                        <!-- Add New Button Start -->
+                                        <a href="{{ route('secreatariat.create') }}"
+                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                            <i data-acorn-icon="plus"></i>
+                                            <span>{{ __('Add New') }}</span>
+                                        </a>
+                                        <!-- Add New Button End -->
 
-                                </div>
-                                <!-- Top Buttons End -->
+                                    </div>
+                                    <!-- Top Buttons End -->
+                                @endcan
+
                             </div>
                             <!-- Controls End -->
 

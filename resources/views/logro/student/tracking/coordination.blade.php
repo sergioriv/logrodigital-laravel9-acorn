@@ -6,7 +6,7 @@
         <div class="row g-3">
 
             <div class="w-100 form-group position-relative">
-                <x-label>{{ __('recommendation to the family') }}</x-label>
+                <x-label>{{ __('select a coordinator') }}</x-label>
                 <select name="trackingCoordinator" logro="select2" required>
                     <option label="&nbsp;"></option>
                     @foreach ($coordinators as $coordinator)

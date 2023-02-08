@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
 
-    Route::get('confirm-email', [ConfirmEmailController::class, 'show']);
+
 
 
     /*
@@ -57,6 +57,9 @@ Route::middleware('auth')->group(function () {
      * Restore Password
      *
      *  */
+
+    /* Verifica si la cuenta ya ha sido confirmada */
+    Route::get('confirm-email', [ConfirmEmailController::class, 'show']);
 
     /* Asigna la contraseña luego de confirmar el correo */
     Route::put('change-password', [ConfirmEmailController::class, 'change_password'])->name('support.users.password');

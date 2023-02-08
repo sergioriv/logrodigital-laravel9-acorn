@@ -624,6 +624,7 @@
     "workload empty": "carga académica vacía",
     "there are negative hours": "hay horas negativas",
     "View document": "Ver documento",
+    "select a coordinator": "seleccione un coordinador",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Current password": "Contraseña actual",
@@ -1316,7 +1317,7 @@
     "Two factor authentication is now enabled. Scan the following QR code using your phone's authenticator application or enter the setup key.": "La autenticación de dos factores ahora está habilitada. Escanee el siguiente código QR usando la aplicación de autenticación de su teléfono o ingrese la clave de configuración.",
     "Uganda": "Uganda",
     "Ukraine": "Ucrania",
-    "Unauthorized": "No autorizado",
+    "Unauthorized!": "No autorizado!",
     "United Arab Emirates": "Emiratos Árabes Unidos",
     "United Kingdom": "Reino Unido",
     "United States": "Estados Unidos",

@@ -185,7 +185,7 @@ class TeacherController extends Controller
                 'maritalStatus' => MaritalStatus::data(),
             ]);
         } else {
-            return redirect()->back()->withErrors(__('Unauthorized'));
+            return redirect()->back()->withErrors(__('Unauthorized!'));
         }
     }
 
@@ -291,7 +291,7 @@ class TeacherController extends Controller
             Notify::success(__('Updated profile!'));
             return redirect()->route('user.profile.edit');
         } else {
-            return redirect()->back()->withErrors(__('Unauthorized'));
+            return redirect()->back()->withErrors(__('Unauthorized!'));
         }
     }
 
@@ -316,7 +316,7 @@ class TeacherController extends Controller
          * Para que el Rol TEACHER solo pueda acceder a sus asignaturas de el año actual
          *  */
         if ($subject->teacher_id !== Auth::id()) {
-            return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
+            return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized!'));
         }
 
         $Y = SchoolYearController::current_year();

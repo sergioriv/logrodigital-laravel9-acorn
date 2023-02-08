@@ -130,7 +130,7 @@ class UserAlertController extends Controller
 
             if ($request->priority_orientation === '1') {
 
-                SmtpMail::sendMailAlert(
+                SmtpMail::init()->sendMailAlert(
                     __(self::TITLE_TEACHER, ['CREATE_BY' => UserController::myName(), 'STUDENT_NAME' => $student->getCompleteNames()]),
                     $orientators,
                     $request->recommendations_orientation
@@ -139,7 +139,7 @@ class UserAlertController extends Controller
             }
 
             Notify::success(__('Report generated!'));
-            return redirect()->route('students.view', $student);
+            return redirect()->route('students.show', $student);
         }
 
         return redirect()->back()->withErrors(__('Not allowed'));

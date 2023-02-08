@@ -18,6 +18,7 @@ class TransferController extends Controller
 
     public function __construct()
     {
+        $this->middleware('can:groups.students.matriculate');
     }
     public function groupStudents(Group $group)
     {
@@ -44,7 +45,7 @@ class TransferController extends Controller
 
         $students = "";
         foreach ($request->students as $student) {
-            $students .= $student . ',';
+            $students .= $student . '|';
         }
 
         $students = substr($students, 0, -1);
@@ -102,7 +103,7 @@ class TransferController extends Controller
 
         $group = Group::find($request->group);
 
-        $students = explode(',', $request->students);
+        $students = explode('|', $request->students);
 
         foreach ($students as $stu) {
 

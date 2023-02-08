@@ -63,44 +63,87 @@ class StudentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('can:students.index')->except(
-            'show',
-            'view',
-            'update',
-            'wizard_documents_request',
-            'wizard_report_books_request',
-            'wizard_person_charge_request',
-            'wizard_personal_info_request',
-            'wizard_complete_request',
-            'pdf_matriculate',
-            'pdf_certificate',
+        $this->middleware('hasroles:SUPPORT,STUDENT,PARENT,SECRETARIAT')->only(
+            'pdf_carnet',
             'pdf_observations',
-            'pdf_carnet');
-        $this->middleware('can:students.import')->only(
-            'data_instructive',
-            'export_instructive',
-            'import',
-            'import_store');
-        $this->middleware('can:students.create')->only('create');
-        $this->middleware('can:students.matriculate')->only(
-            'matriculate',
-            'matriculate_update',
-            'create_parents_filter');
+            'pdf_certificate',
+            'pdf_matriculate');
+
         $this->middleware('can:students.info')->only(
-            'show',
-            'update',
-            'pdf_matriculate',
-            'pdf_certificate',
-            'pdf_observations',
-            'pdf_carnet');
-        $this->middleware('can:students.view')->only('view');
+            'update'
+        );
+
+        $this->middleware('can:students.index')->only(
+            'export_enrolled_generate',
+            'export_enrolled_view',
+            'export_noenrolled',
+            'inclusive_students',
+            'enrolled',
+            'no_enrolled'
+        );
+
+        $this->middleware('can:students.create')->only(
+            'store',
+            'create'
+        );
+
+        $this->middleware('can:students.matriculate')->only(
+            'transfer_store',
+            'transfer',
+            'matriculate_update',
+            'matriculate',
+            'create_parents_filter'
+        );
+
+        $this->middleware('can:students.import')->only(
+            'import_store',
+            'import',
+            'export_instructive',
+            'data_instructive'
+        );
+
         $this->middleware('can:students.psychosocial')->only(
             'psychosocial_update',
             'piar_update');
-        $this->middleware('can:students.delete')->only('send_delete_code', 'delete', 'withdraw');
 
-        $this->middleware(YearCurrentMiddleware::class)->only('matriculate', 'matriculate_update');
-        $this->middleware('countStudents')->only('create', 'store', 'import', 'import_store');
+        $this->middleware('can:students.delete')->only(
+            'send_delete_code',
+            'delete',
+            'withdraw',
+            'withdrawn',
+            'activate',
+            'signature_delete');
+
+        $this->middleware(YearCurrentMiddleware::class)->only(
+            'create',
+            'store',
+            'transfer_store',
+            'transfer',
+            'matriculate_update',
+            'matriculate',
+            'create_parents_filter');
+
+        $this->middleware('countStudents')->only(
+            'create',
+            'store',
+            'import',
+            'import_store');
+    }
+
+
+    public function show(Student $student)
+    {
+        $user = Auth::user();
+        if ( $user->hasPermissionTo('students.view') ) {
+
+            return $this->view($student);
+
+        } else if ( $user->hasPermissionTo('students.info') ) {
+
+            return $this->edit($student);
+        }
+
+        return back();
     }
 
     /*
@@ -253,6 +296,7 @@ class StudentController extends Controller
 
     /*
      * WIZARD START
+     * Solo para el estudiante
      */
     public function wizard_documents(Student $student)
     {
@@ -423,6 +467,7 @@ class StudentController extends Controller
      * WIZARD END
      */
 
+
     /*
      * ENROLLED SECTION
      */
@@ -565,15 +610,8 @@ class StudentController extends Controller
 
 
 
-
-    /*
-     *
-     *
-     * EDIT STUDENT
-     *
-     *
-     *  */
-    public function show(Student $student)
+    /* Tienen acceso Secretarias, Orientacion, El estudiante y Soporte */
+    private function edit($student)
     {
         $Y = SchoolYearController::current_year();
         $YAvailable = SchoolYearController::available_year();
@@ -634,14 +672,8 @@ class StudentController extends Controller
         ]);
     }
 
-    /*
-     *
-     *
-     * VIEW STUDENT
-     *
-     *
-     *  */
-    public function view(Student $student)
+    /* Tienen acceso Coordinacion y Docentes */
+    private function view($student)
     {
         $orientation = [];
         /*
@@ -658,7 +690,7 @@ class StudentController extends Controller
             array_unique($groups);
 
             if ( !in_array($student->group_id, $groups) ) {
-                return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
+                return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized!'));
             }
 
             $orientation = Orientation::all();
@@ -1003,45 +1035,6 @@ class StudentController extends Controller
 
         return $c->count();
     }
-
-    /* private function upload_disability_certificate($request, $student)
-    {
-        $request->file_type = StudentFileType::select('id')->where('inclusive', 1)->first()->id; //certificado de discapacidad
-        $path_file = StudentFileController::upload_file($request, 'disability_certificate', $student->id);
-
-        $student_file = StudentFile::where('student_id', $student->id)
-            ->where('student_file_type_id', $request->file_type)
-            ->first();
-
-        if ($student_file === NULL) {
-            StudentFile::create([
-                'student_id' => $student->id,
-                'student_file_type_id' => $request->file_type,
-                'url' => config('app.url') . '/' . $path_file,
-                'url_absolute' => $path_file,
-                'checked' => NULL,
-                'creation_user_id' => Auth::id()
-            ]);
-            return true;
-        } else {
-
-            if ($request->hasFile('disability_certificate'))
-                File::delete(public_path($student_file->url_absolute));
-
-            $renewed = $student_file->approval_date === NULL ? FALSE : TRUE;
-            $student_file->update([
-                'url' => config('app.url') . '/' . $path_file,
-                'url_absolute' => $path_file,
-                'renewed' => $renewed,
-                'checked' => NULL,
-                'creation_user_id' => Auth::id()
-
-            ]);
-            return true;
-        }
-
-        return false;
-    } */
 
 
     /*
@@ -1486,24 +1479,6 @@ class StudentController extends Controller
         return $pdf->download('Carnet - '. $student->getFullName() .'.pdf');
     }
 
-    /* private function send_msg($student, $group)
-    {
-        if ($student->person_charge !== NULL) {
-            $tutor = PersonCharge::select('id', 'cellphone')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
-
-            if ($tutor->cellphone !== NULL && Str::length($tutor->cellphone) == 10) {
-                $school = School::find(1);
-
-                $msg = "El estudiante, " .
-                    $student->getFullName() .
-                    ", ha sido matriculado en el grupo *" . $group->studyYear->name . ": " . $group->name . "*" .
-                    " del colegio, *" . $school->name . "*";
-
-                $message = new WAController($msg, $tutor->cellphone);
-                $message->send();
-            }
-        }
-    } */
 
     public function send_delete_code(Student $student, Request $request)
     {

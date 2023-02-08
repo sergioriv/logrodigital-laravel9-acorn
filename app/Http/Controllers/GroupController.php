@@ -33,9 +33,7 @@ class GroupController extends Controller
     {
         $this->middleware('can:groups.index')->only('index');
         $this->middleware('can:groups.create')->only('create', 'store', 'edit', 'update', 'delete');
-        // $this->middleware('can:groups.students');
         $this->middleware('can:groups.students.matriculate')->only('matriculate', 'matriculate_update');
-        // $this->middleware('can:groups.teachers');
         $this->middleware('can:groups.teachers.edit')->only('teacher_edit', 'teacher_update');
 
         $this->middleware(YearCurrentMiddleware::class)->except('index', 'filter', 'show', 'exportStudentList');
@@ -211,7 +209,7 @@ class GroupController extends Controller
         if (RoleUser::TEACHER_ROL === UserController::role_auth()
             && !in_array($group->id, TeacherController::myDirectorGroup()->pluck('id')->toArray())) {
 
-            return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized'));
+            return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized!'));
         }
 
 

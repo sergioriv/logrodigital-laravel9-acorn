@@ -32,7 +32,6 @@
 @endsection
 
 @section('js_page')
-    @can('students.info')
         <script src="/js/forms/select2.js"></script>
         <script src="/js/forms/student-profile.js"></script>
         <script src="/js/forms/person-charge.js"></script>
@@ -52,7 +51,6 @@
                 </script>
             @endif
         @endhasrole
-    @endcan
 
     @unlessrole('STUDENT')
         @can('students.delete')
@@ -174,6 +172,7 @@
                                         <i data-acorn-icon="more-horizontal"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
+
                                             @if ($student->enrolled)
                                                 <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student)">
                                                     <i data-acorn-icon="download"></i>
@@ -214,14 +213,16 @@
 
                             @else
 
-                                <!-- Activate Button Start -->
-                                <form action="{{ route('students.activate', $student) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
+                                @can('students.delete')
+                                    <!-- Activate Button Start -->
+                                    <form action="{{ route('students.activate', $student) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
 
-                                    <x-button type="submit" class="btn-success">{{ __('Activate') }}</x-button>
-                                </form>
-                                <!-- Activate Button End -->
+                                        <x-button type="submit" class="btn-success">{{ __('Activate') }}</x-button>
+                                    </form>
+                                    <!-- Activate Button End -->
+                                @endcan
 
                             @endif
                         </div>
@@ -296,16 +297,14 @@
                         </div>
 
                         <div class="nav flex-column mb-5" role="tablist">
-                            @can('students.info')
-                                <a class="nav-link @empty(session('tab')) active @endempty logro-toggle px-0 border-bottom border-separator-light"
-                                    data-bs-toggle="tab" href="#informationTab" role="tab">
-                                    <span class="align-middle">{{ __('Information') }}</span>
-                                </a>
-                                <a class="nav-link @if (session('tab') === 'personsCharge') active @endif logro-toggle px-0 border-bottom border-separator-light"
-                                    data-bs-toggle="tab" href="#personsChargeTab" role="tab">
-                                    <span class="align-middle">{{ __('Persons in Charge') }}</span>
-                                </a>
-                            @endcan
+                            <a class="nav-link @empty(session('tab')) active @endempty logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#informationTab" role="tab">
+                                <span class="align-middle">{{ __('Information') }}</span>
+                            </a>
+                            <a class="nav-link @if (session('tab') === 'personsCharge') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#personsChargeTab" role="tab">
+                                <span class="align-middle">{{ __('Persons in Charge') }}</span>
+                            </a>
                             @can('students.documents.edit')
                                 <a class="nav-link @if (session('tab') === 'documents') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                     data-bs-toggle="tab" href="#documentsTab" role="tab">
@@ -349,7 +348,6 @@
             <!-- Right Side Start -->
             <div class="col-12 col-xl-9 mb-5 tab-content">
 
-                @can('students.info')
                     <!-- Information Tab Start -->
                     <div class="tab-pane fade @empty(session('tab')) active show @endempty" id="informationTab"
                         role="tabpanel">
@@ -987,14 +985,18 @@
                                                         <img src="{{ env('APP_URL') . '/' . $student->signature_tutor }}"
                                                             class="max-w-100 sh-19 border rounded-md" alt="signature" />
                                                     </div>
-                                                    <div class="mt-2">
-                                                        <x-button
-                                                            type="button"
-                                                            class="btn-sm btn-outline-danger"
-                                                            delete-signature="tutor"
-                                                            data-img="{{ env('APP_URL') . '/' . $student->signature_tutor }}"
-                                                            >{{ __('Delete') }}</x-button>
-                                                    </div>
+
+                                                    @can('students.delete')
+                                                        <div class="mt-2">
+                                                            <x-button
+                                                                type="button"
+                                                                class="btn-sm btn-outline-danger"
+                                                                delete-signature="tutor"
+                                                                data-img="{{ env('APP_URL') . '/' . $student->signature_tutor }}"
+                                                                >{{ __('Delete') }}</x-button>
+                                                        </div>
+                                                    @endcan
+
                                                 @endif
                                             </div>
                                             <div class="col-md-6">
@@ -1006,14 +1008,17 @@
                                                         <img src="{{ env('APP_URL') . '/' . $student->signature_student }}"
                                                             class="max-w-100 sh-19 border rounded-md" alt="signature" />
                                                     </div>
-                                                    <div class="mt-2">
-                                                        <x-button
-                                                            type="button"
-                                                            class="btn-sm btn-outline-danger"
-                                                            delete-signature="student"
-                                                            data-img="{{ env('APP_URL') . '/' . $student->signature_student }}"
-                                                            >{{ __('Delete') }}</x-button>
-                                                    </div>
+
+                                                    @can('students.delete')
+                                                        <div class="mt-2">
+                                                            <x-button
+                                                                type="button"
+                                                                class="btn-sm btn-outline-danger"
+                                                                delete-signature="student"
+                                                                data-img="{{ env('APP_URL') . '/' . $student->signature_student }}"
+                                                                >{{ __('Delete') }}</x-button>
+                                                        </div>
+                                                    @endcan
                                                 @endif
                                             </div>
                                         </div>
@@ -1714,7 +1719,6 @@
 
                     </div>
                     <!-- Persons In Charge Tab End -->
-                @endcan
 
                 @can('students.documents.edit')
                     <!-- Documents Tab Start -->
