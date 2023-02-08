@@ -16,7 +16,7 @@ class PermissionsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('model_has_permissions')->delete();
+        DB::table('role_has_permissions')->delete();
         Permission::query()->delete();
 
         app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
