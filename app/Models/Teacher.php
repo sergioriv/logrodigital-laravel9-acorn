@@ -53,6 +53,18 @@ class Teacher extends Model
     {
         return $this->belongsTo(User::class, 'id');
     }
+    public function expeditionCity()
+    {
+        return $this->belongsTo(City::class, 'expedition_city', 'id');
+    }
+    public function birthCity()
+    {
+        return $this->belongsTo(City::class, 'birth_city', 'id');
+    }
+    public function residenceCity()
+    {
+        return $this->belongsTo(City::class, 'residence_city', 'id');
+    }
 
     /*
      * CHILDREN

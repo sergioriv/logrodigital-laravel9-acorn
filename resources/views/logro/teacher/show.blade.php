@@ -65,6 +65,10 @@
                         <div class="nav flex-column mb-5" role="tablist">
 
                             <a class="nav-link @empty(session('tab')) active @endempty logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#informationTab" role="tab">
+                                <span class="align-middle">{{ __('Information') }}</span>
+                            </a>
+                            <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#subjectsTab" role="tab">
                                 <span class="align-middle">{{ __('Subjects') }}</span>
                             </a>
@@ -87,26 +91,6 @@
 
                         </div>
 
-                        <div class="mb-5">
-                            <p class="text-small text-uppercase text-muted mb-2">{{ __('contact') }}</p>
-                            @if ($teacher->telephone)
-                                <div class="d-block mb-1">
-                                    <i data-acorn-icon="phone" class="me-2" data-acorn-size="17"></i>
-                                    <span class="align-middle">{{ $teacher->telephone }}</span>
-                                </div>
-                            @endif
-                            @if ($teacher->cellphone)
-                                <div class="d-block mb-1">
-                                    <i data-acorn-icon="phone" class="me-2" data-acorn-size="17"></i>
-                                    <span class="align-middle">{{ $teacher->cellphone }}</span>
-                                </div>
-                            @endif
-                            <div class="d-block">
-                                <i data-acorn-icon="email" class="me-2" data-acorn-size="17"></i>
-                                <span class="align-middle">{{ $teacher->institutional_email }}</span>
-                            </div>
-                        </div>
-
                         <div class="d-flex flex-column">
                             <text class="text-muted text-small">{{ __('created at') }}:</text>
                             <text class="text-muted text-small">{{ $teacher->created_at }}</text>
@@ -122,8 +106,174 @@
             <!-- Right Side Start -->
             <div class="col-12 col-xl-9 mb-5 tab-content">
 
+                <!-- Information Tab Start -->
+                <div class="tab-pane fade @empty(session('tab')) active show @endempty" id="informationTab"
+                    role="tabpanel">
+
+                    <!-- Information Content Tab Start -->
+                    <h2 class="small-title">{{ __('Information') }}</h2>
+                    <section class="mb-5">
+
+                        <div class="card mb-5">
+                            <div class="card-body row g-3">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('names') }}</x-label>
+                                        <text class="form-control">{{ $teacher->names }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('last names') }}</x-label>
+                                        <text class="form-control">{{ $teacher->last_names }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('document number') }}</x-label>
+                                        <text class="form-control">{{ $teacher->document }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('expedition city') }}</x-label>
+                                        <text class="form-control">{{ $teacher->expeditionCity?->department->name .' | '. $teacher->expeditionCity?->name }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('birth city') }}</x-label>
+                                        <text class="form-control">{{ $teacher->birthCity?->department->name .' | '. $teacher->birthCity?->name }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('birthdate') }}</x-label>
+                                        <text class="form-control">{{ $teacher->birthdate }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('residence city') }}</x-label>
+                                        <text class="form-control">{{ $teacher->residenceCity?->department->name .' | '. $teacher->residenceCity?->name }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('residence address') }}</x-label>
+                                        <text class="form-control">{{ $teacher->address }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('telephone') }}</x-label>
+                                        <text class="form-control">{{ $teacher->telephone }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('cellphone') }}</x-label>
+                                        <text class="form-control">{{ $teacher->cellphone }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label required>{{ __('institutional email') }}</x-label>
+                                        <text class="form-control">{{ $teacher->institutional_email }}</text>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <x-label>{{ __('marital status') }}</x-label>
+                                        <text class="form-control">{{ __($teacher->marital_status) }}</text>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Appointment, possession, transfer Start -->
+                        <div class="card mb-5">
+                            <div class="card-body row g-3">
+
+                                @if ($teacher->file_appointment)
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('appointment number') }}</x-label>
+                                            <text class="form-control">{{ $teacher->appointment_number }}</text>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('date') }}</x-label>
+                                            <text class="form-control">{{ $teacher->date_appointment }}</text>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end justify-content-center">
+                                        <a href="{{ config('app.url') .'/'. $teacher->file_appointment }}"
+                                            target="_blank" class="btn bt-sm btn-outline-primary icon-start">
+                                            <i class="icon bi-box-arrow-up-right me-2"></i>
+                                            {{ __('View document') }}
+                                        </a>
+                                    </div>
+                                @endif
+
+                                @if ($teacher->file_possession_certificate)
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('appointment number') }}</x-label>
+                                            <text class="form-control">{{ $teacher->possession_certificate }}</text>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('date') }}</x-label>
+                                            <text class="form-control">{{ $teacher->date_possession_certificate }}</text>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end justify-content-center">
+                                        <a href="{{ config('app.url') .'/'. $teacher->file_possession_certificate }}"
+                                            target="_blank" class="btn bt-sm btn-outline-primary icon-start">
+                                            <i class="icon bi-box-arrow-up-right me-2"></i>
+                                            {{ __('View document') }}
+                                        </a>
+                                    </div>
+                                @endif
+
+                                @if ($teacher->file_transfer_resolution)
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('appointment number') }}</x-label>
+                                            <text class="form-control">{{ $teacher->transfer_resolution }}</text>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('date') }}</x-label>
+                                            <text class="form-control">{{ $teacher->date_transfer_resolution }}</text>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end justify-content-center">
+                                        <a href="{{ config('app.url') .'/'. $teacher->file_transfer_resolution }}"
+                                            target="_blank" class="btn bt-sm btn-outline-primary icon-start">
+                                            <i class="icon bi-box-arrow-up-right me-2"></i>
+                                            {{ __('View document') }}
+                                        </a>
+                                    </div>
+                                @endif
+
+                            </div>
+                        </div>
+                        <!-- Appointment, possession, transfer End -->
+
+                    </section>
+                    <!-- Information Content Tab End -->
+
+                </div>
+                <!-- Information Tab End -->
+
                 <!-- Subjects Tab Start -->
-                <div class="tab-pane fade @empty(session('tab')) active show @endempty" id="subjectsTab"
+                <div class="tab-pane fade" id="subjectsTab"
                     role="tabpanel">
 
                     <!-- Subjects Content Tab Start -->

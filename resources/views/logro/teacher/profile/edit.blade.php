@@ -110,26 +110,6 @@
 
                         </div>
 
-                        <div class="mb-5">
-                            <p class="text-small text-uppercase text-muted mb-2">{{ __('contact') }}</p>
-                            @if ($teacher->telephone)
-                                <div class="d-block mb-1">
-                                    <i data-acorn-icon="phone" class="me-2" data-acorn-size="17"></i>
-                                    <span class="align-middle">{{ $teacher->telephone }}</span>
-                                </div>
-                            @endif
-                            @if ($teacher->cellphone)
-                                <div class="d-block mb-1">
-                                    <i data-acorn-icon="phone" class="me-2" data-acorn-size="17"></i>
-                                    <span class="align-middle">{{ $teacher->cellphone }}</span>
-                                </div>
-                            @endif
-                            <div class="d-block">
-                                <i data-acorn-icon="email" class="me-2" data-acorn-size="17"></i>
-                                <span class="align-middle">{{ $teacher->institutional_email }}</span>
-                            </div>
-                        </div>
-
                         <div class="d-flex flex-column">
                             <text class="text-muted text-small">{{ __('created at') }}:</text>
                             <text class="text-muted text-small">{{ $teacher->created_at }}</text>
@@ -281,11 +261,23 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="position-relative form-group">
-                                            <x-label>{{ __('upload file') }}</x-label>
-                                            <x-input type="file" accept=".pdf" name="file_appointment"
-                                                class="d-block" />
+
+                                        <div class="row g-2">
+                                            <div class="@if($teacher->file_appointment) col-10 @endif position-relative form-group">
+                                                <x-label>{{ __('upload file') }}</x-label>
+                                                <x-input type="file" accept=".pdf" name="file_appointment"
+                                                    class="d-block" />
+                                            </div>
+                                            @if ($teacher->file_appointment)
+                                                <div class="col-2 d-flex align-items-end">
+                                                    <a href="{{ config('app.url') .'/'. $teacher->file_appointment }}"
+                                                        target="_blank" class="lh-lg">
+                                                        <i class="icon icon-18 text-primary bi-box-arrow-up-right"></i>
+                                                    </a>
+                                                </div>
+                                            @endif
                                         </div>
+
                                     </div>
                                     <div class="col-md-6">
                                         <div class="w-100 position-relative form-group">
@@ -302,11 +294,23 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="position-relative form-group">
-                                            <x-label>{{ __('upload file') }}</x-label>
-                                            <x-input type="file" accept=".pdf" name="file_possession_certificate"
-                                                class="d-block" />
+
+                                        <div class="row g-2">
+                                            <div class="@if($teacher->file_possession_certificate) col-10 @endif position-relative form-group">
+                                                <x-label>{{ __('upload file') }}</x-label>
+                                                <x-input type="file" accept=".pdf" name="file_possession_certificate"
+                                                    class="d-block" />
+                                            </div>
+                                            @if ($teacher->file_possession_certificate)
+                                                <div class="col-2 d-flex align-items-end">
+                                                    <a href="{{ config('app.url') .'/'. $teacher->file_possession_certificate }}"
+                                                        target="_blank" class="lh-lg">
+                                                        <i class="icon icon-18 text-primary bi-box-arrow-up-right"></i>
+                                                    </a>
+                                                </div>
+                                            @endif
                                         </div>
+
                                     </div>
                                     <div class="col-md-6">
                                         <div class="w-100 position-relative form-group">
@@ -323,11 +327,23 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="position-relative form-group">
-                                            <x-label>{{ __('upload file') }}</x-label>
-                                            <x-input type="file" accept=".pdf" name="file_transfer_resolution"
-                                                class="d-block" />
+
+                                        <div class="row g-2">
+                                            <div class="@if($teacher->file_transfer_resolution) col-10 @endif position-relative form-group">
+                                                <x-label>{{ __('upload file') }}</x-label>
+                                                <x-input type="file" accept=".pdf" name="file_transfer_resolution"
+                                                    class="d-block" />
+                                            </div>
+                                            @if ($teacher->file_transfer_resolution)
+                                                <div class="col-2 d-flex align-items-end">
+                                                    <a href="{{ config('app.url') .'/'. $teacher->file_transfer_resolution }}"
+                                                        target="_blank" class="lh-lg">
+                                                        <i class="icon icon-18 text-primary bi-box-arrow-up-right"></i>
+                                                    </a>
+                                                </div>
+                                            @endif
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
