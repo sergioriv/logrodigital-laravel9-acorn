@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use App\Http\Controllers\support\Notify;
+use ErrorException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -46,5 +48,25 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+        $this->renderable(function (Throwable $e) {
+            return $this->handleException($e);
+        });
+    }
+
+
+    public function handleException(Throwable $e){
+        if ($e instanceof ErrorException) {
+
+            \Illuminate\Support\Facades\Log::alert(
+                'ERROR AL INTENTAR ACCEDER: (' .
+                auth()->id() .':' .
+                json_encode(auth()->user()->getRoleNames()->toArray()) . ') ' .
+                \Illuminate\Support\Facades\URL::current()
+            );
+
+            Notify::fail(__('An error has occurred'));
+            return back();
+        }
     }
 }
