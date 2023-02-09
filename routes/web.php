@@ -39,6 +39,7 @@ use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UserAlertController;
 use App\Models\Grade;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +70,11 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::get('update-permissions', function () {
             (new \Database\Seeders\PermissionsSeeder)->run();
             dd('hecho');
+        });
+
+        Route::get('mutate/{id}', function ($id) {
+            Auth::login(User::find($id));
+            return redirect()->route('dashboard');
         });
 
         Route::get('grades-reset', function () {
