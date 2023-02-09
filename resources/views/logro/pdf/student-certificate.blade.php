@@ -34,7 +34,7 @@
 
         .content {
             position: relative;
-            margin-top: 100px;
+            margin-top: 160px;
             margin-bottom: 80px;
         }
 
@@ -270,12 +270,16 @@
 
 
     <table class="table header" border="0">
+        @if ($SCHOOL->badge)
+            <tr>
+                <td class="text-center align-sub">
+                    <div class="h-70p">
+                        <img class="badge" src="{{ config('app.url') . '/' . $SCHOOL->badge }}" alt="badge">
+                    </div>
+                </td>
+            </tr>
+        @endif
         <tr>
-            <td class="h-70p w-70p text-center align-sub">
-                @if ($SCHOOL->badge)
-                    <img class="badge" src="{{ config('app.url') . '/' . $SCHOOL->badge }}" alt="badge">
-                @endif
-            </td>
             <td class="t-center p-se-1">
                 <p class="bold">
                     {{ $SCHOOL->name ?? null }}
@@ -290,7 +294,6 @@
                     @endif
                 </p>
             </td>
-            <td class="h-70p w-70p align-sub text-center">&nbsp;</td>
         </tr>
     </table>
 
