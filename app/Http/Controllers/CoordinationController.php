@@ -13,7 +13,12 @@ class CoordinationController extends Controller
 {
     function __construct()
     {
-        $this->middleware('can:coordination.edit');
+        $this->middleware('can:coordination.create')->except('index');
+    }
+
+    public function index()
+    {
+        return redirect()->route('myinstitution');
     }
 
     /**

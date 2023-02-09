@@ -13,7 +13,7 @@ class OrientationController extends Controller
 {
     function __construct()
     {
-        $this->middleware('can:orientation.edit');
+        $this->middleware('can:orientation.create');
     }
 
     /**

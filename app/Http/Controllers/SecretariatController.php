@@ -13,8 +13,7 @@ class SecretariatController extends Controller
 {
     function __construct()
     {
-        // $this->middleware('can:secretariat.index');
-        $this->middleware('can:secretariat.edit');
+        $this->middleware('can:secretariat.create');
     }
 
     /**
