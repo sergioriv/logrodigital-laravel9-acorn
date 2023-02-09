@@ -16,11 +16,10 @@ class HasRolesMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, string $roles)
+    public function handle(Request $request, Closure $next, string ...$roles)
     {
-        $role = explode(',', $roles);
 
-        if ( empty( array_intersect($role, Auth::user()->getRoleNames()->toArray()) ) ) {
+        if ( empty( array_intersect($roles, Auth::user()->getRoleNames()->toArray()) ) ) {
             Notify::fail(__('Not allowed'));
             return back();
         }
