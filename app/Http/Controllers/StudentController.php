@@ -877,14 +877,11 @@ class StudentController extends Controller
     {
         $students = Student::where(function ($query) {
                 $query->where('inclusive', 1)
-                        ->orWhere(function ($orQuery) {
-                            $orQuery->whereHas('files', function ($files) {
-                                $files->whereHas('studentFileType', function ($fileType) {
-                                    $fileType->where('inclusive', 1);
-                                });
-                            });
-                        });
-            })->get();
+                    ->orWhere('disability_id', '>', 1);
+            })
+            ->with('headquarters', 'studyTime', 'studyYear', 'group', 'disability')
+            ->orderBy('students.inclusive')
+            ->get();
 
         return view('logro.student.list-inclusive', ['students' => $students]);
 

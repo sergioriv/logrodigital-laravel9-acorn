@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\support\UserController;
 use App\Models\Data\RoleUser;
+use App\Models\Student;
 use App\Models\UserAlert;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,7 +53,17 @@ class DashboardController extends Controller
                 ->orderBy('created_at')
                 ->get();
 
-        return view('dashboard.orientation', ['alerts' => $alerts]);
+        $pendingStudents = Student::where(function ($query) {
+            $query->where('disability_id', '>', 1)
+                    ->where(function ($student) {
+                        $student->where('inclusive', 0)->orWhereNull('inclusive');
+                    });
+        })->count();
+
+        return view('dashboard.orientation', [
+            'alerts' => $alerts,
+            'pendingStudents' => $pendingStudents
+        ]);
     }
 
     private function dashCoordination()

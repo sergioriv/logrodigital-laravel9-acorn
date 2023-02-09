@@ -44,7 +44,7 @@ $title = __('Inclusive students');
                         <div
                             class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
                             <input class="form-control datatable-search" placeholder="{{ __('Search') }}"
-                                data-datatable="#datatable_students" />
+                                data-datatable="#datatable_students_inclusive" />
                             <span class="search-magnifier-icon">
                                 <i data-acorn-icon="search"></i>
                             </span>
@@ -59,7 +59,7 @@ $title = __('Inclusive students');
                         <div class="d-inline-block">
                             <!-- Length Start -->
                             <div class="dropdown-as-select d-inline-block datatable-length"
-                                data-datatable="#datatable_students" data-childSelector="span">
+                                data-datatable="#datatable_students_inclusive" data-childSelector="span">
                                 <button class="btn p-0 shadow" type="button" data-bs-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false" data-bs-offset="0,3">
                                     <span class="btn btn-foreground-alternate dropdown-toggle" data-bs-toggle="tooltip"
@@ -84,7 +84,8 @@ $title = __('Inclusive students');
 
                 <!-- Table Start -->
                 <div class="data-table-responsive-wrapper">
-                    <table id="datatable_students" class="data-table nowrap hover" logro="datatable">
+                    <table id="datatable_students_inclusive" class="data-table nowrap hover" logro="datatable"
+                        data-order="[]">
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('names') }}</th>

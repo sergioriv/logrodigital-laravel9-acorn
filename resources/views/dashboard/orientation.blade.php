@@ -28,8 +28,23 @@ $title = __('Dashboard');
     </div>
     <!-- Title and Top Buttons End -->
 
+
+    @if ($pendingStudents)
+    <!-- Pending Students Content Start -->
+    <div class="mb-3">
+        <div class="card">
+            <div class="card-body">
+                {{ __('You have :COUNT students pending assessment.', ['COUNT' => $pendingStudents]) }},
+                <a href="{{ route('students.inclusive') }}"
+                    class="text-primary">{{ __('go to inclusive students') }}</a>
+            </div>
+        </div>
+    </div>
+    <!-- Pending Students Content End -->
+    @endif
+
     <!-- Alerts Content Start -->
-    <div class="mb-5">
+    <div class="mb-3">
         <x-dash.alerts :alerts="$alerts" />
     </div>
     <!-- Alerts Content End -->

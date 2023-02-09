@@ -625,6 +625,8 @@
     "there are negative hours": "hay horas negativas",
     "View document": "Ver documento",
     "select a coordinator": "seleccione un coordinador",
+    "You have :COUNT students pending assessment.": "Tienes :COUNT estudiantes pendientes por valoración",
+    "go to inclusive students": "ir a estudiantes inclusivos",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Current password": "Contraseña actual",
