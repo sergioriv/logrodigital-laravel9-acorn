@@ -279,3 +279,10 @@ html[data-dimension="mobile"] .logro-badge-right-bottom {
 /*
  * DataTables End
  */
+
+
+.readable-text {
+    font-family: "Cascadia mono", monospace;
+    letter-spacing: 0.07em;
+    word-break: break-word;
+}

@@ -13,7 +13,13 @@ class SecretariatController extends Controller
 {
     function __construct()
     {
-        $this->middleware('can:secretariat.create');
+        $this->middleware('can:secretariat.create')->except('index');
+    }
+
+    public function index()
+    {
+        $this->tab();
+        return redirect()->route('myinstitution');
     }
 
     /**
@@ -78,10 +84,16 @@ class SecretariatController extends Controller
 
         DB::commit();
 
-
-        Notify::success( __('Created secretariat user!') );
-        self::tab();
-        return redirect()->route('myinstitution');
+        return view('logro.created', [
+            'role' => 'secreatariat',
+            'title' => __('Created secretariat user!'),
+            'email' => $request->email,
+            'password' => $secreatariatCreate->getUser()->temporalPassword,
+            'redirect' => [
+                'title' => __('Go back'),
+                'action' => route('secreatariat.index')
+            ]
+        ]);
     }
 
 

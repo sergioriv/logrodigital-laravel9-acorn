@@ -185,17 +185,17 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
 
     /* Route Secretariat */
-    Route::resource('secretariat', SecretariatController::class)->only('create','store')->names('secreatariat');
+    Route::resource('secretariat', SecretariatController::class)->only('index', 'create','store')->names('secreatariat');
 
 
 
     /* Route Coordination */
-    Route::resource('coordination', CoordinationController::class)->only('create','store')->names('coordination');
+    Route::resource('coordination', CoordinationController::class)->only('index', 'create','store')->names('coordination');
 
 
 
     /* Route Orientation */
-    Route::resource('orientation', OrientationController::class)->only('create','store')->names('orientation');
+    Route::resource('orientation', OrientationController::class)->only('index', 'create','store')->names('orientation');
 
 
 

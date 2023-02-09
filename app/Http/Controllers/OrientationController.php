@@ -13,7 +13,13 @@ class OrientationController extends Controller
 {
     function __construct()
     {
-        $this->middleware('can:orientation.create');
+        $this->middleware('can:orientation.create')->except('index');
+    }
+
+    public function index()
+    {
+        $this->tab();
+        return redirect()->route('myinstitution');
     }
 
     /**
@@ -78,10 +84,16 @@ class OrientationController extends Controller
 
         DB::commit();
 
-
-        Notify::success( __('Created orientation user!') );
-        self::tab();
-        return redirect()->route('myinstitution');
+        return view('logro.created', [
+            'role' => 'orientation',
+            'title' => __('Created orientation user!'),
+            'email' => $request->email,
+            'password' => $orientatorCreate->getUser()->temporalPassword,
+            'redirect' => [
+                'title' => __('Go back'),
+                'action' => route('orientation.index')
+            ]
+        ]);
     }
 
     /**

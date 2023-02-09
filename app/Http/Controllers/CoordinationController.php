@@ -18,6 +18,7 @@ class CoordinationController extends Controller
 
     public function index()
     {
+        $this->tab();
         return redirect()->route('myinstitution');
     }
 
@@ -90,7 +91,7 @@ class CoordinationController extends Controller
             'password' => $coordinationCreate->getUser()->temporalPassword,
             'redirect' => [
                 'title' => __('Go back'),
-                'action' => route('myinstitution')
+                'action' => route('coordination.index')
             ]
         ]);
     }

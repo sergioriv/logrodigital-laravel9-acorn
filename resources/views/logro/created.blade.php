@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="display-5 mb-2">{{ __('Email') }}: {{ $email }}</div>
-                <div class="display-5">{{ __('Temporary password') }}: <div class="font-weight-bold d-inline-block">{{ $password}}</div></div>
+                <div class="display-5">{{ __('Temporary password') }}: <div class="font-weight-bold d-inline-block readable-text">{{ $password}}</div></div>
 
                 <div class="mt-5">
                     <a href="{{ url()->previous() }}" class="btn btn-primary">Crear nuevo</a>

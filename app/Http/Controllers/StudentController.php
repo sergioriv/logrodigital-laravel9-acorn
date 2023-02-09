@@ -63,7 +63,7 @@ class StudentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('hasroles:SUPPORT,SECRETARIAT,STUDENT,PARENT')->only(
+        $this->middleware('hasroles:SUPPORT,SECRETARIAT,STUDENT')->only(
             'pdf_carnet',
             'pdf_observations',
             'pdf_certificate',
