@@ -337,9 +337,9 @@
                                                                         <td class="col-1 text-center">
                                                                             {{ $subject->academicWorkload->course_load }}%
                                                                         </td>
-                                                                        @canany(['groups.teachers.edit', 'group.subject.period.active'])
-                                                                        @if ($subject?->teacherSubject)
-                                                                            <td class="col-1 text-end">
+                                                                        <td class="col-1 text-end">
+                                                                            @canany(['groups.teachers.edit', 'group.subject.period.active'])
+                                                                            @if ($subject?->teacherSubject)
                                                                                 <!-- Dropdown Button Start -->
                                                                                 <div class="ms-1">
                                                                                     <button type="button"
@@ -367,9 +367,9 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <!-- Dropdown Button End -->
-                                                                            </td>
-                                                                        @endif
-                                                                        @endcanany
+                                                                            @endif
+                                                                            @endcanany
+                                                                        </td>
                                                                     </tr>
                                                                 @endforeach
 
