@@ -13,7 +13,7 @@ class PeriodPermitController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(OnlyCoordinationMiddleware::class);
+        $this->middleware('can:group.subject.period.active');
     }
 
     public function store(Request $request)

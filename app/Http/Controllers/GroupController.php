@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\GroupStudentList;
+use App\Exports\GroupStudentListGuide;
 use App\Exports\StudentsWithFiles;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
@@ -584,6 +585,10 @@ class GroupController extends Controller
 
 
     /* Export */
+    public function exportStudentListGuide(TeacherSubjectGroup $subject)
+    {
+        return Excel::download(new GroupStudentListGuide($subject), __('auxiliary template') .'_'. $subject->subject->resourceSubject->name .'_'. $subject->group->name .'_'. $subject->teacher->getFullName() . '.xlsx');
+    }
     public function exportStudentList(Group $group)
     {
         return Excel::download(new GroupStudentList($group), __('student list :GROUP', ['GROUP' => $group->name]) . '.xlsx');

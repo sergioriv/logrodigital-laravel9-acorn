@@ -78,6 +78,7 @@ class PermissionsSeeder extends Seeder
         $g_students_matriculate = Permission::create(['name' => 'groups.students.matriculate']);
         $g_teachers = Permission::create(['name' => 'groups.teachers']);
         $g_teachers_edit = Permission::create(['name' => 'groups.teachers.edit']);
+        $g_subject_active_period = Permission::create(['name' => 'group.subject.period.active']);
 
         /* Areas & Asignaturas */
         $sb_index = Permission::create(['name' => 'subjects.index']);
@@ -131,6 +132,7 @@ class PermissionsSeeder extends Seeder
             $g_students_matriculate,
             $g_teachers,
             $g_teachers_edit,
+            $g_subject_active_period,
             $sb_index,
             $sb_edit,
             $sb_subjects_index,

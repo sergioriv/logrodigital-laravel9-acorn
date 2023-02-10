@@ -337,7 +337,8 @@
                                                                         <td class="col-1 text-center">
                                                                             {{ $subject->academicWorkload->course_load }}%
                                                                         </td>
-                                                                        @hasrole('COORDINATOR')
+                                                                        @canany(['groups.teachers.edit', 'group.subject.period.active'])
+                                                                        @if ($subject?->teacherSubject)
                                                                             <td class="col-1 text-end">
                                                                                 <!-- Dropdown Button Start -->
                                                                                 <div class="ms-1">
@@ -350,16 +351,25 @@
                                                                                         <i data-acorn-icon="more-vertical"></i>
                                                                                     </button>
                                                                                     <div class="dropdown-menu dropdown-menu-end">
-                                                                                        <x-dropdown-item type="button"
-                                                                                            modal-period-permit
-                                                                                            data-subject-id="{{ $subject->teacherSubject->id ?? null }}">
-                                                                                            <span>{{ __('Activate note upload') }}</span>
-                                                                                        </x-dropdown-item>
+                                                                                        @can('group.subject.period.active')
+                                                                                            <x-dropdown-item type="button"
+                                                                                                modal-period-permit
+                                                                                                data-subject-id="{{ $subject->teacherSubject->id }}">
+                                                                                                <span>{{ __('Activate note upload') }}</span>
+                                                                                            </x-dropdown-item>
+                                                                                        @endcan
+                                                                                        @can('groups.teachers.edit')
+                                                                                            <x-dropdown-item type="button"
+                                                                                                :link="route('group.export.student-list-guide', $subject->teacherSubject)">
+                                                                                                <span>{{ __('Download auxiliary template') }}</span>
+                                                                                            </x-dropdown-item>
+                                                                                        @endcan
                                                                                     </div>
                                                                                 </div>
                                                                                 <!-- Dropdown Button End -->
                                                                             </td>
-                                                                        @endhasrole
+                                                                        @endif
+                                                                        @endcanany
                                                                     </tr>
                                                                 @endforeach
 
@@ -572,7 +582,7 @@
         </div>
     </div>
 
-    @hasrole('COORDINATOR')
+    @can('group.subject.period.active')
         <!-- Modal Period Permit -->
         <div class="modal fade" id="addPeriodPermit" aria-labelledby="modalPeriodPermit" data-bs-backdrop="static"
             data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -620,7 +630,7 @@
                 </div>
             </div>
         </div>
-    @endhasrole
+    @endcan
 
     @hasrole('SUPPORT')
     @if (!$group->specialty && !$periods->isEmpty())
