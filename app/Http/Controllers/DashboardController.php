@@ -7,7 +7,6 @@ use App\Http\Controllers\support\UserController;
 use App\Models\Data\RoleUser;
 use App\Models\Student;
 use App\Models\UserAlert;
-use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -36,23 +35,13 @@ class DashboardController extends Controller
 
     private function dashTeacher()
     {
-        $alerts = UserAlert::where('for_user', Auth::id())
-                ->whereNull('checked')
-                ->orderByDesc('priority')
-                ->orderBy('created_at')
-                ->get();
-
-        return view('dashboard.teacher', ['alerts' => $alerts]);
+        return view('dashboard.teacher', [
+            'alertsStudents' => $this->myAlertStudents()
+        ]);
     }
 
     private function dashOrientation()
     {
-        $alerts = UserAlert::where('for_user', Auth::id())
-                ->whereNull('checked')
-                ->orderByDesc('priority')
-                ->orderBy('created_at')
-                ->get();
-
         $pendingStudents = Student::where(function ($query) {
             $query->where('disability_id', '>', 1)
                     ->where(function ($student) {
@@ -61,20 +50,28 @@ class DashboardController extends Controller
         })->count();
 
         return view('dashboard.orientation', [
-            'alerts' => $alerts,
+            'alertsStudents' => $this->myAlertStudents(),
             'pendingStudents' => $pendingStudents
         ]);
     }
 
     private function dashCoordination()
     {
-        $alerts = UserAlert::where('for_user', Auth::id())
-                ->whereNull('checked')
-                ->orderByDesc('priority')
-                ->orderBy('created_at')
-                ->get();
+        return view('dashboard.coordination', [
+            'alertsStudents' => $this->myAlertStudents()
+        ]);
+    }
 
-        return view('dashboard.coordination', ['alerts' => $alerts]);
+    protected function myAlertStudents()
+    {
+        return UserAlert::where('for_user', auth()->id())
+            ->whereNull('checked')
+            ->orderByDesc('priority')
+            ->orderBy('created_at')
+            ->with('student')
+            ->get()->groupBy(function ($alert) {
+                return $alert->student_id;
+            });
     }
 
 }

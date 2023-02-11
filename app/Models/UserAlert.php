@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Data\RoleUser;
 use App\Traits\Uuid;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class UserAlert extends Model
@@ -18,6 +20,10 @@ class UserAlert extends Model
         'student_id',
         'created_user_id',
         'created_rol',
+    ];
+
+    protected $casts = [
+        'priority' => 'boolean'
     ];
 
     public function createdRol()
@@ -37,10 +43,22 @@ class UserAlert extends Model
 
     public function student()
     {
-        if ( $this->student_id ) {
-            return $this->belongsTo(Student::class, 'student_id', 'id');
-        }
+        // if ( $this->student_id ) {
+            return $this->belongsTo(Student::class, 'student_id', 'id')->select(
+                'id',
+                'first_name',
+                'second_name',
+                'first_last_name',
+                'second_last_name',);
+        // }
 
-        return null;
+        // return null;
+    }
+
+    protected function createdAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn($v) => Carbon::parse($v)->format('d/m/Y')
+        );
     }
 }

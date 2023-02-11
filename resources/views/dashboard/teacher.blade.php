@@ -28,10 +28,12 @@ $title = __('Dashboard');
     </div>
     <!-- Title and Top Buttons End -->
 
-    <!-- Alerts Content Start -->
-    <div class="mb-5">
-        <x-dash.alerts :alerts="$alerts" />
-    </div>
-    <!-- Alerts Content End -->
+    <!-- Alerts Section Start -->
+    <section class="scroll-section">
+        <h2 class="small-title">{{ __('Alerts') }}</h2>
+        <x-dash.alerts-students :content="$alertsStudents" />
+    </section>
+    <!-- Alerts Section End -->
+
 </div>
 @endsection
