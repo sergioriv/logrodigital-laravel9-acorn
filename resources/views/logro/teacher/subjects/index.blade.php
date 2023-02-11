@@ -32,7 +32,7 @@
                 <div class="data-table-rows slim">
 
                     <!-- Cards Start -->
-                    <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6">
+                    <div class="row g-3 row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
                         @foreach ($directGroup as $group)
                             <x-group.card :group="$group">
                                 <span class="badge text-primary me-2 position-absolute e-n2 t-2 z-index-1"><i class="icon icon-16 bi-award"></i></span>
