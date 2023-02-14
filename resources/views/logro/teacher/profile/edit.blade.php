@@ -19,6 +19,7 @@
     <script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
     <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
     <script src="/js/vendor/imask.js"></script>
+    <script src="/js/vendor/singleimageupload.js"></script>
 @endsection
 
 @section('js_page')
@@ -35,6 +36,11 @@
         });
         IMask(document.querySelector('[name="cellphone"]'), {
             mask: Number,
+        });
+        new SingleImageUpload(document.getElementById('signature'));
+
+        jQuery("#signature input[type='file']").change(function () {
+            $("#signature .form-signature").removeClass('d-none');
         });
     </script>
 @endsection
@@ -348,6 +354,29 @@
                                 </div>
                             </div>
                             <!-- Appointment, possession, transfer End -->
+
+                            <div class="card mb-5">
+                                <div class="card-body">
+
+                                    <div id="signature" class="text-center">
+                                        <div class="border rounded-md mb-2 form-signature @if(is_null($teacher->signature)) d-none @endif">
+                                            <img src="@if(!is_null($teacher->signature)) {{ config('app.url') .'/'. $teacher->signature }} @endif"
+                                                class="rounded-0 max-w-100 sh-19 object-scale-down" />
+                                        </div>
+                                        <button title="{{ __('load signature') }}"
+                                            class="btn w-100 btn-icon btn-separator-light rounded-xl"
+                                            type="button">
+                                            <i data-acorn-icon="upload"></i>
+                                            <span>{{ __('upload signature') }}</span>
+                                        </button>
+                                        <input name="signature"
+                                            class="file-upload d-none" type="file"
+                                            accept="image/jpg, image/jpeg, image/png, image/webp" />
+
+                                    </div>
+
+                                </div>
+                            </div>
 
                             <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
 

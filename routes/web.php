@@ -21,6 +21,7 @@ use App\Http\Controllers\SecretariatController;
 use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFileController;
+use App\Http\Controllers\StudentObserverController;
 use App\Http\Controllers\StudentReportBookController;
 use App\Http\Controllers\StudentTrackingController;
 use App\Http\Controllers\StudyTimeController;
@@ -304,6 +305,8 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
         Route::delete('students/{student}/delete-signature', 'signature_delete')->name('students.signature.delete');
     });
+
+    Route::post('student/{student}/add-observation', [StudentObserverController::class, 'store'])->name('students.observer.create');
 
 
     Route::put('persons-charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');

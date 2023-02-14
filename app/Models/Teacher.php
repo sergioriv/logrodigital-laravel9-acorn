@@ -46,6 +46,8 @@ class Teacher extends Model
         'date_transfer_resolution',
         'file_transfer_resolution',
 
+        'signature',
+
         'active'
     ];
 

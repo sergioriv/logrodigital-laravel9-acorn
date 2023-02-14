@@ -315,6 +315,10 @@
                                     <span class="align-middle">{{ __('Report book') }}</span>
                                 </a>
                             @endcan
+                            {{-- <a class="nav-link @if (session('tab') === 'observer') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#observerTab" role="tab">
+                                <span class="align-middle">{{ __('Observer') }}</span>
+                            </a> --}}
                             @can('students.psychosocial')
                                 <a class="nav-link @if (session('tab') === 'psychosocial') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                     data-bs-toggle="tab" href="#psychosocialTab" role="tab">
@@ -1999,6 +2003,22 @@
                     </div>
                     <!-- Report Books Tab End -->
                 @endcan
+
+                {{-- <!-- Observer Tab Start -->
+                <div class="tab-pane fade @if (session('tab') === 'observer') active show @endif" id="observerTab"
+                role="tabpanel">
+
+                    <!-- Observer Section Start -->
+                    <h2 class="small-title">{{ __('Observer') }}</h2>
+                    <section class="card mb-5">
+                        <div class="card-body">
+                            @include('logro.student.observer.content-tab')
+                        </div>
+                    </section>
+                    <!-- Observer Section End -->
+
+                </div>
+                <!-- Observer Tab End --> --}}
 
                 @can('students.psychosocial')
                     <!-- Psychosocial Information Tab Start -->

@@ -149,9 +149,16 @@ class TeacherController extends Controller
         DB::commit();
 
 
-        Notify::success(__('Teacher created!'));
-        self::tab();
-        return redirect()->route('myinstitution');
+        return view('logro.created', [
+            'role' => 'teacher',
+            'title' => __('Teacher created!'),
+            'email' => $request->email,
+            'password' => $teacherCreate->getUser()->temporalPassword,
+            'redirect' => [
+                'title' => __('Go back'),
+                'action' => route('myinstitution')
+            ]
+        ]);
     }
 
     /*
@@ -216,6 +223,8 @@ class TeacherController extends Controller
                 'transfer_resolution' => ['nullable', 'max:20'],
                 'date_transfer_resolution' => ['required_with:transfer_resolution'],
                 'file_transfer_resolution' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
+
+                'signature' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp','max:2048'],
             ]);
 
             DB::beginTransaction();
@@ -250,7 +259,7 @@ class TeacherController extends Controller
                     'possession_certificate' => $request->possession_certificate,
                     'date_possession_certificate' => $request->date_possession_certificate,
                     'transfer_resolution' => $request->transfer_resolution,
-                    'date_transfer_resolution' => $request->date_transfer_resolution,
+                    'date_transfer_resolution' => $request->date_transfer_resolution
                 ]);
 
                 if ($request->hasFile('file_appointment')) {
@@ -266,6 +275,11 @@ class TeacherController extends Controller
                 if ($request->hasFile('file_transfer_resolution')) {
                     $teacher->update([
                         'file_transfer_resolution' => $this->uploadFile($request, $teacher, 'file_transfer_resolution')
+                    ]);
+                }
+                if ($request->hasFile('signature')) {
+                    $teacher->update([
+                        'signature' => $this->uploadFile($request, $teacher, 'signature')
                     ]);
                 }
 

@@ -343,6 +343,10 @@ class Student extends Model
     {
         return $this->hasMany(StudentDescriptor::class, 'student_id', 'id');
     }
+    public function observer()
+    {
+        return $this->hasMany(StudentObserver::class, 'student_id', 'id');
+    }
 
 
 

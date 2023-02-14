@@ -290,6 +290,11 @@ return [
         'date' => 'fecha',
 
         'current_password' => 'contraseña actual',
+        'annotation_type' => 'tipo de anotación',
+        'date_annotation' => 'fecha de la anotación',
+        'situation_description' => 'descripción de la situación',
+        'free_version_or_disclaimers' => 'versión libre y/o descargos',
+        'agreements_or_commitments' => 'acuerdos o compromisos',
     ],
 
 ];

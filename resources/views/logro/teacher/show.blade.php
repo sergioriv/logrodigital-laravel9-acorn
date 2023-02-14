@@ -221,7 +221,7 @@
                                 @if ($teacher->file_possession_certificate)
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <x-label>{{ __('appointment number') }}</x-label>
+                                            <x-label>{{ __('possession certificate number') }}</x-label>
                                             <text class="form-control">{{ $teacher->possession_certificate }}</text>
                                         </div>
                                     </div>
@@ -243,7 +243,7 @@
                                 @if ($teacher->file_transfer_resolution)
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <x-label>{{ __('appointment number') }}</x-label>
+                                            <x-label>{{ __('transfer resolution number') }}</x-label>
                                             <text class="form-control">{{ $teacher->transfer_resolution }}</text>
                                         </div>
                                     </div>
@@ -265,6 +265,19 @@
                             </div>
                         </div>
                         <!-- Appointment, possession, transfer End -->
+
+                        @if ($teacher->signature)
+                            <!-- Signature Section Start -->
+                            <div class="card mb-5">
+                                <div class="card-body text-center">
+                                    <div class="border rounded-md mb-2 form-signature">
+                                        <img src="{{ config('app.url') .'/'. $teacher->signature }}"
+                                            class="rounded-0 max-w-100 sh-19 object-scale-down" />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Signature Section End -->
+                        @endif
 
                     </section>
                     <!-- Information Content Tab End -->

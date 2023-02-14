@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
-use App\Http\Controllers\support\UserController;
 use App\Models\Coordination;
-use App\Models\Orientation;
 use App\Models\Student;
 use App\Models\StudentTracking;
 use App\Models\StudentTrackingAdvice;
@@ -14,7 +11,6 @@ use App\Models\StudentTrackingCoordination;
 use App\Models\StudentTrackingFamily;
 use App\Models\StudentTrackingRemit;
 use App\Models\StudentTrackingTeacher;
-use App\Models\UserAlert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
