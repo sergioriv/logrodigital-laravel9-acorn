@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SchoolYearController;
+use App\Models\Student;
 use App\Models\TeacherSubjectGroup;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
@@ -19,6 +20,7 @@ class GroupStudentListGuide implements WithColumnWidths, WithEvents
     private static $TSG;
     private static $title;
     private static $subTitle;
+    private static $students;
 
     public function __construct(TeacherSubjectGroup $tsg)
     {
@@ -29,6 +31,9 @@ class GroupStudentListGuide implements WithColumnWidths, WithEvents
 
         static::$title = $school->name() .' - SEDE '. $tsg->group->headquarters->name .' - JORNADA '. $tsg->group->studyTime->name;
         static::$subTitle = 'PLANILLA DE NOTAS ' . SchoolYearController::current_year()->name;
+
+        static::$students = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $tsg->group->id))
+        ->get();
     }
 
     public function columnWidths(): array
@@ -178,9 +183,9 @@ class GroupStudentListGuide implements WithColumnWidths, WithEvents
             $workSheet->setCellValue('W6', 'DEFINITIVA');
             $workSheet->setCellValue('X6', 'DEF');
 
-            foreach (static::$GROUP->groupStudents as $key => $GStudent) {
+            foreach (static::$students as $key => $student) {
                 $workSheet->setCellValue('A' . $key+7, $key+1);
-                $workSheet->setCellValue('B' . $key+7, $GStudent->student->getCompleteNames());
+                $workSheet->setCellValue('B' . $key+7, $student->getCompleteNames());
                 $event->sheet->getDelegate()->getRowDimension($key+7)->setRowHeight(20);
             }
 
