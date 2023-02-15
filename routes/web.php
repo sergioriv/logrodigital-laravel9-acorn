@@ -246,7 +246,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('teachers/hierarchy', [TeacherHierarchyController::class, 'store'])->name('teacher.hierarchy.store');
     Route::post('teachers/degree', [TeacherDegreeController::class, 'store'])->name('teacher.degree.store');
     Route::post('teachers/employment', [TeacherEmploymentHistoryController::class, 'store'])->name('teacher.employment.store');
-
+    Route::get('teacher/{teacher}/guide-groups', [TeacherController::class, 'download_guide_group'])->name('teacher.guide-groups');
 
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\GroupStudentListGuide;
 use App\Exports\TeachersExport;
 use App\Exports\TeachersInstructuveExport;
 use App\Http\Controllers\support\Notify;
@@ -453,6 +454,43 @@ class TeacherController extends Controller
         self::tab();
         return redirect()->route('myinstitution');
     }
+
+
+    /*
+     *
+     *
+     *  */
+    public function download_guide_group(Teacher $teacher)
+    {
+        $currentYear = SchoolYearController::current_year();
+
+        $TSG = $teacher->teacherSubjectGroups->where('school_year_id', $currentYear->id);
+
+        /* Dirección para guardar los reportes generados */
+        $pathUuid = Str::uuid();
+        $pathReport = "reports/". $pathUuid ."/";
+
+        if (!File::isDirectory(public_path('app/'.$pathReport))) {
+            File::makeDirectory(public_path('app/'.$pathReport), 0755, true, true);
+        }
+
+        foreach($TSG as $teacherSubjectGroup)
+        {
+            Excel::store(
+                new GroupStudentListGuide($teacherSubjectGroup),
+                $pathReport . __('auxiliary template') .'_'. $teacherSubjectGroup->subject->resourceSubject->name .'_'. $teacherSubjectGroup->group->headquarters->name .'_'. $teacherSubjectGroup->group->studyTime->name .'_'. $teacherSubjectGroup->group->name .'_'. $teacherSubjectGroup->teacher->getFullName() . '.xlsx',
+                'public'
+            );
+        }
+
+        /* Generate Zip and Download */
+        return (new ZipController($pathUuid))->downloadTeacherGuideGroups( Str::slug($teacher->getFullName()) );
+
+    }
+    /*
+     *
+     *
+     *  */
 
     private function tab()
     {

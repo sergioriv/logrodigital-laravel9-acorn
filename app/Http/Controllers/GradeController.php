@@ -299,7 +299,7 @@ class GradeController extends Controller
 
 
         /* Generate Zip and Download */
-        return (new ZipController($pathUuid, $group->name))->downloadGradesGroup();
+        return (new ZipController($pathUuid))->downloadGradesGroup($group->name);
 
     }
 

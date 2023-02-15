@@ -405,6 +405,7 @@ $title = $school->name;
                                             </th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
                                                 {{ __('cellphone') }}</th>
+                                            <th class="empty"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -424,6 +425,24 @@ $title = $school->name;
                                                 </td>
                                                 <td>{{ $teacher->institutional_email }}</td>
                                                 <td>{{ $teacher->cellphone }}</td>
+                                                <td class="text-end">
+                                                    <!-- Dropdown Button Start -->
+                                                    <div class="ms-1">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                            data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false" data-submenu>
+                                                            <i data-acorn-icon="more-vertical"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a class="dropdown-item btn-icon btn-icon-start"
+                                                                href="{{ route('teacher.guide-groups', $teacher) }}">
+                                                                <i data-acorn-icon="download"></i>
+                                                                <span>Descargar planillas</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Dropdown Button End -->
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
