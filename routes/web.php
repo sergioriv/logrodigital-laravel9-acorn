@@ -160,6 +160,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::get('study-years/{study_year}/subjects', [StudyYearController::class, 'subjects'])->name('studyYear.subject.show');
     Route::post('study-years/{study_year}/subjects', [StudyYearController::class, 'subjects_store'])->name('studyYear.subject.store');
     Route::get('study-years/{study_year}/subjects/edit', [StudyYearController::class, 'subjects_edit'])->name('studyYear.subject.edit');
+    Route::get('study-years/{study_year}/groups-guide', [StudyYearController::class, 'download_guide_groups'])->name('studyYear.groups-guide');
 
     /* Route Resource areas */
     Route::resource('areas', ResourceAreaController::class)->except('destroy')->names('resourceArea');

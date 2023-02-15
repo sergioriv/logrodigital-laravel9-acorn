@@ -484,7 +484,7 @@ class TeacherController extends Controller
         }
 
         /* Generate Zip and Download */
-        return (new ZipController($pathUuid))->downloadTeacherGuideGroups( Str::slug($teacher->getFullName()) );
+        return (new ZipController($pathUuid))->downloadAllGuideGroups( Str::slug($teacher->getFullName()) );
 
     }
     /*

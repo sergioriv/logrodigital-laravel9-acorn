@@ -61,6 +61,8 @@
                                         <hr />
                                         <a
                                             href="{{ route('studyYear.subject.show', $studyYear) }}">{{ __('Subjects') . ' ' . $Y }}</a>
+                                        <a
+                                            href="{{ route('studyYear.groups-guide', $studyYear) }}">Descargar planillas</a>
                                     </div>
                                 </div>
                             </div>

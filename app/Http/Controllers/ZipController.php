@@ -53,16 +53,15 @@ class ZipController extends Controller
 
     }
 
-    public function downloadTeacherGuideGroups($teacherName)
+    public function downloadAllGuideGroups($modelName)
     {
-        if ($this->path && $teacherName) {
+        if ($this->path && $modelName) {
 
             $zip = new ZipArchive;
             $path = 'app/reports/' . $this->path;
-            $pathZip = public_path('app/reports/Planillas - '. $teacherName .' - '. time() .'.zip');
+            $pathZip = public_path('app/reports/Planillas - '. $modelName .' - '. time() .'.zip');
 
-            $zip->open($pathZip, ZipArchive::CREATE);
-            // if ($zip->open($pathZip, ZipArchive::CREATE) === TRUE) {
+            if ($zip->open($pathZip, ZipArchive::CREATE) === TRUE) {
 
                 $files = File::files(public_path($path));
 
@@ -82,11 +81,11 @@ class ZipController extends Controller
                 if (count($files))
                     return response()->download($pathZip)->deleteFileAfterSend();
 
-            // }
+            }
         }
 
-        // Notify::fail(__('An error has occurred'));
-        // return back();
+        Notify::fail(__('An error has occurred'));
+        return back();
 
     }
 }

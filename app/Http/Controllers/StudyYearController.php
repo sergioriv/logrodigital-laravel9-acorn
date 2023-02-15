@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\GroupStudentListGuide;
 use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\ResourceArea;
 use App\Models\ResourceStudyYear;
 use App\Models\StudyYear;
 use App\Models\AcademicWorkload;
+use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudyYearController extends Controller
 {
@@ -237,4 +242,43 @@ class StudyYearController extends Controller
             return redirect()->back()->withErrors(__("check the course load"));
         }
     }
+
+
+    /*
+     *
+     *
+     *  */
+    public function download_guide_groups(StudyYear $studyYear)
+    {
+        $currentYear = SchoolYearController::current_year();
+
+        $groups = $studyYear->groups->where('school_year_id', $currentYear->id)->pluck('id')->toArray();
+
+        $TSG = TeacherSubjectGroup::whereIn('group_id', $groups)->get();
+
+
+        /* Dirección para guardar los reportes generados */
+        $pathUuid = Str::uuid();
+        $pathReport = "reports/". $pathUuid ."/";
+
+        if (!File::isDirectory(public_path('app/'.$pathReport))) {
+            File::makeDirectory(public_path('app/'.$pathReport), 0755, true, true);
+        }
+
+        foreach($TSG as $teacherSubjectGroup)
+        {
+            Excel::store(
+                new GroupStudentListGuide($teacherSubjectGroup),
+                $pathReport . __('auxiliary template') .'_'. $teacherSubjectGroup->subject->resourceSubject->name .'_'. $teacherSubjectGroup->group->headquarters->name .'_'. $teacherSubjectGroup->group->studyTime->name .'_'. $teacherSubjectGroup->group->name .'_'. $teacherSubjectGroup->teacher->getFullName() . '.xlsx',
+                'public'
+            );
+        }
+
+        /* Generate Zip and Download */
+        return (new ZipController($pathUuid))->downloadAllGuideGroups( Str::slug($studyYear->name) );
+    }
+    /*
+     *
+     *
+     *  */
 }
