@@ -36,9 +36,15 @@ class StudyYearController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
+        $studyYears = StudyYear::
+            withCount(['groups' => function ($groups) {
+                $groups->whereHas('teacherSubjectGroups');
+            }])
+            ->get();
+
         return view('logro.studyyear.index')->with([
             'Y' => $Y->name,
-            'studyYears' => StudyYear::all()
+            'studyYears' => $studyYears
         ]);
     }
 

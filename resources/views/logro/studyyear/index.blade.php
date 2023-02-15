@@ -61,8 +61,10 @@
                                         <hr />
                                         <a
                                             href="{{ route('studyYear.subject.show', $studyYear) }}">{{ __('Subjects') . ' ' . $Y }}</a>
+                                        @if ($studyYear->groups_count)
                                         <a
-                                            href="{{ route('studyYear.groups-guide', $studyYear) }}">Descargar planillas</a>
+                                        href="{{ route('studyYear.groups-guide', $studyYear) }}">Descargar planillas</a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
