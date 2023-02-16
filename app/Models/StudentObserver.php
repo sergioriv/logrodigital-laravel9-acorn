@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Data\Enum\AnnotationTypeEnum;
 use App\Traits\Uuid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -27,7 +26,7 @@ class StudentObserver extends Model
     ];
 
     protected $casts = [
-        'annotation_type' => AnnotationTypeEnum::class
+        'annotation_type' => \App\Models\Data\Enum\AnnotationTypeEnum::class
     ];
 
     public function student()
