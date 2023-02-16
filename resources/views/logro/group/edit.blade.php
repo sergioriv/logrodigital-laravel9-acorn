@@ -15,10 +15,10 @@ $title = $group->name;
 @section('js_page')
 <script src="/js/forms/select2.js"></script>
 <script>
-    jQuery('#select2Headquarters').select2({minimumResultsForSearch: Infinity, placeholder: ''});
-    jQuery('#select2StudyTime').select2({minimumResultsForSearch: Infinity, placeholder: ''});
-    jQuery('#select2StudyYear').select2({minimumResultsForSearch: Infinity, placeholder: ''});
-    jQuery('#select2Teacher').select2({minimumResultsForSearch: Infinity, placeholder: ''});
+    jQuery('#select2Headquarters').select2({minimumResultsForSearch: 5, placeholder: ''});
+    jQuery('#select2StudyTime').select2({minimumResultsForSearch: 5, placeholder: ''});
+    jQuery('#select2StudyYear').select2({minimumResultsForSearch: 5, placeholder: ''});
+    jQuery('#select2Teacher').select2({minimumResultsForSearch: true, placeholder: ''});
 </script>
 @endsection
 
