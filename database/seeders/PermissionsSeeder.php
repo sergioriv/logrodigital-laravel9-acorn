@@ -99,6 +99,7 @@ class PermissionsSeeder extends Seeder
         $s_documents_checked = Permission::create(['name' => 'students.documents.checked']);
         $s_psychosocial = Permission::create(['name' => 'students.psychosocial']);
         $s_delete = Permission::create(['name' => 'students.delete']);
+        $s_observer = Permission::create(['name' => 'students.observer']);
 
 
         /* Asignacion de permisos a los roles */
@@ -148,6 +149,7 @@ class PermissionsSeeder extends Seeder
             $s_documents_checked,
             $s_psychosocial,
             $s_delete,
+            $s_observer
         ]);
 
         $SECRETARY->syncPermissions([
@@ -215,13 +217,15 @@ class PermissionsSeeder extends Seeder
             $sb_areas_index,
             $sb_area_edit,
             $s_index,
-            $s_view
+            $s_view,
+            $s_observer
         ]);
 
         $TEACHER->syncPermissions([
             $profile,
             $g_students,
-            $s_view
+            $s_view,
+            $s_observer
         ]);
 
         $ORIENTATION->syncPermissions([
@@ -232,7 +236,8 @@ class PermissionsSeeder extends Seeder
             $s_index,
             $s_info,
             $s_documents_edit,
-            $s_psychosocial
+            $s_psychosocial,
+            $s_observer
         ]);
 
         $STUDENT->syncPermissions([

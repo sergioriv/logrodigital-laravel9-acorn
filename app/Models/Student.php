@@ -345,7 +345,7 @@ class Student extends Model
     }
     public function observer()
     {
-        return $this->hasMany(StudentObserver::class, 'student_id', 'id');
+        return $this->hasMany(StudentObserver::class, 'student_id', 'id')->orderBy('date')->orderByDesc('created_at');
     }
 
 

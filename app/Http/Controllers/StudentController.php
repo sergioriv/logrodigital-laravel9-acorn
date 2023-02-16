@@ -46,6 +46,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use iio\libmergepdf\Merger;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -680,11 +681,24 @@ class StudentController extends Controller
          * Para que el Rol TEACHER solo pueda ver estudiantes que esten en sus listados en el año actual
          *  */
         if (UserController::role_auth() === RoleUser::TEACHER_ROL) {
+
+            $Y = SchoolYearController::available_year();
+
+            /* Asignaturas que está dando en el Ciclo escolar en curso */
             $subjectsTeacher = TeacherController::subjects()->select('group_id')->get();
 
             $groups = [];
             foreach ($subjectsTeacher as $subjects) {
                 array_push($groups, $subjects->group_id);
+            }
+
+            /* Grupos donde es director de grupo en el Ciclo escolar en curso */
+            $directorGroups = Group::where('school_year_id', $Y->id)
+                    ->where('teacher_id', auth()->id())
+                    ->pluck('id');
+
+            foreach ($directorGroups as $directorGroup) {
+                array_push($groups, $directorGroup);
             }
 
             array_unique($groups);

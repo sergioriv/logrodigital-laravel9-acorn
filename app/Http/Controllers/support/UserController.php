@@ -198,6 +198,16 @@ class UserController extends Controller
         return Auth::user()->getRoleNames()[0];
     }
 
+    public static function myModelIs(): string
+    {
+        return match (static::role_auth()) {
+            'SUPPORT' => 'App\Models\User',
+            'TEACHER' => 'App\Models\Teacher',
+            'COORDINATOR' => 'App\Models\Coordination',
+            'ORIENTATION' => 'App\Models\Orientation',
+        };
+    }
+
     public static function myName()
     {
         $name = null;

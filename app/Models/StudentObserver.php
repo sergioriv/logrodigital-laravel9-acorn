@@ -21,6 +21,7 @@ class StudentObserver extends Model
         'situation_description',
         'free_version',
         'agreements',
+        'accept',
         'created_user_id',
         'created_rol'
     ];
@@ -33,6 +34,26 @@ class StudentObserver extends Model
     {
         return $this->belongsTo(Student::class, 'student_id', 'id');
     }
+
+    public function creatorName()
+    {
+        return $this->created_rol::where('id', $this->created_user_id)->first()->getFullName();
+    }
+
+    /*
+     *
+     *  */
+    public function isAccept(): bool
+    {
+        return $this->accept === 1;
+    }
+    public function isReject(): bool
+    {
+        return $this->accept === 0;
+    }
+    /*
+     *
+     *  */
 
     protected function date(): Attribute
     {

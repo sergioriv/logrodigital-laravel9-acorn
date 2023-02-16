@@ -308,6 +308,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     });
 
     Route::post('student/{student}/add-observation', [StudentObserverController::class, 'store'])->name('students.observer.create');
+    Route::put('student/{student}/add-disclaimers', [StudentObserverController::class, 'disclaimers'])->name('students.observer.disclaimers');
 
 
     Route::put('persons-charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');

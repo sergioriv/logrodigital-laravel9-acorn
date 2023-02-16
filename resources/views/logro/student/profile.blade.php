@@ -37,6 +37,7 @@
         <script src="/js/forms/person-charge.js"></script>
         <script src="/js/forms/signature.js?v=0.2"></script>
         <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
+        <script src="/js/plugins/datatable/datatables_boxed.js"></script>
 
         @hasrole('STUDENT')
             @if (null === $student->signature_student)
@@ -96,7 +97,6 @@
 
     <!-- PSYCHOSOCIAL -->
     @can('students.psychosocial')
-        <script src="/js/plugins/datatable/datatables_boxed.js"></script>
         <script src="/js/forms/student-advices.js"></script>
         <script>
             new TimePicker(document.querySelector('#timeAdvice'));
@@ -114,6 +114,19 @@
             });
         </script>
     @endcan
+
+    @if (count($student->observer))
+        <script>
+            jQuery("[data-observer]").click(function () {
+                let _observer = $(this).data('observer');
+
+                if (_observer) {
+                    $("#observerDisclaimers").val(_observer);
+                    $("#addDisclaimers").modal('show');
+                }
+            });
+        </script>
+    @endif
 @endsection
 
 @section('content')
@@ -315,10 +328,10 @@
                                     <span class="align-middle">{{ __('Report book') }}</span>
                                 </a>
                             @endcan
-                            {{-- <a class="nav-link @if (session('tab') === 'observer') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                            <a class="nav-link @if (session('tab') === 'observer') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#observerTab" role="tab">
                                 <span class="align-middle">{{ __('Observer') }}</span>
-                            </a> --}}
+                            </a>
                             @can('students.psychosocial')
                                 <a class="nav-link @if (session('tab') === 'psychosocial') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                     data-bs-toggle="tab" href="#psychosocialTab" role="tab">
@@ -2004,7 +2017,7 @@
                     <!-- Report Books Tab End -->
                 @endcan
 
-                {{-- <!-- Observer Tab Start -->
+                <!-- Observer Tab Start -->
                 <div class="tab-pane fade @if (session('tab') === 'observer') active show @endif" id="observerTab"
                 role="tabpanel">
 
@@ -2018,7 +2031,7 @@
                     <!-- Observer Section End -->
 
                 </div>
-                <!-- Observer Tab End --> --}}
+                <!-- Observer Tab End -->
 
                 @can('students.psychosocial')
                     <!-- Psychosocial Information Tab Start -->

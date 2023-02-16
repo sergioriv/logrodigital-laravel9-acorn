@@ -286,3 +286,10 @@ html[data-dimension="mobile"] .logro-badge-right-bottom {
     letter-spacing: 0.07em;
     word-break: break-word;
 }
+
+.form-check.custom-card .form-check-input:checked~.form-check-label-danger:before, .form-check.custom-card:hover .form-check-label-danger:before {
+    box-shadow: inset 0 0 0 3px rgba(var(--danger-rgb),.5)!important;
+}
+.form-check.custom-card .form-check-input:checked~.form-check-label-success:before, .form-check.custom-card:hover .form-check-label-success:before {
+    box-shadow: inset 0 0 0 3px rgba(var(--success-rgb),.5)!important;
+}
