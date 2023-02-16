@@ -26,7 +26,7 @@ class StudentObserver extends Model
     ];
 
     protected $casts = [
-        'annotation_type' => \App\Models\Data\Enum\AnnotationTypeEnum::class
+        'annotation_type' => \App\Models\Data\Enum\AnnotationTypeClassEnum::class
     ];
 
     public function student()

@@ -2,7 +2,7 @@
 
 namespace App\Models\Data\Enum;
 
-enum AnnotationTypeEnum: int
+enum AnnotationTypeClassEnum: int
 {
 
     case CONGRATULATION = 1; // FELICITACION
