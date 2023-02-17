@@ -398,6 +398,11 @@ class Student extends Model
         return $this->tag;
     }
 
+    public function isInclusive(): bool
+    {
+        return $this->inclusive === 1;
+    }
+
 
 
     /* contar retirados o no */

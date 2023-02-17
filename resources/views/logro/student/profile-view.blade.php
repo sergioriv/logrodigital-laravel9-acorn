@@ -20,7 +20,7 @@
     <script src="/js/forms/select2.js"></script>
     @if (count($student->observer))
         <script>
-            jQuery("[data-observer]").click(function () {
+            jQuery("[data-observer]").click(function() {
                 let _observer = $(this).data('observer');
 
                 if (_observer) {
@@ -115,14 +115,20 @@
                                 data-bs-toggle="tab" href="#informationTab" role="tab">
                                 <span class="align-middle">{{ __('Information') }}</span>
                             </a>
-                            <a class="nav-link @if (session('tab') === 'personsCharge') active @endif logro-toggle px-0 border-bottom border-separator-light"
-                                data-bs-toggle="tab" href="#personsChargeTab" role="tab">
+                            <a class="nav-link logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
+                                href="#personsChargeTab" role="tab">
                                 <span class="align-middle">{{ __('Persons in Charge') }}</span>
                             </a>
                             <a class="nav-link @if (session('tab') === 'observer') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#observerTab" role="tab">
                                 <span class="align-middle">{{ __('Observer') }}</span>
                             </a>
+                            @if ($student->isInclusive())
+                                <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
+                                    data-bs-toggle="tab" href="#psychosocialTab" role="tab">
+                                    <span class="align-middle">{{ __('Psychosocial Information') }}</span>
+                                </a>
+                            @endif
                         </div>
 
                         <div class="d-flex flex-column">
@@ -141,7 +147,8 @@
             <div class="col-12 col-xl-9 mb-5 tab-content">
 
                 <!-- Information Tab Start -->
-                <div class="tab-pane fade @empty(session('tab')) active show @endempty" id="informationTab" role="tabpanel">
+                <div class="tab-pane fade @empty(session('tab')) active show @endempty" id="informationTab"
+                    role="tabpanel">
 
                     <!-- Basic Information Section Start -->
                     <h2 class="small-title">{{ __('Basic information') }}</h2>
@@ -260,7 +267,7 @@
                 <!-- Information Tab End -->
 
                 <!-- Persons In Charge Tab Start -->
-                <div class="tab-pane fade @if (session('tab') === 'personsCharge') active show @endif" id="personsChargeTab" role="tabpanel">
+                <div class="tab-pane fade" id="personsChargeTab" role="tabpanel">
 
                     <!-- Mother Section Start -->
                     @if ($student->mother)
@@ -538,7 +545,7 @@
 
                 <!-- Observer Tab Start -->
                 <div class="tab-pane fade @if (session('tab') === 'observer') active show @endif" id="observerTab"
-                role="tabpanel">
+                    role="tabpanel">
 
                     <!-- Observer Section Start -->
                     <h2 class="small-title">{{ __('Observer') }}</h2>
@@ -551,6 +558,40 @@
 
                 </div>
                 <!-- Observer Tab End -->
+
+                @if ($student->isInclusive())
+                    <!-- Psychosocial Information Tab Start -->
+                    <div class="tab-pane fade" id="psychosocialTab" role="tabpanel">
+
+                        <!-- Psychosocial Information Section Start -->
+                        <h2 class="small-title">{{ __('Psychosocial Information') }}</h2>
+                        <section class="card mb-5">
+                            <div class="card-body">
+
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('medical diagnosis') }}</x-label>
+                                            <div class="form-control">
+                                                {{ $student->medical_diagnosis }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('medical prediagnosis') }}</x-label>
+                                            <div class="form-control">
+                                                {{ $student->medical_prediagnosis }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+                        <!-- Psychosocial Information Section End -->
+
+                    </div>
+                    <!-- Psychosocial Information Tab End -->
+                @endif
 
             </div>
             <!-- Right Side End -->
