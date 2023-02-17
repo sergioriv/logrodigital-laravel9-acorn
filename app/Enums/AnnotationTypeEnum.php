@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Data\Enum;
+namespace App\Enums;
 
-enum AnnotationTypeClassEnum: int
+enum AnnotationTypeEnum: int
 {
 
     case CONGRATULATION = 1; // FELICITACION
