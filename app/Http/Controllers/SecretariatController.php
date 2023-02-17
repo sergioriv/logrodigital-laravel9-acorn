@@ -89,9 +89,16 @@ class SecretariatController extends Controller
             'title' => __('Created secretariat user!'),
             'email' => $request->email,
             'password' => $secreatariatCreate->getUser()->temporalPassword,
-            'redirect' => [
-                'title' => __('Go back'),
-                'action' => route('secreatariat.index')
+            'buttons' => [
+                [
+                    'title' => __('Go back'),
+                    'class' => 'btn-outline-alternate',
+                    'action' => route('secreatariat.index'),
+                ],[
+                    'title' => __('Create new'),
+                    'class' => 'btn-primary ms-2',
+                    'action' => url()->previous(),
+                ]
             ]
         ]);
     }

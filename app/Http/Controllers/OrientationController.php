@@ -89,9 +89,16 @@ class OrientationController extends Controller
             'title' => __('Created orientation user!'),
             'email' => $request->email,
             'password' => $orientatorCreate->getUser()->temporalPassword,
-            'redirect' => [
-                'title' => __('Go back'),
-                'action' => route('orientation.index')
+            'buttons' => [
+                [
+                    'title' => __('Go back'),
+                    'class' => 'btn-outline-alternate',
+                    'action' => route('orientation.index'),
+                ],[
+                    'title' => __('Create new'),
+                    'class' => 'btn-primary ms-2',
+                    'action' => url()->previous(),
+                ]
             ]
         ]);
     }

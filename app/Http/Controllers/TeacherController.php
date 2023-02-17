@@ -46,6 +46,12 @@ class TeacherController extends Controller
         $this->middleware(OnlyTeachersMiddleware::class)->only('profile', 'profile_update', 'mysubjects', 'mysubjects_show', 'subjects', 'myDirectorGroup');
     }
 
+    public function index()
+    {
+        $this->tab();
+        return redirect()->route('myinstitution');
+    }
+
     public function create()
     {
         return view('logro.teacher.create', [
@@ -153,11 +159,18 @@ class TeacherController extends Controller
         return view('logro.created', [
             'role' => 'teacher',
             'title' => __('Teacher created!'),
-            'email' => $request->email,
+            'email' => $request->institutional_email,
             'password' => $teacherCreate->getUser()->temporalPassword,
-            'redirect' => [
-                'title' => __('Go back'),
-                'action' => route('myinstitution')
+            'buttons' => [
+                [
+                    'title' => __('Go back'),
+                    'class' => 'btn-outline-alternate',
+                    'action' => route('teacher.index'),
+                ],[
+                    'title' => __('Create new'),
+                    'class' => 'btn-primary ms-2',
+                    'action' => url()->previous(),
+                ]
             ]
         ]);
     }

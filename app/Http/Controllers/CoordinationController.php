@@ -89,9 +89,16 @@ class CoordinationController extends Controller
             'title' => __('Created coordination user!'),
             'email' => $request->email,
             'password' => $coordinationCreate->getUser()->temporalPassword,
-            'redirect' => [
-                'title' => __('Go back'),
-                'action' => route('coordination.index')
+            'buttons' => [
+                [
+                    'title' => __('Go back'),
+                    'class' => 'btn-outline-alternate',
+                    'action' => route('coordination.index'),
+                ],[
+                    'title' => __('Create new'),
+                    'class' => 'btn-primary ms-2',
+                    'action' => url()->previous(),
+                ]
             ]
         ]);
     }

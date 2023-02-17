@@ -286,13 +286,43 @@ class StudentController extends Controller
             return redirect()->back();
         }
 
-        Notify::success(__('Student created!'));
 
-        if (1 == $request->matriculate) {
-            return redirect()->route('students.matriculate', $studentCreate->getUser()->id);
+        $buttons = [
+            [
+                'title' => __('Go back'),
+                'class' => 'btn-outline-alternate',
+                'action' => route('students.no_enrolled'),
+            ]
+        ];
+
+        if (1 == $request->matriculate)
+        {
+            array_push($buttons, [
+                'title' => __('Create new'),
+                'class' => 'btn-outline-primary ms-2',
+                'action' => url()->previous(),
+            ],[
+                'title' => __('Matriculate'),
+                'class' => 'btn-primary ms-2',
+                'action' => route('students.matriculate', $studentCreate->getUser()->id)
+            ]);
+
+        } else
+        {
+            array_push($buttons, [
+                'title' => __('Create new'),
+                'class' => 'btn-primary ms-2',
+                'action' => url()->previous(),
+            ]);
         }
 
-        return redirect()->route('students.no_enrolled');
+        return view('logro.created', [
+            'role' => 'student',
+            'title' => __('Student created!'),
+            'email' => $request->institutional_email,
+            'password' => $studentCreate->getUser()->temporalPassword,
+            'buttons' => $buttons
+        ]);
     }
 
     /*

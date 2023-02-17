@@ -265,7 +265,10 @@ class GroupController extends Controller
         $headquarters = Headquarters::where('available', TRUE)->get();
         $studyTime = StudyTime::all();
         $studyYear = StudyYear::all();
-        $teachers = Teacher::select('id', 'uuid', 'names', 'last_names')->get();
+        $teachers = Teacher::select('id', 'uuid', 'names', 'last_names')
+            ->orderBy('names')
+            ->orderBy('last_names')
+            ->get();
 
         return view('logro.group.edit')->with([
             'group' => $group,
