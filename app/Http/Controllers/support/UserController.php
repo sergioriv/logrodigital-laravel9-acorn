@@ -257,7 +257,7 @@ class UserController extends Controller
     }
 
     /* Tratamiento de datos */
-    private static function _username($name)
+    public static function _username($name)
     {
         $name = Str::limit($name, 15, null);
         $name = Str::words($name, 2, null);

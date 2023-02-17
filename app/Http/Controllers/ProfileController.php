@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
+use App\Models\Coordination;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\User;
@@ -13,37 +14,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show()
-    {
-        switch (UserController::role_auth()) {
-                /* case 'Support':
-                $support = User::findOrFail(Auth::id());
-                return view('profile.support-edit')->with('support', $support);
-                break; */
-
-                /* case 'STUDENT':
-                $student = User::findOrFail(Auth::id());
-                return view('profile.estudent-edit')->with('student', $student);
-                break; */
-                /*
-            case 'Branch':
-                $branch = Branch::with('user')->findOrFail(Auth::id());
-                $deps = json_decode(file_get_contents('json/colombia.min.json'), true);
-
-                return view('profile.branch-edit')->with(['branch' => $branch, 'deps' => $deps]);
-                break; */
-
-            default:
-                return $this->not_found();
-                break;
-        }
-    }
 
     public function edit()
     {
@@ -54,6 +24,11 @@ class ProfileController extends Controller
             case 'SUPPORT':
                 $support = User::findOrFail(Auth::id());
                 return view('profile.support-edit', ['support' => $support]);
+                break;
+
+            case 'COORDINATOR':
+                $coordination = Coordination::where('id', Auth::id())->first();
+                return (new CoordinationController)->profile($coordination);
                 break;
 
             case 'SECRETARY':
@@ -109,6 +84,11 @@ class ProfileController extends Controller
             case 'SUPPORT':
                 $support = User::findOrFail(Auth::id());
                 UserController::profile_update($request, $support);
+                break;
+
+            case 'COORDINATOR':
+                $coordination = Coordination::where('id', Auth::id())->first();
+                return (new CoordinationController)->profile_update($coordination, $request);
                 break;
 
             case 'SECRETARY':

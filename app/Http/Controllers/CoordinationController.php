@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Coordination;
+use App\Models\Data\RoleUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -32,12 +33,6 @@ class CoordinationController extends Controller
         return view('logro.coordination.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -54,7 +49,7 @@ class CoordinationController extends Controller
         if (!$coordinationCreate->getUser()) {
 
             DB::rollBack();
-            Notify::fail( __('Something went wrong.') );
+            Notify::fail(__('Something went wrong.'));
             return redirect()->back();
         }
 
@@ -67,7 +62,6 @@ class CoordinationController extends Controller
                 'email' => $request->email,
                 'telephone' => $request->telephone
             ]);
-
         } catch (\Throwable $th) {
 
             DB::rollBack();
@@ -78,7 +72,7 @@ class CoordinationController extends Controller
         if (!$coordinationCreate->sendVerification()) {
 
             DB::rollBack();
-            Notify::fail( __('Invalid email (:email)', ['email' => $request->email]) );
+            Notify::fail(__('Invalid email (:email)', ['email' => $request->email]));
             return redirect()->back();
         }
 
@@ -94,7 +88,7 @@ class CoordinationController extends Controller
                     'title' => __('Go back'),
                     'class' => 'btn-outline-alternate',
                     'action' => route('coordination.index'),
-                ],[
+                ], [
                     'title' => __('Create new'),
                     'class' => 'btn-primary ms-2',
                     'action' => url()->previous(),
@@ -103,24 +97,67 @@ class CoordinationController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Coordination  $coordination
-     * @return \Illuminate\Http\Response
-     */
+    public function profile(Coordination $coordination)
+    {
+        if (RoleUser::COORDINATION_ROL === UserController::role_auth()) {
+            return view('logro.coordination.profile.edit', [
+                'coordination' => $coordination,
+            ]);
+        }
+
+        return redirect()->back()->withErrors(__('Unauthorized!'));
+    }
+
+    public function profile_update(Coordination $coordination, Request $request)
+    {
+        if (auth()->id() !== $coordination->id) {
+            return redirect()->back()->withErrors(__('Unauthorized!'));
+        }
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:191'],
+            'last_names' => ['required', 'string', 'max:191'],
+            'telephone' => ['nullable', 'string', 'max:30'],
+            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048']
+        ]);
+
+
+        DB::beginTransaction();
+
+        try {
+            $userName = UserController::_username($request->name . ' ' . $request->last_names);
+
+            $coordination->update([
+                'name' => $request->name,
+                'last_names' => $request->last_names,
+                'telephone' => $request->telephone
+            ]);
+
+            $coordination->user->update([
+                'name' => $userName
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Notify::fail(__('An error has occurred'));
+            return back();
+        }
+
+        DB::commit();
+
+        if ($request->hasFile('avatar')) {
+            UserController::_update_avatar($request, $coordination->user);
+        }
+
+        Notify::success(__('Updated profile!'));
+        return back();
+    }
+
     public function edit(Coordination $coordination)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Coordination  $coordination
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Coordination $coordination)
     {
         //
