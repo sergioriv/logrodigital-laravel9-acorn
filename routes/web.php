@@ -15,6 +15,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RemarkController;
 use App\Http\Controllers\ResourceAreaController;
 use App\Http\Controllers\ResourceSubjectController;
+use App\Http\Controllers\RestorePasswordController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\SecretariatController;
@@ -354,6 +355,13 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
     Route::get('alert/{alert}/checked', [UserAlertController::class, 'checked'])->name('alert.checked');
 
+
+    /*
+     *
+     * Resporte Password
+     *
+     *  */
+    Route::get('user/restore-password', [RestorePasswordController::class, 'restore'])->middleware('hasroles:SUPPORT,SECRETARY');
 
 });
 

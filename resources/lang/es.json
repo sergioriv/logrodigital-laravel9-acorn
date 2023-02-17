@@ -648,6 +648,8 @@
     "Student does NOT accept the observation": "El estudiante NO acepta la observación",
     "date observation": "fecha de la observación",
     "Create new": "Crear nuevo",
+    "Restore password": "Restaurar contraseña",
+    "Are you sure to reset :USER's password?": "¿Está seguro de restaurar la contraseña de :USER?",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Current password": "Contraseña actual",

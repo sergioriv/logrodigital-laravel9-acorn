@@ -127,6 +127,23 @@
             });
         </script>
     @endif
+
+    @hasanyrole('SUPPORT|SECRETARY')
+    <script>
+        jQuery('[modal="restorePassword"]').click(function() {
+
+            let _restore = $(this);
+
+            $.get(HOST + "/user/restore-password", {
+                role: _restore.data('role'),
+                id: _restore.data('id')
+            }, function(data) {
+                $('#restorePassword .modal-body').html(data);
+                $('#restorePassword').modal('show');
+            });
+        });
+    </script>
+    @endhasanyrole
 @endsection
 
 @section('content')
@@ -211,15 +228,24 @@
                                                 <i data-acorn-icon="destination"></i>
                                                 <span>{{ __('Transfer') }}</span>
                                             </x-dropdown-item>
-                                        @can('students.delete')
-                                            @if (!$student->isRetired())
-                                                <x-dropdown-item type="button" data-bs-toggle="modal"
-                                                data-bs-target="#withdrawStudentModal">
-                                                <i data-acorn-icon="multiply" class="text-danger"></i>
-                                                <span>{{ __('Withdraw student') }}</span>
+                                            @can('students.delete')
+                                                @if (!$student->isRetired())
+                                                    <x-dropdown-item type="button" data-bs-toggle="modal"
+                                                        data-bs-target="#withdrawStudentModal">
+                                                        <i data-acorn-icon="multiply" class="text-danger"></i>
+                                                        <span>{{ __('Withdraw student') }}</span>
+                                                    </x-dropdown-item>
+                                                @endif
+                                            @endcan
+                                            @hasanyrole('SUPPORT|SECRETARY')
+                                            <div class="dropdown-divider"></div>
+                                            <x-dropdown-item type="button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#restorePassword">
+                                                <i data-acorn-icon="lock-off"></i>
+                                                <span>{{ __('Restore password') }}</span>
                                             </x-dropdown-item>
-                                            @endif
-                                        @endcan
+                                            @endhasanyrole
                                     </div>
                                 </div>
                                 <!-- Dropdown Button End -->
@@ -2941,5 +2967,29 @@
             </div>
         </div>
     @endcan
+
+    @hasanyrole('SUPPORT|SECRETARY')
+    <!-- Modal Restore Password -->
+    <div class="modal fade" id="restorePassword" aria-labelledby="modalRestorePassword" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('Restore password') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>
+                        {{ __("Are you sure to reset :USER's password?", ['USER' => $student->getCompleteNames()]) }}
+                    </p>
+                    <div class="btn btn-outline-primary"
+                        modal="restorePassword"
+                        data-role="student"
+                        data-id="{{ $student->id }}">{{ __('Restore') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endhasanyrole
 
 @endsection
