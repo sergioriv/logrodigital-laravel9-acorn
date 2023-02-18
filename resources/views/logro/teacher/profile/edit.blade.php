@@ -270,7 +270,7 @@
 
                                         <div class="row g-2">
                                             <div class="@if($teacher->file_appointment) col-10 @endif position-relative form-group">
-                                                <x-label>{{ __('upload file') }}</x-label>
+                                                <x-label>{{ __('upload file') }} (.pdf)</x-label>
                                                 <x-input type="file" accept=".pdf" name="file_appointment"
                                                     class="d-block" />
                                             </div>
@@ -303,7 +303,7 @@
 
                                         <div class="row g-2">
                                             <div class="@if($teacher->file_possession_certificate) col-10 @endif position-relative form-group">
-                                                <x-label>{{ __('upload file') }}</x-label>
+                                                <x-label>{{ __('upload file') }} (.pdf)</x-label>
                                                 <x-input type="file" accept=".pdf" name="file_possession_certificate"
                                                     class="d-block" />
                                             </div>
@@ -336,7 +336,7 @@
 
                                         <div class="row g-2">
                                             <div class="@if($teacher->file_transfer_resolution) col-10 @endif position-relative form-group">
-                                                <x-label>{{ __('upload file') }}</x-label>
+                                                <x-label>{{ __('upload file') }} (.pdf)</x-label>
                                                 <x-input type="file" accept=".pdf" name="file_transfer_resolution"
                                                     class="d-block" />
                                             </div>
@@ -565,7 +565,17 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="teacherHierarchyForm" class="tooltip-end-top"
-                    action="{{ route('teacher.hierarchy.store') }}" method="POST" enctype="multipart/form-data">
+                    action="
+
+                    @hasrole('TEACHER')
+                    {{ route('teacher.hierarchy.store') }}
+                    @endhasrole
+
+                    @hasrole('COORDINATOR')
+                    {{ route('coordination.hierarchy.store') }}
+                    @endhasrole
+
+                    " method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-body">
@@ -619,7 +629,17 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="teacherDegreeForm" class="tooltip-end-top"
-                    action="{{ route('teacher.degree.store') }}" method="POST" enctype="multipart/form-data">
+                    action="
+
+                    @hasrole('TEACHER')
+                    {{ route('teacher.degree.store') }}
+                    @endhasrole
+
+                    @hasrole('COORDINATOR')
+                    {{ route('coordination.degree.store') }}
+                    @endhasrole
+
+                    " method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-body">
@@ -673,7 +693,17 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="teacherEmploymentFrom" class="tooltip-end-top"
-                    action="{{ route('teacher.employment.store') }}" method="POST" enctype="multipart/form-data">
+                    action="
+
+                    @hasrole('TEACHER')
+                    {{ route('teacher.employment.store') }}
+                    @endhasrole
+
+                    @hasrole('COORDINATOR')
+                    {{ route('coordination.employment.store') }}
+                    @endhasrole
+
+                    " method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-body">

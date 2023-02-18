@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AttendanceStudentController;
 use App\Http\Controllers\CoordinationController;
+use App\Http\Controllers\CoordinationDegreeController;
+use App\Http\Controllers\CoordinationEmploymentHistoryController;
+use App\Http\Controllers\CoordinationHierarchyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DescriptorController;
 use App\Http\Controllers\GradeController;
@@ -199,7 +202,9 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
     /* Route Orientation */
     Route::resource('orientation', OrientationController::class)->only('index', 'create','store')->names('orientation');
-
+    Route::post('orientation/hierarchy', [CoordinationHierarchyController::class, 'store'])->name('coordination.hierarchy.store');
+    Route::post('orientation/degree', [CoordinationDegreeController::class, 'store'])->name('coordination.degree.store');
+    Route::post('orientation/employment', [CoordinationEmploymentHistoryController::class, 'store'])->name('coordination.employment.store');
 
 
     /* Route Groups */
