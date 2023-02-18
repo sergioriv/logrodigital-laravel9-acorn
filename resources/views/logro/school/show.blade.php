@@ -307,16 +307,16 @@ $title = $school->name;
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('email') }}
                                             </th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
-                                                {{ __('telephone') }}</th>
+                                                {{ __('cellphone') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($coordinations as $coordination)
                                             <tr>
-                                                <td>{{ $coordination->name }}</td>
+                                                <td>{{ $coordination->names }}</td>
                                                 <td>{{ $coordination->last_names }}</td>
-                                                <td>{{ $coordination->email }}</td>
-                                                <td>{{ $coordination->telephone }}</td>
+                                                <td>{{ $coordination->institutional_email }}</td>
+                                                <td>{{ $coordination->cellphone }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
