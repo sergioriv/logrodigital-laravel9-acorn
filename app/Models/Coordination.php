@@ -96,7 +96,7 @@ class Coordination extends Model
     /* accesored */
     public function getFullName()
     {
-        return "{$this->name} {$this->last_names}";
+        return "{$this->names} {$this->last_names}";
     }
 
     /* Cast */

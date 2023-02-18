@@ -313,8 +313,18 @@ $title = $school->name;
                                     <tbody>
                                         @foreach ($coordinations as $coordination)
                                             <tr>
-                                                <td>{{ $coordination->names }}</td>
-                                                <td>{{ $coordination->last_names }}</td>
+                                                <td>
+                                                    <a href="{{ route('coordination.show', $coordination) }}"
+                                                        class="list-item-heading body">
+                                                        {{ $coordination->names }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('coordination.show', $coordination) }}"
+                                                        class="list-item-heading body">
+                                                        {{ $coordination->last_names }}
+                                                    </a>
+                                                </td>
                                                 <td>{{ $coordination->institutional_email }}</td>
                                                 <td>{{ $coordination->cellphone }}</td>
                                             </tr>
@@ -405,7 +415,7 @@ $title = $school->name;
                                             </th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
                                                 {{ __('cellphone') }}</th>
-                                            <th class="empty"></th>
+                                            <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
                                     <tbody>

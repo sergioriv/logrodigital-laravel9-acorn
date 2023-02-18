@@ -34,11 +34,6 @@ class CoordinationController extends Controller
         return redirect()->route('myinstitution');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('logro.coordination.create', [
@@ -157,6 +152,13 @@ class CoordinationController extends Controller
                     'action' => url()->previous(),
                 ]
             ]
+        ]);
+    }
+
+    public function show(Coordination $coordination)
+    {
+        return view('logro.coordination.show')->with([
+            'coordination' => $coordination
         ]);
     }
 

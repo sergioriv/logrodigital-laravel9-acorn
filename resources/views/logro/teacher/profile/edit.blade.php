@@ -90,8 +90,12 @@
                                 <!-- Avatar Form End -->
 
                                 <div class="h5">{{ $teacher->getFullName() }}</div>
-                                <div class="text-muted text-capitalize">{{ __($teacher->type_appointment) }}</div>
-                                <div class="text-muted text-capitalize">{{ __($teacher->type_admin_act) }}</div>
+                                @if ($teacher instanceof \App\Models\Coordination )
+                                <div class="text-muted text-uppercase">{{ __('coordinator') }}</div>
+                                @elseif ($teacher instanceof \App\Models\Teacher )
+                                <div class="text-muted text-uppercase">{{ __('Teacher') }}</div>
+                                @endif
+                                <div class="text-muted">{{ __($teacher->type_appointment) }}</div>
                             </div>
                         </div>
 

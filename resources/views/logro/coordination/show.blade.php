@@ -1,5 +1,5 @@
 @php
-    $title = $teacher->names;
+    $title = $coordination->names;
 @endphp
 @extends('layout', ['title' => $title])
 
@@ -27,14 +27,14 @@
 @endsection
 
 @section('content')
-    <input type="hidden" id="teacher" value="{{ $teacher->uuid }}">
+    <input type="hidden" id="teacher" value="{{ $coordination->uuid }}">
     <div class="container">
         <!-- Title Start -->
         <section class="page-title-container">
             <div class="row">
                 <!-- Title Start -->
                 <div class="col-12">
-                    <h1 class="mb-1 pb-0 display-4" id="title">{{ $teacher->getFullName() }}</h1>
+                    <h1 class="mb-1 pb-0 display-4" id="title">{{ $coordination->getFullName() }}</h1>
                 </div>
                 <!-- Title End -->
             </div>
@@ -53,12 +53,12 @@
                             <div class="mb-5 d-flex align-items-center flex-column">
 
                                 <!-- Avatar Form Start -->
-                                <x-avatar-profile :avatar="$teacher->user->avatar" class="mb-3" />
+                                <x-avatar-profile :avatar="$coordination->user->avatar" class="mb-3" />
                                 <!-- Avatar Form End -->
 
-                                <div class="h5">{{ $teacher->getFullName() }}</div>
-                                <div class="text-muted text-uppercase">{{ __('Teacher') }}</div>
-                                <div class="text-muted text-capitalize">{{ __($teacher->type_appointment) }}</div>
+                                <div class="h5">{{ $coordination->getFullName() }}</div>
+                                <div class="text-muted text-uppercase">{{ __('coordinator') }}</div>
+                                <div class="text-muted text-capitalize">{{ __($coordination->type_appointment) }}</div>
                             </div>
                         </div>
 
@@ -67,10 +67,6 @@
                             <a class="nav-link @empty(session('tab')) active @endempty logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#informationTab" role="tab">
                                 <span class="align-middle">{{ __('Information') }}</span>
-                            </a>
-                            <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
-                                data-bs-toggle="tab" href="#subjectsTab" role="tab">
-                                <span class="align-middle">{{ __('Subjects') }}</span>
                             </a>
                             <a class="nav-link @if (session('tab') === 'permits') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#permitsTab" role="tab">
@@ -93,7 +89,7 @@
 
                         <div class="d-flex flex-column">
                             <text class="text-muted text-small">{{ __('created at') }}:</text>
-                            <text class="text-muted text-small">{{ $teacher->created_at }}</text>
+                            <text class="text-muted text-small">{{ $coordination->created_at }}</text>
                         </div>
 
                     </div>
@@ -119,73 +115,73 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('names') }}</x-label>
-                                        <text class="form-control">{{ $teacher->names }}</text>
+                                        <text class="form-control">{{ $coordination->names }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('last names') }}</x-label>
-                                        <text class="form-control">{{ $teacher->last_names }}</text>
+                                        <text class="form-control">{{ $coordination->last_names }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('document number') }}</x-label>
-                                        <text class="form-control">{{ $teacher->document }}</text>
+                                        <text class="form-control">{{ $coordination->document }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('expedition city') }}</x-label>
-                                        <text class="form-control">{{ $teacher->expeditionCity?->department->name .' | '. $teacher->expeditionCity?->name }}</text>
+                                        <text class="form-control">{{ $coordination->expeditionCity?->department->name .' | '. $coordination->expeditionCity?->name }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('birth city') }}</x-label>
-                                        <text class="form-control">{{ $teacher->birthCity?->department->name .' | '. $teacher->birthCity?->name }}</text>
+                                        <text class="form-control">{{ $coordination->birthCity?->department->name .' | '. $coordination->birthCity?->name }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('birthdate') }}</x-label>
-                                        <text class="form-control">{{ $teacher->birthdate }}</text>
+                                        <text class="form-control">{{ $coordination->birthdate }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('residence city') }}</x-label>
-                                        <text class="form-control">{{ $teacher->residenceCity?->department->name .' | '. $teacher->residenceCity?->name }}</text>
+                                        <text class="form-control">{{ $coordination->residenceCity?->department->name .' | '. $coordination->residenceCity?->name }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('residence address') }}</x-label>
-                                        <text class="form-control">{{ $teacher->address }}</text>
+                                        <text class="form-control">{{ $coordination->address }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('telephone') }}</x-label>
-                                        <text class="form-control">{{ $teacher->telephone }}</text>
+                                        <text class="form-control">{{ $coordination->telephone }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('cellphone') }}</x-label>
-                                        <text class="form-control">{{ $teacher->cellphone }}</text>
+                                        <text class="form-control">{{ $coordination->cellphone }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label required>{{ __('institutional email') }}</x-label>
-                                        <text class="form-control">{{ $teacher->institutional_email }}</text>
+                                        <text class="form-control">{{ $coordination->institutional_email }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('marital status') }}</x-label>
-                                        <text class="form-control">{{ __($teacher->marital_status) }}</text>
+                                        <text class="form-control">{{ __($coordination->marital_status) }}</text>
                                     </div>
                                 </div>
 
@@ -196,21 +192,21 @@
                         <div class="card mb-5">
                             <div class="card-body row g-3">
 
-                                @if ($teacher->file_appointment)
+                                @if ($coordination->file_appointment)
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <x-label>{{ __('appointment number') }}</x-label>
-                                            <text class="form-control">{{ $teacher->appointment_number }}</text>
+                                            <text class="form-control">{{ $coordination->appointment_number }}</text>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
-                                            <text class="form-control">{{ $teacher->date_appointment }}</text>
+                                            <text class="form-control">{{ $coordination->date_appointment }}</text>
                                         </div>
                                     </div>
                                     <div class="col-md-3 d-flex align-items-end justify-content-center">
-                                        <a href="{{ config('app.url') .'/'. $teacher->file_appointment }}"
+                                        <a href="{{ config('app.url') .'/'. $coordination->file_appointment }}"
                                             target="_blank" class="btn bt-sm btn-outline-primary icon-start">
                                             <i class="icon bi-box-arrow-up-right me-2"></i>
                                             {{ __('View document') }}
@@ -218,21 +214,21 @@
                                     </div>
                                 @endif
 
-                                @if ($teacher->file_possession_certificate)
+                                @if ($coordination->file_possession_certificate)
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <x-label>{{ __('possession certificate number') }}</x-label>
-                                            <text class="form-control">{{ $teacher->possession_certificate }}</text>
+                                            <text class="form-control">{{ $coordination->possession_certificate }}</text>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
-                                            <text class="form-control">{{ $teacher->date_possession_certificate }}</text>
+                                            <text class="form-control">{{ $coordination->date_possession_certificate }}</text>
                                         </div>
                                     </div>
                                     <div class="col-md-3 d-flex align-items-end justify-content-center">
-                                        <a href="{{ config('app.url') .'/'. $teacher->file_possession_certificate }}"
+                                        <a href="{{ config('app.url') .'/'. $coordination->file_possession_certificate }}"
                                             target="_blank" class="btn bt-sm btn-outline-primary icon-start">
                                             <i class="icon bi-box-arrow-up-right me-2"></i>
                                             {{ __('View document') }}
@@ -240,21 +236,21 @@
                                     </div>
                                 @endif
 
-                                @if ($teacher->file_transfer_resolution)
+                                @if ($coordination->file_transfer_resolution)
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <x-label>{{ __('transfer resolution number') }}</x-label>
-                                            <text class="form-control">{{ $teacher->transfer_resolution }}</text>
+                                            <text class="form-control">{{ $coordination->transfer_resolution }}</text>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
-                                            <text class="form-control">{{ $teacher->date_transfer_resolution }}</text>
+                                            <text class="form-control">{{ $coordination->date_transfer_resolution }}</text>
                                         </div>
                                     </div>
                                     <div class="col-md-3 d-flex align-items-end justify-content-center">
-                                        <a href="{{ config('app.url') .'/'. $teacher->file_transfer_resolution }}"
+                                        <a href="{{ config('app.url') .'/'. $coordination->file_transfer_resolution }}"
                                             target="_blank" class="btn bt-sm btn-outline-primary icon-start">
                                             <i class="icon bi-box-arrow-up-right me-2"></i>
                                             {{ __('View document') }}
@@ -266,12 +262,12 @@
                         </div>
                         <!-- Appointment, possession, transfer End -->
 
-                        @if ($teacher->signature)
+                        @if ($coordination->signature)
                             <!-- Signature Section Start -->
                             <div class="card mb-5">
                                 <div class="card-body text-center">
                                     <div class="border rounded-md mb-2 form-signature">
-                                        <img src="{{ config('app.url') .'/'. $teacher->signature }}"
+                                        <img src="{{ config('app.url') .'/'. $coordination->signature }}"
                                             class="rounded-0 max-w-100 sh-19 object-scale-down" />
                                     </div>
                                 </div>
@@ -284,55 +280,6 @@
 
                 </div>
                 <!-- Information Tab End -->
-
-                <!-- Subjects Tab Start -->
-                <div class="tab-pane fade" id="subjectsTab"
-                    role="tabpanel">
-
-                    <!-- Subjects Content Tab Start -->
-                    <h2 class="small-title">{{ __('Subjects') }}</h2>
-                    <section class="mb-5">
-                        @if ($schoolYear->count() === 0)
-                            <h5 class="text-muted">{{ __('No Subjects') }}</h5>
-                        @endif
-                        <div class="mb-n2" id="accordionCardsSubjects">
-                            @foreach ($schoolYear as $schy)
-                                <div class="card d-flex mb-2 card-color-background">
-                                    <div class="d-flex flex-grow-1" role="button" data-bs-toggle="collapse"
-                                        data-bs-target="#year-{{ $schy->name }}" aria-expanded="true"
-                                        aria-controls="year-{{ $schy->name }}">
-                                        <div class="card-body py-3 border-bottom">
-                                            <div class="btn btn-link list-item-heading p-0">
-                                                {{ $schy->name }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="year-{{ $schy->name }}"
-                                        class="collapse @if ($loop->first) show @endif"
-                                        data-bs-parent="#accordionCardsSubjects">
-                                        <div class="card-body accordion-content">
-                                            @if ($schy->teacherSubjectGroups->count() === 0)
-                                                <h5 class="text-muted">{{ __('No Subjects') }}</h5>
-                                            @endif
-                                            <div class="row g-2 row-cols-3 row-cols-md-4">
-                                                @foreach ($schy->teacherSubjectGroups as $teacherSubject)
-                                                    <x-group.card :group="$teacherSubject->group">
-                                                        <span class="mt-3 text-black btn-icon-start">
-                                                            <i data-acorn-icon="notebook-1" class="icon"
-                                                                data-acorn-size="15"></i>
-                                                            {!! $teacherSubject->subject->resourceSubject->nameSpecialty() !!}
-                                                        </span>
-                                                    </x-group.card>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </section> <!-- Subjects Content Tab End -->
-                </div>
-                <!-- Subjects Tab End -->
 
                 <!-- Permits Tab Start -->
                 <div class="tab-pane fade @if (session('tab') === 'permits') active show @endif" id="permitsTab"
@@ -367,7 +314,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($teacher->permits as $permit)
+                                        @foreach ($coordination->permits as $permit)
                                             <tr>
                                                 <td>{{ $permit->description }}</td>
                                                 <td>{{ $permit->dateRange() }}</td>
@@ -410,7 +357,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($teacher->hierarchies as $hierarchy)
+                                        @foreach ($coordination->hierarchies as $hierarchy)
                                             <tr>
                                                 <td>{{ $hierarchy->number }}</td>
                                                 <td>{{ $hierarchy->resolution }}</td>
@@ -455,7 +402,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($teacher->degrees as $degree)
+                                        @foreach ($coordination->degrees as $degree)
                                             <tr>
                                                 <td>{{ $degree->institution }}</td>
                                                 <td>{{ $degree->degree }}</td>
@@ -500,7 +447,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($teacher->employments as $employment)
+                                        @foreach ($coordination->employments as $employment)
                                             <tr>
                                                 <td>{{ $employment->institution }}</td>
                                                 <td class="text-small">{{ $employment->date_start }}</td>
@@ -539,7 +486,7 @@
                     <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Add permit') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                @include('logro.teacher.permit.create')
+                @include('logro.coordination.permit.create')
             </div>
         </div>
     </div>

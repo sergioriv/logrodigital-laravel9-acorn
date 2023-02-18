@@ -5,6 +5,7 @@ use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\CoordinationDegreeController;
 use App\Http\Controllers\CoordinationEmploymentHistoryController;
 use App\Http\Controllers\CoordinationHierarchyController;
+use App\Http\Controllers\CoordinationPermitController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DescriptorController;
 use App\Http\Controllers\GradeController;
@@ -196,7 +197,8 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
 
     /* Route Coordination */
-    Route::resource('coordination', CoordinationController::class)->only('index', 'create','store')->names('coordination');
+    Route::resource('coordination', CoordinationController::class)->only('index', 'show', 'create','store')->names('coordination');
+    Route::post('coordination/{coordination}/permit', [CoordinationPermitController::class, 'store'])->name('coordination.permits.store');
 
 
 
