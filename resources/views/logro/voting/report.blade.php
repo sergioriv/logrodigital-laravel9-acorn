@@ -54,7 +54,11 @@
                                     <div class="mt-4 display-3 m-0">{{ $candidate->totalVotes->count() }}</div>
                                     <div class="h5">Votos obtenidos</div>
                                     <div class="display-1 mt-3">
-                                        {{ number_format(($candidate->totalVotes->count() * 100) / ($totalVotes ?? 1), 2) }}%
+                                        @if ($totalVotes)
+                                        {{ number_format(($candidate->totalVotes->count() * 100) / $totalVotes, 2) }}%
+                                        @else
+                                        0%
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -74,7 +78,11 @@
                                 <div class="mt-4 display-3 m-0">{{ $blankVotes }}</div>
                                 <div class="h5">Votos obtenidos</div>
                                 <div class="display-1 mt-3">
-                                    {{ number_format(($blankVotes * 100) / ($totalVotes ?? 1), 2) }}%
+                                    @if ($totalVotes)
+                                    {{ number_format(($blankVotes * 100) / $totalVotes, 2) }}%
+                                    @else
+                                    0%
+                                    @endif
                                 </div>
                             </div>
                         </div>
