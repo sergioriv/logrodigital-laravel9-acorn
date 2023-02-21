@@ -178,6 +178,15 @@
             </li>
             @endhasrole
 
+            @hasrole('VOTING_COORDINATOR')
+            <li>
+                <a href="{{ route('voting.index') }}" data-href="/voting">
+                    <i data-acorn-icon="archive" class="icon" data-acorn-size="18"></i>
+                    <span class="label">{{ __('Voting') }}</span>
+                </a>
+            </li>
+            @endhasrole
+
 
             <div class="separator-light"></div>
 

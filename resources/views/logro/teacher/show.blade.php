@@ -33,10 +33,56 @@
         <section class="page-title-container">
             <div class="row">
                 <!-- Title Start -->
-                <div class="col-12">
+                <div class="col-12 col-md-8 mb-2 mb-md-0">
                     <h1 class="mb-1 pb-0 display-4" id="title">{{ $teacher->getFullName() }}</h1>
                 </div>
                 <!-- Title End -->
+
+                @hasrole('VOTING_COORDINATOR')
+                <!-- Top Buttons Start -->
+                <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
+
+                    <!-- Dropdown Button Start -->
+                    <div class="ms-1">
+                        <button type="button" class="btn btn-sm btn-outline-info btn-icon btn-icon-only" data-bs-offset="0,3"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
+                            <i data-acorn-icon="more-horizontal"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            @if ( ! in_array('VOTING_COORDINATOR', $teacher->user->getRoleNames()->toArray()) )
+                                <form action="{{ route('voting.add-user') }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <input type="hidden" name="voting_role" value="TEACHER">
+                                    <input type="hidden" name="voting_user" value="{{ $teacher->uuid }}">
+                                    <x-dropdown-item type="submit">
+                                        <span>{{ __('To make voting coordinator') }}</span>
+                                    </x-dropdown-item>
+                                </form>
+                            @else
+                                <form action="{{ route('voting.remove-user') }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <input type="hidden" name="voting_role" value="TEACHER">
+                                    <input type="hidden" name="voting_user" value="{{ $teacher->uuid }}">
+                                    <x-dropdown-item type="submit">
+                                        <i data-acorn-icon="multiply" class="text-danger"></i>
+                                        <span>{{ __('Remove from voting coordinator') }}</span>
+                                    </x-dropdown-item>
+                                </form>
+                            @endif
+
+                            <x-dropdown-item type="button">
+                                @foreach ($teacher->user->getRoleNames() as $role)
+                                    {{ $role }}<br />
+                                @endforeach
+                            </x-dropdown-item>
+                        </div>
+                    </div>
+                </div>
+                @endhasrole
             </div>
         </section>
         <!-- Title End -->
@@ -68,8 +114,8 @@
                                 data-bs-toggle="tab" href="#informationTab" role="tab">
                                 <span class="align-middle">{{ __('Information') }}</span>
                             </a>
-                            <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
-                                data-bs-toggle="tab" href="#subjectsTab" role="tab">
+                            <a class="nav-link logro-toggle px-0 border-bottom border-separator-light" data-bs-toggle="tab"
+                                href="#subjectsTab" role="tab">
                                 <span class="align-middle">{{ __('Subjects') }}</span>
                             </a>
                             <a class="nav-link @if (session('tab') === 'permits') active @endif logro-toggle px-0 border-bottom border-separator-light"
@@ -137,13 +183,15 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('expedition city') }}</x-label>
-                                        <text class="form-control">{{ $teacher->expeditionCity?->department->name .' | '. $teacher->expeditionCity?->name }}</text>
+                                        <text
+                                            class="form-control">{{ $teacher->expeditionCity?->department->name . ' | ' . $teacher->expeditionCity?->name }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('birth city') }}</x-label>
-                                        <text class="form-control">{{ $teacher->birthCity?->department->name .' | '. $teacher->birthCity?->name }}</text>
+                                        <text
+                                            class="form-control">{{ $teacher->birthCity?->department->name . ' | ' . $teacher->birthCity?->name }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -155,7 +203,8 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('residence city') }}</x-label>
-                                        <text class="form-control">{{ $teacher->residenceCity?->department->name .' | '. $teacher->residenceCity?->name }}</text>
+                                        <text
+                                            class="form-control">{{ $teacher->residenceCity?->department->name . ' | ' . $teacher->residenceCity?->name }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -210,7 +259,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 d-flex align-items-end justify-content-center">
-                                        <a href="{{ config('app.url') .'/'. $teacher->file_appointment }}"
+                                        <a href="{{ config('app.url') . '/' . $teacher->file_appointment }}"
                                             target="_blank" class="btn bt-sm btn-outline-primary icon-start">
                                             <i class="icon bi-box-arrow-up-right me-2"></i>
                                             {{ __('View document') }}
@@ -232,7 +281,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 d-flex align-items-end justify-content-center">
-                                        <a href="{{ config('app.url') .'/'. $teacher->file_possession_certificate }}"
+                                        <a href="{{ config('app.url') . '/' . $teacher->file_possession_certificate }}"
                                             target="_blank" class="btn bt-sm btn-outline-primary icon-start">
                                             <i class="icon bi-box-arrow-up-right me-2"></i>
                                             {{ __('View document') }}
@@ -254,7 +303,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 d-flex align-items-end justify-content-center">
-                                        <a href="{{ config('app.url') .'/'. $teacher->file_transfer_resolution }}"
+                                        <a href="{{ config('app.url') . '/' . $teacher->file_transfer_resolution }}"
                                             target="_blank" class="btn bt-sm btn-outline-primary icon-start">
                                             <i class="icon bi-box-arrow-up-right me-2"></i>
                                             {{ __('View document') }}
@@ -271,7 +320,7 @@
                             <div class="card mb-5">
                                 <div class="card-body text-center">
                                     <div class="border rounded-md mb-2 form-signature">
-                                        <img src="{{ config('app.url') .'/'. $teacher->signature }}"
+                                        <img src="{{ config('app.url') . '/' . $teacher->signature }}"
                                             class="rounded-0 max-w-100 sh-19 object-scale-down" />
                                     </div>
                                 </div>
@@ -286,8 +335,7 @@
                 <!-- Information Tab End -->
 
                 <!-- Subjects Tab Start -->
-                <div class="tab-pane fade" id="subjectsTab"
-                    role="tabpanel">
+                <div class="tab-pane fade" id="subjectsTab" role="tabpanel">
 
                     <!-- Subjects Content Tab Start -->
                     <h2 class="small-title">{{ __('Subjects') }}</h2>
@@ -399,13 +447,16 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
-                                    data-order='[[ 2, "desc" ]]'>
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    logro="dataTableBoxed" data-order='[[ 2, "desc" ]]'>
                                     <thead>
                                         <tr>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('number') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('Resolution') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('number') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('Resolution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}
+                                            </th>
                                             <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
@@ -416,7 +467,8 @@
                                                 <td>{{ $hierarchy->resolution }}</td>
                                                 <td class="text-small">{{ $hierarchy->date }}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ config('app.url') .'/'. $hierarchy->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                    <a href="{{ config('app.url') . '/' . $hierarchy->url }}"
+                                                        class="btn btn-sm btn-link text-capitalize" target="_blank">
                                                         <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
@@ -444,13 +496,16 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
-                                    data-order='[[ 2, "desc" ]]'>
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    logro="dataTableBoxed" data-order='[[ 2, "desc" ]]'>
                                     <thead>
                                         <tr>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('institution') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('degree') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('institution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('degree') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}
+                                            </th>
                                             <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
@@ -461,7 +516,8 @@
                                                 <td>{{ $degree->degree }}</td>
                                                 <td class="text-small">{{ $degree->date }}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ config('app.url') .'/'. $degree->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                    <a href="{{ config('app.url') . '/' . $degree->url }}"
+                                                        class="btn btn-sm btn-link text-capitalize" target="_blank">
                                                         <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
@@ -480,8 +536,8 @@
                 <!-- Degree Tab End -->
 
                 <!-- Employment History Tab Start -->
-                <div class="tab-pane fade show @if (session('tab') === 'employments') active show @endempty" id="employmentsTab"
-                    role="tabpanel">
+                <div class="tab-pane fade show @if (session('tab') === 'employments') active show @endempty"
+                    id="employmentsTab" role="tabpanel">
 
                     <!-- Employment History Content Tab Start -->
                     <h2 class="small-title">{{ __('Employment history') }}</h2>
@@ -489,13 +545,16 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
-                                    data-order='[[ 2, "desc" ]]'>
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    logro="dataTableBoxed" data-order='[[ 2, "desc" ]]'>
                                     <thead>
                                         <tr>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('institution') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date of entry') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date of withdrawal') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('institution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('date of entry') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('date of withdrawal') }}</th>
                                             <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
@@ -506,7 +565,8 @@
                                                 <td class="text-small">{{ $employment->date_start }}</td>
                                                 <td class="text-small">{{ $employment->date_end }}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ config('app.url') .'/'. $employment->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                    <a href="{{ config('app.url') . '/' . $employment->url }}"
+                                                        class="btn btn-sm btn-link text-capitalize" target="_blank">
                                                         <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>

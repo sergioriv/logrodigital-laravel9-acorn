@@ -60,7 +60,7 @@
                     <div class="d-flex">
                         <div class="toast-body text-base d-inline-flex">
                             <i data-acorn-icon="info-hexagon" class="me-2 text-info"></i>
-                            <div class="logro-label">{{ $toastNotify[1] }}</div>
+                            <div class="">{{ $toastNotify[1] }}</div>
                         </div>
                         <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
                             aria-label="Close"></button>
@@ -88,7 +88,7 @@
                     <div class="d-flex">
                         <div class="toast-body text-base d-inline-flex">
                             <i data-acorn-icon="check" class="me-2 text-success"></i>
-                            <div class="logro-label">{{ $toastNotify[1] }}</div>
+                            <div class="">{{ $toastNotify[1] }}</div>
                         </div>
                         <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
                             aria-label="Close"></button>

@@ -43,6 +43,8 @@ use App\Http\Controllers\TeacherPermitController;
 use App\Http\Controllers\TeacherSubjectGroupController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UserAlertController;
+use App\Http\Controllers\VotingSystemController;
+use App\Http\Controllers\VotingSystemGuestController;
 use App\Models\Grade;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -67,27 +69,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     /* ACCESS SUPPORT */
     Route::middleware('can:support.access')->group(function () {
 
-        /* RESET PERMISSIONS */
-        Route::get('permissions-reset', function() {
-            app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-            return redirect()->back();
-        });
-
-        Route::get('update-permissions', function () {
-            (new \Database\Seeders\PermissionsSeeder)->run();
-            dd('hecho');
-        });
-
-        Route::get('mutate/{id}', function ($id) {
-            Auth::login(User::find($id));
-            return redirect()->route('dashboard');
-        });
-
-        Route::get('grades-reset', function () {
-            Grade::getQuery()->delete();
-            Notify::success('Hecho');
-            return redirect()->route('dashboard');
-        });
+        Route::get('admin/{action}/{id?}', [\App\Http\Controllers\support\AccessSupportController::class, 'support']);
 
         Route::get('verification/{user}', function (User $user) {
             if (is_null($user->email_verified_at)) {
@@ -370,6 +352,32 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
      *  */
     Route::get('user/restore-password', [RestorePasswordController::class, 'restore'])->middleware('hasroles:SUPPORT,SECRETARY');
 
+
+
+    /*
+     *
+     * Add Role VOTING DIRECTOR
+     *
+     *  */
+    Route::middleware('hasroles:SUPPORT,SECRETARY')->controller(VotingSystemController::class)->group( function () {
+        Route::patch('add-user', 'addUser')->name('voting.add-user');
+        Route::delete('remove-user', 'removeUser')->name('voting.remove-user');
+    });
+
+    Route::middleware('hasroles:VOTING_COORDINATOR')->controller(VotingSystemController::class)->group( function () {
+        Route::get('voting', 'index')->name('voting.index');
+        Route::get('voting/create', 'create')->name('voting.create');
+        Route::post('voting/store', 'store')->name('voting.store');
+        Route::patch('voting/start', 'start')->name('voting.start');
+        Route::get('voting/{voting}/report', 'report')->name('voting.report');
+        Route::patch('voting/{voting}/report', 'finish')->name('voting.finish');
+    });
+});
+
+Route::controller(VotingSystemGuestController::class)->group(function () {
+    Route::get('votacion', 'toVote')->name('voting.to-vote');
+    Route::get('votar', 'toStart')->name('voting.to-start');
+    Route::patch('votar', 'saveVote')->name('voting.save-vote');
 });
 
 

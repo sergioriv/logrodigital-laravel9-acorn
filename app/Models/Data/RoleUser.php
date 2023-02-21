@@ -9,6 +9,7 @@ class RoleUser
     public const TEACHER = 6;
     public const STUDENT = 7;
     public const PARENT = 8;
+    public const VOTING_DIRECTOR = 9;
 
     public const COORDINATION_ROL   = 'COORDINATOR';
     public const ORIENTATION_ROL    = 'ORIENTATION';
