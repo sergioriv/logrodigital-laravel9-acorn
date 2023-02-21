@@ -38,7 +38,7 @@
                 </div>
                 <!-- Title End -->
 
-                @hasrole('VOTING_COORDINATOR')
+                @hasrole('SUPPORT')
                 <!-- Top Buttons Start -->
                 <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
 
