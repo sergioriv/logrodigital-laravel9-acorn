@@ -111,7 +111,7 @@
                             </a>
                             <a class="nav-link @if (session('tab') === 'degrees') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#degreeTab" role="tab">
-                                <span class="align-middle">{{ __('Degrees') }}</span>
+                                <span class="align-middle">{{ __('Last titles obtained') }}</span>
                             </a>
                             <a class="nav-link @if (session('tab') === 'employments') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#employmentsTab" role="tab">
@@ -395,7 +395,7 @@
                     role="tabpanel">
 
                     <!-- Hierarchy Content Tab Start -->
-                    <h2 class="small-title">{{ __('Hierarchy') }}</h2>
+                    <h2 class="small-title">{{ __('Hierarchy') }} <i>(max. 5)</i></h2>
                     <section class="scroll-section mb-5">
 
                         <div class="card">
@@ -449,7 +449,7 @@
                     role="tabpanel">
 
                     <!-- Degree Content Tab Start -->
-                    <h2 class="small-title">{{ __('Degrees') }}</h2>
+                    <h2 class="small-title">{{ __('Last titles obtained') }} <i>(max. 5)</i></h2>
                     <section class="scroll-section mb-5">
 
                         <div class="card">
@@ -503,7 +503,7 @@
                     role="tabpanel">
 
                     <!-- Employment History Content Tab Start -->
-                    <h2 class="small-title">{{ __('Employment history') }}</h2>
+                    <h2 class="small-title">{{ __('Employment history') }} <i>(max. 5)</i></h2>
                     <section class="scroll-section mb-5">
 
                         <div class="card">
