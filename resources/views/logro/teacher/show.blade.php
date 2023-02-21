@@ -73,12 +73,6 @@
                                     </x-dropdown-item>
                                 </form>
                             @endif
-
-                            <x-dropdown-item type="button">
-                                @foreach ($teacher->user->getRoleNames() as $role)
-                                    {{ $role }}<br />
-                                @endforeach
-                            </x-dropdown-item>
                         </div>
                     </div>
                 </div>
