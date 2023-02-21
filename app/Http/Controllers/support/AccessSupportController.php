@@ -47,9 +47,15 @@ class AccessSupportController extends Controller
 
     protected function addVoting()
     {
-        Role::create([
-            'name' => 'VOTING_COORDINATOR'
-        ]);
+        if ( ! Role::where('name', 'VOTING_COORDINATOR')->first()) {
+
+            Role::create([
+                'name' => 'VOTING_COORDINATOR'
+            ]);
+        }
+
+        auth()->user()->assignRole(9);
+
         dd('Rol VOTING_COORDINATOR creado');
     }
 
