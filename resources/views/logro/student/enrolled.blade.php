@@ -31,6 +31,7 @@ $title = __('Students') .' '. __('enrolled');
                     </div>
                     <!-- Title End -->
 
+                    @can('students.index')
                     <!-- Top Buttons Start -->
                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
                         <!-- Add New Button Start -->
@@ -58,6 +59,7 @@ $title = __('Students') .' '. __('enrolled');
                         <!-- Dropdown Button End -->
                     </div>
                     <!-- Top Buttons End -->
+                    @endcan
                 </div>
             </div>
             <!-- Title and Top Buttons End -->

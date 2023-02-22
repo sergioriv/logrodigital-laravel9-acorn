@@ -176,6 +176,12 @@
                     <span class="label">{{ __('Subjects') }}</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('students.enrolled') }}" data-href="/students">
+                    <i class="icon icon-18 bi-people"></i>
+                    <span class="label">{{ __('Students') }}</span>
+                </a>
+            </li>
             @endhasrole
 
             @hasrole('VOTING_COORDINATOR')
