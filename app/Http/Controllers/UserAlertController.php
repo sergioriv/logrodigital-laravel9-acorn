@@ -37,7 +37,7 @@ class UserAlertController extends Controller
             if ($request->priority_coordinator === '1') {
                 $newAlert->priority = TRUE;
 
-                SmtpMail::sendMailAlert(
+                SmtpMail::init()->sendMailAlert(
                     __(self::TITLE_ORIENTATION, ['CREATE_BY' => UserController::myName(), 'STUDENT_NAME' => $student->getCompleteNames()]),
                     $coordinator,
                     $request->recommendations_coordinator
@@ -80,7 +80,7 @@ class UserAlertController extends Controller
 
             if ($request->priority_teacher === '1') {
 
-                SmtpMail::sendMailAlert(
+                SmtpMail::init()->sendMailAlert(
                     __(self::TITLE_ORIENTATION, ['CREATE_BY' => UserController::myName(), 'STUDENT_NAME' => $student->getCompleteNames()]),
                     $teachersGroup,
                     $request->recommendations_teachers
