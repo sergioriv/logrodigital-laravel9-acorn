@@ -18,13 +18,13 @@ class StudentTracking extends Model
 
 
     /* MUTADORES Y ACCESORES */
-    public function user()
+    public function creator()
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(Orientation::class, 'user_id', 'id');
     }
     public function student()
     {
-        return $this->belongsTo(Student::class, 'id');
+        return $this->belongsTo(Student::class, 'student_id');
     }
     public function coordination()
     {

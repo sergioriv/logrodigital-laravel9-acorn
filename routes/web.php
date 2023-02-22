@@ -331,6 +331,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::get('students/{student}/tracking/{advice}', 'tracking_evolution')->name('students.tracking.evolution');
         Route::put('students/{student}/tracking/{advice}', 'tracking_evolution_update')->name('students.tracking.evolution.store');
         Route::get('students/tracking', 'tracking_view');
+        Route::get('students/tracking/{tracking}/download', 'download_tracking')->name('student.tracking.remit.download');
     });
 
 

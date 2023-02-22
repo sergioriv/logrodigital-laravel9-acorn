@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
 use App\Models\Coordination;
+use App\Models\Orientation;
 use App\Models\Student;
 use App\Models\StudentTracking;
 use App\Models\StudentTrackingAdvice;
@@ -11,6 +12,7 @@ use App\Models\StudentTrackingCoordination;
 use App\Models\StudentTrackingFamily;
 use App\Models\StudentTrackingRemit;
 use App\Models\StudentTrackingTeacher;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -234,7 +236,10 @@ class StudentTrackingController extends Controller
             case 'remit':
                 $title = __('Remit');
                 $content = '<p>'.$tracking->entity_remit.'</p>'
-                            .'<p>'.$tracking->reason_entity.'</p>';
+                            .'<p>'.$tracking->reason_entity.'</p>'
+                            .'<p class="text-center"><a class="btn btn-background hover-outline mb-1" href="' .
+                            route('student.tracking.remit.download', $tracking->id)
+                            . '">Descargar remisión</a></p>';
                 break;
 
             case 'advice':
@@ -254,6 +259,21 @@ class StudentTrackingController extends Controller
         return ['title' => $title, 'content' => $content];
     }
 
+
+    public function download_tracking(StudentTracking $tracking)
+    {
+        $SCHOOL = SchoolController::myschool()->getData();
+
+        $pdf = Pdf::loadView('logro.pdf.remit', [
+            'SCHOOL' => $SCHOOL,
+            'date' => now(),
+            'tracking' => $tracking,
+            'nationalCountry' => NationalCountry::country()
+        ])->setPaper('letter', 'portrait')->setOption('dpi', 72);
+
+
+        return $pdf->download('Remisión ' . $tracking->entity_remit . ' - ' . now() . '.pdf');
+    }
 
 
     private function tab()
