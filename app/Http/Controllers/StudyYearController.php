@@ -239,14 +239,14 @@ class StudyYearController extends Controller
 
         $areas_total = count(array_unique($areas)) * 100;
 
-        if ($total_course_load === $areas_total) {
-            DB::commit();
-            Notify::success(__('Updated!'));
-            return redirect()->route('studyYear.subject.show', $studyYear);
-        } else {
+        if ($total_course_load > $areas_total) {
             DB::rollBack();
             return redirect()->back()->withErrors(__("check the course load"));
         }
+
+        DB::commit();
+        Notify::success(__('Updated!'));
+        return redirect()->route('studyYear.subject.show', $studyYear);
     }
 
 

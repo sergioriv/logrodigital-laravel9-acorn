@@ -73,7 +73,7 @@ $title = $studyYear->name;
                                                         <div class="input-group">
                                                             <span class="input-group-text logro-input-disabled">%</span>
                                                             <input type="number" @if (null === $subject->academicWorkload) disabled @endif
-                                                            max="100" min="0" placeholder="{{ __('Course load') }}"
+                                                            max="100" min="0" step="0.1" placeholder="{{ __('Course load') }}"
                                                             subject="{{ $subject->id }}" class="form-control"
                                                             name="{{ $subject->id }}~course_load"
                                                             value="{{ $subject->academicWorkload->course_load ?? null }}"
