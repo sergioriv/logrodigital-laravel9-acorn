@@ -429,10 +429,3 @@
 </body>
 
 </html>
-
-{{--
-<td class="p-1">
-    <div class="label"></div>
-    <div class="form-control"></div>
-</td>
---}}

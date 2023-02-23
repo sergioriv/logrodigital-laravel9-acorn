@@ -7,7 +7,7 @@
             <div class="col-md-6">
                 <div class="position-relative form-group">
                     <x-label>{{ __('date') }}</x-label>
-                    <x-input name="date" :value="old('date')" logro="datePickerAll" />
+                    <x-input name="date" :value="old('date', now()->format('Y-m-d'))" placeholder="yyyy-mm-dd" logro="datePickerAll" />
                 </div>
             </div>
             <div class="col-md-6">

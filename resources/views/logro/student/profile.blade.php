@@ -2485,7 +2485,14 @@
                                                 <tr>
                                                     <td>
                                                         @if ($studentTracking->type_tracking === 'advice')
-                                                            <div class="logro-label">{{ __('advice') }}</div>
+                                                            <div class="logro-label">
+                                                                {{ __('advice') }}
+                                                                <div class="d-inline-block ms-2">
+                                                                    <a href="{{ route('student.tracking.download', $studentTracking) }}">
+                                                                        <i data-acorn-icon="download" data-acorn-size="16"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
                                                         @elseif ($studentTracking->type_tracking === 'remit')
                                                             <div class="d-inline-block">{{ __('Referral to') }}:
                                                                 {{ $studentTracking->entity_remit }}</div>

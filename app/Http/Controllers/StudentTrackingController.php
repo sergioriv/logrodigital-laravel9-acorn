@@ -237,9 +237,9 @@ class StudentTrackingController extends Controller
                 $title = __('Remit');
                 $content = '<p>'.$tracking->entity_remit.'</p>'
                             .'<p>'.$tracking->reason_entity.'</p>'
-                            .'<p class="text-center"><a class="btn btn-background hover-outline mb-1" href="' .
-                            route('student.tracking.remit.download', $tracking->id)
-                            . '">Descargar remisión</a></p>';
+                            .'<div class="text-center mt-6"><a class="btn btn-background hover-outline mb-1" href="' .
+                            route('student.tracking.download', $tracking->id)
+                            . '">Descargar remisión</a></div>';
                 break;
 
             case 'advice':
@@ -262,6 +262,22 @@ class StudentTrackingController extends Controller
 
     public function download_tracking(StudentTracking $tracking)
     {
+
+        switch ($tracking->type_tracking) {
+            case 'advice':
+                return self::downloadTrackingAdvice($tracking);
+                break;
+
+            case 'remit':
+                return self::downloadTrackingRemit($tracking);
+                break;
+        }
+
+        return false;
+    }
+
+    private function downloadTrackingRemit($tracking)
+    {
         $SCHOOL = SchoolController::myschool()->getData();
 
         $pdf = Pdf::loadView('logro.pdf.remit', [
@@ -275,6 +291,50 @@ class StudentTrackingController extends Controller
         return $pdf->download('Remisión ' . $tracking->entity_remit . ' - ' . now() . '.pdf');
     }
 
+    private function downloadTrackingAdvice($tracking)
+    {
+        $SCHOOL = SchoolController::myschool()->getData();
+
+        try {
+
+            if ( is_null($tracking->evolution) ) {
+
+                /*
+                *
+                * Asesorias sin evolución, descarga la citación
+                *
+                * */
+
+                $pdf = Pdf::loadView('logro.pdf.advice-citation', [
+                    'SCHOOL' => $SCHOOL,
+                    'date' => now()->format('Y / m / d'),
+                    'tracking' => $tracking
+                ])->setPaper('letter', 'portrait')->setOption('dpi', 72);
+
+                return $pdf->download('Citación ' . $tracking->student->getCompleteNames() . ' - ' . $tracking->dateFull() . '.pdf');
+
+            } else {
+
+                /*
+                *
+                * Descarga la evolucion de la asesoría
+                *
+                * */
+                $pdf = Pdf::loadView('logro.pdf.evolucion-citation', [
+                    'SCHOOL' => $SCHOOL,
+                    'date' => now()->format('Y / m / d'),
+                    'tracking' => $tracking
+                ])->setPaper('letter', 'portrait')->setOption('dpi', 72);
+
+                return $pdf->download('Evolución ' . $tracking->student->getCompleteNames() . ' - ' . $tracking->dateFull() . '.pdf');
+
+            }
+        } catch (\Throwable $e) {
+            Notify::fail(__('An error has occurred'));
+            $this->tab();
+            return back();
+        }
+    }
 
     private function tab()
     {
