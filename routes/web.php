@@ -12,6 +12,10 @@ use App\Http\Controllers\GradeController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\OrientationController;
+use App\Http\Controllers\OrientationDegreeController;
+use App\Http\Controllers\OrientationEmploymentHistoryController;
+use App\Http\Controllers\OrientationHierarchyController;
+use App\Http\Controllers\OrientationPermitController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\PeriodPermitController;
 use App\Http\Controllers\PersonChargeController;
@@ -181,14 +185,19 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     /* Route Coordination */
     Route::resource('coordination', CoordinationController::class)->only('index', 'show', 'create','store')->names('coordination');
     Route::post('coordination/{coordination}/permit', [CoordinationPermitController::class, 'store'])->name('coordination.permits.store');
+    Route::post('coordination/hierarchy', [CoordinationHierarchyController::class, 'store'])->name('coordination.hierarchy.store');
+    Route::post('coordination/degree', [CoordinationDegreeController::class, 'store'])->name('coordination.degree.store');
+    Route::post('coordination/employment', [CoordinationEmploymentHistoryController::class, 'store'])->name('coordination.employment.store');
 
 
 
     /* Route Orientation */
-    Route::resource('orientation', OrientationController::class)->only('index', 'create','store')->names('orientation');
-    Route::post('orientation/hierarchy', [CoordinationHierarchyController::class, 'store'])->name('coordination.hierarchy.store');
-    Route::post('orientation/degree', [CoordinationDegreeController::class, 'store'])->name('coordination.degree.store');
-    Route::post('orientation/employment', [CoordinationEmploymentHistoryController::class, 'store'])->name('coordination.employment.store');
+    Route::resource('orientation', OrientationController::class)->only('index', 'show', 'create','store')->names('orientation');
+    Route::post('orientation/{orientation}/permit', [OrientationPermitController::class, 'store'])->name('orientation.permits.store');
+    Route::post('orientation/hierarchy', [OrientationHierarchyController::class, 'store'])->name('orientation.hierarchy.store');
+    Route::post('orientation/degree', [OrientationDegreeController::class, 'store'])->name('orientation.degree.store');
+    Route::post('orientation/employment', [OrientationEmploymentHistoryController::class, 'store'])->name('orientation.employment.store');
+
 
 
     /* Route Groups */

@@ -530,10 +530,20 @@ $title = $school->name;
                                     <tbody>
                                         @foreach ($orientations as $orientation)
                                             <tr>
-                                                <td>{{ $orientation->name }}</td>
-                                                <td>{{ $orientation->last_names }}</td>
-                                                <td>{{ $orientation->email }}</td>
-                                                <td>{{ $orientation->telephone }}</td>
+                                                <td>
+                                                    <a href="{{ route('orientation.show', $orientation) }}"
+                                                        class="list-item-heading body">
+                                                        {{ $orientation->names }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('orientation.show', $orientation) }}"
+                                                        class="list-item-heading body">
+                                                        {{ $orientation->last_names }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ $orientation->institutional_email }}</td>
+                                                <td>{{ $orientation->cellphone }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

@@ -6,6 +6,7 @@ namespace App\Models\Data;
 class RoleUser
 {
     public const COORDINATOR = 3;
+    public const ORIENTATION = 5;
     public const TEACHER = 6;
     public const STUDENT = 7;
     public const PARENT = 8;

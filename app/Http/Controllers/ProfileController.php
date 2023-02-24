@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Coordination;
+use App\Models\Orientation;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\User;
@@ -29,6 +30,11 @@ class ProfileController extends Controller
             case 'COORDINATOR':
                 $coordination = Coordination::where('id', Auth::id())->first();
                 return (new CoordinationController)->profile($coordination);
+                break;
+
+            case 'ORIENTATION':
+                $orientation = Orientation::where('id', Auth::id())->first();
+                return (new OrientationController)->profile($orientation);
                 break;
 
             case 'SECRETARY':
@@ -89,6 +95,11 @@ class ProfileController extends Controller
             case 'COORDINATOR':
                 $coordination = Coordination::where('id', Auth::id())->first();
                 return (new CoordinationController)->profile_update($coordination, $request);
+                break;
+
+            case 'ORIENTATION':
+                $coordination = Orientation::where('id', Auth::id())->first();
+                return (new OrientationController)->profile_update($coordination, $request);
                 break;
 
             case 'SECRETARY':

@@ -310,7 +310,7 @@ class CoordinationController extends Controller
 
     protected function deleteDirectory($uuid)
     {
-        if (is_dir(public_path('app/teachers/' . $uuid)))
-            File::deleteDirectory(public_path('app/teachers/' . $uuid));
+        if (is_dir(public_path('app/coordinators/' . $uuid)))
+            File::deleteDirectory(public_path('app/coordinators/' . $uuid));
     }
 }

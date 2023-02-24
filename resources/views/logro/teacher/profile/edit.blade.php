@@ -92,6 +92,8 @@
                                 <div class="h5">{{ $teacher->getFullName() }}</div>
                                 @if ($teacher instanceof \App\Models\Coordination )
                                 <div class="text-muted text-uppercase">{{ __('coordinator') }}</div>
+                                @elseif ($teacher instanceof \App\Models\Orientation )
+                                <div class="text-muted text-uppercase">{{ __('orientator') }}</div>
                                 @elseif ($teacher instanceof \App\Models\Teacher )
                                 <div class="text-muted text-uppercase">{{ __('Teacher') }}</div>
                                 @endif
@@ -579,6 +581,10 @@
                     {{ route('coordination.hierarchy.store') }}
                     @endhasrole
 
+                    @hasrole('ORIENTATION')
+                    {{ route('orientation.hierarchy.store') }}
+                    @endhasrole
+
                     " method="POST" enctype="multipart/form-data">
                     @csrf
 
@@ -643,6 +649,10 @@
                     {{ route('coordination.degree.store') }}
                     @endhasrole
 
+                    @hasrole('ORIENTATION')
+                    {{ route('orientation.degree.store') }}
+                    @endhasrole
+
                     " method="POST" enctype="multipart/form-data">
                     @csrf
 
@@ -705,6 +715,10 @@
 
                     @hasrole('COORDINATOR')
                     {{ route('coordination.employment.store') }}
+                    @endhasrole
+
+                    @hasrole('ORIENTATION')
+                    {{ route('orientation.employment.store') }}
                     @endhasrole
 
                     " method="POST" enctype="multipart/form-data">

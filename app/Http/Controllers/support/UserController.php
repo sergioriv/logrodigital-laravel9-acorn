@@ -146,11 +146,14 @@ class UserController extends Controller
 
             if ($user->email !== $email) {
 
-                $sendmail = SmtpMail::init()->sendEmailVerificationNotification($user);
+                $sendmail = true;
+                if (config('app.env') === 'production') {
+                    $sendmail = SmtpMail::init()->sendEmailVerificationNotification($user);
 
-                /* comprueba que el correo fué enviado y permite la actualización del correo */
-                if (!$sendmail) {
-                    return false;
+                    /* comprueba que el correo fué enviado y permite la actualización del correo */
+                    if (!$sendmail) {
+                        return false;
+                    }
                 }
 
                 $user->forceFill([
