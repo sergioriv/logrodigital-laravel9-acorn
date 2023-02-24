@@ -244,6 +244,7 @@ class VotingSystemController extends Controller
             'document',
             'group_id')
             ->whereIn('group_id', $groups)
+            ->with(['group:id,name'])
             ->withCount(['voted' => fn($voted) => $voted->where('voting_id', $voting->id) ])->get();
 
         return Excel::download(new VotingStudents($voting, $students), $voting->title . ' - estudiantes' . '.xlsx');

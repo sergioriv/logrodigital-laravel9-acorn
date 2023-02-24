@@ -38,11 +38,11 @@ class VotingStudents implements FromArray, ShouldAutoSize, WithStyles, WithEvent
     {
         $array = [
             [$this->voting->title],
-            ['#', 'Nombre completo', 'documento']
+            ['#', 'Nombre completo', 'documento', 'grupo']
         ];
 
         foreach ($this->students as $i => $student) {
-            array_push($array, [++$i, $student->getCompleteNames(), $student->document]);
+            array_push($array, [++$i, $student->getCompleteNames(), $student->document, $student->group->name]);
 
             if ( $student->voted_count > 0 ) {
                 $this->stylesVoting[$i+2] = [
@@ -73,7 +73,7 @@ class VotingStudents implements FromArray, ShouldAutoSize, WithStyles, WithEvent
     {
         return [
             AfterSheet::class    => function (AfterSheet $event) {
-                $event->sheet->mergeCells('A1:C1');
+                $event->sheet->mergeCells('A1:D1');
             }
         ];
     }
