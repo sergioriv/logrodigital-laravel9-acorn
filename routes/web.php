@@ -381,6 +381,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::patch('voting/start', 'start')->name('voting.start');
         Route::get('voting/{voting}/report', 'report')->name('voting.report');
         Route::patch('voting/{voting}/report', 'finish')->name('voting.finish');
+        Route::get('voting/{voting}/students', 'download_students')->name('voting.download.students');
     });
 });
 

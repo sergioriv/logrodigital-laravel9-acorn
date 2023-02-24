@@ -35,16 +35,6 @@
                         Crear votación
                     </a>
                 </div>
-                {{-- <div class="col-md-6 text-md-start text-center">
-                    <a href="
-                    @if ($votingStarted) {{ route('voting.to-vote') }}
-                    @else
-                    # @endif
-                    "
-                        class="btn @if (!$votingStarted) pointer-events-none btn-muted @else btn-primary @endif">
-                        Acceso para Estudiantes
-                    </a>
-                </div> --}}
             </div>
         </section>
 
@@ -63,7 +53,7 @@
                                     @php $studentsForVote = 0; @endphp
                                     @foreach ($vt->constituencies as $groups)
                                         @php
-                                            $studentsForVote += $groups->group->group_students_count;
+                                            $studentsForVote += $groups->group->group_students_count ?? 0;
                                         @endphp
                                     @endforeach
 
@@ -71,6 +61,11 @@
 
                                 </div>
                                 <div>Estudiantes habilitados para votar</div>
+                                <div>
+                                    <a href="{{ route('voting.download.students', $vt) }}">
+                                        Descargar lista
+                                    </a>
+                                </div>
                                 <div class="my-5 h5">
                                     @if ($vt->status->isCreated())
                                         <button type="button" class="btn btn-primary"

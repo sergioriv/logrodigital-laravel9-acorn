@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\VotingStudents;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Group;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class VotingSystemController extends Controller
 {
@@ -32,7 +34,13 @@ class VotingSystemController extends Controller
 
         $voting = Voting::where('school_year_id', $Y->id)
             ->withCount(['candidates'])
-            ->with(['constituencies' => fn ($const) => $const->with(['group' => fn ($group) => $group->withCount('groupStudents')])])
+            ->with([
+                'constituencies' =>
+                fn ($const) => $const->with([
+                    'group' =>
+                    fn ($group) => $group->whereNull('specialty')->withCount('groupStudents')
+                ])
+            ])
             ->orderBy('created_at')
             ->get();
 
@@ -72,6 +80,7 @@ class VotingSystemController extends Controller
             ->whereIn('headquarters_id', $request->headquarters)
             ->whereIn('study_year_id', $request->study_years)
             ->whereHas('groupStudents')
+            ->whereNull('specialty')
             ->pluck('id');
 
         if (!$groups->count()) {
@@ -220,5 +229,23 @@ class VotingSystemController extends Controller
         }
 
         return back();
+    }
+
+    public function download_students(Voting $voting)
+    {
+        $groups = $voting->constituencies->pluck('group_id')->toArray();
+
+        $students = Student::select(
+            'id',
+            'first_name',
+            'second_name',
+            'first_last_name',
+            'second_last_name',
+            'document',
+            'group_id')
+            ->whereIn('group_id', $groups)
+            ->withCount(['voted' => fn($voted) => $voted->where('voting_id', $voting->id) ])->get();
+
+        return Excel::download(new VotingStudents($voting, $students), $voting->title . ' - estudiantes' . '.xlsx');
     }
 }
