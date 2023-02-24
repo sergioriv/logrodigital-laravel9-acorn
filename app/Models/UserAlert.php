@@ -49,7 +49,8 @@ class UserAlert extends Model
                 'first_name',
                 'second_name',
                 'first_last_name',
-                'second_last_name',);
+                'second_last_name',
+                'group_id');
         // }
 
         // return null;

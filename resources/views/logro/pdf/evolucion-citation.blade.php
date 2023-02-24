@@ -339,7 +339,7 @@
                         </div>
                         <div class="fz-8">DOCENTE ORIENTADORA</div>
                         <div class="fz-8">Psicóloga R P - 114277</div>
-                        <div class="fz-8">{{ $tracking->creator->email }}</div>
+                        <div class="fz-8">{{ $tracking->creator->institutional_email }}</div>
                     </td>
                 </tr>
             </table>

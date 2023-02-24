@@ -68,7 +68,7 @@ class DashboardController extends Controller
             ->whereNull('checked')
             ->orderByDesc('priority')
             ->orderBy('created_at')
-            ->with('student')
+            ->with(['student' => fn($student) => $student->with(['group:id,name']) ])
             ->get()->groupBy(function ($alert) {
                 return $alert->student_id;
             });

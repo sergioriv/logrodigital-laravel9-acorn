@@ -3,7 +3,7 @@
 <div class="card mb-5">
 
     <div class="card-body">
-        @if ($content)
+        @if (count($content))
         <div class="accordion accordion-flush" id="accordionFlushAlerts">
             @foreach ($content as $alertStudent)
                 <div class="accordion-item">
@@ -13,6 +13,7 @@
                             aria-controls="flush-collapse{{ $loop->index }}">
                             <span class="font-weight-bold me-1">{{ '(' . $alertStudent->count() . ')' }}</span>
                             {{ $alertStudent[0]->student->getCompleteNames() }}
+                            <span class="ms-2 mb-0 badge bg-muted text-uppercase">{{ $alertStudent[0]->student->group?->name }}</span>
                             <a href="{{ route('students.show', $alertStudent[0]->student->id) }}"><i
                                 class="icon bi-box-arrow-in-up-right text-primary ms-2"></i></a>
                         </button>
