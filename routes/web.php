@@ -138,7 +138,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
     /* Route Headquarters */
     Route::resource('headquarters', HeadquartersController::class)->except('destroy')->names('headquarters');
-    Route::get('headquarters.json', [HeadquartersController::class, 'data']);
+    Route::get('headquarters/{headquarters}/students', [HeadquartersController::class, 'download_students'])->name('headquarters.download-students');
 
     /* Route StudyTime */
     Route::resource('study-times', StudyTimeController::class)->except('destroy','edit','update')->names('studyTime');

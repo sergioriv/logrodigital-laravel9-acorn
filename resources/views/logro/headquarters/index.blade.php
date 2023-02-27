@@ -15,7 +15,7 @@ $title = __('Headquarters list');
 
 @section('js_page')
 <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
-<script src="/js/plugins/datatable/headquarters_datatable.ajax.js?d=1670967386206"></script>
+<script src="/js/plugins/datatable/datatable_standard.ajax.js?d=1674758885739"></script>
 @endsection
 
 @section('content')
@@ -70,14 +70,31 @@ $title = __('Headquarters list');
 
                 <!-- Table Start -->
                 <div class="data-table-responsive-wrapper">
-                    <table id="datatable_headquarters" class="data-table nowrap w-100">
+                    <table id="datatable_headquarters" class="data-table nowrap w-100" logro="datatable">
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
                                 <th class="text-muted text-small text-uppercase text-center">{{ __('Number of students enrolled') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('Created at') }}</th>
+                                <th class="empty">&nbsp;</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            @foreach ($headquarters as $hq)
+                            <tr>
+                                <td>{{ $hq->name }}</td>
+                                <td class="text-center">{{ $hq->students_count }}</td>
+                                <td>
+                                    <h4 class="text-small">{{ $hq->created_at }}</h4>
+                                </td>
+                                <td align="right">
+                                    <a href="{{ route('headquarters.download-students', $hq) }}">
+                                        <i data-acorn-icon="download" data-acorn-size="16"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
                 <!-- Table End -->

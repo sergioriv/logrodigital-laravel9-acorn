@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\StudentsForHeadquartersExport;
 use App\Http\Controllers\support\Notify;
 use App\Models\Headquarters;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class HeadquartersController extends Controller
 {
@@ -20,18 +23,16 @@ class HeadquartersController extends Controller
      */
     public function index()
     {
-        return view('logro.headquarters.index');
-    }
-
-    public function data()
-    {
         $hq = Headquarters::
             withCount([
                 'students' =>
                 fn($students) => $students->where('enrolled', 1)
             ])
             ->orderBy('name')->get();
-        return ['data' => $hq];
+
+        return view('logro.headquarters.index', [
+            'headquarters' => $hq
+        ]);
     }
 
     /**
@@ -106,5 +107,14 @@ class HeadquartersController extends Controller
 
         Notify::success( __('Headquarters updated!') );
         return redirect()->route('headquarters.index');
+    }
+
+    public function download_students(Headquarters $headquarters)
+    {
+        $students = Student::with('headquarters', 'studyTime', 'studyYear', 'group')
+            ->where('headquarters_id', $headquarters->id)
+            ->where('enrolled', 1)->get();
+
+        return Excel::download(new StudentsForHeadquartersExport($students), 'Estudiantes - ' . $headquarters->name . '.xlsx' );
     }
 }
