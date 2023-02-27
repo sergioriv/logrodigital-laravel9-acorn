@@ -47,15 +47,12 @@ $title = __('Change group');
                 </section>
                 <!-- Title End -->
 
-                <!-- Validation Errors -->
-                {{-- <x-validation-errors class="mb-4" :errors="$errors" /> --}}
-
                 <!-- Content Start -->
                 <form method="POST" action="{{ route('students.matriculate', $student) }}" novalidate>
                     @csrf
                     @method('PUT')
 
-                    <section class="row g-2 mb-3 row-cols-3 row-cols-md-4 row-cols-lg-6">
+                    <section class="row g-3 mb-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6">
 
                         @foreach ($groups as $group)
                             <div class="col small-gutter-col position-relative">

@@ -488,6 +488,7 @@
     "coordinator": "coordinador/a",
     "orientator": "orientador/a",
     "priority": "prioridad",
+    "Number of students enrolled": "Número de estudiantes matriculados",
     "The orientator: :CREATE_BY, has created a recommendation for the student: :STUDENT_NAME": "El/La orientador/a: :CREATE_BY, ha creado una recomendación para el estudiante: :STUDENT_NAME",
     "The teacher: :CREATE_BY, has created a report for the student: :STUDENT_NAME": "El/La docente: :CREATE_BY, ha creado un reporte para el estudiante: :STUDENT_NAME",
     "Report generated!": "Reporte generado!",

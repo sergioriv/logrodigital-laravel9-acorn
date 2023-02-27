@@ -15,7 +15,7 @@ $title = __('Headquarters list');
 
 @section('js_page')
 <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
-<script src="/js/plugins/datatable/headquarters_datatable.ajax.js"></script>
+<script src="/js/plugins/datatable/headquarters_datatable.ajax.js?d=1670967386206"></script>
 @endsection
 
 @section('content')
@@ -74,6 +74,7 @@ $title = __('Headquarters list');
                         <thead>
                             <tr>
                                 <th class="text-muted text-small text-uppercase">{{ __('Name') }}</th>
+                                <th class="text-muted text-small text-uppercase text-center">{{ __('Number of students enrolled') }}</th>
                                 <th class="text-muted text-small text-uppercase">{{ __('Created at') }}</th>
                             </tr>
                         </thead>

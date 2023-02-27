@@ -111,9 +111,11 @@ class StudentController extends Controller
             'send_delete_code',
             'delete',
             'withdraw',
-            'withdrawn',
+            // 'withdrawn',
             'activate',
             'signature_delete');
+
+        $this->middleware('hasroles:SUPPORT,ORIENTATION,SECRETARY')->only('withdrawn');
 
         $this->middleware(YearCurrentMiddleware::class)->only(
             'create',

@@ -31,6 +31,11 @@ class Headquarters extends Model
         return $this->hasMany(Group::class);
     }
 
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
+
 
     /**
      * Mutadores y Accesores

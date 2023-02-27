@@ -25,7 +25,13 @@ class HeadquartersController extends Controller
 
     public function data()
     {
-        return ['data' => Headquarters::orderBy('name')->get()];
+        $hq = Headquarters::
+            withCount([
+                'students' =>
+                fn($students) => $students->where('enrolled', 1)
+            ])
+            ->orderBy('name')->get();
+        return ['data' => $hq];
     }
 
     /**

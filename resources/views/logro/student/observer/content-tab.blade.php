@@ -19,6 +19,7 @@
     <!-- Top Buttons Start -->
     <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
 
+        @if ($student->enrolled)
         <!-- Add New Button Start -->
         <a href="#" class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
             data-bs-toggle="modal" data-bs-target="#addObservation">
@@ -26,6 +27,7 @@
             <span>{{ __('Add New') }}</span>
         </a>
         <!-- Add New Button End -->
+        @endif
 
     </div>
     <!-- Top Buttons End -->

@@ -38,6 +38,7 @@
             order: false,
             columns: [
                 { data: "name" },
+                { data: "students_count" },
                 { data: "created_at" }
             ],
             language: {
@@ -62,9 +63,17 @@
                         );
                     },
                 },
-                // Adding DateTime content class text-small
                 {
                     targets: 1,
+                    render: function(data) {
+                        return (
+                            '<div class="text-center">' + data + '</div>'
+                        )
+                    }
+                },
+                // Adding DateTime content class text-small
+                {
+                    targets: 2,
                     render: function(data) {
                         return (
                             '<h4 class="text-small">' + data + '</h4>'
