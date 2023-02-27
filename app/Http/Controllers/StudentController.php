@@ -947,8 +947,8 @@ class StudentController extends Controller
             'bullying' => ['nullable', 'boolean'],
             'simat' => ['nullable', 'boolean'],
             'inclusive' => ['nullable', 'boolean'],
-            'medical_diagnosis' => ['nullable', 'max:1000'],
-            'medical_prediagnosis' => ['nullable', 'max:1000']
+            'medical_diagnosis' => ['nullable', 'max:5000'],
+            'medical_prediagnosis' => ['nullable', 'max:5000']
         ]);
 
         $student->update([

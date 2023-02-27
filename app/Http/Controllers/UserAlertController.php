@@ -100,7 +100,7 @@ class UserAlertController extends Controller
         if ($student->enrolled && UserController::role_auth() === RoleUser::TEACHER_ROL) {
 
             $request->validate([
-                'recommendations_orientation' => ['required', 'string', 'min:10', 'max:1000'],
+                'recommendations_orientation' => ['required', 'string', 'min:10', 'max:5000'],
                 'priority_orientation' => ['nullable', 'boolean']
             ]);
 

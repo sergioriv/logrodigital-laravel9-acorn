@@ -54,7 +54,7 @@ class StudentTrackingController extends Controller
     {
         $request->validate([
             'entity_remit' => ['required', 'min:1', 'max:191'],
-            'reason_entity' => ['required', 'string', 'min:10', 'max:1000']
+            'reason_entity' => ['required', 'string', 'min:10', 'max:5000']
         ]);
 
         StudentTrackingRemit::create([
@@ -73,7 +73,7 @@ class StudentTrackingController extends Controller
     public function teachers_store(Request $request, Student $student)
     {
         $request->validate([
-            'recommendations_teachers' => ['required', 'string', 'min:10', 'max:1000'],
+            'recommendations_teachers' => ['required', 'string', 'min:10', 'max:5000'],
             'priority_teacher' => ['nullable', 'boolean']
         ]);
 
@@ -113,7 +113,7 @@ class StudentTrackingController extends Controller
     {
         $request->validate([
             'trackingCoordinator' => ['required', Rule::exists((new Coordination)->getTable(), 'uuid')],
-            'recommendations_coordinator' => ['required', 'string', 'min:10', 'max:1000'],
+            'recommendations_coordinator' => ['required', 'string', 'min:10', 'max:5000'],
             'priority_coordinator' => ['nullable', 'boolean']
         ]);
 
@@ -153,7 +153,7 @@ class StudentTrackingController extends Controller
     public function family_store(Request $request, Student $student)
     {
         $request->validate([
-            'recommendations_family' => ['required', 'string', 'min:10', 'max:1000']
+            'recommendations_family' => ['required', 'string', 'min:10', 'max:5000']
         ]);
 
         StudentTrackingFamily::create([
@@ -193,7 +193,7 @@ class StudentTrackingController extends Controller
         $request->validate([
             'attendance' => ["required"],
             'type_advice' => ["required_if:attendance,done"],
-            'evolution' => ["required", 'string', 'min:10', 'max:1000']
+            'evolution' => ["required", 'string', 'min:10', 'max:5000']
         ]);
 
         $advice->update([

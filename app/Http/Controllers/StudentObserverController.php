@@ -21,7 +21,7 @@ class StudentObserverController extends Controller
         $request->validate([
             'annotation_type' => ['required'],
             'date_observation' => ['required', 'date', 'date_format:Y-m-d', 'before:tomorrow'],
-            'situation_description' => ['required', 'string', 'max:1000']
+            'situation_description' => ['required', 'string', 'max:5000']
         ]);
 
         StudentObserver::create([
@@ -42,8 +42,8 @@ class StudentObserverController extends Controller
     {
         $request->validate([
             'observer' => ['required', Rule::exists('student_observer', 'id')],
-            'free_version_or_disclaimers' => ['required', 'string', 'max:1000'],
-            'agreements_or_commitments' => ['nullable', 'string', 'max:1000'],
+            'free_version_or_disclaimers' => ['required', 'string', 'max:5000'],
+            'agreements_or_commitments' => ['nullable', 'string', 'max:5000'],
             'accepts_or_rejects' => ['nullable']
         ]);
 
