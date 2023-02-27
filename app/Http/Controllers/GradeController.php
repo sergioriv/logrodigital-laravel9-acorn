@@ -170,24 +170,25 @@ class GradeController extends Controller
     /* Nota general por estudiante */
     public static function forStudent($student, $subject)
     {
-        $studyTime = $subject->group->studyTimeSelectAll;
-
         $grades = Grade::select('period_id', 'final')->where('teacher_subject_group_id', $subject->id)
             ->where('student_id', $student)->get();
 
         if (count($grades)) {
+
+            $studyTime = $subject->group->studyTimeSelectAll;
 
             $def = 0;
             foreach ($grades as $g) {
                 $wl = ($g->period->workload / 100);
                 $def += $g->final * $wl;
             }
-        } else {
-            $def = $studyTime->minimum_grade;
-        }
 
-        /* Verifica decimales y PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
-        $def = number_format(round($def, $studyTime->decimal, static::round($studyTime->round)), $studyTime->decimal);
+            /* Verifica decimales y PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
+            $def = number_format(round($def, $studyTime->decimal, static::round($studyTime->round)), $studyTime->decimal);
+
+        } else {
+            $def = null;
+        }
 
         return $def;
     }
@@ -199,8 +200,15 @@ class GradeController extends Controller
 
     public static function performance($studyTime, $value)
     {
-        return $value > $studyTime->high_performance ? __('superior') : ($value > $studyTime->basic_performance ? __('high') : ($value > $studyTime->low_performance ? __('basic') :
-                    '<span class="alert alert-danger px-2 py-1">' . __('low') . '</span>'));
+        if ( ! is_null($value) )
+
+            return $value > $studyTime->high_performance ? __('superior')
+            : ($value > $studyTime->basic_performance ? __('high')
+            : ($value > $studyTime->low_performance ? __('basic')
+            : '<span class="alert alert-danger px-2 py-1">' . __('low') . '</span>'));
+
+
+        return null;
     }
     public static function performanceString($studyTime, $value)
     {
