@@ -897,7 +897,6 @@ class StudentController extends Controller
     {
         $Y = SchoolYearController::current_year();
 
-
         $pendingStudents = null;
         if ( RoleUser::ORIENTATION_ROL === UserController::role_auth() ) {
             $pendingStudents = Student::where(function ($query) {

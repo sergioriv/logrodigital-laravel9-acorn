@@ -42,12 +42,16 @@ class DashboardController extends Controller
 
     private function dashOrientation()
     {
+        $Y = SchoolYearController::current_year();
+
         $pendingStudents = Student::where(function ($query) {
             $query->where('disability_id', '>', 1)
                     ->where(function ($student) {
                         $student->where('inclusive', 0)->orWhereNull('inclusive');
                     });
-        })->count();
+        })
+        ->whereHas('groupYear', fn($gr) => $gr->whereHas('group', fn($g) => $g->where('school_year_id', $Y->id)))
+        ->count();
 
         return view('dashboard.orientation', [
             'alertsStudents' => $this->myAlertStudents(),
