@@ -141,7 +141,7 @@ class Calendar {
     // document.getElementById('modalTitle').innerHTML = 'Edit Event';
     // jQuery('#eventCategory').trigger('change');
 
-    document.getElementById('deleteConfirmDetail').innerHTML = moment(startDate).format('YYYY-MM-DD') + ' - ' + moment(endDate).format('YYYY-MM-DD') + ' - ' +  event.title;
+    document.getElementById('deleteConfirmDetail').innerHTML = moment(startDate).format('YYYY-MM-DD hh:mm') + ' - ' + moment(endDate).format('YYYY-MM-DD hh:mm') + ' - ' +  event.title;
     this.deleteConfirmModal.show();
     // this._enableEdit();
   }

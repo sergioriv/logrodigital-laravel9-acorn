@@ -22,6 +22,13 @@ $title = __('Inclusive students');
 <div class="container">
     <div class="row">
         <div class="col">
+
+            @if ( ! is_null($pendingStudents) )
+            @if ($pendingStudents !== 0)
+            <div class="alert alert-danger">{!! __('You have :COUNT students pending assessment.', ['COUNT' => '<b>'. $pendingStudents .'</b>']) !!}</div>
+            @endif
+            @endif
+
             <!-- Title and Top Buttons Start -->
             <div class="page-title-container">
                 <div class="row">

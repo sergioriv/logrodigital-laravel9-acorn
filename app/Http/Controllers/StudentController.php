@@ -895,15 +895,35 @@ class StudentController extends Controller
      * */
     public function inclusive_students()
     {
+        $Y = SchoolYearController::current_year();
+
+
+        $pendingStudents = null;
+        if ( RoleUser::ORIENTATION_ROL === UserController::role_auth() ) {
+            $pendingStudents = Student::where(function ($query) {
+                $query->where('disability_id', '>', 1)
+                        ->where(function ($student) {
+                            $student->where('inclusive', 0)->orWhereNull('inclusive');
+                        });
+            })
+            ->whereHas('groupYear', fn($gr) => $gr->whereHas('group', fn($g) => $g->where('school_year_id', $Y->id)))
+            ->count();
+        }
+
+
         $students = Student::where(function ($query) {
                 $query->where('inclusive', 1)
                     ->orWhere('disability_id', '>', 1);
             })
+            ->whereHas('groupYear', fn($gr) => $gr->whereHas('group', fn($g) => $g->where('school_year_id', $Y->id)))
             ->with('headquarters', 'studyTime', 'studyYear', 'group', 'disability')
             ->orderBy('students.inclusive')
             ->get();
 
-        return view('logro.student.list-inclusive', ['students' => $students]);
+        return view('logro.student.list-inclusive', [
+            'students' => $students,
+            'pendingStudents' => $pendingStudents
+        ]);
 
     }
     public function psychosocial_update(Request $request, Student $student)
