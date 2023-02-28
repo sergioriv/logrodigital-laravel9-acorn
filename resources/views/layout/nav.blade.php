@@ -2,12 +2,7 @@
     <!-- Logo Start -->
     <div class="logo position-relative">
         <a href="/">
-            <!-- Logo can be added directly -->
-            <!-- <img src="/img/logo/logo-white.svg" alt="logo" /> -->
-            {{-- <x-application-logo class="w-200 h-200 fill-current text-white" /> --}}
             <div class="img img-logro"></div>
-            <!-- Or added via css to provide different ones for different color themes -->
-            {{-- <div class="img"></div> --}}
         </a>
     </div>
     <!-- Logo End -->
@@ -31,12 +26,6 @@
                                 <span class="align-middle">{{ __('Profile') }}</span>
                             </a>
                         </li>
-                        {{-- <li>
-                            <a href="#">
-                                <i data-acorn-icon="file-text" class="me-2" data-acorn-size="17"></i>
-                                <span class="align-middle">{{ __('Docs') }}</span>
-                            </a>
-                        </li> --}}
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -80,6 +69,14 @@
                     <span class="label">{{ __('Dashboard') }}</span>
                 </a>
             </li>
+            @hasrole('SUPPORT')
+            <li>
+                <a href="{{ route('calendar.index') }}" data-href="/calendar">
+                    <i class="icon icon-18 bi-calendar3"></i>
+                    <span class="label">{{ __('Calendar') }}</span>
+                </a>
+            </li>
+            @endhasrole
             @can('students.index')
             <li>
                 <a href="#students" data-href="/students">

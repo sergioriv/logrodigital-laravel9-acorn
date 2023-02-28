@@ -50,6 +50,7 @@ class Variables {
     Globals.danger = rootStyle.getPropertyValue('--danger').trim();
     Globals.success = rootStyle.getPropertyValue('--success').trim();
     Globals.info = rootStyle.getPropertyValue('--info').trim();
+    Globals.pink = rootStyle.getPropertyValue('--bs-pink').trim();
 
     Globals.font = rootStyle.getPropertyValue('--font').trim();
     Globals.fontHeading = rootStyle.getPropertyValue('--font-heading').trim();

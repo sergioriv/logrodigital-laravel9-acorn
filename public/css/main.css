@@ -314,5 +314,6 @@ html[data-dimension="mobile"] .logro-badge-right-bottom {
 
 
 .form-voting.form-check.custom-card:hover .form-check-label::before, .form-voting.form-check.custom-card .form-check-input:checked ~ .form-check-label::before {
-    box-shadow: inset 0 0 0 4px rgba(var(--alternate-rgb), 0.6) !important;
+    box-shadow: none !important;
+    /* box-shadow: inset 0 0 0 4px rgba(var(--alternate-rgb), 0.6) !important; */
 }

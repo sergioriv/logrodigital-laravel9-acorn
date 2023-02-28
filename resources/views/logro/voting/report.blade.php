@@ -33,7 +33,7 @@
             <div class="row g-4 row-cols-md-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4">
                 @foreach ($voting->candidates as $candidate)
                     <div class="">
-                        <div class="card form-check-label w-100">
+                        <div class="card form-check-label w-100 border border-5 @if(is_null($candidate->color)) border-light @endif" @if( ! is_null($candidate->color) ) style="border-color: {{ $candidate->color }} !important" @endif>
                             <div class="card-body text-center">
                                 <div class="d-flex flex-column justify-content-center align-items-center">
                                     <div class="rounded-md border shadow-deep border-light border-2">
@@ -66,7 +66,7 @@
                     </div>
                 @endforeach
                 <div class="">
-                    <div class="card form-check-label w-100">
+                    <div class="card form-check-label w-100 border border-5 border-light">
                         <div class="card-body text-center">
                             <div class="d-flex flex-column justify-content-center align-items-center">
                                 <div class="rounded-md border shadow-deep border-light border-2">

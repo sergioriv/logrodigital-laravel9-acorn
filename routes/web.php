@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttendanceStudentController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\CoordinationDegreeController;
 use App\Http\Controllers\CoordinationEmploymentHistoryController;
@@ -344,6 +345,17 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     });
 
 
+    /*
+     *
+     * Calendar
+     *
+     *  */
+    Route::controller(CalendarController::class)->group( function () {
+        Route::get('calendar', 'index')->name('calendar.index');
+        Route::get('json/calendar.json', 'data');
+    });
+
+
 
     /*
      *
@@ -374,6 +386,13 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::delete('remove-user', 'removeUser')->name('voting.remove-user');
     });
 
+
+
+    /*
+     *
+     * System Voting
+     *
+     *  */
     Route::middleware('hasroles:VOTING_COORDINATOR')->controller(VotingSystemController::class)->group( function () {
         Route::get('voting', 'index')->name('voting.index');
         Route::get('voting/create', 'create')->name('voting.create');
@@ -385,6 +404,12 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     });
 });
 
+
+/*
+ *
+ * Student Voting
+ *
+ *  */
 Route::controller(VotingSystemGuestController::class)->group(function () {
     Route::get('votacion', 'toVote')->name('voting.to-vote');
     Route::get('votar', 'toStart')->name('voting.to-start');

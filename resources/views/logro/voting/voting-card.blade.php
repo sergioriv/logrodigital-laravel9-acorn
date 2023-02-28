@@ -43,7 +43,7 @@
                             <label class="form-check custom-card form-voting w-100 position-relative p-0 m-0">
                                 <input type="radio" class="form-check-input position-absolute e-0 t-0 z-index-1"
                                     name="vote" value="{{ $candidate->id }}" requried />
-                                <div class="card form-check-label w-100">
+                                <div class="card form-check-label w-100 border border-5 @if(is_null($candidate->color)) border-light @endif" @if( ! is_null($candidate->color) ) style="border-color: {{ $candidate->color }} !important" @endif>
                                     <div class="card-body text-center">
                                         <div class="d-flex flex-column justify-content-center align-items-center">
                                             <div class="rounded-md border shadow-deep border-light border-2">
@@ -71,7 +71,7 @@
                         <label class="form-check custom-card form-voting w-100 position-relative p-0 m-0">
                             <input type="radio" class="form-check-input position-absolute e-0 t-0 z-index-1"
                                 name="vote" value="BLANK" requried />
-                            <div class="card form-check-label w-100">
+                            <div class="card form-check-label w-100 border border-5 border-light">
                                 <div class="card-body text-center">
                                     <div class="d-flex flex-column justify-content-center align-items-center">
                                         <div class="rounded-md border shadow-deep border-light border-2">

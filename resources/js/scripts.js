@@ -23,6 +23,7 @@ class Scripts {
             document.body.classList.remove("spinner");
             this._initBase();
             this._initCommon();
+            this._initApps();
             this._initPages();
             this._initForms();
             this._initPlugins();
@@ -168,6 +169,14 @@ class Scripts {
             new ProgressBars;
         }
 
+    }
+
+    // Application pages initialization
+    _initApps() {
+        // calendar.js initialization
+        if (typeof Calendar !== 'undefined') {
+        let calendar = new Calendar();
+        }
     }
 
     // Settings initialization
