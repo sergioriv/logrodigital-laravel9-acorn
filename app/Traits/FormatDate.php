@@ -25,4 +25,21 @@ trait FormatDate
             get: fn ($value) => $this->formatDate($value)
         );
     }
+
+    /**
+     * Parse date from "d/m/Y" format to "{Day}/{Month Name}/{Year}" format.
+     * @param $yearMonth
+     * @return string
+     */
+    private function parseDateWithSlash($date)
+    {
+        $dateArray = explode("/", $date);
+
+        $month = trans("months.abbreviation.{$dateArray[1]}");
+
+        if ( count($dateArray) === 2 )
+            return "{$dateArray[0]}/{$month}";
+
+        return "{$dateArray[0]}/{$month}/{$dateArray[2]}";
+    }
 }

@@ -39,7 +39,8 @@ class PeriodController extends Controller
             'period.*.start' => ['date'],
             'period.*.end' => ['date'],
             'period.*.workload' => ['numeric'],
-            'period.*.days' => ['numeric']
+            'period.*.start_grades' => ['date'],
+            'period.*.end_grades' => ['date'],
         ]);
 
         return $this->save($request, $studyTime);
@@ -57,8 +58,12 @@ class PeriodController extends Controller
                 DB::rollBack();
                 return redirect()->back()->withErrors(['custom' => __('Start date must be less than the end date of each period')]);
             }
+            if ($period['start_grades'] > $period['end_grades']) {
+                DB::rollBack();
+                return redirect()->back()->withErrors(['custom' => __('The start date of grades must be less than the end date of grades for each period.')]);
+            }
 
-            if (isset($period['id'])) {
+            if ( isset($period['id']) ) {
                 $updatePeriod = Period::where('id', $period['id'])
                     ->where('study_time_id', $studyTime->id)
                     ->where('ordering', $key)->first();
@@ -69,7 +74,8 @@ class PeriodController extends Controller
                         'start' => $period['start'],
                         'end'   => $period['end'],
                         'workload' => $period['workload'],
-                        'days'  => $period['days']
+                        'start_grades' => $period['start_grades'],
+                        'end_grades'   => $period['end_grades'],
                     ]);
                 } else {
                     DB::rollBack();
@@ -85,7 +91,8 @@ class PeriodController extends Controller
                     'start' => $period['start'],
                     'end'   => $period['end'],
                     'workload' => $period['workload'],
-                    'days'  => $period['days']
+                    'start_grades' => $period['start_grades'],
+                    'end_grades'   => $period['end_grades'],
                 ]);
             }
 

@@ -110,27 +110,52 @@ $title = $studyTime->name;
                             <div class="card mb-3 d-none" logro="periods" id="period-{{ $i }}">
                                 <div class="card-body">
                                     <h2 class="small-title">{{ __('Period') . ' ' . $i }}</h2>
-                                    <div class="row">
+                                    <div class="row g-2">
+
+                                        <!-- Name -->
                                         <div class="col-4">
-                                            <x-input name="period[{{ $i }}][name]"
-                                                placeholder="{{ __('Name') }}" disabled="disabled" />
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="input-daterange input-group datePickerRange">
-                                                <x-input name="period[{{ $i }}][start]"
-                                                    placeholder="{{ __('Start') }}" disabled="disabled" />
-                                                <span class="p-gutter"></span>
-                                                <x-input name="period[{{ $i }}][end]"
-                                                    placeholder="{{ __('End') }}" disabled="disabled" />
+                                            <div class="form-group position-relative">
+                                                <x-label>{{ __('Name') }}</x-label>
+                                                <x-input name="period[{{ $i }}][name]"
+                                                    placeholder="{{ __('Name') }}" disabled="disabled" />
                                             </div>
                                         </div>
+
+                                        <!-- Academic Workload -->
                                         <div class="col-2">
-                                            <x-input type="number" name="period[{{ $i }}][workload]"
-                                                placeholder="{{ __('Academic workload') }}" disabled="disabled" />
+                                            <div class="form-group position-relative">
+                                                <x-label>{{ __('Academic workload') }}</x-label>
+                                                <x-input type="number" name="period[{{ $i }}][workload]"
+                                                    placeholder="{{ __('Academic workload') }}" disabled="disabled" />
+                                            </div>
                                         </div>
-                                        <div class="col-2">
-                                            <x-input type="number" name="period[{{ $i }}][days]"
-                                                placeholder="{{ __('Deadline days') }}" disabled="disabled" />
+
+                                        <!-- Range Date Period -->
+                                        <div class="col-3">
+                                            <div class="form-group position-relative text-center">
+                                                <x-label>{{ __('date range') }}</x-label>
+                                                <div class="input-daterange input-group datePickerRange">
+                                                    <x-input name="period[{{ $i }}][start]"
+                                                        placeholder="{{ __('Start') }}" disabled="disabled" />
+                                                    <span class="p-gutter"></span>
+                                                    <x-input name="period[{{ $i }}][end]"
+                                                        placeholder="{{ __('End') }}" disabled="disabled" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Range Date Period Active -->
+                                        <div class="col-3">
+                                            <div class="form-group position-relative text-center">
+                                                <x-label>{{ __('Grades upload') }}</x-label>
+                                                <div class="input-daterange input-group datePickerRange">
+                                                    <x-input name="period[{{ $i }}][start_grades]"
+                                                        placeholder="{{ __('Start') }}" disabled="disabled" />
+                                                    <span class="p-gutter"></span>
+                                                    <x-input name="period[{{ $i }}][end_grades]"
+                                                        placeholder="{{ __('End') }}" disabled="disabled" />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

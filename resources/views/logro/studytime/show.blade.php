@@ -4,12 +4,18 @@
 @extends('layout', ['title' => $title])
 
 @section('css')
+    <link rel="stylesheet" href="/css/vendor/datatables.min.css" />
 @endsection
 
 @section('js_vendor')
+    <script src="/js/vendor/bootstrap-submenu.js"></script>
+    <script src="/js/vendor/datatables.min.js"></script>
+    <script src="/js/vendor/mousetrap.min.js"></script>
 @endsection
 
 @section('js_page')
+    <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
+    <script src="/js/plugins/datatable/datatables_boxed.js"></script>
 @endsection
 
 @section('content')
@@ -137,7 +143,7 @@
                             <div class="row mb-3">
 
                                 <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-center">
-                                    <h4 class="m-0">{{ __('School year') .': '. $Y->name }}</h4>
+                                    <h4 class="m-0">{{ __('School year') . ': ' . $Y->name }}</h4>
                                 </div>
 
                                 <div
@@ -158,28 +164,48 @@
                             <!-- Top Content End -->
 
 
-                            <div class="row g-3">
-                                @foreach ($periods as $period)
-                                    <div class="card">
-                                        <div class="card-body p-3 row">
-                                            <div class="col-md-4">{{ $period->name }}</div>
-                                            <div class="col-md-4">{{ $period->start }} <span
-                                                    class="font-weight-bold p-2">/</span> {{ $period->end }}</div>
-                                            <div class="col-md-2">{{ $period->workload }}%</div>
-                                            <div class="col-md-2">{{ $period->days }}</div>
-                                        </div>
+                            <!-- Periods Content Start -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <!-- Table Periods Start -->
+                                    <div class="data-table-responsive-wrapper">
+                                        <table id="datatable_periods" logro="dataTableBoxed"
+                                            class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                            data-order='[]'>
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-muted text-small text-uppercase p-0 pb-2 empty">
+                                                        {{ __('Name') }}</th>
+                                                    <th class="text-muted text-small text-uppercase p-0 pb-2 empty text-center">
+                                                        {{ __('Academic workload') }}
+                                                    </th>
+                                                    <th class="text-muted text-small text-uppercase p-0 pb-2 empty text-center">
+                                                        {{ __('Start') }} / {{ __('End') }}
+                                                    </th>
+                                                    <th class="text-muted text-small text-uppercase p-0 pb-2 empty text-center">
+                                                        {{ __('Grades upload') }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($periods as $period)
+                                                    <tr>
+                                                        <td class="py-2 px-1">{{ $period->name }}</td>
+                                                        <td class="py-2 px-1" align="center">{{ $period->workload }}%</td>
+                                                        <td class="py-2 px-1" align="center">
+                                                            {{ $period->startLabel() }}
+                                                            <span class="font-weight-bold p-2">/</span>
+                                                            {{ $period->endLabel() }}
+                                                        </td>
+                                                        <td class="py-2 px-1" align="center">{{ $period->dateUploadingNotes() }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
-                                @endforeach
+                                    <!-- Table Periods End -->
+                                </div>
                             </div>
-
-                            <!-- Edit Periods Button Start -->
-                            <div class="col-12 mt-3 d-flex align-items-start justify-content-end">
-
-
-
-
-                            </div>
-                            <!-- Edit Periods Button End -->
+                            <!-- Periods Content End -->
 
                         </div>
                     </div>

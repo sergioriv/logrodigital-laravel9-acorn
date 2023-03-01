@@ -632,6 +632,7 @@
     "View document": "Ver documento",
     "select a coordinator": "seleccione un coordinador",
     "You have :COUNT students pending assessment.": "Tienes :COUNT estudiantes pendientes por valoración",
+    "The start date of grades must be less than the end date of grades for each period.": "La fecha de inicio de notas debe ser inferior a la fecha de finalización de notas de cada periodo.",
     "go to inclusive students": "ir a estudiantes inclusivos",
     "Download auxiliary template": "Descargar plantilla auxiliar",
     "auxiliary template": "plantilla auxiliar",
@@ -682,6 +683,8 @@
     "Month": "Mes",
     "Week": "Semana",
     "Day": "Día",
+    "Grades upload": "Subida de notas",
+    "End date": "Fecha final",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Current password": "Contraseña actual",

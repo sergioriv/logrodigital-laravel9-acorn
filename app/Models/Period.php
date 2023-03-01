@@ -5,12 +5,11 @@ namespace App\Models;
 use App\Traits\FormatDate;
 use App\Traits\Uuid;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Period extends Model
 {
-    use HasFactory;
     use Uuid;
     use FormatDate;
 
@@ -23,7 +22,8 @@ class Period extends Model
         'start',
         'end',
         'workload',
-        'days'
+        'start_grades',
+        'end_grades',
     ];
 
     /*
@@ -71,14 +71,33 @@ class Period extends Model
     {
         return "{$this->start} / {$this->end}";
     }
+    public function startLabel()
+    {
+        return $this->parseDateWithSlash( Carbon::parse($this->start)->format('d/M/Y') );
+    }
+    public function endLabel()
+    {
+        return $this->parseDateWithSlash( Carbon::parse($this->end)->format('d/M/Y') );
+    }
+    public function startGradesLabel()
+    {
+        return $this->parseDateWithSlash( Carbon::parse($this->start_grades)->format('d/M') );
+    }
+    public function endGradesLabel()
+    {
+        return $this->parseDateWithSlash( Carbon::parse($this->end_grades)->format('d/M') );
+    }
 
     public function dateUploadingNotes()
     {
-        return Carbon::parse($this->end)->addDays(-$this->days)->format('Y-m-d');
+        if ( $this->start_grades !== $this->end_grades )
+            return $this->startGradesLabel() .' - '. $this->endGradesLabel();
+        else
+            return $this->startGradesLabel();
     }
 
     public function active()
     {
-        return (Carbon::now()->between($this->dateUploadingNotes(), $this->end . ' 23:59:00'));
+        return (Carbon::now()->between($this->start_grades, $this->end_grades . ' 23:59:00'));
     }
 }

@@ -414,12 +414,11 @@
                                                                     </div>
                                                                     <div
                                                                         class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
-                                                                        {{ __('Enabled as from') }}<br /><b>{{ $period->dateUploadingNotes() }}</b>
-                                                                    </div>
-                                                                    <div
-                                                                        class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
-                                                                        {{ __('Deadline date') }}<br /><b>{{ $period->end }}</b>
-                                                                    </div>
+                                                                        {{ __('End date') }}<br /><b>{{ $period->end }}</b>
+                                                                    </div><div
+                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
+                                                                    {{ __('Grades upload') }}<br /><b>{{ $period->dateUploadingNotes() }}</b>
+                                                                </div>
                                                                 </div>
                                                             </div>
                                                         </div>
