@@ -6,12 +6,16 @@
         <div class="row g-3">
 
             <div class="mb-2 form-group position-relative">
-                <x-label>{{ __('Entidad a remitir') }}</x-label>
+                <x-label required>{{ __('Entidad a remitir') }}</x-label>
                 <x-input name="entity_remit" />
             </div>
             <div class="form-group position-relative">
-                <x-label>{{ __('Reason for remit') }}</x-label>
+                <x-label required>{{ __('Reason for remit') }}</x-label>
                 <textarea name="reason_entity" class="form-control" rows="5"></textarea>
+            </div>
+            <div class="form-group position-relative">
+                <x-label required>{{ __('Orientation intervention') }}</x-label>
+                <textarea name="orientation_intervention" class="form-control" rows="5"></textarea>
             </div>
 
         </div>

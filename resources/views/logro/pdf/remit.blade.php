@@ -389,13 +389,24 @@
     </section>
 
     <section class="card mt-1">
-        <div class="card-header">Motivo de la Remisión</div>
+        <div class="card-header">{{ __('Reason for remit') }}</div>
         <div class="card-content">
             <div class="p-1">
                 {{ $tracking->reason_entity }}
             </div>
         </div>
     </section>
+
+    @if ( ! is_null($tracking->orientation_intervention) )
+    <section class="card mt-1">
+        <div class="card-header">{{ __('Orientation Intervention') }}</div>
+        <div class="card-content">
+            <div class="p-1">
+                {{ $tracking->orientation_intervention }}
+            </div>
+        </div>
+    </section>
+    @endif
 
     <section class="card mt-4">
         <table class="table w-100">

@@ -54,7 +54,8 @@ class StudentTrackingController extends Controller
     {
         $request->validate([
             'entity_remit' => ['required', 'min:1', 'max:191'],
-            'reason_entity' => ['required', 'string', 'min:10', 'max:5000']
+            'reason_entity' => ['required', 'string', 'min:10', 'max:5000'],
+            'orientation_intervention' => ['required', 'string', 'min:10', 'max:5000']
         ]);
 
         StudentTrackingRemit::create([
@@ -62,7 +63,8 @@ class StudentTrackingController extends Controller
             'student_id' => $student->id,
             'type_tracking' => 'REMIT',
             'entity_remit' => $request->entity_remit,
-            'reason_entity' => $request->reason_entity
+            'reason_entity' => $request->reason_entity,
+            'orientation_intervention' => $request->orientation_intervention
         ]);
 
         self::tab();
@@ -236,7 +238,10 @@ class StudentTrackingController extends Controller
             case 'remit':
                 $title = __('Remit');
                 $content = '<p>'.$tracking->entity_remit.'</p>'
+                            .'<b><li>' . __('Reason for remit') . '</li></b>'
                             .'<p>'.$tracking->reason_entity.'</p>'
+                            .'<b><li>' . __('Orientation Intervention') . '</li></b>'
+                            .'<p>'.$tracking->orientation_intervention.'</p>'
                             .'<div class="text-center mt-6"><a class="btn btn-background hover-outline mb-1" href="' .
                             route('student.tracking.download', $tracking->id)
                             . '">Descargar remisión</a></div>';

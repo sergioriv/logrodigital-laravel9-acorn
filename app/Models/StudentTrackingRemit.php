@@ -19,7 +19,8 @@ class StudentTrackingRemit extends Model
         'student_id',
         'type_tracking',
         'entity_remit',
-        'reason_entity'
+        'reason_entity',
+        'orientation_intervention'
     ];
 
 
