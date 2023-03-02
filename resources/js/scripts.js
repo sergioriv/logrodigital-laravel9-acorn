@@ -67,6 +67,11 @@ class Scripts {
         if ("undefined" !== typeof DashboardTeacher) {
             new DashboardTeacher();
         }
+
+        // Dashboard Coordination
+        if ("undefined" !== typeof DashboardCoordination) {
+            new DashboardCoordination();
+        }
     }
 
     // Form and form controls pages initialization
