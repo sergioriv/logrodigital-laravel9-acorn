@@ -14,6 +14,7 @@ $title = __('Create') . ' ' . __('Student');
     <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
     <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
     <script src="/js/vendor/select2.full.min.js"></script>
+    <script src="/js/vendor/select2.full.min.es.js"></script>
     <script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
     <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
 @endsection

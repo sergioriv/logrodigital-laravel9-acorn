@@ -345,7 +345,7 @@ class Student extends Model
     }
     public function observer()
     {
-        return $this->hasMany(StudentObserver::class, 'student_id', 'id')->orderBy('date')->orderByDesc('created_at');
+        return $this->hasMany(StudentObserver::class, 'student_id', 'id')->orderByDesc('date')->orderBy('created_at');
     }
     public function voted()
     {
@@ -357,6 +357,11 @@ class Student extends Model
     /*
      * Accesores
      */
+    public function getFullnameAttribute()
+    {
+        return "{$this->first_last_name} {$this->second_last_name} {$this->first_name} {$this->second_name}";
+
+    }
     public function getFullName()
     {
         return "{$this->first_name} {$this->first_last_name}";

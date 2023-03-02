@@ -263,6 +263,8 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     /* Route Students */
     Route::controller(StudentController::class)->group( function () {
 
+        Route::get('json/students.json', 'jsonEnrolled');
+
         Route::get('students/create', 'create')->name('students.create');
         Route::post('students/no-enrolled', 'store')->name('students.store');
         Route::get('student/{student}', 'show')->name('students.show');
@@ -307,6 +309,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::delete('students/{student}/delete-signature', 'signature_delete')->name('students.signature.delete');
     });
 
+    Route::post('students/add-observation', [StudentObserverController::class, 'storeMultiple'])->name('students.observer.multiple');
     Route::post('student/{student}/add-observation', [StudentObserverController::class, 'store'])->name('students.observer.create');
     Route::put('student/{student}/add-disclaimers', [StudentObserverController::class, 'disclaimers'])->name('students.observer.disclaimers');
 

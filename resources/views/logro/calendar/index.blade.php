@@ -11,7 +11,8 @@ $title = __('Calendar');
 @endsection
 
 @section('js_vendor')
-<script src="/js/vendor/select2.full.min.js"></script>
+    <script src="/js/vendor/select2.full.min.js"></script>
+    <script src="/js/vendor/select2.full.min.es.js"></script>
     <script src="/js/vendor/fullcalendar/main.min.js"></script>
     <script src="/js/vendor/fullcalendar/locales/es.js"></script>
     <script src="/js/vendor/moment-with-locales.min.js"></script>

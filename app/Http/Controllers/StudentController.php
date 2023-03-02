@@ -512,7 +512,6 @@ class StudentController extends Controller
 
         $fn_gs = fn ($gs) =>
         $gs->withWhereHas('group', $fn_g);
-            // ->whereHas('group', $fn_g);
 
         $students = Student::select(
             'id',
@@ -532,6 +531,24 @@ class StudentController extends Controller
 
 
         return view('logro.student.enrolled')->with('students', $students);
+    }
+
+    public function jsonEnrolled(Request $request)
+    {
+        $search = $request->search['value'];
+        $Y = SchoolYearController::current_year();
+
+        $students = Student::select('id', 'first_name', 'second_name', 'first_last_name', 'second_last_name', 'first_name as fullname', 'headquarters_id', 'group_id')
+            ->whereRaw("CONCAT(students.first_last_name,' ',students.second_last_name,' ',students.first_name,' ',students.second_name) LIKE '%{$search}%'")
+            ->whereHas('groupYear', fn($gYear) => $gYear->whereHas('group', fn($group) => $group->where('school_year_id', $Y->id)) )
+            ->with([
+                'group:id,name',
+                'headquarters:id,name'
+            ])
+            ->limit(15)
+            ->get();
+
+        return response()->json(['data' => $students]);
     }
 
     public function matriculate($student_id)

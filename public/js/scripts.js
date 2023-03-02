@@ -62,6 +62,11 @@ class Scripts {
             document.querySelector(".responsive-tabs") !== null &&
                 new ResponsiveTab(document.querySelector(".responsive-tabs"));
         }
+
+        // Dashboard Teacher
+        if ("undefined" !== typeof DashboardTeacher) {
+            new DashboardTeacher();
+        }
     }
 
     // Form and form controls pages initialization

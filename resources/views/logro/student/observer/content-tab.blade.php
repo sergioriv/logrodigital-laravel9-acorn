@@ -103,7 +103,7 @@
 
                                                 <div class="ms-1 dropstart">
                                                     <button type="button"
-                                                        class="btn btn-sm btn-icon-only text-alternate"
+                                                        class="btn btn-sm btn-icon-only text-primary"
                                                         data-bs-offset="0,3" data-bs-toggle="dropdown"
                                                         aria-haspopup="true" aria-expanded="false" data-submenu>
                                                         <i data-acorn-icon="more-horizontal"></i>

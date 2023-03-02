@@ -13,6 +13,7 @@ $title = $studyYear->name;
     <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
     <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
     <script src="/js/vendor/select2.full.min.js"></script>
+    <script src="/js/vendor/select2.full.min.es.js"></script>
 @endsection
 
 @section('js_page')

@@ -12,6 +12,7 @@
     <script src="/js/cs/responsivetab.js"></script>
     <script src="/js/vendor/progressbar.min.js"></script>
     <script src="/js/vendor/select2.full.min.js"></script>
+    <script src="/js/vendor/select2.full.min.es.js"></script>
 @endsection
 
 @section('js_page')

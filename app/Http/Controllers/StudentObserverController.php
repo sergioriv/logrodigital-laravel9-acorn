@@ -8,12 +8,53 @@ use App\Models\Student;
 use App\Models\StudentObserver;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class StudentObserverController extends Controller
 {
     public function __construct()
     {
         $this->middleware('can:students.observer');
+    }
+
+    public function storeMultiple(Request $request)
+    {
+        $request->validate([
+            'students_observer' => ['required', 'array'],
+            'annotation_type' => ['required'],
+            'date_observation' => ['required', 'date', 'date_format:Y-m-d', 'before:tomorrow'],
+            'situation_description' => ['required', 'string', 'max:5000']
+        ]);
+
+        $insert = [];
+        foreach ($request->students_observer as $student) {
+
+            array_push(
+                $insert,
+                [
+                    'id' => Str::uuid()->toString(),
+                    'student_id' => $student,
+                    'annotation_type' => $request->annotation_type,
+                    'date' => $request->date_observation,
+                    'situation_description' => $request->situation_description,
+                    'created_user_id' => auth()->id(),
+                    'created_rol' => UserController::myModelIs()
+                ]
+            );
+        }
+
+        try {
+
+            StudentObserver::insert($insert);
+
+            Notify::success(__('Observation saved!'));
+
+        } catch (\Throwable $th) {
+
+            Notify::fail(__('An error has occurred'));
+        }
+
+        return back();
     }
 
     public function store(Request $request, Student $student)
