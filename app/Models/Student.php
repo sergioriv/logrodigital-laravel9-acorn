@@ -335,6 +335,10 @@ class Student extends Model
     {
         return $this->hasMany(AttendanceStudent::class, 'student_id', 'id');
     }
+    public function fallas()
+    {
+        return $this->hasMany(AttendanceStudent::class, 'student_id', 'id')->whereIn('attend', ['N', 'J', 'L']);
+    }
     public function oneAttendanceStudent()
     {
         return $this->hasOne(AttendanceStudent::class, 'student_id', 'id');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RecordAttendanceStudent;
 use App\Http\Controllers\support\Notify;
 use App\Http\Middleware\OnlyTeachersMiddleware;
 use App\Models\Attendance;
@@ -11,6 +12,7 @@ use App\Models\TeacherSubjectGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AttendanceStudentController extends Controller
 {
@@ -152,5 +154,10 @@ class AttendanceStudentController extends Controller
 
         Notify::success(__('Updated attendance!'));
         return redirect()->back();
+    }
+
+    public function reportForStudent(Student $student)
+    {
+        return Excel::download(new RecordAttendanceStudent($student), 'Fallas - ' . $student->getCompleteNames() . '.xlsx');
     }
 }
