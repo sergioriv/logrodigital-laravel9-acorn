@@ -45,10 +45,6 @@
                 </div>
             </div>
 
-            <div class="mt-1 text-center">
-                <p>Las votaciones inician oficialmente el viernes 3 de Marzo a las 07:00 am</p>
-            </div>
-
         </section>
 
     </div>
