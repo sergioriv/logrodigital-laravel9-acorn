@@ -35,6 +35,9 @@
                                                         class="text-warning"></i></span>
                                             @endif
                                             <span class="text">{{ $alert->message }}</span>
+                                            @if ( ! is_null($alert->sub_message) )
+                                            <span class="text fst-italic">({{ $alert->sub_message }})</span>
+                                            @endif
                                             <span class="text">
                                                 <a type="button" href="{{ route('alert.checked', $alert) }}"
                                                     class="ms-2 text-info">{{ __('mark as read') }}</a>

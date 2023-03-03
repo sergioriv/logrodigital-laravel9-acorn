@@ -5,9 +5,16 @@
 
         <div class="row g-3">
 
+            <!-- Recommendation To Orientation -->
             <div class="form-group position-relative">
-                <x-label>{{ __('recommendation to orientation') }}</x-label>
-                <textarea name="recommendations_orientation" class="form-control" rows="5"></textarea>
+                <x-label required>{{ __('recommendation to orientation') }}</x-label>
+                <textarea name="recommendations_orientation" class="form-control" minlength="10" maxlength="5000" rows="3"></textarea>
+            </div>
+
+            <!-- Actions Taken by The Teacher -->
+            <div class="form-group position-relative">
+                <x-label required>{{ __('Actions taken by the teacher') }}</x-label>
+                <textarea name="actions_teacher" class="form-control" minlength="10" maxlength="5000" rows="3"></textarea>
             </div>
 
         </div>
@@ -26,9 +33,8 @@
                 title="{{ __('By checking priority, an email with the given information will be sent to the relevant users. If the user has not verified their account, the email will not be sent.') }}"></i>
         </div>
         <div>
-            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{{ __('Close') }}</button>
-            <button type="submit" class="btn btn-primary">
-                {{ __('Save') }}</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+            <button type="submit" class="btn btn-outline-primary">{{ __('Save') }}</button>
         </div>
     </div>
 </form>

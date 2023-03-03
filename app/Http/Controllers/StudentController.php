@@ -725,15 +725,17 @@ class StudentController extends Controller
     /* Tienen acceso Coordinacion y Docentes */
     private function view($student)
     {
-        $orientation = [];
+        $existOrientation = false;
         /*
          * Para que el Rol TEACHER solo pueda ver estudiantes que esten en sus listados en el año actual
          *  */
-        if (UserController::role_auth() === RoleUser::TEACHER_ROL) {
-            $orientation = Orientation::all();
+        $myRole = UserController::role_auth();
+        if ($myRole === RoleUser::TEACHER_ROL
+            || $myRole === RoleUser::COORDINATION_ROL) {
+            $existOrientation = (bool)Orientation::count();
         }
 
-        return view('logro.student.profile-view', ['student' => $student, 'orientation' => count($orientation)]);
+        return view('logro.student.profile-view', ['student' => $student, 'existOrientation' => $existOrientation]);
     }
 
 

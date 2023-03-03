@@ -101,6 +101,7 @@ class UserAlertController extends Controller
 
             $request->validate([
                 'recommendations_orientation' => ['required', 'string', 'min:10', 'max:5000'],
+                'actions_teacher' => ['required', 'string', 'min:10', 'max:5000'],
                 'priority_orientation' => ['nullable', 'boolean']
             ]);
 
@@ -118,6 +119,7 @@ class UserAlertController extends Controller
                 $newAlert->title = self::TITLE_TEACHER;
                 $newAlert->student_id = $student->id;
                 $newAlert->message = $request->recommendations_orientation;
+                $newAlert->sub_message = $request->actions_teacher;
                 $newAlert->created_user_id = Auth::id();
                 $newAlert->created_rol = RoleUser::TEACHER_ROL;
 

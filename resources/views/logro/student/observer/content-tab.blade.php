@@ -130,9 +130,9 @@
     <!-- Table End -->
 
     <!-- Modal Add Disclaimers Start -->
-    <div class="modal fade" id="addDisclaimers" aria-labelledby="modalAddDisclaimers" data-bs-backdrop="static"
+    <div class="modal fade modal-close-out" id="addDisclaimers" aria-labelledby="modalAddDisclaimers" data-bs-backdrop="static"
         data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{{ __('Add disclaimers') }}</h5>
@@ -197,9 +197,9 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger"
-                            data-bs-dismiss="modal">{{ __('Close') }}</button>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="button" class="btn btn-danger"
+                            data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-outline-primary">
                             {{ __('Save') }}</button>
                     </div>
                 </form>
@@ -213,9 +213,9 @@
 
 @can('students.observer')
 <!-- Modal Add Observation Start -->
-<div class="modal fade" id="addObservation" aria-labelledby="modalAddObservation" data-bs-backdrop="static"
+<div class="modal fade modal-close-out" id="addObservation" aria-labelledby="modalAddObservation" data-bs-backdrop="static"
     data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{{ __('Add observation') }}</h5>
@@ -261,9 +261,9 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger"
-                        data-bs-dismiss="modal">{{ __('Close') }}</button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="button" class="btn btn-danger"
+                        data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                    <button type="submit" class="btn btn-outline-primary">
                         {{ __('Save') }}</button>
                 </div>
             </form>

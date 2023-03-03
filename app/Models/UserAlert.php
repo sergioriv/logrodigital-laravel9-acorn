@@ -17,6 +17,7 @@ class UserAlert extends Model
         'priority',
         'title',
         'message',
+        'sub_message',
         'student_id',
         'created_user_id',
         'created_rol',

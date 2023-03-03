@@ -71,13 +71,14 @@
                 <!-- Title End -->
 
                 @hasrole('TEACHER')
-                    @if ($orientation)
+                    @if ($existOrientation)
                         <!-- Top Buttons Start -->
                         <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-                            <!-- Download Matriculate Button -->
+                            <!-- Remit to Orientation Button -->
                             <x-button type="button" class="btn-outline-info" data-bs-toggle="modal"
                                 data-bs-target="#addRemitToOrientation">{{ __('Remit to Orientation') }}</x-button>
                         </div>
+                        <!-- Top Buttons End -->
                     @endif
                 @endhasrole
 
@@ -605,11 +606,11 @@
 
 
     @hasrole('TEACHER')
-        @if ($orientation)
+        @if ($existOrientation)
             <!-- Modal Remit to Orientation -->
-            <div class="modal fade" id="addRemitToOrientation" aria-labelledby="modalAddRemitToOrientation"
+            <div class="modal fade modal-close-out" id="addRemitToOrientation" aria-labelledby="modalAddRemitToOrientation"
                 data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="modalAddRemitToOrientation">{{ __('Remit to Orientation') }}</h5>
