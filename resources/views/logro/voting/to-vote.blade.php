@@ -31,7 +31,7 @@
 
                         <h5 class="h5 mt-3">Digite su número de documento</h5>
 
-                        <x-input name="document" class="display-2 text-center spaci" value="" required />
+                        <x-input name="document" class="display-2 text-center spaci" value="" autofocus required />
 
                         <div class="mt-7 mb-3 h5">
                             <x-button type="submit" class="btn-primary btn-icon btn-icon-end text-capitalize">
