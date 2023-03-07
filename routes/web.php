@@ -285,6 +285,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::get('students/no-enrolled', 'no_enrolled')->name('students.no_enrolled');
         Route::get('students', 'enrolled')->name('students.enrolled');
         Route::get('students/inclusive', 'inclusive_students')->name('students.inclusive');
+        Route::patch('students/inclusive/non-inclusive', 'changeToNonInclusive')->name('students.non-inclusive');
 
         Route::get('students/data/instructive', 'data_instructive')->name('students.data.instructive');
         Route::get('students/export/instructive', 'export_instructive')->name('students.instructive');

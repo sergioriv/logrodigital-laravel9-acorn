@@ -131,6 +131,8 @@ class StudentController extends Controller
             'store',
             'import',
             'import_store');
+
+        $this->middleware('hasroles:SUPPORT,ORIENTATION')->only('changeToNonInclusive');
     }
 
 
@@ -929,9 +931,10 @@ class StudentController extends Controller
         }
 
 
-        $students = Student::where(function ($query) {
+        $students = Student::
+            where(function ($query) {
                 $query->where('inclusive', 1)
-                    ->orWhere('disability_id', '>', 1);
+                    ->orWhere('pre_inclusive', 1);
             })
             ->whereHas('groupYear', fn($gr) => $gr->whereHas('group', fn($g) => $g->where('school_year_id', $Y->id)))
             ->with('headquarters', 'studyTime', 'studyYear', 'group', 'disability')
@@ -944,6 +947,25 @@ class StudentController extends Controller
         ]);
 
     }
+
+    public function changeToNonInclusive(Request $request)
+    {
+        $request->validate([
+            'student' => ['required', Rule::exists('students', 'id')]
+        ]);
+
+        $student = Student::find($request->student);
+
+        $student->forceFill([
+            'pre_inclusive' => 0,
+            'inclusive' => NULL
+        ])->save();
+
+        Notify::success(__('Removed from list of inclusives'));
+        return back();
+
+    }
+
     public function psychosocial_update(Request $request, Student $student)
     {
         $request->validate([

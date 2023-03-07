@@ -701,6 +701,9 @@
     "Counselors": "Orientadores ",
     "Permits requested": "Permisos solicitados",
     "Date of application": "Fecha de solicitud",
+    "If confirmed, student :STUDENT_NAME will be removed from this list.": "Si confirma, el estudiante :STUDENT_NAME será eliminado de esta lista.",
+    "Remove from inclusive": "Retirar de inclusivos",
+    "Removed from list of inclusives": "Eliminado de la lista de inclusivos",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Current password": "Contraseña actual",
