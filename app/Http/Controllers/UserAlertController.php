@@ -137,7 +137,7 @@ class UserAlertController extends Controller
     /* access for methode GET */
     public function checked(UserAlert $alert)
     {
-        if ($alert->for_user === auth()->id()) {
+        if ( in_array(auth()->id(), $alert->for_users) ) {
 
             $checked = (array)$alert->checked;
             array_push($checked, auth()->id());
