@@ -44,7 +44,7 @@
                                             </span>
                                             <span
                                                 class="position-absolute text-extra-small text-alternate opacity-75 b-2 e-2">
-                                                {{ $alert->createdRol->getFullName() }}
+                                                {{ $alert?->created_user?->getFullName() }}
                                                 | {{ $alert->createdAt }}
                                             </span>
                                         </div>

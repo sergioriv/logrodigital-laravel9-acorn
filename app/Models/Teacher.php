@@ -81,7 +81,7 @@ class Teacher extends Model
 
     public function permits()
     {
-        return $this->hasMany(TeacherPermit::class, 'teacher_id', 'id');
+        return $this->hasMany(TeacherPermit::class, 'teacher_id', 'id')->with('accept_deny')->orderByDesc('start');
     }
 
     public function hierarchies()

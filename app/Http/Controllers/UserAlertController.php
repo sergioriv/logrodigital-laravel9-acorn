@@ -12,39 +12,35 @@ use App\Models\Student;
 use App\Models\TeacherSubjectGroup;
 use App\Models\UserAlert;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class UserAlertController extends Controller
 {
-
-    const TITLE_ORIENTATION = "The orientator: :CREATE_BY, has created a recommendation for the student: :STUDENT_NAME";
-    const TITLE_TEACHER = "The teacher: :CREATE_BY, has created a report for the student: :STUDENT_NAME";
 
     public static function orientation_to_coordinator(Coordination $coordinator, Student $student, Request $request)
     {
         /* Create alert for User Coordinator */
         if (UserController::role_auth() === RoleUser::ORIENTATION_ROL) {
 
-            $newAlert = new UserAlert;
-
-            $newAlert->for_user = $coordinator->id;
-            $newAlert->title = self::TITLE_ORIENTATION;
-            $newAlert->student_id = $student->id;
-            $newAlert->message = $request->recommendations_coordinator;
-            $newAlert->created_user_id = Auth::id();
-            $newAlert->created_rol = RoleUser::ORIENTATION_ROL;
+            UserAlert::create([
+                'for_users' => [$coordinator->id],
+                'priority' => $request->priority_coordinator === '1' ? TRUE : FALSE,
+                'message' => $request->recommendations_coordinator,
+                'student_id' => $student->id,
+                'created_user_type' => UserController::myModelIs(),
+                'created_user_id' => auth()->id(),
+                'checked' => []
+            ]);
 
             if ($request->priority_coordinator === '1') {
-                $newAlert->priority = TRUE;
 
                 SmtpMail::init()->sendMailAlert(
-                    __(self::TITLE_ORIENTATION, ['CREATE_BY' => UserController::myName(), 'STUDENT_NAME' => $student->getCompleteNames()]),
+                    __('An alert has been generated for the student :STUDENT_NAME', ['STUDENT_NAME' => $student->getCompleteNames()]),
                     $coordinator,
                     $request->recommendations_coordinator
                 );
             }
 
-            return $newAlert->save();
+            return true;
         }
 
         return false;
@@ -60,28 +56,23 @@ class UserAlertController extends Controller
                 return __('The group has no teachers');
             }
 
-            foreach ($teachersGroup as $teacherGroup) {
+            $teachers = $teachersGroup->pluck('teacher_id')->toArray();
 
-                $newAlert = new UserAlert;
+            UserAlert::create([
+                'for_users' => $teachers,
+                'priority' => $request->priority_teacher === '1' ? TRUE : FALSE,
+                'message' => $request->recommendations_teachers,
+                'student_id' => $student->id,
+                'created_user_type' => UserController::myModelIs(),
+                'created_user_id' => auth()->id(),
+                'checked' => []
+            ]);
 
-                $newAlert->for_user = $teacherGroup->teacher->id;
-                $newAlert->title = self::TITLE_ORIENTATION;
-                $newAlert->student_id = $student->id;
-                $newAlert->message = $request->recommendations_teachers;
-                $newAlert->created_user_id = Auth::id();
-                $newAlert->created_rol = RoleUser::ORIENTATION_ROL;
-
-                if ($request->priority_teacher === '1') {
-                    $newAlert->priority = TRUE;
-                }
-
-                $newAlert->save();
-            }
 
             if ($request->priority_teacher === '1') {
 
                 SmtpMail::init()->sendMailAlert(
-                    __(self::TITLE_ORIENTATION, ['CREATE_BY' => UserController::myName(), 'STUDENT_NAME' => $student->getCompleteNames()]),
+                    __('An alert has been generated for the student :STUDENT_NAME', ['STUDENT_NAME' => $student->getCompleteNames()]),
                     $teachersGroup,
                     $request->recommendations_teachers
                 );
@@ -111,29 +102,24 @@ class UserAlertController extends Controller
                 return redirect()->back()->withErrors(__('No registered orientators'));
             }
 
-            foreach ($orientators as $orientator) {
+            $orientatorsArray = $orientators->pluck('id')->toArray();
 
-                $newAlert = new UserAlert;
+            UserAlert::create([
+                'for_users' => $orientatorsArray,
+                'priority' => $request->priority_orientation === '1' ? TRUE : FALSE,
+                'message' => $request->recommendations_orientation,
+                'sub_message' => $request->actions_teacher,
+                'student_id' => $student->id,
+                'created_user_type' => UserController::myModelIs(),
+                'created_user_id' => auth()->id(),
+                'checked' => []
+            ]);
 
-                $newAlert->for_user = $orientator->id;
-                $newAlert->title = self::TITLE_TEACHER;
-                $newAlert->student_id = $student->id;
-                $newAlert->message = $request->recommendations_orientation;
-                $newAlert->sub_message = $request->actions_teacher;
-                $newAlert->created_user_id = Auth::id();
-                $newAlert->created_rol = RoleUser::TEACHER_ROL;
-
-                if ($request->priority_teacher === '1') {
-                    $newAlert->priority = TRUE;
-                }
-
-                $newAlert->save();
-            }
 
             if ($request->priority_orientation === '1') {
 
                 SmtpMail::init()->sendMailAlert(
-                    __(self::TITLE_TEACHER, ['CREATE_BY' => UserController::myName(), 'STUDENT_NAME' => $student->getCompleteNames()]),
+                    __('An alert has been generated for the student :STUDENT_NAME', ['STUDENT_NAME' => $student->getCompleteNames()]),
                     $orientators,
                     $request->recommendations_orientation
                 );
@@ -151,9 +137,14 @@ class UserAlertController extends Controller
     /* access for methode GET */
     public function checked(UserAlert $alert)
     {
-        if ($alert->for_user === Auth::id()) {
+        if ($alert->for_user === auth()->id()) {
 
-            $alert->forceFill(['checked' => TRUE])->save();
+            $checked = (array)$alert->checked;
+            array_push($checked, auth()->id());
+
+            $alert->update([
+                'checked' => $checked
+            ]);
 
             Notify::success(__('Read alert!'));
             return redirect()->back();

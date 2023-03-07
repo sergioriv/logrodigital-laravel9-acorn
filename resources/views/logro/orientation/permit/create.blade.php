@@ -1,5 +1,5 @@
 <form action="{{ route('orientation.permits.store', $orientation) }}" id="addPermitTeacherForm"
-    class="tooltip-label-end" method="POST" enctype="multipart/form-data" novalidate>
+    class="tooltip-label-end" method="POST" novalidate>
     @csrf
 
     <div class="modal-body">
@@ -23,21 +23,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12">
-                <div class="position-relative form-group">
-                    <x-label required>{{ __('support document') }} (pdf)</x-label>
-                    <x-input name="support_document" type="file" accept="application/pdf"
-                        class="d-block" required />
-                </div>
-            </div>
         </div>
 
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-danger"
+        <button type="button" class="btn btn-danger"
             data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-outline-primary">
             {{ __('Save') }}</button>
     </div>
 </form>

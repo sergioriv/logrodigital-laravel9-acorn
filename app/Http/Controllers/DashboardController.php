@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\support\UserController;
 use App\Models\Data\RoleUser;
 use App\Models\Student;
+use App\Models\TeacherPermit;
 use App\Models\UserAlert;
 
 class DashboardController extends Controller
@@ -61,21 +62,28 @@ class DashboardController extends Controller
 
     private function dashCoordination()
     {
+        $teacherPermits = TeacherPermit::where('status', 0)->get()->groupBy(function ($permit) {
+            return $permit->teacher_id;
+        });
+
         return view('dashboard.coordination', [
+            'teacherPermits' => $teacherPermits,
             'alertsStudents' => $this->myAlertStudents()
         ]);
     }
 
     protected function myAlertStudents()
     {
-        return UserAlert::where('for_user', auth()->id())
-            ->whereNull('checked')
+        return UserAlert::whereJsonContains('for_users', auth()->id())
+            ->whereNot(fn ($not) => $not->whereJsonContains('checked', auth()->id()) )
             ->orderByDesc('priority')
             ->orderBy('created_at')
             ->with(['student' => fn($student) => $student->with(['group:id,name']) ])
+            ->with('created_user')
             ->get()->groupBy(function ($alert) {
                 return $alert->student_id;
             });
+
     }
 
 }

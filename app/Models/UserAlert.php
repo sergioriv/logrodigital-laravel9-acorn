@@ -13,33 +13,26 @@ class UserAlert extends Model
     use Uuid;
 
     protected $fillable = [
-        'for_user',
+        'for_users',
         'priority',
-        'title',
         'message',
         'sub_message',
         'student_id',
+        'created_user_type',
         'created_user_id',
-        'created_rol',
+        'checked'
     ];
 
     protected $casts = [
+        'for_users' => 'array',
+        'checked' => 'array',
         'priority' => 'boolean'
     ];
 
-    public function createdRol()
+
+    public function created_user()
     {
-        switch ($this->created_rol) {
-            case RoleUser::ORIENTATION_ROL:
-                return $this->belongsTo(Orientation::class, 'created_user_id', 'id');
-                break;
-
-            case RoleUser::TEACHER_ROL:
-                return $this->belongsTo(Teacher::class, 'created_user_id', 'id');
-                break;
-        }
-
-        return null;
+        return $this->morphTo('created_user', 'created_user_type', 'created_user_id', 'id')->select('id', 'names', 'last_names');
     }
 
     public function student()

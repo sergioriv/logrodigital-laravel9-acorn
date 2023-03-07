@@ -75,7 +75,7 @@ class Coordination extends Model
      *  */
     public function permits()
     {
-        return $this->hasMany(CoordinationPermit::class, 'coordination_id', 'id');
+        return $this->hasMany(CoordinationPermit::class, 'coordination_id', 'id')->with('accept_deny')->orderByDesc('start');
     }
 
     public function hierarchies()

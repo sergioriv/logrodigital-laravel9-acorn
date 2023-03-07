@@ -40,7 +40,7 @@
         });
         new SingleImageUpload(document.getElementById('signature'));
 
-        jQuery("#signature input[type='file']").change(function () {
+        jQuery("#signature input[type='file']").change(function() {
             $("#signature .form-signature").removeClass('d-none');
         });
     </script>
@@ -91,12 +91,12 @@
                                 <!-- Avatar Form End -->
 
                                 <div class="h5">{{ $teacher->getFullName() }}</div>
-                                @if ($teacher instanceof \App\Models\Coordination )
-                                <div class="text-muted text-uppercase">{{ __('coordinator') }}</div>
-                                @elseif ($teacher instanceof \App\Models\Orientation )
-                                <div class="text-muted text-uppercase">{{ __('orientator') }}</div>
-                                @elseif ($teacher instanceof \App\Models\Teacher )
-                                <div class="text-muted text-uppercase">{{ __('Teacher') }}</div>
+                                @if ($teacher instanceof \App\Models\Coordination)
+                                    <div class="text-muted text-uppercase">{{ __('coordinator') }}</div>
+                                @elseif ($teacher instanceof \App\Models\Orientation)
+                                    <div class="text-muted text-uppercase">{{ __('orientator') }}</div>
+                                @elseif ($teacher instanceof \App\Models\Teacher)
+                                    <div class="text-muted text-uppercase">{{ __('Teacher') }}</div>
                                 @endif
                                 <div class="text-muted">{{ __($teacher->type_appointment) }}</div>
                             </div>
@@ -107,6 +107,10 @@
                             <a class="nav-link @empty(session('tab')) active @endempty logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#infoTab" role="tab">
                                 <span class="align-middle">{{ __('Information') }}</span>
+                            </a>
+                            <a class="nav-link @if (session('tab') === 'permits') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#permitsTab" role="tab">
+                                <span class="align-middle">{{ __('Permits') }}</span>
                             </a>
                             <a class="nav-link @if (session('tab') === 'hierarchies') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#hierarchyTab" role="tab">
@@ -276,14 +280,15 @@
                                     <div class="col-md-3">
 
                                         <div class="row g-2">
-                                            <div class="@if($teacher->file_appointment) col-10 @endif position-relative form-group">
+                                            <div
+                                                class="@if ($teacher->file_appointment) col-10 @endif position-relative form-group">
                                                 <x-label>{{ __('upload file') }} (.pdf)</x-label>
                                                 <x-input type="file" accept=".pdf" name="file_appointment"
                                                     class="d-block" />
                                             </div>
                                             @if ($teacher->file_appointment)
                                                 <div class="col-2 d-flex align-items-end">
-                                                    <a href="{{ config('app.url') .'/'. $teacher->file_appointment }}"
+                                                    <a href="{{ config('app.url') . '/' . $teacher->file_appointment }}"
                                                         target="_blank" class="lh-lg">
                                                         <i class="icon icon-18 text-primary bi-box-arrow-up-right"></i>
                                                     </a>
@@ -309,14 +314,15 @@
                                     <div class="col-md-3">
 
                                         <div class="row g-2">
-                                            <div class="@if($teacher->file_possession_certificate) col-10 @endif position-relative form-group">
+                                            <div
+                                                class="@if ($teacher->file_possession_certificate) col-10 @endif position-relative form-group">
                                                 <x-label>{{ __('upload file') }} (.pdf)</x-label>
                                                 <x-input type="file" accept=".pdf" name="file_possession_certificate"
                                                     class="d-block" />
                                             </div>
                                             @if ($teacher->file_possession_certificate)
                                                 <div class="col-2 d-flex align-items-end">
-                                                    <a href="{{ config('app.url') .'/'. $teacher->file_possession_certificate }}"
+                                                    <a href="{{ config('app.url') . '/' . $teacher->file_possession_certificate }}"
                                                         target="_blank" class="lh-lg">
                                                         <i class="icon icon-18 text-primary bi-box-arrow-up-right"></i>
                                                     </a>
@@ -342,14 +348,15 @@
                                     <div class="col-md-3">
 
                                         <div class="row g-2">
-                                            <div class="@if($teacher->file_transfer_resolution) col-10 @endif position-relative form-group">
+                                            <div
+                                                class="@if ($teacher->file_transfer_resolution) col-10 @endif position-relative form-group">
                                                 <x-label>{{ __('upload file') }} (.pdf)</x-label>
                                                 <x-input type="file" accept=".pdf" name="file_transfer_resolution"
                                                     class="d-block" />
                                             </div>
                                             @if ($teacher->file_transfer_resolution)
                                                 <div class="col-2 d-flex align-items-end">
-                                                    <a href="{{ config('app.url') .'/'. $teacher->file_transfer_resolution }}"
+                                                    <a href="{{ config('app.url') . '/' . $teacher->file_transfer_resolution }}"
                                                         target="_blank" class="lh-lg">
                                                         <i class="icon icon-18 text-primary bi-box-arrow-up-right"></i>
                                                     </a>
@@ -366,18 +373,17 @@
                                 <div class="card-body">
 
                                     <div id="signature" class="text-center">
-                                        <div class="border rounded-md mb-2 form-signature @if(is_null($teacher->signature)) d-none @endif">
-                                            <img src="@if(!is_null($teacher->signature)) {{ config('app.url') .'/'. $teacher->signature }} @endif"
+                                        <div
+                                            class="border rounded-md mb-2 form-signature @if (is_null($teacher->signature)) d-none @endif">
+                                            <img src="@if (!is_null($teacher->signature)) {{ config('app.url') . '/' . $teacher->signature }} @endif"
                                                 class="rounded-0 max-w-100 sh-19 object-scale-down" />
                                         </div>
                                         <button title="{{ __('load signature') }}"
-                                            class="btn w-100 btn-icon btn-separator-light rounded-xl"
-                                            type="button">
+                                            class="btn w-100 btn-icon btn-separator-light rounded-xl" type="button">
                                             <i data-acorn-icon="upload"></i>
                                             <span>{{ __('upload signature') }}</span>
                                         </button>
-                                        <input name="signature"
-                                            class="file-upload d-none" type="file"
+                                        <input name="signature" class="file-upload d-none" type="file"
                                             accept="image/jpg, image/jpeg, image/png, image/webp" />
 
                                     </div>
@@ -392,6 +398,58 @@
                     <!-- Info Content Tab End -->
 
                 </div>
+
+                <!-- Permits Tab Start -->
+                <div class="tab-pane fade @if (session('tab') === 'permits') active show @endif" id="permitsTab"
+                    role="tabpanel">
+
+                    <!-- Permits Content Start -->
+                    <h2 class="small-title">{{ __('Permits') }}</h2>
+                    <section class="card mb-5">
+                        <div class="card-body">
+
+                            <!-- Permits Buttons Start -->
+                            <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
+                                <a type="button" data-bs-toggle="modal" data-bs-target="#addPermitTeacherModal"
+                                    class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                    <i data-acorn-icon="send"></i>
+                                    <span>Solicitar permiso</span>
+                                </a>
+                            </div>
+                            <!-- Permits Buttons End -->
+
+                            <!-- Table Start -->
+                            <div class="table-responsive-sm">
+                                <table logro='dataTableBoxed' data-order='[[ 2, "asc" ]]'
+                                    class="table responsive stripe">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('short description') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('status') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
+                                                {{ __('date range') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($teacher->permits as $permit)
+                                            <tr>
+                                                <td>{{ $permit->description }}</td>
+                                                <td>{!! $permit->status->getLabelHtml() !!}</td>
+                                                <td align="center">{{ $permit->dateRange() }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Table End -->
+                        </div>
+                    </section>
+                    <!-- Secretariat Content End -->
+
+                </div>
+                <!-- Permits Tab End -->
 
                 <!-- Hierarchy Tab Start -->
                 <div class="tab-pane fade show @if (session('tab') === 'hierarchies') active show @endempty" id="hierarchyTab"
@@ -412,13 +470,16 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
-                                    data-order='[[ 2, "desc" ]]'>
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    logro="dataTableBoxed" data-order='[[ 2, "desc" ]]'>
                                     <thead>
                                         <tr>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('number') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('Resolution') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('number') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('Resolution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}
+                                            </th>
                                             <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
@@ -429,7 +490,8 @@
                                                 <td>{{ $hierarchy->resolution }}</td>
                                                 <td class="text-small">{{ $hierarchy->date }}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ config('app.url') .'/'. $hierarchy->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                    <a href="{{ config('app.url') . '/' . $hierarchy->url }}"
+                                                        class="btn btn-sm btn-link text-capitalize" target="_blank">
                                                         <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
@@ -466,13 +528,16 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
-                                    data-order='[[ 2, "desc" ]]'>
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    logro="dataTableBoxed" data-order='[[ 2, "desc" ]]'>
                                     <thead>
                                         <tr>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('institution') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('degree') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('institution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('degree') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}
+                                            </th>
                                             <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
@@ -483,7 +548,8 @@
                                                 <td>{{ $degree->degree }}</td>
                                                 <td class="text-small">{{ $degree->date }}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ config('app.url') .'/'. $degree->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                    <a href="{{ config('app.url') . '/' . $degree->url }}"
+                                                        class="btn btn-sm btn-link text-capitalize" target="_blank">
                                                         <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
@@ -502,8 +568,8 @@
                 <!-- Degree Tab End -->
 
                 <!-- Employment History Tab Start -->
-                <div class="tab-pane fade show @if (session('tab') === 'employments') active show @endempty" id="employmentsTab"
-                    role="tabpanel">
+                <div class="tab-pane fade show @if (session('tab') === 'employments') active show @endempty"
+                    id="employmentsTab" role="tabpanel">
 
                     <!-- Employment History Content Tab Start -->
                     <h2 class="small-title">{{ __('Employment history') }} <i>(max. 5)</i></h2>
@@ -520,13 +586,16 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
-                                    data-order='[[ 2, "desc" ]]'>
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    logro="dataTableBoxed" data-order='[[ 2, "desc" ]]'>
                                     <thead>
                                         <tr>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('institution') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date of entry') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date of withdrawal') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('institution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('date of entry') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('date of withdrawal') }}</th>
                                             <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
@@ -537,7 +606,8 @@
                                                 <td class="text-small">{{ $employment->date_start }}</td>
                                                 <td class="text-small">{{ $employment->date_end }}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ config('app.url') .'/'. $employment->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                    <a href="{{ config('app.url') . '/' . $employment->url }}"
+                                                        class="btn btn-sm btn-link text-capitalize" target="_blank">
                                                         <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
@@ -561,6 +631,33 @@
         </section>
 
     </div>
+
+    <!-- Modal Add Permit Start -->
+    <div class="modal fade" id="addPermitTeacherModal" aria-labelledby="modalAddPermitTeacher" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Add permit') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                @hasrole('TEACHER')
+                @include('logro.teacher.permit.create')
+                @endhasrole
+
+                @hasrole('COORDINATOR')
+                @php $coordination = $teacher @endphp
+                @include('logro.coordination.permit.create')
+                @endhasrole
+
+                @hasrole('ORIENTATION')
+                @php $orientation = $teacher @endphp
+                @include('logro.orientation.permit.create')
+                @endhasrole
+            </div>
+        </div>
+    </div>
+    <!-- Modal Add Permit End -->
 
     <!-- Modal Add Hierarchy -->
     <div class="modal fade" id="addHierarchyModal" aria-labelledby="modalAddHierarchy" data-bs-backdrop="static"
@@ -586,7 +683,8 @@
                     {{ route('orientation.hierarchy.store') }}
                     @endhasrole
 
-                    " method="POST" enctype="multipart/form-data">
+                    "
+                    method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-body">
@@ -606,14 +704,15 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('date') }}</x-label>
-                                    <x-input name="hierarchy_date" required
-                                    logro="datePickerBefore" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                    <x-input name="hierarchy_date" required logro="datePickerBefore"
+                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('file') }} (pdf)</x-label>
-                                    <x-input type="file" accept=".pdf" class="d-block" name="hierarchy_file" required />
+                                    <x-input type="file" accept=".pdf" class="d-block" name="hierarchy_file"
+                                        required />
                                 </div>
                             </div>
                         </div>
@@ -654,7 +753,8 @@
                     {{ route('orientation.degree.store') }}
                     @endhasrole
 
-                    " method="POST" enctype="multipart/form-data">
+                    "
+                    method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-body">
@@ -674,14 +774,15 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('date') }}</x-label>
-                                    <x-input name="degree_date" required
-                                    logro="datePickerBefore" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                    <x-input name="degree_date" required logro="datePickerBefore"
+                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('file') }} (pdf)</x-label>
-                                    <x-input type="file" accept=".pdf" class="d-block" name="degree_file" required />
+                                    <x-input type="file" accept=".pdf" class="d-block" name="degree_file"
+                                        required />
                                 </div>
                             </div>
                         </div>
@@ -722,7 +823,8 @@
                     {{ route('orientation.employment.store') }}
                     @endhasrole
 
-                    " method="POST" enctype="multipart/form-data">
+                    "
+                    method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-body">
@@ -736,21 +838,22 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('date of entry') }}</x-label>
-                                    <x-input name="employment_date_start"
-                                    logro="datePickerBefore" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                    <x-input name="employment_date_start" logro="datePickerBefore"
+                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('date of withdrawal') }}</x-label>
-                                    <x-input name="employment_date_end" required
-                                    logro="datePickerBefore" data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
+                                    <x-input name="employment_date_end" required logro="datePickerBefore"
+                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <x-label required>{{ __('file') }} (pdf)</x-label>
-                                    <x-input type="file" accept=".pdf" class="d-block" name="employment_file" required />
+                                    <x-input type="file" accept=".pdf" class="d-block" name="employment_file"
+                                        required />
                                 </div>
                             </div>
                         </div>

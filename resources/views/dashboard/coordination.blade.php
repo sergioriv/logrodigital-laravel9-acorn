@@ -55,6 +55,32 @@
         </div>
         <!-- Title and Top Buttons End -->
 
+        @if (count($teacherPermits))
+            <!-- Alerts Section Start -->
+            <section class="scroll-section">
+                <h2 class="small-title">Permisos docente</h2>
+
+                <div class="card mb-5">
+                    <div class="card-body">
+
+                        <div class="accordion accordion-flush" id="accordionFlushAlerts">
+                            @foreach ($teacherPermits as $permit)
+                                <div class="accordion-item p-3">
+                                    <span class="font-weight-bold me-1">{{ '(' . $permit->count() . ')' }}</span>
+                                    {{ $permit[0]->teacher->getFullName() }}
+                                    <a href="{{ route('teacher.show', $permit[0]->teacher->uuid) }}"><i
+                                            class="icon bi-box-arrow-in-up-right text-primary ms-2"></i></a>
+                                </div>
+                            @endforeach
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+            <!-- Alerts Section Start -->
+        @endif
+
         <!-- Alerts Section Start -->
         <section class="scroll-section">
             <h2 class="small-title">{{ __('Alerts') }}</h2>

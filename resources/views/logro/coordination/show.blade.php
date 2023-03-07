@@ -24,6 +24,19 @@
     <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
     <script src="/js/plugins/datatable/datatables_boxed.js"></script>
     <script src="/js/forms/teacher-permit-create.js"></script>
+    @hasanyrole('SUPPORT|COORDINATOR')
+        <script>
+            jQuery('[modal="acceptOrDenyPermit"]').click(function() {
+                let _this = $(this);
+                var contentModal = $("#acceptOrDenyPermitModal");
+
+                if (_this.data('permit')) {
+                    contentModal.find('[name="permit"]').val(_this.data('permit'));
+                    contentModal.modal('show');
+                }
+            });
+        </script>
+    @endhasanyrole
 @endsection
 
 @section('content')
@@ -133,13 +146,15 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('expedition city') }}</x-label>
-                                        <text class="form-control">{{ $coordination->expeditionCity?->department->name .' | '. $coordination->expeditionCity?->name }}</text>
+                                        <text
+                                            class="form-control">{{ $coordination->expeditionCity?->department->name . ' | ' . $coordination->expeditionCity?->name }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('birth city') }}</x-label>
-                                        <text class="form-control">{{ $coordination->birthCity?->department->name .' | '. $coordination->birthCity?->name }}</text>
+                                        <text
+                                            class="form-control">{{ $coordination->birthCity?->department->name . ' | ' . $coordination->birthCity?->name }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -151,7 +166,8 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <x-label>{{ __('residence city') }}</x-label>
-                                        <text class="form-control">{{ $coordination->residenceCity?->department->name .' | '. $coordination->residenceCity?->name }}</text>
+                                        <text
+                                            class="form-control">{{ $coordination->residenceCity?->department->name . ' | ' . $coordination->residenceCity?->name }}</text>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -206,7 +222,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 d-flex align-items-end justify-content-center">
-                                        <a href="{{ config('app.url') .'/'. $coordination->file_appointment }}"
+                                        <a href="{{ config('app.url') . '/' . $coordination->file_appointment }}"
                                             target="_blank" class="btn bt-sm btn-outline-primary icon-start">
                                             <i class="icon bi-box-arrow-up-right me-2"></i>
                                             {{ __('View document') }}
@@ -224,11 +240,12 @@
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
-                                            <text class="form-control">{{ $coordination->date_possession_certificate }}</text>
+                                            <text
+                                                class="form-control">{{ $coordination->date_possession_certificate }}</text>
                                         </div>
                                     </div>
                                     <div class="col-md-3 d-flex align-items-end justify-content-center">
-                                        <a href="{{ config('app.url') .'/'. $coordination->file_possession_certificate }}"
+                                        <a href="{{ config('app.url') . '/' . $coordination->file_possession_certificate }}"
                                             target="_blank" class="btn bt-sm btn-outline-primary icon-start">
                                             <i class="icon bi-box-arrow-up-right me-2"></i>
                                             {{ __('View document') }}
@@ -246,11 +263,12 @@
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
                                             <x-label>{{ __('date') }}</x-label>
-                                            <text class="form-control">{{ $coordination->date_transfer_resolution }}</text>
+                                            <text
+                                                class="form-control">{{ $coordination->date_transfer_resolution }}</text>
                                         </div>
                                     </div>
                                     <div class="col-md-3 d-flex align-items-end justify-content-center">
-                                        <a href="{{ config('app.url') .'/'. $coordination->file_transfer_resolution }}"
+                                        <a href="{{ config('app.url') . '/' . $coordination->file_transfer_resolution }}"
                                             target="_blank" class="btn bt-sm btn-outline-primary icon-start">
                                             <i class="icon bi-box-arrow-up-right me-2"></i>
                                             {{ __('View document') }}
@@ -267,7 +285,7 @@
                             <div class="card mb-5">
                                 <div class="card-body text-center">
                                     <div class="border rounded-md mb-2 form-signature">
-                                        <img src="{{ config('app.url') .'/'. $coordination->signature }}"
+                                        <img src="{{ config('app.url') . '/' . $coordination->signature }}"
                                             class="rounded-0 max-w-100 sh-19 object-scale-down" />
                                     </div>
                                 </div>
@@ -290,39 +308,72 @@
                     <section class="card mb-5">
                         <div class="card-body">
 
-                            <!-- Permits Buttons Start -->
-                            <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
-                                <a type="button" data-bs-toggle="modal" data-bs-target="#addPermitTeacherModal"
-                                    class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                    <i data-acorn-icon="plus"></i>
-                                    <span>{{ __('Add permit') }}</span>
-                                </a>
-                            </div>
-                            <!-- Permits Buttons End -->
+                            @hasanyrole('SUPPORT|SECRETARY')
+                                <!-- Permits Buttons Start -->
+                                <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
+                                    <a type="button" data-bs-toggle="modal" data-bs-target="#addPermitTeacherModal"
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                        <i data-acorn-icon="plus"></i>
+                                        <span>{{ __('Add permit') }}</span>
+                                    </a>
+                                </div>
+                                <!-- Permits Buttons End -->
+                            @endhasanyrole
 
                             <!-- Table Start -->
-                            <div class="">
-                                <table logro='dataTableBoxed' data-order=""
-                                    class="data-table responsive nowrap stripe dataTable no-footer dtr-inline">
+                            <div class="table-responsive-sm">
+                                <table logro='dataTableBoxed' data-order='[[ 2, "asc" ]]'
+                                    class="table responsive stripe">
                                     <thead>
                                         <tr>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
                                                 {{ __('short description') }}</th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('status') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
                                                 {{ __('date range') }}</th>
-                                            <th class="empty p-0">&nbsp;</th>
+                                            @hasanyrole('SUPPORT|COORDINATOR')
+                                                <th class="empty p-0">&nbsp;</th>
+                                            @endhasanyrole
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($coordination->permits as $permit)
                                             <tr>
-                                                <td>{{ $permit->description }}</td>
-                                                <td>{{ $permit->dateRange() }}</td>
-                                                <td class="text-center">
-                                                    <a target="_blank" title="{{ __('Download') }}"
-                                                        href="{{ $permit->url }}"><i data-acorn-icon="download"
-                                                            data-acorn-size="14"></i></a>
+                                                <td>{{ $permit->description }} </td>
+                                                <td>
+                                                    {!! $permit->status->getLabelHtml() !!}
+                                                    @if (!$permit->status->isPending())
+                                                        <span
+                                                            class="text-small fst-italic">{{ $permit?->accept_deny?->getFullName() }}</span>
+                                                    @endif
                                                 </td>
+                                                <td align="center">{{ $permit->dateRange() }}</td>
+                                                @hasanyrole('SUPPORT|COORDINATOR')
+                                                    <td align="right">
+
+                                                        @if ($permit->status->isPending())
+                                                            <!-- Dropdown Button Start -->
+                                                            <div class="ms-1">
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                    data-bs-offset="0,3" data-bs-toggle="dropdown"
+                                                                    aria-haspopup="true" aria-expanded="false" data-submenu>
+                                                                    <i data-acorn-icon="more-vertical"></i>
+                                                                </button>
+                                                                <div class="dropdown-menu dropdown-menu-end">
+                                                                    <div class="dropdown-item cursor-pointer"
+                                                                        modal="acceptOrDenyPermit"
+                                                                        data-permit="{{ $permit->id }}">
+                                                                        <span>{{ __('Accept or Deny') }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Dropdown Button End -->
+                                                        @endif
+
+                                                    </td>
+                                                @endhasanyrole
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -331,7 +382,7 @@
                             <!-- Table End -->
                         </div>
                     </section>
-                    <!-- Secretariat Content End -->
+                    <!-- Permits Content End -->
 
                 </div>
                 <!-- Permits Tab End -->
@@ -346,13 +397,16 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
-                                    data-order='[[ 2, "desc" ]]'>
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    logro="dataTableBoxed" data-order='[[ 2, "desc" ]]'>
                                     <thead>
                                         <tr>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('number') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('Resolution') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('number') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('Resolution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}
+                                            </th>
                                             <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
@@ -363,7 +417,8 @@
                                                 <td>{{ $hierarchy->resolution }}</td>
                                                 <td class="text-small">{{ $hierarchy->date }}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ config('app.url') .'/'. $hierarchy->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                    <a href="{{ config('app.url') . '/' . $hierarchy->url }}"
+                                                        class="btn btn-sm btn-link text-capitalize" target="_blank">
                                                         <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
@@ -391,13 +446,16 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
-                                    data-order='[[ 2, "desc" ]]'>
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    logro="dataTableBoxed" data-order='[[ 2, "desc" ]]'>
                                     <thead>
                                         <tr>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('institution') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('degree') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('institution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('degree') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date') }}
+                                            </th>
                                             <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
@@ -408,7 +466,8 @@
                                                 <td>{{ $degree->degree }}</td>
                                                 <td class="text-small">{{ $degree->date }}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ config('app.url') .'/'. $degree->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                    <a href="{{ config('app.url') . '/' . $degree->url }}"
+                                                        class="btn btn-sm btn-link text-capitalize" target="_blank">
                                                         <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
@@ -427,8 +486,8 @@
                 <!-- Degree Tab End -->
 
                 <!-- Employment History Tab Start -->
-                <div class="tab-pane fade show @if (session('tab') === 'employments') active show @endempty" id="employmentsTab"
-                    role="tabpanel">
+                <div class="tab-pane fade show @if (session('tab') === 'employments') active show @endempty"
+                    id="employmentsTab" role="tabpanel">
 
                     <!-- Employment History Content Tab Start -->
                     <h2 class="small-title">{{ __('Employment history') }}</h2>
@@ -436,13 +495,16 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline" logro="dataTableBoxed"
-                                    data-order='[[ 2, "desc" ]]'>
+                                <table class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    logro="dataTableBoxed" data-order='[[ 2, "desc" ]]'>
                                     <thead>
                                         <tr>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('institution') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date of entry') }}</th>
-                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('date of withdrawal') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('institution') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('date of entry') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('date of withdrawal') }}</th>
                                             <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
@@ -453,7 +515,8 @@
                                                 <td class="text-small">{{ $employment->date_start }}</td>
                                                 <td class="text-small">{{ $employment->date_end }}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ config('app.url') .'/'. $employment->url }}" class="btn btn-sm btn-link text-capitalize" target="_blank">
+                                                    <a href="{{ config('app.url') . '/' . $employment->url }}"
+                                                        class="btn btn-sm btn-link text-capitalize" target="_blank">
                                                         <i class="icon bi-box-arrow-up-right me-1"></i>
                                                         {{ __('open') }}
                                                     </a>
@@ -477,17 +540,76 @@
     </div>
 
 
-    <!-- Modal Add Advice -->
-    <div class="modal fade" id="addPermitTeacherModal" aria-labelledby="modalAddPermitTeacher" data-bs-backdrop="static"
-        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Add permit') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    @hasanyrole('SUPPORT|SECRETARY')
+        <!-- Modal Add Advice -->
+        <div class="modal fade" id="addPermitTeacherModal" aria-labelledby="modalAddPermitTeacher" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Add permit') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    @include('logro.coordination.permit.create')
                 </div>
-                @include('logro.coordination.permit.create')
             </div>
         </div>
-    </div>
+    @endhasanyrole
+
+    @hasanyrole('SUPPORT|COORDINATOR')
+        <!-- Modal Accept or Deny Permit Start -->
+        <div class="modal fade" id="acceptOrDenyPermitModal" aria-labelledby="modalAcceptOrDenyPermit"
+            data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAcceptOrDenyPermit">{{ __('Accept or Deny Permission') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('coordination.permit.accepted', $coordination) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+
+                        <input type="hidden" name="permit" value="">
+
+                        <div class="modal-body">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="form-check custom-card cursor-pointer w-100 position-relative p-0 m-0">
+                                        <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
+                                            name="accept_or_deny" value="accept" />
+                                        <span class="card form-check-label form-check-label-success w-100 custom-border">
+                                            <span class="card-body text-center">
+                                                <span class="heading mt-3 text-body text-primary d-block">Aceptar</span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-check custom-card cursor-pointer w-100 position-relative p-0 m-0">
+                                        <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
+                                            name="accept_or_deny" value="deny" />
+                                        <span class="card form-check-label form-check-label-danger w-100 custom-border">
+                                            <span class="card-body text-center">
+                                                <span class="heading mt-3 text-body text-primary d-block">Denegar</span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger"
+                                data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                            <button type="submit" class="btn btn-outline-primary">
+                                {{ __('Save') }}</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- Modal Accept or Deny Permit End -->
+    @endhasanyrole
 @endsection

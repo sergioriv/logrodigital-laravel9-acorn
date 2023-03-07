@@ -24,6 +24,19 @@
     <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
     <script src="/js/plugins/datatable/datatables_boxed.js"></script>
     <script src="/js/forms/teacher-permit-create.js"></script>
+    @hasanyrole('SUPPORT|COORDINATOR')
+        <script>
+            jQuery('[modal="acceptOrDenyPermit"]').click(function() {
+                let _this = $(this);
+                var contentModal = $("#acceptOrDenyPermitModal");
+
+                if (_this.data('permit')) {
+                    contentModal.find('[name="permit"]').val(_this.data('permit'));
+                    contentModal.modal('show');
+                }
+            });
+        </script>
+    @endhasanyrole
 @endsection
 
 @section('content')
@@ -39,43 +52,44 @@
                 <!-- Title End -->
 
                 @hasrole('SUPPORT')
-                <!-- Top Buttons Start -->
-                <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
+                    <!-- Top Buttons Start -->
+                    <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
 
-                    <!-- Dropdown Button Start -->
-                    <div class="ms-1">
-                        <button type="button" class="btn btn-sm btn-outline-info btn-icon btn-icon-only" data-bs-offset="0,3"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
-                            <i data-acorn-icon="more-horizontal"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            @if ( ! in_array('VOTING_COORDINATOR', $teacher->user->getRoleNames()->toArray()) )
-                                <form action="{{ route('voting.add-user') }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
+                        <!-- Dropdown Button Start -->
+                        <div class="ms-1">
+                            <button type="button" class="btn btn-sm btn-outline-info btn-icon btn-icon-only"
+                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                data-submenu>
+                                <i data-acorn-icon="more-horizontal"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                @if (!in_array('VOTING_COORDINATOR', $teacher->user->getRoleNames()->toArray()))
+                                    <form action="{{ route('voting.add-user') }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
 
-                                    <input type="hidden" name="voting_role" value="TEACHER">
-                                    <input type="hidden" name="voting_user" value="{{ $teacher->uuid }}">
-                                    <x-dropdown-item type="submit">
-                                        <span>{{ __('To make voting coordinator') }}</span>
-                                    </x-dropdown-item>
-                                </form>
-                            @else
-                                <form action="{{ route('voting.remove-user') }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
+                                        <input type="hidden" name="voting_role" value="TEACHER">
+                                        <input type="hidden" name="voting_user" value="{{ $teacher->uuid }}">
+                                        <x-dropdown-item type="submit">
+                                            <span>{{ __('To make voting coordinator') }}</span>
+                                        </x-dropdown-item>
+                                    </form>
+                                @else
+                                    <form action="{{ route('voting.remove-user') }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
 
-                                    <input type="hidden" name="voting_role" value="TEACHER">
-                                    <input type="hidden" name="voting_user" value="{{ $teacher->uuid }}">
-                                    <x-dropdown-item type="submit">
-                                        <i data-acorn-icon="multiply" class="text-danger"></i>
-                                        <span>{{ __('Remove from voting coordinator') }}</span>
-                                    </x-dropdown-item>
-                                </form>
-                            @endif
+                                        <input type="hidden" name="voting_role" value="TEACHER">
+                                        <input type="hidden" name="voting_user" value="{{ $teacher->uuid }}">
+                                        <x-dropdown-item type="submit">
+                                            <i data-acorn-icon="multiply" class="text-danger"></i>
+                                            <span>{{ __('Remove from voting coordinator') }}</span>
+                                        </x-dropdown-item>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
                 @endhasrole
             </div>
         </section>
@@ -385,39 +399,71 @@
                     <section class="card mb-5">
                         <div class="card-body">
 
-                            <!-- Permits Buttons Start -->
-                            <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
-                                <a type="button" data-bs-toggle="modal" data-bs-target="#addPermitTeacherModal"
-                                    class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                    <i data-acorn-icon="plus"></i>
-                                    <span>{{ __('Add permit') }}</span>
-                                </a>
-                            </div>
-                            <!-- Permits Buttons End -->
+                            @hasanyrole('SUPPORT|SECRETARY')
+                                <!-- Permits Buttons Start -->
+                                <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
+                                    <a type="button" data-bs-toggle="modal" data-bs-target="#addPermitTeacherModal"
+                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                        <i data-acorn-icon="plus"></i>
+                                        <span>{{ __('Add permit') }}</span>
+                                    </a>
+                                </div>
+                                <!-- Permits Buttons End -->
+                            @endhasanyrole
 
                             <!-- Table Start -->
-                            <div class="">
-                                <table logro='dataTableBoxed' data-order=""
-                                    class="data-table responsive nowrap stripe dataTable no-footer dtr-inline">
+                            <div class="table-responsive-sm">
+                                <table logro='dataTableBoxed' data-order='[[ 2, "asc" ]]'
+                                    class="table responsive stripe">
                                     <thead>
                                         <tr>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
                                                 {{ __('short description') }}</th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('status') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
                                                 {{ __('date range') }}</th>
-                                            <th class="empty p-0">&nbsp;</th>
+                                            @hasanyrole('SUPPORT|COORDINATOR')
+                                                <th class="empty p-0">&nbsp;</th>
+                                            @endhasanyrole
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($teacher->permits as $permit)
                                             <tr>
-                                                <td>{{ $permit->description }}</td>
-                                                <td>{{ $permit->dateRange() }}</td>
-                                                <td class="text-center">
-                                                    <a target="_blank" title="{{ __('Download') }}"
-                                                        href="{{ $permit->url }}"><i data-acorn-icon="download"
-                                                            data-acorn-size="14"></i></a>
+                                                <td>{{ $permit->description }} </td>
+                                                <td>
+                                                    {!! $permit->status->getLabelHtml() !!}
+                                                    @if ( ! $permit->status->isPending())
+                                                    <span class="text-small fst-italic">{{ $permit?->accept_deny?->getFullName() }}</span>
+                                                    @endif
                                                 </td>
+                                                <td align="center">{{ $permit->dateRange() }}</td>
+                                                @hasanyrole('SUPPORT|COORDINATOR')
+                                                    <td align="right">
+
+                                                        @if ($permit->status->isPending())
+                                                            <!-- Dropdown Button Start -->
+                                                            <div class="ms-1">
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                    data-bs-offset="0,3" data-bs-toggle="dropdown"
+                                                                    aria-haspopup="true" aria-expanded="false" data-submenu>
+                                                                    <i data-acorn-icon="more-vertical"></i>
+                                                                </button>
+                                                                <div class="dropdown-menu dropdown-menu-end">
+                                                                    <div class="dropdown-item cursor-pointer"
+                                                                        modal="acceptOrDenyPermit"
+                                                                        data-permit="{{ $permit->id }}">
+                                                                        <span>{{ __('Accept or Deny') }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Dropdown Button End -->
+                                                        @endif
+
+                                                    </td>
+                                                @endhasanyrole
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -426,7 +472,7 @@
                             <!-- Table End -->
                         </div>
                     </section>
-                    <!-- Secretariat Content End -->
+                    <!-- Permits Content End -->
 
                 </div>
                 <!-- Permits Tab End -->
@@ -583,18 +629,78 @@
         </section>
     </div>
 
-
-    <!-- Modal Add Advice -->
-    <div class="modal fade" id="addPermitTeacherModal" aria-labelledby="modalAddPermitTeacher" data-bs-backdrop="static"
-        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Add permit') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    @hasanyrole('SUPPORT|SECRETARY')
+        <!-- Modal Add Permit Start -->
+        <div class="modal fade" id="addPermitTeacherModal" aria-labelledby="modalAddPermitTeacher" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Add permit') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    @include('logro.teacher.permit.create')
                 </div>
-                @include('logro.teacher.permit.create')
             </div>
         </div>
-    </div>
+        <!-- Modal Add Permit End -->
+    @endhasanyrole
+
+    @hasanyrole('SUPPORT|COORDINATOR')
+        <!-- Modal Accept or Deny Permit Start -->
+        <div class="modal fade" id="acceptOrDenyPermitModal" aria-labelledby="modalAcceptOrDenyPermit"
+            data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAcceptOrDenyPermit">{{ __('Accept or Deny Permission') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('teachers.permit.accepted', $teacher) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+
+                        <input type="hidden" name="permit" value="">
+
+                        <div class="modal-body">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="form-check custom-card cursor-pointer w-100 position-relative p-0 m-0">
+                                        <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
+                                            name="accept_or_deny" value="accept" />
+                                        <span class="card form-check-label form-check-label-success w-100 custom-border">
+                                            <span class="card-body text-center">
+                                                <span class="heading mt-3 text-body text-primary d-block">Aceptar</span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-check custom-card cursor-pointer w-100 position-relative p-0 m-0">
+                                        <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
+                                            name="accept_or_deny" value="deny" />
+                                        <span class="card form-check-label form-check-label-danger w-100 custom-border">
+                                            <span class="card-body text-center">
+                                                <span class="heading mt-3 text-body text-primary d-block">Denegar</span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger"
+                                data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                            <button type="submit" class="btn btn-outline-primary">
+                                {{ __('Save') }}</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- Modal Accept or Deny Permit End -->
+    @endhasanyrole
+
 @endsection

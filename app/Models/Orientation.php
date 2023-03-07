@@ -75,7 +75,7 @@ class Orientation extends Model
      *  */
     public function permits()
     {
-        return $this->hasMany(OrientationPermit::class, 'orientation_id', 'id');
+        return $this->hasMany(OrientationPermit::class, 'orientation_id', 'id')->with('accept_deny')->orderByDesc('start');
     }
 
     public function hierarchies()
