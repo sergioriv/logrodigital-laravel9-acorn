@@ -326,6 +326,8 @@
                                     class="table responsive stripe">
                                     <thead>
                                         <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
+                                                {{ __('Date of application') }}</th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
                                                 {{ __('short description') }}</th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
@@ -340,6 +342,7 @@
                                     <tbody>
                                         @foreach ($coordination->permits as $permit)
                                             <tr>
+                                                <td align="center" class="text-small">{{ $permit->created_at }}</td>
                                                 <td>{{ $permit->description }} </td>
                                                 <td>
                                                     {!! $permit->status->getLabelHtml() !!}
@@ -348,7 +351,7 @@
                                                             class="text-small fst-italic">{{ $permit?->accept_deny?->getFullName() }}</span>
                                                     @endif
                                                 </td>
-                                                <td align="center">{{ $permit->dateRange() }}</td>
+                                                <td align="center" class="text-small">{{ $permit->dateRange() }}</td>
                                                 @hasanyrole('SUPPORT|COORDINATOR')
                                                     <td align="right">
 

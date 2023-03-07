@@ -53,4 +53,11 @@ class OrientationPermit extends Model
     {
         return $this->parseDateWithSlash( Carbon::parse($v)->format('d/M') );
     }
+
+    protected function createdAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn($v) => $this->parseDateWithSlash( Carbon::parse($v)->format('d/M/Y') )
+        );
+    }
 }
