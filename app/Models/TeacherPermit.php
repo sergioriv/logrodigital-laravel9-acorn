@@ -40,26 +40,17 @@ class TeacherPermit extends Model
     }
 
     /* Accesores */
-    protected function start(): Attribute
-    {
-        return Attribute::make(
-            get: fn($v) => $this->parseDateWithSlash( Carbon::parse($v)->format('d/M') )
-        );
-    }
-
-    protected function end(): Attribute
-    {
-        return Attribute::make(
-            get: fn($v) => $this->parseDateWithSlash( Carbon::parse($v)->format('d/M') )
-        );
-    }
-
     public function dateRange()
     {
         if ( $this->start === $this->end ) {
-            return "{$this->start}";
+            return $this->dateRangeFormat($this->start);
         } else {
-            return "{$this->start} - {$this->end}";
+            return $this->dateRangeFormat($this->start) . ' - ' . $this->dateRangeFormat($this->end);
         }
+    }
+
+    private function dateRangeFormat($v)
+    {
+        return $this->parseDateWithSlash( Carbon::parse($v)->format('d/M') );
     }
 }

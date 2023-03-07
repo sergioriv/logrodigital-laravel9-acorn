@@ -21,7 +21,7 @@
                     <div id="flush-collapse{{ $loop->index }}" class="accordion-collapse collapse"
                         aria-labelledby="flush-heading{{ $loop->index }}"
                         data-bs-parent="#accordionFlushAlerts">
-                        <div class="accordion-body">
+                        <div class="accordion-body px-5">
                             <div class="row g-2">
                                 @foreach ($alertStudent as $alert)
                                     <div class="col-12 d-flex align-items-end content-container">

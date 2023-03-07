@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\support\UserController;
+use App\Models\CoordinationPermit;
 use App\Models\Data\RoleUser;
+use App\Models\OrientationPermit;
 use App\Models\Student;
 use App\Models\TeacherPermit;
 use App\Models\UserAlert;
@@ -65,9 +67,17 @@ class DashboardController extends Controller
         $teacherPermits = TeacherPermit::where('status', 0)->get()->groupBy(function ($permit) {
             return $permit->teacher_id;
         });
+        $coordinationPermits = CoordinationPermit::where('status', 0)->get()->groupBy(function ($permit) {
+            return $permit->coordination_id;
+        });
+        $orientationPermits = OrientationPermit::where('status', 0)->get()->groupBy(function ($permit) {
+            return $permit->orientation_id;
+        });
 
         return view('dashboard.coordination', [
             'teacherPermits' => $teacherPermits,
+            'coordinationPermits' => $coordinationPermits,
+            'orientationPermits' => $orientationPermits,
             'alertsStudents' => $this->myAlertStudents()
         ]);
     }

@@ -322,7 +322,7 @@
 
                             <!-- Table Start -->
                             <div class="table-responsive-sm">
-                                <table logro='dataTableBoxed' data-order='[[ 2, "asc" ]]'
+                                <table logro='dataTableBoxed' data-order='[]'
                                     class="table responsive stripe">
                                     <thead>
                                         <tr>
