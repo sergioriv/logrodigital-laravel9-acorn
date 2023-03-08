@@ -137,6 +137,9 @@ class Scripts {
       if ("undefined" !== typeof PasteGrades) {
         new PasteGrades;
       }
+      if ("undefined" !== typeof ChangeEmailAdministrative) {
+        new ChangeEmailAdministrative;
+      }
     }
 
     // Plugin pages initialization

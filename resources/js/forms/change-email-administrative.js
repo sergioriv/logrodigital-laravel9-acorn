@@ -1,7 +1,7 @@
 /**
  * Student page
  */
-class StudentDeleteForm {
+class ChangeEmailAdministrative {
     constructor() {
       this.href = window.location.href;
       // Initialization of the page plugins
@@ -12,13 +12,13 @@ class StudentDeleteForm {
     _initCodeConfirmation() {
         const _this = this;
         let btnSendCodeConfirmation = jQuery('#btn-sendCodeConfirmation');
-        let btnConfirmDelete = jQuery('#btn-confirmDelete');
+        let btnConfirmChange = jQuery('#btn-confirmChange');
         let inputSecurityCode = jQuery('#inputSecurityCode');
         btnSendCodeConfirmation.click(function () {
 
             btnSendCodeConfirmation.prop('disabled', true);
 
-            $.get(_this.href + "/code-confirmation", {}, function (data) {
+            $.get(_this.href + "/change-email/code-confirmation", {}, function (data) {
                 callNotify(data.message);
                 btnSendCodeConfirmation.prop('disabled', false);
             });
@@ -26,16 +26,16 @@ class StudentDeleteForm {
 
         inputSecurityCode.on('keyup', function () {
             if ( inputSecurityCode.val().length === 6 ) {
-                btnConfirmDelete.prop('disabled', false);
+                btnConfirmChange.prop('disabled', false);
             } else {
-                btnConfirmDelete.prop('disabled', true);
+                btnConfirmChange.prop('disabled', true);
             }
         });
     }
     _initValidateCode() {
-        const form = document.getElementById("studentDeleteForm");
+        const form = document.getElementById("changeEmailAddressForm");
         if (!form) {
-            console.log("studentDeleteForm is null");
+            console.log("changeEmailAddressForm is null");
             return;
         }
 
@@ -45,6 +45,11 @@ class StudentDeleteForm {
                     required: true,
                     minlength: 6,
                     maxlength: 6,
+                },
+                new_email: {
+                    required: true,
+                    email: true,
+                    maxlength: 191,
                 },
             }
         }

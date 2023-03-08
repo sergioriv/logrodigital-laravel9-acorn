@@ -19,7 +19,7 @@ class StudentRemovalCodeController extends Controller
         $studentCodes = StudentRemovalCode::where('student_id', $student->id);
         if ($studentCodes->count())
         {
-            if ($studentCodes->firstOrFail()->addMinutes() > now())
+            if ($studentCodes->latest()->first()->addMinutes() > now())
             {
                 $diff = Carbon::now()->diffInMinutes($studentCodes->first()->addMinutes());
                 return __("Must wait :minutes minutes to send another code.", ['minutes' => $diff]);

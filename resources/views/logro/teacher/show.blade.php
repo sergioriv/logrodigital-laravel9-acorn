@@ -37,6 +37,9 @@
             });
         </script>
     @endhasanyrole
+    @hasanyrole('SUPPORT|SECRETARY')
+    <script src="/js/forms/change-email-administrative.js"></script>
+    @endhasanyrole
 @endsection
 
 @section('content')
@@ -51,7 +54,7 @@
                 </div>
                 <!-- Title End -->
 
-                @hasrole('SUPPORT')
+                @hasanyrole('SUPPORT|SECRETARY')
                     <!-- Top Buttons Start -->
                     <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
 
@@ -63,6 +66,15 @@
                                 <i data-acorn-icon="more-horizontal"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
+                                <x-dropdown-item type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#changeEmailAddressModal">
+                                    <i data-acorn-icon="email" class="me-1"></i>
+                                    <span>{{ __('Change email address') }}</span>
+                                </x-dropdown-item>
+
+                                <div class="dropdown-divider"></div>
+
                                 @if (!in_array('VOTING_COORDINATOR', $teacher->user->getRoleNames()->toArray()))
                                     <form action="{{ route('voting.add-user') }}" method="POST">
                                         @csrf
@@ -71,6 +83,7 @@
                                         <input type="hidden" name="voting_role" value="TEACHER">
                                         <input type="hidden" name="voting_user" value="{{ $teacher->uuid }}">
                                         <x-dropdown-item type="submit">
+                                            <i data-acorn-icon="archive" class="me-1"></i>
                                             <span>{{ __('To make voting coordinator') }}</span>
                                         </x-dropdown-item>
                                     </form>
@@ -82,7 +95,7 @@
                                         <input type="hidden" name="voting_role" value="TEACHER">
                                         <input type="hidden" name="voting_user" value="{{ $teacher->uuid }}">
                                         <x-dropdown-item type="submit">
-                                            <i data-acorn-icon="multiply" class="text-danger"></i>
+                                            <i data-acorn-icon="multiply" class="text-danger me-1"></i>
                                             <span>{{ __('Remove from voting coordinator') }}</span>
                                         </x-dropdown-item>
                                     </form>
@@ -90,7 +103,7 @@
                             </div>
                         </div>
                     </div>
-                @endhasrole
+                @endhasanyrole
             </div>
         </section>
         <!-- Title End -->
@@ -648,6 +661,73 @@
             </div>
         </div>
         <!-- Modal Add Permit End -->
+
+        <!-- Modal Change Email Address Start -->
+        <div class="modal fade" id="changeEmailAddressModal" aria-labelledby="modalChangeEmailAddress" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalChangeEmailAddress">{{ __('Change email address') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('teachers.change-email', $teacher) }}" id="changeEmailAddressForm" method="POST">
+                        @csrf
+                        @method('PATCH')
+
+                        <div class="modal-body">
+                            @if (is_null(\App\Http\Controllers\SchoolController::myschool()->securityEmail()))
+                                <div class="alert alert-info mb-0" role="alert">
+                                    <h4 class="alert-heading">{{ __('No security email exists') }}.</h4>
+                                    <hr>
+                                    <div>
+                                        {{ __('You must set up a security email to continue.') }}
+                                    </div>
+                                </div>
+                            @else
+                                <div class="alert alert-warning">
+                                    <div class="mb-3">
+                                        <i data-acorn-icon="warning-circle"></i>
+                                        Por seguridad, es necesario generar un código de confirmación que le será enviado al
+                                        correo electónico de seguridad.
+                                    </div>
+                                    <div class="text-center">
+                                        <x-button class="btn-warning" id="btn-sendCodeConfirmation" type="button">
+                                            {{ __('Generate confirmation code') }}
+                                        </x-button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputSecurityCode" class="col-sm-3 col-form-label">
+                                        {{ __('Code') }}
+                                        <x-required />
+                                    </label>
+                                    <div class="col-sm-9 position-relative">
+                                        <x-input name="code_confirm" id="inputSecurityCode" :hasError="true" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="inputSecurityCode" class="col-sm-3 col-form-label">
+                                        {{ __('new email address') }}
+                                        <x-required />
+                                    </label>
+                                    <div class="col-sm-9 position-relative">
+                                        <x-input name="new_email" id="inputSecurityNewEmail" :hasError="true" />
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger"
+                                data-bs-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" id="btn-confirmChange" class="btn btn-outline-primary"
+                                disabled>{{ __('Confirm change') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Change Email Address End -->
     @endhasanyrole
 
     @hasanyrole('SUPPORT|COORDINATOR')

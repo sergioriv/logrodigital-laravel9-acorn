@@ -704,6 +704,13 @@
     "If confirmed, student :STUDENT_NAME will be removed from this list.": "Si confirma, el estudiante :STUDENT_NAME será eliminado de esta lista.",
     "Remove from inclusive": "Retirar de inclusivos",
     "Removed from list of inclusives": "Eliminado de la lista de inclusivos",
+    "Change email address": "Cambiar correo electrónico",
+    "You must set up a security email to continue.": "Debe configurar un correo electrónico de seguridad para continuar.",
+    "Authorization code for e-mail change": "Código de autorización para el cambio de correo electrónico",
+    "This code has been generated for the change of :NAME's e-mail address.": "Este código se ha generado para el cambio de correo electrónico de :NAME.",
+    "Email changed!": "Correo electrónico cambiado!",
+    "new email address": "Nuevo correo electrónico",
+    "Confirm change": "Confirmar cambio",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Current password": "Contraseña actual",

@@ -144,6 +144,25 @@ class SmtpMail extends Controller
         return $this->send_email($content->toContent());
     }
 
+    public function sendChangeEmailCode($modelName, $code)
+    {
+        $this->subject = Lang::get("Authorization code for e-mail change");
+        $this->userName = $this->SCHOOL->name;
+        $this->userEmail = $this->SCHOOL->security_email;
+
+        $content = (new ContentMail)
+            ->title(Lang::get('Dear') .' '. $this->SCHOOL->name)
+            ->line('<hr>')
+            ->line(Lang::get('Here is the code you need:'))
+            ->line('<b>'.$code.'</b>')
+            ->line(Lang::get(
+                "This code has been generated for the change of :NAME's e-mail address.",
+                ['NAME' => '<b>' . $modelName . '</b>']
+            ));
+
+        return $this->send_email($content->toContent());
+    }
+
 
     /* Mail Alert
      *

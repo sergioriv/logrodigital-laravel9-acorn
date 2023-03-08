@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AttendanceStudentController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ChangeEmailAddressAdmin;
 use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\CoordinationDegreeController;
 use App\Http\Controllers\CoordinationEmploymentHistoryController;
@@ -331,6 +332,17 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::put('students/{student}/report-book/checked', [StudentReportBookController::class, 'checked'])->name('students.reportBooks.checked');
     Route::delete('student/{student}/report-book', [StudentReportBookController::class, 'delete'])->name('students.reportBook.delete');
 
+
+
+    /*
+     *
+     * Change Email Address Administrative
+     *
+     */
+    Route::controller(ChangeEmailAddressAdmin::class)->group( function () {
+        Route::get('teachers/{teacher}/change-email/code-confirmation', 'teacher');
+        Route::patch('teachers/{teacher}/change-email}', 'teacherUpdate')->name('teachers.change-email');
+    });
 
 
 

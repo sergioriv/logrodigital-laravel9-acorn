@@ -3,12 +3,14 @@
  */
 class StudentDeleteForm {
     constructor() {
+      this.href = window.location.href;
       // Initialization of the page plugins
       this._initCodeConfirmation();
       this._initValidateCode();
     }
 
     _initCodeConfirmation() {
+        const _this = this;
         let btnSendCodeConfirmation = jQuery('#btn-sendCodeConfirmation');
         let btnConfirmDelete = jQuery('#btn-confirmDelete');
         let inputSecurityCode = jQuery('#inputSecurityCode');
@@ -16,7 +18,7 @@ class StudentDeleteForm {
 
             btnSendCodeConfirmation.prop('disabled', true);
 
-            $.get("code-confirmation", {}, function (data) {
+            $.get(_this.href + "/code-confirmation", {}, function (data) {
                 callNotify(data.message);
                 btnSendCodeConfirmation.prop('disabled', false);
             });
@@ -39,7 +41,7 @@ class StudentDeleteForm {
 
         const validateOptions = {
             rules: {
-                code: {
+                code_confirm: {
                     required: true,
                     minlength: 6,
                     maxlength: 6,
