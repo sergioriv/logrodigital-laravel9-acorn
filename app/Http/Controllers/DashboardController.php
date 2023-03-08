@@ -48,7 +48,7 @@ class DashboardController extends Controller
         $Y = SchoolYearController::current_year();
 
         $pendingStudents = Student::where(function ($query) {
-            $query->where('disability_id', '>', 1)
+            $query->where('pre_inclusive', 1)
                     ->where(function ($student) {
                         $student->where('inclusive', 0)->orWhereNull('inclusive');
                     });

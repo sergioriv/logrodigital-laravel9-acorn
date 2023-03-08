@@ -107,6 +107,7 @@ class Student extends Model
 
         'simat', // (Si, No)
         'inclusive', // (Si, No)
+        'pre_inclusive',
         'medical_diagnosis',
         'medical_prediagnosis',
 

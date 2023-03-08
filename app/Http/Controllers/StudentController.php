@@ -336,7 +336,7 @@ class StudentController extends Controller
     public function wizard_documents(Student $student)
     {
         if ('STUDENT' === UserController::role_auth()) {
-            // $student = Student::find(Auth::id());
+
             $studentFileTypes = StudentFileType::with([
                 'studentFile' => fn ($files) => $files->where('student_id', $student->id)
             ]);
@@ -825,9 +825,14 @@ class StudentController extends Controller
         }
 
         /* COMPROBACION DE CERTIFICADO DE DISCAPACIDAD */
+        $preInclusive = 0;
         if ($request->disability > 1) {
 
             StudentFileController::upload_disability_file($request, $student);
+
+            if ( ! is_null($student->pre_inclusive) ) {
+                $preInclusive = 1;
+            }
 
         }
 
@@ -871,6 +876,7 @@ class StudentController extends Controller
             'sisben_id' => $request->sisben,
             'school_insurance' => $request->school_insurance,
             'disability_id' => $request->disability,
+            'pre_inclusive' => $preInclusive,
 
             /* informacion complementaria */
             'ethnic_group_id' => $request->ethnic_group,
@@ -921,7 +927,7 @@ class StudentController extends Controller
         $pendingStudents = null;
         if ( RoleUser::ORIENTATION_ROL === UserController::role_auth() ) {
             $pendingStudents = Student::where(function ($query) {
-                $query->where('disability_id', '>', 1)
+                $query->where('pre_inclusive', 1)
                         ->where(function ($student) {
                             $student->where('inclusive', 0)->orWhereNull('inclusive');
                         });
@@ -956,10 +962,10 @@ class StudentController extends Controller
 
         $student = Student::find($request->student);
 
-        $student->forceFill([
-            'pre_inclusive' => 0,
+        $student->update([
+            'pre_inclusive' => NULL,
             'inclusive' => NULL
-        ])->save();
+        ]);
 
         Notify::success(__('Removed from list of inclusives'));
         return back();
