@@ -70,7 +70,7 @@
                 </div>
                 <!-- Title End -->
 
-                @hasrole('TEACHER')
+                @hasrole('TEACHER|COORDINATOR')
                     @if ($existOrientation)
                         <!-- Top Buttons Start -->
                         <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
@@ -611,7 +611,7 @@
     </div>
 
 
-    @hasrole('TEACHER')
+    @hasrole('TEACHER|COORDINATOR')
         @if ($existOrientation)
             <!-- Modal Remit to Orientation -->
             <div class="modal fade modal-close-out" id="addRemitToOrientation" aria-labelledby="modalAddRemitToOrientation"

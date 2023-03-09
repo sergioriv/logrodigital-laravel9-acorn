@@ -15,6 +15,10 @@ use Illuminate\Http\Request;
 
 class UserAlertController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('hasroles:TEACHER,COORDINATOR')->only('teacher_to_orientation');
+    }
 
     public static function orientation_to_coordinator(Coordination $coordinator, Student $student, Request $request)
     {
@@ -88,7 +92,7 @@ class UserAlertController extends Controller
     /* access for methode POST */
     public function teacher_to_orientation(Student $student, Request $request)
     {
-        if ($student->enrolled && UserController::role_auth() === RoleUser::TEACHER_ROL) {
+        if ($student->enrolled) {
 
             $request->validate([
                 'recommendations_orientation' => ['required', 'string', 'min:10', 'max:5000'],
@@ -123,21 +127,20 @@ class UserAlertController extends Controller
                     $orientators,
                     $request->recommendations_orientation
                 );
-
             }
 
             Notify::success(__('Report generated!'));
             return redirect()->route('students.show', $student);
         }
 
-        return redirect()->back()->withErrors(__('Not allowed'));
+        return redirect()->back()->withErrors(__('Student is not enrolled'));
     }
 
 
     /* access for methode GET */
     public function checked(UserAlert $alert)
     {
-        if ( in_array(auth()->id(), $alert->for_users) ) {
+        if (in_array(auth()->id(), $alert->for_users)) {
 
             $checked = (array)$alert->checked;
             array_push($checked, auth()->id());
