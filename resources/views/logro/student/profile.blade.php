@@ -2994,11 +2994,11 @@
                 </div>
                 <div class="modal-body text-center">
                     <p>
-                        {{ __("Are you sure to reset :USER's password?", ['USER' => $student->getCompleteNames()]) }}
+                        {!! __("Are you sure to reset <b>:USER's</b> password?", ['USER' => $student->getCompleteNames()]) !!}
                     </p>
                     <div class="btn btn-outline-primary"
                         modal="restorePassword"
-                        data-role="student"
+                        data-role="STUDENT"
                         data-id="{{ $student->id }}">{{ __('Restore') }}</div>
                 </div>
             </div>

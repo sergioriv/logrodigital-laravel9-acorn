@@ -37,6 +37,23 @@
             });
         </script>
     @endhasanyrole
+    @hasanyrole('SUPPORT|SECRETARY')
+    <script src="/js/forms/change-email-administrative.js"></script>
+    <script>
+        jQuery('[modal="restorePassword"]').click(function() {
+
+            let _restore = $(this);
+
+            $.get(HOST + "/user/restore-password", {
+                role: _restore.data('role'),
+                id: _restore.data('id')
+            }, function(data) {
+                $('#restorePassword .modal-body').html(data);
+                $('#restorePassword').modal('show');
+            });
+        });
+    </script>
+    @endhasanyrole
 @endsection
 
 @section('content')
@@ -46,10 +63,39 @@
         <section class="page-title-container">
             <div class="row">
                 <!-- Title Start -->
-                <div class="col-12">
+                <div class="col-12 col-md-8 mb-2 mb-md-0">
                     <h1 class="mb-1 pb-0 display-4" id="title">{{ $orientation->getFullName() }}</h1>
                 </div>
                 <!-- Title End -->
+
+                @hasanyrole('SUPPORT|SECRETARY')
+                    <!-- Top Buttons Start -->
+                    <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
+
+                        <!-- Dropdown Button Start -->
+                        <div class="ms-1">
+                            <button type="button" class="btn btn-sm btn-outline-info btn-icon btn-icon-only"
+                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                data-submenu>
+                                <i data-acorn-icon="more-horizontal"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <x-dropdown-item type="button" data-bs-toggle="modal"
+                                    data-bs-target="#changeEmailAddressModal">
+                                    <i data-acorn-icon="email" class="me-1"></i>
+                                    <span>{{ __('Change email address') }}</span>
+                                </x-dropdown-item>
+
+                                <x-dropdown-item type="button" data-bs-toggle="modal" data-bs-target="#restorePassword">
+                                    <i data-acorn-icon="lock-off" class="me-1"></i>
+                                    <span>{{ __('Restore password') }}</span>
+                                </x-dropdown-item>
+                            </div>
+                        </div>
+                        <!-- Dropdown Button End -->
+
+                    </div>
+                @endhasanyrole
             </div>
         </section>
         <!-- Title End -->
@@ -543,7 +589,7 @@
 
 
     @hasanyrole('SUPPORT|SECRETARY')
-        <!-- Modal Add Advice -->
+        <!-- Modal Add Advice Start -->
         <div class="modal fade" id="addPermitTeacherModal" aria-labelledby="modalAddPermitTeacher" data-bs-backdrop="static"
             data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -556,6 +602,93 @@
                 </div>
             </div>
         </div>
+        <!-- Modal Add Advice End -->
+
+        <!-- Modal Change Email Address Start -->
+        <div class="modal fade" id="changeEmailAddressModal" aria-labelledby="modalChangeEmailAddress" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalChangeEmailAddress">{{ __('Change email address') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('orientation.change-email', $orientation) }}" id="changeEmailAddressForm" method="POST">
+                        @csrf
+                        @method('PATCH')
+
+                        <div class="modal-body">
+                            @if (is_null(\App\Http\Controllers\SchoolController::myschool()->securityEmail()))
+                                <div class="alert alert-info mb-0" role="alert">
+                                    <h4 class="alert-heading">{{ __('No security email exists') }}.</h4>
+                                    <hr>
+                                    <div>
+                                        {{ __('You must set up a security email to continue.') }}
+                                    </div>
+                                </div>
+                            @else
+                                <div class="alert alert-warning">
+                                    <div class="mb-3">
+                                        <i data-acorn-icon="warning-circle"></i>
+                                        Por seguridad, es necesario generar un código de confirmación que le será enviado al
+                                        correo electónico de seguridad.
+                                    </div>
+                                    <div class="text-center">
+                                        <x-button class="btn-warning" id="btn-sendCodeConfirmation" type="button">
+                                            {{ __('Generate confirmation code') }}
+                                        </x-button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputSecurityCode" class="col-sm-3 col-form-label">
+                                        {{ __('Code') }}
+                                        <x-required />
+                                    </label>
+                                    <div class="col-sm-9 position-relative">
+                                        <x-input name="code_confirm" id="inputSecurityCode" :hasError="true" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="inputSecurityCode" class="col-sm-3 col-form-label">
+                                        {{ __('new email address') }}
+                                        <x-required />
+                                    </label>
+                                    <div class="col-sm-9 position-relative">
+                                        <x-input name="new_email" id="inputSecurityNewEmail" :hasError="true" />
+                                    </div>
+                                </div> @endif
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" id="btn-confirmChange" class="btn btn-outline-primary"
+                                disabled>{{ __('Confirm change') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Change Email Address End -->
+
+        <!-- Modal Restore Password Start -->
+        <div class="modal fade" id="restorePassword" aria-labelledby="modalRestorePassword" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Restore password') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>
+                            {!! __("Are you sure to reset <b>:USER's</b> password?", ['USER' => $orientation->getFullName()]) !!}
+                        </p>
+                        <div class="btn btn-outline-primary" modal="restorePassword" data-role="ORIENTATOR"
+                            data-id="{{ $orientation->uuid }}">{{ __('Restore') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Restore Password End -->
     @endhasanyrole
 
     @hasanyrole('SUPPORT|COORDINATOR')

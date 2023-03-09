@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
 use App\Models\ChangeEmailCode;
+use App\Models\Orientation;
 use App\Models\Teacher;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class ChangeEmailAddressAdmin extends Controller
     protected $model;
 
     const MODEL_TEACHER = "App\Models\Teacher";
+    const MODEL_ORIENTATOR = "App\Models\Orientation";
 
     public function __construct()
     {
@@ -27,6 +29,11 @@ class ChangeEmailAddressAdmin extends Controller
     }
 
 
+    /*
+     *
+     * UPDATE TEACHER START
+     *
+     * */
     public function teacher(Teacher $teacher)
     {
         if (is_null(SchoolController::myschool()->securityEmail())) {
@@ -43,16 +50,15 @@ class ChangeEmailAddressAdmin extends Controller
 
     public function teacherUpdate(Request $request, Teacher $teacher)
     {
+        if (is_null(SchoolController::myschool()->securityEmail())) {
+            Notify::fail(__('No security email exists'));
+            return redirect()->back();
+        }
 
         $request->validate([
             'code_confirm' => ['required', 'string'],
             'new_email' => ['required', 'max:191', 'email', Rule::unique('users', 'email')->ignore($teacher->id)]
         ]);
-
-        if (is_null(SchoolController::myschool()->securityEmail())) {
-            Notify::fail(__('No security email exists'));
-            return redirect()->back();
-        }
 
         $confirmCode = ChangeEmailCode::where('model_type', self::MODEL_TEACHER)
             ->where('model_id', $teacher->id)
@@ -83,6 +89,80 @@ class ChangeEmailAddressAdmin extends Controller
         Notify::success(__('Email changed!'));
         return redirect()->back();
     }
+    /*
+     *
+     * UPDATE TEACHER END
+     *
+     * */
+
+
+
+    /*
+     *
+     * UPDATE TEACHER START
+     *
+     * */
+    public function orientator(Orientation $orientation)
+    {
+        if (is_null(SchoolController::myschool()->securityEmail())) {
+            return ['status' => false, 'message' => 'fail|' . __('No security email exists')];
+        }
+
+        $generateCodeRemoval = $this->generate(self::MODEL_ORIENTATOR, $orientation);
+
+        if ($generateCodeRemoval === TRUE)
+            return ['status' => true, 'message' => 'info|' . __("A code was sent to the security email")];
+        else
+            return ['status' => false, 'message' => 'fail|' . $generateCodeRemoval];
+    }
+
+    public function orientatorUpdate(Request $request, Orientation $orientation)
+    {
+        if (is_null(SchoolController::myschool()->securityEmail())) {
+            Notify::fail(__('No security email exists'));
+            return redirect()->back();
+        }
+
+        $request->validate([
+            'code_confirm' => ['required', 'string'],
+            'new_email' => ['required', 'max:191', 'email', Rule::unique('users', 'email')->ignore($orientation->id)]
+        ]);
+
+
+        $confirmCode = ChangeEmailCode::where('model_type', self::MODEL_ORIENTATOR)
+            ->where('model_id', $orientation->id)
+            ->where('code', $request->code_confirm)
+            ->first();
+
+        if (is_null($confirmCode)) {
+            Notify::fail(__('Code invalid'));
+            return redirect()->back();
+        }
+
+
+        $newEmail = Str::lower($request->new_email);
+
+        /* Actualizamos el correo tanto en el modelo como en su usuario */
+        $orientation->update([
+            'institutional_email' => $newEmail
+        ]);
+        $orientation->user->update([
+            'email' => $newEmail
+        ]);
+
+
+        /* Se borran los codigos que se hayan generado para el docente */
+        ChangeEmailCode::where('model_type', self::MODEL_ORIENTATOR)->where('model_id', $orientation->id)->delete();
+
+
+        Notify::success(__('Email changed!'));
+        return redirect()->back();
+    }
+    /*
+     *
+     * UPDATE TEACHER END
+     *
+     * */
 
 
 

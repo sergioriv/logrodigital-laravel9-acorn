@@ -656,7 +656,7 @@
     "date observation": "fecha de la observación",
     "Create new": "Crear nuevo",
     "Restore password": "Restaurar contraseña",
-    "Are you sure to reset :USER's password?": "¿Está seguro de restaurar la contraseña de :USER?",
+    "Are you sure to reset <b>:USER's</b> password?": "¿Está seguro de restaurar la contraseña de <b>:USER</b>?",
     "He is now voting coordinator": "Ahora es coordinador de votaciones",
     "No longer voting coordinator": "Ya no es coordinador de votaciones",
     "To make voting coordinator": "Hacer coordinador de votaciones",

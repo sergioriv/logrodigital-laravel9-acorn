@@ -342,6 +342,9 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::controller(ChangeEmailAddressAdmin::class)->group( function () {
         Route::get('teachers/{teacher}/change-email/code-confirmation', 'teacher');
         Route::patch('teachers/{teacher}/change-email}', 'teacherUpdate')->name('teachers.change-email');
+
+        Route::get('orientation/{orientation}/change-email/code-confirmation', 'orientator');
+        Route::patch('orientation/{orientation}/change-email}', 'orientatorUpdate')->name('orientation.change-email');
     });
 
 

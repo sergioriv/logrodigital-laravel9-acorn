@@ -38,7 +38,21 @@
         </script>
     @endhasanyrole
     @hasanyrole('SUPPORT|SECRETARY')
-    <script src="/js/forms/change-email-administrative.js"></script>
+        <script src="/js/forms/change-email-administrative.js"></script>
+        <script>
+            jQuery('[modal="restorePassword"]').click(function() {
+
+                let _restore = $(this);
+
+                $.get(HOST + "/user/restore-password", {
+                    role: _restore.data('role'),
+                    id: _restore.data('id')
+                }, function(data) {
+                    $('#restorePassword .modal-body').html(data);
+                    $('#restorePassword').modal('show');
+                });
+            });
+        </script>
     @endhasanyrole
 @endsection
 
@@ -66,11 +80,15 @@
                                 <i data-acorn-icon="more-horizontal"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <x-dropdown-item type="button"
-                                    data-bs-toggle="modal"
+                                <x-dropdown-item type="button" data-bs-toggle="modal"
                                     data-bs-target="#changeEmailAddressModal">
                                     <i data-acorn-icon="email" class="me-1"></i>
                                     <span>{{ __('Change email address') }}</span>
+                                </x-dropdown-item>
+
+                                <x-dropdown-item type="button" data-bs-toggle="modal" data-bs-target="#restorePassword">
+                                    <i data-acorn-icon="lock-off" class="me-1"></i>
+                                    <span>{{ __('Restore password') }}</span>
                                 </x-dropdown-item>
 
                                 <div class="dropdown-divider"></div>
@@ -426,8 +444,7 @@
 
                             <!-- Table Start -->
                             <div class="table-responsive-sm">
-                                <table logro='dataTableBoxed' data-order='[]'
-                                    class="table responsive stripe">
+                                <table logro='dataTableBoxed' data-order='[]' class="table responsive stripe">
                                     <thead>
                                         <tr>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
@@ -451,8 +468,9 @@
                                                 <td>{{ $permit->description }} </td>
                                                 <td>
                                                     {!! $permit->status->getLabelHtml() !!}
-                                                    @if ( ! $permit->status->isPending())
-                                                    <span class="text-small fst-italic">{{ $permit?->accept_deny?->getFullName() }}</span>
+                                                    @if (!$permit->status->isPending())
+                                                        <span
+                                                            class="text-small fst-italic">{{ $permit?->accept_deny?->getFullName() }}</span>
                                                     @endif
                                                 </td>
                                                 <td align="center" class="text-small">{{ $permit->dateRange() }}</td>
@@ -495,7 +513,8 @@
                 <!-- Permits Tab End -->
 
                 <!-- Hierarchy Tab Start -->
-                <div class="tab-pane fade show @if (session('tab') === 'hierarchies') active show @endempty" id="hierarchyTab"
+                <div
+                    class="tab-pane fade show @if (session('tab') === 'hierarchies') active show @endempty" id="hierarchyTab"
                     role="tabpanel">
 
                     <!-- Hierarchy Content Tab Start -->
@@ -664,7 +683,7 @@
 
         <!-- Modal Change Email Address Start -->
         <div class="modal fade" id="changeEmailAddressModal" aria-labelledby="modalChangeEmailAddress" data-bs-backdrop="static"
-        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -714,12 +733,10 @@
                                     <div class="col-sm-9 position-relative">
                                         <x-input name="new_email" id="inputSecurityNewEmail" :hasError="true" />
                                     </div>
-                                </div>
-                            @endif
+                                </div> @endif
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger"
-                                data-bs-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('Close') }}</button>
                             <button type="submit" id="btn-confirmChange" class="btn btn-outline-primary"
                                 disabled>{{ __('Confirm change') }}</button>
                         </div>
@@ -728,63 +745,83 @@
             </div>
         </div>
         <!-- Modal Change Email Address End -->
-    @endhasanyrole
 
-    @hasanyrole('SUPPORT|COORDINATOR')
-        <!-- Modal Accept or Deny Permit Start -->
-        <div class="modal fade" id="acceptOrDenyPermitModal" aria-labelledby="modalAcceptOrDenyPermit"
-            data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <!-- Modal Restore Password Start -->
+        <div class="modal fade" id="restorePassword" aria-labelledby="modalRestorePassword" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalAcceptOrDenyPermit">{{ __('Accept or Deny Permission') }}</h5>
+                        <h5 class="modal-title">{{ __('Restore password') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="{{ route('teachers.permit.accepted', $teacher) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-
-                        <input type="hidden" name="permit" value="">
-
-                        <div class="modal-body">
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <label class="form-check custom-card cursor-pointer w-100 position-relative p-0 m-0">
-                                        <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
-                                            name="accept_or_deny" value="accept" />
-                                        <span class="card form-check-label form-check-label-success w-100 custom-border">
-                                            <span class="card-body text-center">
-                                                <span class="heading mt-3 text-body text-primary d-block">Aceptar</span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-check custom-card cursor-pointer w-100 position-relative p-0 m-0">
-                                        <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
-                                            name="accept_or_deny" value="deny" />
-                                        <span class="card form-check-label form-check-label-danger w-100 custom-border">
-                                            <span class="card-body text-center">
-                                                <span class="heading mt-3 text-body text-primary d-block">Denegar</span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger"
-                                data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-                            <button type="submit" class="btn btn-outline-primary">
-                                {{ __('Save') }}</button>
-                        </div>
-                    </form>
-
+                    <div class="modal-body text-center">
+                        <p>
+                            {!! __("Are you sure to reset <b>:USER's</b> password?", ['USER' => $teacher->getFullName()]) !!}
+                        </p>
+                        <div class="btn btn-outline-primary" modal="restorePassword" data-role="TEACHER"
+                            data-id="{{ $teacher->uuid }}">{{ __('Restore') }}</div>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- Modal Accept or Deny Permit End -->
+        <!-- Modal Restore Password End -->
     @endhasanyrole
 
+@hasanyrole('SUPPORT|COORDINATOR')
+    <!-- Modal Accept or Deny Permit Start -->
+    <div class="modal fade" id="acceptOrDenyPermitModal" aria-labelledby="modalAcceptOrDenyPermit"
+        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAcceptOrDenyPermit">{{ __('Accept or Deny Permission') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('teachers.permit.accepted', $teacher) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+
+                    <input type="hidden" name="permit" value="">
+
+                    <div class="modal-body">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label class="form-check custom-card cursor-pointer w-100 position-relative p-0 m-0">
+                                    <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
+                                        name="accept_or_deny" value="accept" />
+                                    <span class="card form-check-label form-check-label-success w-100 custom-border">
+                                        <span class="card-body text-center">
+                                            <span class="heading mt-3 text-body text-primary d-block">Aceptar</span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-check custom-card cursor-pointer w-100 position-relative p-0 m-0">
+                                    <input type="radio" class="form-check-input position-absolute e-2 t-2 z-index-1"
+                                        name="accept_or_deny" value="deny" />
+                                    <span class="card form-check-label form-check-label-danger w-100 custom-border">
+                                        <span class="card-body text-center">
+                                            <span class="heading mt-3 text-body text-primary d-block">Denegar</span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger"
+                            data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-outline-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal Accept or Deny Permit End -->
+@endhasanyrole
 @endsection
