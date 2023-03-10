@@ -594,6 +594,13 @@
                                                 {{ $student->medical_prediagnosis }}</div>
                                         </div>
                                     </div>
+                                    <div class="col-12">
+                                        <div class="position-relative form-group">
+                                            <x-label>{{ __('risks or vulnerabilities') }}</x-label>
+                                            <div class="form-control">
+                                                {{ $student->risks_vulnerabilities }}</div>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>

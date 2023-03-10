@@ -110,6 +110,7 @@ class Student extends Model
         'pre_inclusive',
         'medical_diagnosis',
         'medical_prediagnosis',
+        'risks_vulnerabilities',
 
         'school_year_create',
         'headquarters_id',

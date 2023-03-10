@@ -389,6 +389,63 @@
     </section>
 
     <section class="card mt-1">
+        <div class="card-header">Datos del acudiente</div>
+        @if ( is_null($tracking->student->person_charge) )
+        <div class="card-content">
+            <div class="p-1">Sin registro de acudiente</div>
+        </div>
+        @else
+        <div class="card-content">
+            <table class="table w-100">
+                <tr>
+                    <td colspan="4" class="p-1">
+                        <div class="label">Nombre completo</div>
+                        <div class="form-control">{{ $tracking->student->myTutorIs->name ?? '--' }}</div>
+                    </td>
+                    <td colspan="3" class="p-1">
+                        <div class="label">Correo electrónico</div>
+                        <div class="form-control">{{ $tracking->student->myTutorIs->email ?? '--' }}</div>
+                    </td>
+                    <td class="p-1">
+                        <div class="label">Teléfono</div>
+                        <div class="form-control">{{ $tracking->student->myTutorIs->telephone ?? '--' }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="p-1">
+                        <div class="label">Ciudad de residencia</div>
+                        <div class="form-control">
+                            @if ($tracking->student->myTutorIs != null && $tracking->student->myTutorIs->residence_city_id != null)
+                                {{ $tracking->student->myTutorIs->residenceCity->department->name . ' | ' . $tracking->student->myTutorIs->residenceCity->name }}
+                            @else
+                                --
+                            @endif
+                        </div>
+                    </td>
+                    <td colspan="4" class="p-1">
+                        <div class="label">Dirección</div>
+                        <div class="form-control">{{ $tracking->student->myTutorIs->address ?? '--' }}</div>
+                    </td>
+                    <td class="p-1">
+                        <div class="label">Celular</div>
+                        <div class="form-control">{{ $tracking->student->myTutorIs->cellphone ?? '--' }}</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @endif
+    </section>
+
+    @if ( ! is_null($tracking->student->risks_vulnerabilities) )
+        <section class="card mt-1">
+            <div class="card-header">Riegos o vulnerabilidades del estudiante</div>
+            <div class="card-content">
+                <div class="p-1">{{ $tracking->student->risks_vulnerabilities }}</div>
+            </div>
+        </section>
+    @endif
+
+    <section class="card mt-1">
         <div class="card-header">{{ __('Reason for remit') }}</div>
         <div class="card-content">
             <div class="p-1">

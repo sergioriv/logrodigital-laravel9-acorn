@@ -1014,7 +1014,8 @@ class StudentController extends Controller
             'simat' => ['nullable', 'boolean'],
             'inclusive' => ['nullable', 'boolean'],
             'medical_diagnosis' => ['nullable', 'max:5000'],
-            'medical_prediagnosis' => ['nullable', 'max:5000']
+            'medical_prediagnosis' => ['nullable', 'max:5000'],
+            'risks_vulnerabilities' => ['nullable', 'max:5000'],
         ]);
 
         $student->update([
@@ -1061,7 +1062,8 @@ class StudentController extends Controller
             'simat' => $request->simat,
             'inclusive' => $request->inclusive,
             'medical_diagnosis' => $request->medical_diagnosis,
-            'medical_prediagnosis' => $request->medical_prediagnosis
+            'medical_prediagnosis' => $request->medical_prediagnosis,
+            'risks_vulnerabilities' => $request->risks_vulnerabilities,
         ]);
 
         Notify::success(__('Student updated!'));

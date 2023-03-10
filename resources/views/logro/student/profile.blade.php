@@ -2399,6 +2399,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <div class="mb-3 position-relative form-group">
+                                                <x-label>{{ __('risks or vulnerabilities') }}</x-label>
+                                                <textarea name="risks_vulnerabilities" rows="5" class="form-control">{{ $student->risks_vulnerabilities }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </section>
                             <!--  Psychosocial Assessment Section End -->
