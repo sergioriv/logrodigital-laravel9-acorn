@@ -36,11 +36,8 @@ class Attendance extends Model
         return $this->students()->whereIn('attend', ['N', 'J', 'L']);
     }
 
-
-    protected function date(): Attribute
+    public function dateLabel()
     {
-        return Attribute::make(
-            get: fn ($value) => ucwords( Carbon::parse($value)->translatedFormat('d M') )
-        );
+        return ucwords( Carbon::parse($this->date)->translatedFormat('d M') );
     }
 }

@@ -372,7 +372,7 @@ class TeacherController extends Controller
             ->first();
 
         $attendancesWeek = Attendance::where('teacher_subject_group_id', $subject->id)
-            ->whereBetween('created_at', [
+            ->whereBetween('date', [
                 Carbon::now()->startOfWeek()->format('Y-m-d H:i:s'),
                 Carbon::now()->endOfWeek()->format('Y-m-d H:i:s')
             ])->count();

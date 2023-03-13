@@ -511,7 +511,7 @@
                                                             @foreach ($attendances as $attendance)
                                                                 <tr>
                                                                     <td scope="row" class="text-capitalize">
-                                                                        {{ $attendance->date }}</td>
+                                                                        {{ $attendance->dateLabel() }}</td>
                                                                     <td class="text-center">
                                                                         {{ $attendance->absences_count }}</td>
                                                                     <td class="text-end">
