@@ -21,6 +21,6 @@
 <x-notify-errors />
 @endauth
 @yield('js_page')
-<script src="/js/common.js?d=1666621931302"></script>
+<script src="/js/common.js?d=1678306933740"></script>
 <script src="/js/scripts.js?d=1678306933740"></script>
 <!-- Page Specific Scripts End -->
