@@ -174,6 +174,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     });
     Route::resource('teachers', TeacherController::class)->except('destroy','edit','update')->names('teacher');
     Route::post('teachers/{teacher}/permit', [TeacherPermitController::class, 'store'])->name('teachers.permits.store');
+    Route::patch('teachers/{teacher}/permit', [TeacherPermitController::class, 'store_document'])->name('teachers.permits.document');
     Route::patch('teachers/{teacher}/permit/accept-or-deny', [TeacherPermitController::class, 'acceptedOrDenied'])->name('teachers.permit.accepted');
     Route::post('teachers/hierarchy', [TeacherHierarchyController::class, 'store'])->name('teacher.hierarchy.store');
     Route::post('teachers/degree', [TeacherDegreeController::class, 'store'])->name('teacher.degree.store');
@@ -191,6 +192,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     /* Route Coordination */
     Route::resource('coordination', CoordinationController::class)->only('index', 'show', 'create','store')->names('coordination');
     Route::post('coordination/{coordination}/permit', [CoordinationPermitController::class, 'store'])->name('coordination.permits.store');
+    Route::patch('coordination/{coordination}/permit', [CoordinationPermitController::class, 'store_document'])->name('coordination.permits.document');
     Route::patch('coordination/{coordination}/permit/accept-or-deny', [CoordinationPermitController::class, 'acceptedOrDenied'])->name('coordination.permit.accepted');
     Route::post('coordination/hierarchy', [CoordinationHierarchyController::class, 'store'])->name('coordination.hierarchy.store');
     Route::post('coordination/degree', [CoordinationDegreeController::class, 'store'])->name('coordination.degree.store');
@@ -201,6 +203,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     /* Route Orientation */
     Route::resource('orientation', OrientationController::class)->only('index', 'show', 'create','store')->names('orientation');
     Route::post('orientation/{orientation}/permit', [OrientationPermitController::class, 'store'])->name('orientation.permits.store');
+    Route::patch('orientation/{orientation}/permit', [OrientationPermitController::class, 'store_document'])->name('orientation.permits.document');
     Route::patch('orientation/{orientation}/permit/accept-or-deny', [OrientationPermitController::class, 'acceptedOrDenied'])->name('orientation.permit.accepted');
     Route::post('orientation/hierarchy', [OrientationHierarchyController::class, 'store'])->name('orientation.hierarchy.store');
     Route::post('orientation/degree', [OrientationDegreeController::class, 'store'])->name('orientation.degree.store');

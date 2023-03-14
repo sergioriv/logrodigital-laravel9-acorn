@@ -49,6 +49,37 @@ class CoordinationPermitController extends Controller
         return redirect()->back();
     }
 
+    public function store_document(Request $request, Coordination $coordination)
+    {
+        $request->validate([
+            'permit' => ['required'],
+            'support_document' => ['required', 'file', 'mimes:pdf', 'max:2048']
+        ]);
+
+        $permit = CoordinationPermit::where('id', $request->permit)->where('coordination_id', $coordination->id)->first();
+
+        if ( ! $permit->status->isDenied() && is_null($permit->support_document) ) {
+
+            $fileUrl = $this->upload_file($request, $coordination->uuid);
+            if ( ! is_null($fileUrl) ) {
+
+                $permit->forceFill([
+                    'support_document' => $fileUrl
+                ])->save();
+
+                Notify::success(__('File upload!'));
+
+            } else {
+
+                Notify::fail(__('An error has occurred'));
+            }
+
+        }
+
+        static::tab();
+        return back();
+    }
+
     public function acceptedOrDenied(Request $request, Coordination $coordination)
     {
         $request->validate([
@@ -89,7 +120,9 @@ class CoordinationPermitController extends Controller
         if ( $request->hasFile('support_document') )
         {
             $path = $request->file('support_document')->store('coordinators/'.$coordination_uuid.'/permits', 'public');
-            return config('filesystems.disks.public.url') .'/' . $path;
+            if ($path)
+                return config('app.url') .'/'.  config('filesystems.disks.public.url') .'/' . $path;
+            return null;
         }
         else return null;
     }

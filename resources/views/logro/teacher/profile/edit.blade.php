@@ -43,6 +43,16 @@
         jQuery("#signature input[type='file']").change(function() {
             $("#signature .form-signature").removeClass('d-none');
         });
+
+        jQuery("[data-permit]").click(function() {
+            let _this = $(this);
+            var contentModal = $("#modalAddSupportDocument");
+
+            if (_this.data('permit')) {
+                contentModal.find('[name="permit"]').val(_this.data('permit'));
+                contentModal.modal('show');
+            }
+        });
     </script>
 @endsection
 
@@ -420,8 +430,7 @@
 
                             <!-- Table Start -->
                             <div class="table-responsive-sm">
-                                <table logro='dataTableBoxed' data-order='[]'
-                                    class="table responsive stripe">
+                                <table logro='dataTableBoxed' data-order='[]' class="table responsive stripe">
                                     <thead>
                                         <tr>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
@@ -432,6 +441,7 @@
                                                 {{ __('status') }}</th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
                                                 {{ __('date range') }}</th>
+                                            <th class="empty">&nbsp;</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -441,11 +451,62 @@
                                                 <td>{{ $permit->description }}</td>
                                                 <td>
                                                     {!! $permit->status->getLabelHtml() !!}
-                                                    @if ( ! $permit->status->isPending())
-                                                    <span class="text-small fst-italic">{{ $permit?->accept_deny?->getFullName() }}</span>
+                                                    @if (!$permit->status->isPending())
+                                                        <span
+                                                            class="text-small fst-italic">{{ $permit?->accept_deny?->getFullName() }}</span>
                                                     @endif
                                                 </td>
                                                 <td align="center" class="text-small">{{ $permit->dateRange() }}</td>
+                                                <td align="right">
+
+                                                    @if ( ! $permit->status->isDenied() )
+                                                        <!-- Dropdown Start -->
+                                                        <div class="ms-1 dropstart">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-icon-only text-primary p-1"
+                                                                data-bs-offset="0,3" data-bs-toggle="dropdown"
+                                                                aria-haspopup="true" aria-expanded="false" data-submenu>
+                                                                <i data-acorn-icon="more-vertical"
+                                                                    data-acorn-size="17"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-end">
+                                                                @if ( $permit->support_document )
+                                                                    <a class="dropdown-item" target="_blank"
+                                                                        href="{{ $permit->support_document }}">
+                                                                        <i class="icon bi-box-arrow-up-right me-1"></i>
+                                                                        {{ __('View document') }}
+                                                                    </a>
+                                                                @else
+                                                                    <x-dropdown-item type="button"
+                                                                        data-permit="{{ $permit->id }}">
+                                                                        <span>{{ __('Add support document') }}</span>
+                                                                    </x-dropdown-item>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <!-- Dropdown End -->
+                                                    @elseif ($permit->support_document)
+                                                        <!-- Dropdown Start -->
+                                                        <div class="ms-1 dropstart">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-icon-only text-primary p-1"
+                                                                data-bs-offset="0,3" data-bs-toggle="dropdown"
+                                                                aria-haspopup="true" aria-expanded="false" data-submenu>
+                                                                <i data-acorn-icon="more-vertical"
+                                                                    data-acorn-size="17"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-end">
+                                                                <a class="dropdown-item" target="_blank"
+                                                                    href="{{ $permit->support_document }}">
+                                                                        <i class="icon bi-box-arrow-up-right me-1"></i>
+                                                                        {{ __('View document') }}
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Dropdown End -->
+                                                    @endif
+
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -650,22 +711,49 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 @hasrole('TEACHER')
-                @include('logro.teacher.permit.create')
+                    @include('logro.teacher.permit.create')
                 @endhasrole
 
                 @hasrole('COORDINATOR')
-                @php $coordination = $teacher @endphp
-                @include('logro.coordination.permit.create')
+                    @php $coordination = $teacher @endphp
+                    @include('logro.coordination.permit.create')
                 @endhasrole
 
                 @hasrole('ORIENTATION')
-                @php $orientation = $teacher @endphp
-                @include('logro.orientation.permit.create')
+                    @php $orientation = $teacher @endphp
+                    @include('logro.orientation.permit.create')
                 @endhasrole
             </div>
         </div>
     </div>
     <!-- Modal Add Permit End -->
+
+    <!-- Modal Add Support Document Start -->
+    <div class="modal fade" id="modalAddSupportDocument" aria-labelledby="refModalAddSupportDocument"
+        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="refModalAddSupportDocument">{{ __('Add support document') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                @hasrole('TEACHER')
+                    @include('logro.teacher.permit.add-doc')
+                @endhasrole
+
+                @hasrole('COORDINATOR')
+                    @php $coordination = $teacher @endphp
+                    @include('logro.coordination.permit.add-doc')
+                @endhasrole
+
+                @hasrole('ORIENTATION')
+                    @php $orientation = $teacher @endphp
+                    @include('logro.orientation.permit.add-doc')
+                @endhasrole
+            </div>
+        </div>
+    </div>
+    <!-- Modal Add Support Document End -->
 
     <!-- Modal Add Hierarchy -->
     <div class="modal fade" id="addHierarchyModal" aria-labelledby="modalAddHierarchy" data-bs-backdrop="static"

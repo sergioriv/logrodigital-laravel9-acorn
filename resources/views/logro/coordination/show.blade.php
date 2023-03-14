@@ -359,17 +359,48 @@
                                                             <!-- Dropdown Button Start -->
                                                             <div class="ms-1">
                                                                 <button type="button"
-                                                                    class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                    class="btn btn-sm btn-icon-only text-primary p-1"
                                                                     data-bs-offset="0,3" data-bs-toggle="dropdown"
                                                                     aria-haspopup="true" aria-expanded="false" data-submenu>
-                                                                    <i data-acorn-icon="more-vertical"></i>
+                                                                    <i data-acorn-icon="more-vertical"
+                                                                        data-acorn-size="17"></i>
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-end">
+                                                                    @if ( $permit->support_document )
+                                                                        <a class="dropdown-item" target="_blank"
+                                                                            href="{{ $permit->support_document }}">
+                                                                            <i class="icon bi-box-arrow-up-right me-1"></i>
+                                                                            {{ __('View document') }}
+                                                                        </a>
+
+                                                                        <div class="dropdown-divider"></div>
+                                                                    @endif
                                                                     <div class="dropdown-item cursor-pointer"
                                                                         modal="acceptOrDenyPermit"
                                                                         data-permit="{{ $permit->id }}">
                                                                         <span>{{ __('Accept or Deny') }}</span>
                                                                     </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Dropdown Button End -->
+                                                        @endif
+
+                                                        @if ( ! $permit->status->isPending() && $permit->support_document )
+                                                            <!-- Dropdown Button Start -->
+                                                            <div class="ms-1">
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-icon-only text-primary p-1"
+                                                                    data-bs-offset="0,3" data-bs-toggle="dropdown"
+                                                                    aria-haspopup="true" aria-expanded="false" data-submenu>
+                                                                    <i data-acorn-icon="more-vertical"
+                                                                        data-acorn-size="17"></i>
+                                                                </button>
+                                                                <div class="dropdown-menu dropdown-menu-end">
+                                                                    <a class="dropdown-item" target="_blank"
+                                                                        href="{{ $permit->support_document }}">
+                                                                        <i class="icon bi-box-arrow-up-right me-1"></i>
+                                                                        {{ __('View document') }}
+                                                                    </a>
                                                                 </div>
                                                             </div>
                                                             <!-- Dropdown Button End -->

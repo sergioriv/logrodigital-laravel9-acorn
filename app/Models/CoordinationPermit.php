@@ -57,7 +57,7 @@ class CoordinationPermit extends Model
     protected function createdAt(): Attribute
     {
         return Attribute::make(
-            get: fn($v) => $this->parseDateWithSlash( Carbon::parse($v)->format('d/M/Y') )
+            get: fn($v) => $this->parseDateWithSlash( Carbon::parse($v)->format('d/M/Y H:i') )
         );
     }
 }

@@ -49,6 +49,37 @@ class TeacherPermitController extends Controller
         return redirect()->back();
     }
 
+    public function store_document(Request $request, Teacher $teacher)
+    {
+        $request->validate([
+            'permit' => ['required'],
+            'support_document' => ['required', 'file', 'mimes:pdf', 'max:2048']
+        ]);
+
+        $permit = TeacherPermit::where('id', $request->permit)->where('teacher_id', $teacher->id)->first();
+
+        if ( ! $permit->status->isDenied() && is_null($permit->support_document) ) {
+
+            $fileUrl = $this->upload_file($request, $teacher->uuid);
+            if ( ! is_null($fileUrl) ) {
+
+                $permit->forceFill([
+                    'support_document' => $fileUrl
+                ])->save();
+
+                Notify::success(__('File upload!'));
+
+            } else {
+
+                Notify::fail(__('An error has occurred'));
+            }
+
+        }
+
+        static::tab();
+        return back();
+    }
+
     public function acceptedOrDenied(Request $request, Teacher $teacher)
     {
         $request->validate([
@@ -89,7 +120,9 @@ class TeacherPermitController extends Controller
         if ( $request->hasFile('support_document') )
         {
             $path = $request->file('support_document')->store('teachers/'.$teacher_uuid.'/permits', 'public');
-            return config('app.url') .'/'.  config('filesystems.disks.public.url') .'/' . $path;
+            if ($path)
+                return config('app.url') .'/'.  config('filesystems.disks.public.url') .'/' . $path;
+            return null;
         }
         else return null;
     }
