@@ -16,6 +16,10 @@ class AttendanceStudent extends Model
         'reason'
     ];
 
+    protected $casts = [
+        'attend' => \App\Enums\AttendStudentEnum::class
+    ];
+
 
     /*
      * PARENTS

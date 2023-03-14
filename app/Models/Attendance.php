@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\SchoolYearController;
 use App\Traits\Uuid;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
@@ -22,13 +22,18 @@ class Attendance extends Model
      */
     public function teacherSubjectGroup()
     {
-        return $this->belongsTo(TeacherSubjectGroup::class)->with('teacher', 'subject', 'group');
+        $Y =  SchoolYearController::current_year();
+        return $this->belongsTo(TeacherSubjectGroup::class)->where('school_year_id', $Y->id);
     }
 
     /* CHILDREN */
     public function students()
     {
         return $this->hasMany(AttendanceStudent::class, 'attendance_id');
+    }
+    public function student()
+    {
+        return $this->hasOne(AttendanceStudent::class, 'attendance_id');
     }
 
     public function absences()

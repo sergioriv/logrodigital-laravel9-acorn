@@ -134,6 +134,10 @@
                                 data-bs-toggle="tab" href="#observerTab" role="tab">
                                 <span class="align-middle">{{ __('Observer') }}</span>
                             </a>
+                            <a class="nav-link @if (session('tab') === 'attendance') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#attendanceTab" role="tab">
+                                <span class="align-middle">{{ __('Attendances') }}</span>
+                            </a>
                             @if ($student->isInclusive())
                                 <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
                                     data-bs-toggle="tab" href="#psychosocialTab" role="tab">
@@ -569,6 +573,22 @@
 
                 </div>
                 <!-- Observer Tab End -->
+
+                <!-- Attendances Tab Start -->
+                <div class="tab-pane fade @if (session('tab') === 'attendance') active show @endif" id="attendanceTab"
+                    role="tabpanel">
+
+                    <!-- Attendance Section Start -->
+                    <h2 class="small-title">{{ __('Attendances') }}</h2>
+                    <section class="card mb-5">
+                        <div class="card-body">
+                            @include('logro.student.attendance.attendance-tab')
+                        </div>
+                    </section>
+                    <!-- Attendance Section End -->
+
+                </div>
+                <!-- Attendances Tab End -->
 
                 @if ($student->isInclusive())
                     <!-- Psychosocial Information Tab Start -->

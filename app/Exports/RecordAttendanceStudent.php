@@ -35,8 +35,7 @@ class RecordAttendanceStudent implements FromArray, ShouldAutoSize, WithStyles, 
         $attendaces = AttendanceStudent::where('student_id', $this->student->id)
             ->whereIn('attend', ['N', 'J', 'L'])
             ->with(['attendance' => fn($at) => $at->with([
-                'teacherSubjectGroup' =>
-                fn ($TSG) => $TSG->with('subject')
+                'teacherSubjectGroup.subject'
             ])])
             ->get();
 
@@ -44,22 +43,13 @@ class RecordAttendanceStudent implements FromArray, ShouldAutoSize, WithStyles, 
 
             array_push($array, [
                 ++$i,
-                $this->match($attend->attend),
+                $attend->attend->getLabelText(),
                 $attend->attendance->date,
                 $attend->attendance->teacherSubjectGroup->subject->resourceSubject->name
             ]);
         }
 
         return $array;
-    }
-
-    private function match($attend)
-    {
-        return match ($attend) {
-            'N' => 'No justificada',
-            'J' => 'Justificada',
-            'L' => 'Llegada tarde',
-        };
     }
 
     public function styles(Worksheet $sheet)

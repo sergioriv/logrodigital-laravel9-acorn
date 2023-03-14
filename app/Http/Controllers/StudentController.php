@@ -11,6 +11,8 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Imports\StudentsImport;
+use App\Models\Attendance;
+use App\Models\AttendanceStudent;
 use App\Models\City;
 use App\Models\Coordination;
 use App\Models\Country;
@@ -737,7 +739,18 @@ class StudentController extends Controller
             $existOrientation = (bool)Orientation::count();
         }
 
-        return view('logro.student.profile-view', ['student' => $student, 'existOrientation' => $existOrientation]);
+        $attendance = Attendance::withWhereHas(
+                'student',
+                fn ($s) => $s->where('student_id', $student->id)
+            )->with('teacherSubjectGroup.subject', 'teacherSubjectGroup.teacher')
+            ->orderByDesc('date')
+            ->get();
+
+        return view('logro.student.profile-view', [
+            'student' => $student,
+            'existOrientation' => $existOrientation,
+            'attendance' => $attendance
+        ]);
     }
 
 

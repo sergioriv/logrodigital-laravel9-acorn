@@ -18,7 +18,7 @@ class AttendanceStudentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(OnlyTeachersMiddleware::class);
+        $this->middleware('hasroles:SUPPORT,TEACHER')->only('subject','absences_view','absences_edit','absences_update');
     }
 
     public function subject(TeacherSubjectGroup $subject, Request $request)
