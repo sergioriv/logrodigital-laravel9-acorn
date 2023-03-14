@@ -67,6 +67,9 @@
                 <a href="/dashboard" data-href="/dashboards">
                     <i data-acorn-icon="home" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Dashboard') }}</span>
+                    @hasanyrole('TEACHER|COORDINATOR|ORIENTATION')
+                    <sup class="font-weight-bold" id="user-alerts-count"></sup>
+                    @endhasanyrole
                 </a>
             </li>
             @hasrole('SUPPORT')

@@ -9,7 +9,6 @@ use App\Models\Data\RoleUser;
 use App\Models\OrientationPermit;
 use App\Models\Student;
 use App\Models\TeacherPermit;
-use App\Models\UserAlert;
 
 class DashboardController extends Controller
 {
@@ -39,7 +38,7 @@ class DashboardController extends Controller
     private function dashTeacher()
     {
         return view('dashboard.teacher', [
-            'alertsStudents' => $this->myAlertStudents()
+            'alertsStudents' => UserAlertController::myAlerts()
         ]);
     }
 
@@ -57,43 +56,19 @@ class DashboardController extends Controller
         ->count();
 
         return view('dashboard.orientation', [
-            'alertsStudents' => $this->myAlertStudents(),
+            'alertsStudents' => UserAlertController::myAlerts(),
             'pendingStudents' => $pendingStudents
         ]);
     }
 
     private function dashCoordination()
     {
-        $teacherPermits = TeacherPermit::where('status', 0)->get()->groupBy(function ($permit) {
-            return $permit->teacher_id;
-        });
-        $coordinationPermits = CoordinationPermit::where('status', 0)->get()->groupBy(function ($permit) {
-            return $permit->coordination_id;
-        });
-        $orientationPermits = OrientationPermit::where('status', 0)->get()->groupBy(function ($permit) {
-            return $permit->orientation_id;
-        });
 
         return view('dashboard.coordination', [
-            'teacherPermits' => $teacherPermits,
-            'coordinationPermits' => $coordinationPermits,
-            'orientationPermits' => $orientationPermits,
-            'alertsStudents' => $this->myAlertStudents()
+            'teacherPermits' => TeacherPermitController::pendingPermits(),
+            'coordinationPermits' => CoordinationPermitController::pendingPermits(),
+            'orientationPermits' => OrientationPermitController::pendingPermits(),
+            'alertsStudents' => UserAlertController::myAlerts()
         ]);
     }
-
-    protected function myAlertStudents()
-    {
-        return UserAlert::whereJsonContains('for_users', auth()->id())
-            ->whereNot(fn ($not) => $not->whereJsonContains('checked', auth()->id()) )
-            ->orderByDesc('priority')
-            ->orderBy('created_at')
-            ->with(['student' => fn($student) => $student->with(['group:id,name']) ])
-            ->with('created_user')
-            ->get()->groupBy(function ($alert) {
-                return $alert->student_id;
-            });
-
-    }
-
 }

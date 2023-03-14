@@ -31,6 +31,7 @@ class Common {
         this._setQuillDefaults();
         this._setDatePickerDefaults();
         this._setValidationDefaults();
+        this._getUserAlertsCount();
         // this._setNotifyDefaults();
         // this._setSelect2Defaults();
         this._momentWarnings();
@@ -285,6 +286,26 @@ class Common {
                 leftArrow: '<i class="cs-chevron-left"></i>',
                 rightArrow: '<i class="cs-chevron-right"></i>',
             };
+        }
+    }
+
+    _getUserAlertsCount() {
+        var contentAlertsCount = document.getElementById('user-alerts-count');
+
+
+        if (contentAlertsCount) {
+
+            //inicial
+            $.get(HOST + '/api/user-alerts-count', {}, function (data) {
+                contentAlertsCount.innerText = '(' + data + ')';
+            });
+
+            // se actualiza cada 10 minutos
+            setInterval(() => {
+                $.get(HOST + '/api/user-alerts-count', {}, function (data) {
+                    contentAlertsCount.innerText = '(' + data + ')';
+                });
+            }, 600000);
         }
     }
 

@@ -131,4 +131,12 @@ class OrientationPermitController extends Controller
     {
         session()->flash('tab', 'permits');
     }
+
+
+    public static function pendingPermits($status = 0)
+    {
+        return OrientationPermit::where('status', 0)->get()->groupBy(function ($permit) {
+            return $permit->orientation_id;
+        });
+    }
 }

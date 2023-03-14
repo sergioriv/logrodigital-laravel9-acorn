@@ -131,4 +131,12 @@ class TeacherPermitController extends Controller
     {
         session()->flash('tab', 'permits');
     }
+
+
+    public static function pendingPermits($status = 0)
+    {
+        return TeacherPermit::where('status', $status)->get()->groupBy(function ($permit) {
+            return $permit->teacher_id;
+        });
+    }
 }

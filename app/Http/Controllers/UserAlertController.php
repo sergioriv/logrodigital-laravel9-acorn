@@ -155,4 +155,18 @@ class UserAlertController extends Controller
 
         return redirect()->back()->withErrors(__('Not allowed'));
     }
+
+
+    public static function myAlerts()
+    {
+        return UserAlert::whereJsonContains('for_users', auth()->id())
+            ->whereNot(fn ($not) => $not->whereJsonContains('checked', auth()->id()) )
+            ->orderByDesc('priority')
+            ->orderBy('created_at')
+            ->with(['student' => fn($student) => $student->with(['group:id,name']) ])
+            ->with('created_user')
+            ->get()->groupBy(function ($alert) {
+                return $alert->student_id;
+            });
+    }
 }

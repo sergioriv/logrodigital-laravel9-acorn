@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\UserAlertsController;
 use App\Http\Controllers\AttendanceStudentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChangeEmailAddressAdmin;
@@ -428,6 +429,15 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::patch('voting/{voting}/report', 'finish')->name('voting.finish');
         Route::get('voting/{voting}/students', 'download_students')->name('voting.download.students');
     });
+
+
+
+    /*
+     *
+     * API
+     *
+     *  */
+    Route::get('api/user-alerts-count', [UserAlertsController::class, 'alertsCount']);
 });
 
 

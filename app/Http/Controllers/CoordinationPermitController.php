@@ -131,4 +131,12 @@ class CoordinationPermitController extends Controller
     {
         session()->flash('tab', 'permits');
     }
+
+
+    public static function pendingPermits($status = 0)
+    {
+        return CoordinationPermit::where('status', 0)->get()->groupBy(function ($permit) {
+            return $permit->coordination_id;
+        });
+    }
 }
