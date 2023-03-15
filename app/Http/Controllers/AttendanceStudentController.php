@@ -86,9 +86,9 @@ class AttendanceStudentController extends Controller
 
         foreach ($attendanceStudents as $attStudent) {
             $content .= '<tr><td scope="row">';
-            if ($attStudent->oneAttendanceStudent->attend === 'J') {
+            if ($attStudent->oneAttendanceStudent->attend->isJustified()) {
                 $content .= '<span class="badge bg-outline-success me-1">' . __('Justified') . '</span>';
-            } elseif ($attStudent->oneAttendanceStudent->attend === 'L') {
+            } elseif ($attStudent->oneAttendanceStudent->attend->isLateArrival()) {
                 $content .= '<span class="badge bg-outline-success me-1">' . __('Late arrival') . '</span>';
             }
             $content .= $attStudent->getCompleteNames();
