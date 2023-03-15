@@ -17,7 +17,7 @@
                             <label class="form-check custom-icon mb-0 unchecked-opacity-25">
                                 <input type="checkbox" class="form-check-input"
                                     name="studentsAttendance[{{ $student->code }}]" value="1" editAttendanceStudent
-                                    data-code="Edit{{ $student->code }}" @checked($student->oneAttendanceStudent?->attend === 'Y')>
+                                    data-code="Edit{{ $student->code }}" @checked($student->oneAttendanceStudent->attend->isYes())>
                                 <span class="form-check-label">
                                     <span class="content">
                                         <span class="heading mb-1 d-block lh-1-25">
@@ -31,7 +31,7 @@
                         <td>
                             <!-- Dropdown Button Start -->
                             <div id="dropdownEdit{{ $student->code }}"
-                                class="@if ($student->oneAttendanceStudent?->attend === 'Y') d-none @endif">
+                                class="@if ($student->oneAttendanceStudent->attend->isYes()) d-none @endif">
                                 <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
                                     data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false" data-bs-auto-close="inside">
@@ -41,14 +41,14 @@
                                     <div class="dropdown-item">
                                         <label class="form-label">
                                             <input type="radio" name="studentsAttendance[{{ $student->code }}][type]"
-                                                value="late-arrival" @checked($student->oneAttendanceStudent?->attend === 'L') />
+                                                value="late-arrival" @checked($student->oneAttendanceStudent->attend->isLateArrival()) />
                                             {{ __('Late arrival') }}
                                         </label>
                                     </div>
                                     <div class="dropdown-item">
                                         <label class="form-label">
                                             <input type="radio" name="studentsAttendance[{{ $student->code }}][type]"
-                                                value="justified" @checked($student->oneAttendanceStudent?->attend === 'J') />
+                                                value="justified" @checked($student->oneAttendanceStudent?->attend->isJustified()) />
                                             {{ __('Justified') }}
                                         </label>
                                     </div>

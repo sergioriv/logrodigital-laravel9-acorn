@@ -9,6 +9,19 @@ enum AttendStudentEnum: string
     case JUSTIFIED = 'J';
     case LATE_ARRIVAL = 'L';
 
+    public function isYes(): bool
+    {
+        return $this === self::YES;
+    }
+    public function isLateArrival(): bool
+    {
+        return $this === self::LATE_ARRIVAL;
+    }
+    public function isJustified(): bool
+    {
+        return $this === self::JUSTIFIED;
+    }
+
     public function getLabelText(): string
     {
         return match($this) {
