@@ -589,7 +589,14 @@
                                                                 <tr>
                                                                     <td>{{ $absence->attendance->dateLabel() }}</td>
                                                                     <td>{{ $absence->attendance->teacherSubjectGroup->subject->resourceSubject->name }}</td>
-                                                                    <td>{{ $absence->student->getCompleteNames() }}</td>
+                                                                    <td>
+                                                                        <a href="{{ route('students.show', $absence->student->id) }}"
+                                                                            class="list-item-heading body">
+                                                                            {{ $absence->student->getCompleteNames() }}
+                                                                        </a>
+
+                                                                        {!! $absence->student->tag() !!}
+                                                                    </td>
                                                                     <td>{{ $absence->attend->getLabelText() }}</td>
                                                                 </tr>
                                                             @endforeach
