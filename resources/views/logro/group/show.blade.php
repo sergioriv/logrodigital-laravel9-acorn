@@ -4,18 +4,22 @@
 @extends('layout', ['title' => $title])
 
 @section('css')
+    <link rel="stylesheet" href="/css/vendor/datatables.min.css" />
     <link rel="stylesheet" href="/css/vendor/select2.min.css" />
     <link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" />
 @endsection
 
 @section('js_vendor')
     <script src="/js/cs/responsivetab.js"></script>
+    <script src="/js/vendor/datatables.min.js"></script>
     <script src="/js/vendor/progressbar.min.js"></script>
     <script src="/js/vendor/select2.full.min.js"></script>
     <script src="/js/vendor/select2.full.min.es.js"></script>
 @endsection
 
 @section('js_page')
+    <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
+    <script src="/js/plugins/datatable/datatables_boxed.js"></script>
     <script src="/js/forms/select2.js"></script>
     <script src="/js/plugins/progressbars.js"></script>
     <script>
@@ -28,7 +32,7 @@
             }
         });
 
-        jQuery('#openModelGenerateGradeReport').click(function () {
+        jQuery('#openModelGenerateGradeReport').click(function() {
             $('button#btn-generateGradeReport').prop('disabled', false);
         });
     </script>
@@ -113,14 +117,14 @@
                                             <span>{{ __('Information general from student list') }}</span>
                                         </a>
                                         @hasrole('SUPPORT')
-                                        @if (!$group->specialty && !$periods->isEmpty())
-                                        <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
-                                            id="openModelGenerateGradeReport"
-                                            data-bs-toggle="modal" data-bs-target="#generateGradeReport">
-                                            <i data-acorn-icon="file-text"></i>
-                                            <span>{{ __('Grade report') }}</span>
-                                        </a>
-                                        @endif
+                                            @if (!$group->specialty && !$periods->isEmpty())
+                                                <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
+                                                    id="openModelGenerateGradeReport" data-bs-toggle="modal"
+                                                    data-bs-target="#generateGradeReport">
+                                                    <i data-acorn-icon="file-text"></i>
+                                                    <span>{{ __('Grade report') }}</span>
+                                                </a>
+                                            @endif
                                         @endhasrole
                                     </div>
                                 </div>
@@ -159,8 +163,8 @@
                                     </li>
                                 @endhasrole
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-capitalize" data-bs-toggle="tab" href="#summaryTab" role="tab"
-                                        aria-selected="true">{{ __('summary') }}</a>
+                                    <a class="nav-link text-capitalize" data-bs-toggle="tab" href="#summaryTab"
+                                        role="tab" aria-selected="true">{{ __('summary') }}</a>
                                 </li>
                             </ul>
                             <!-- Title Tabs End -->
@@ -173,8 +177,9 @@
                                     @can('groups.students.matriculate')
                                         <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
                                             @if (null !== $Y->available)
-                                                @if ((is_null($group->specialty) && $count_studentsNoEnrolled > 0) ||
-                                                    ($group->specialty && $count_studentsMatriculateInStudyYear > 0))
+                                                @if (
+                                                    (is_null($group->specialty) && $count_studentsNoEnrolled > 0) ||
+                                                        ($group->specialty && $count_studentsMatriculateInStudyYear > 0))
                                                     <!-- Groups Buttons Start -->
                                                     <div class="col-12 d-flex align-items-start justify-content-end">
                                                         <!-- Matriculate Students Button Start -->
@@ -323,7 +328,7 @@
                                                                             {!! $subject->resourceSubject->nameSpecialty() !!}
                                                                         </td>
                                                                         <td>
-                                                                            @unless (is_null($subject->teacherSubject))
+                                                                            @unless(is_null($subject->teacherSubject))
                                                                                 {{ $subject->teacherSubject->teacher->getFullName() ?? null }}
                                                                             @endunless
                                                                         </td>
@@ -339,36 +344,41 @@
                                                                             {{ $subject->academicWorkload->course_load }}%
                                                                         </td>
                                                                         <td class="col-1 text-end">
-                                                                            @canany(['groups.teachers.edit', 'group.subject.period.active'])
-                                                                            @if ($subject?->teacherSubject)
-                                                                                <!-- Dropdown Button Start -->
-                                                                                <div class="ms-1">
-                                                                                    <button type="button"
-                                                                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
-                                                                                        data-bs-offset="0,3"
-                                                                                        data-bs-toggle="dropdown"
-                                                                                        aria-haspopup="true" aria-expanded="false"
-                                                                                        data-submenu>
-                                                                                        <i data-acorn-icon="more-vertical"></i>
-                                                                                    </button>
-                                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                                        @can('group.subject.period.active')
-                                                                                            <x-dropdown-item type="button"
-                                                                                                modal-period-permit
-                                                                                                data-subject-id="{{ $subject->teacherSubject->id }}">
-                                                                                                <span>{{ __('Activate note upload') }}</span>
-                                                                                            </x-dropdown-item>
-                                                                                        @endcan
-                                                                                        @can('groups.teachers.edit')
-                                                                                            <x-dropdown-item type="button"
-                                                                                                :link="route('group.export.student-list-guide', $subject->teacherSubject)">
-                                                                                                <span>{{ __('Download auxiliary template') }}</span>
-                                                                                            </x-dropdown-item>
-                                                                                        @endcan
+                                                                            @canany(['groups.teachers.edit',
+                                                                                'group.subject.period.active'])
+                                                                                @if ($subject?->teacherSubject)
+                                                                                    <!-- Dropdown Button Start -->
+                                                                                    <div class="ms-1">
+                                                                                        <button type="button"
+                                                                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                                            data-bs-offset="0,3"
+                                                                                            data-bs-toggle="dropdown"
+                                                                                            aria-haspopup="true"
+                                                                                            aria-expanded="false" data-submenu>
+                                                                                            <i data-acorn-icon="more-vertical"></i>
+                                                                                        </button>
+                                                                                        <div
+                                                                                            class="dropdown-menu dropdown-menu-end">
+                                                                                            @can('group.subject.period.active')
+                                                                                                <x-dropdown-item type="button"
+                                                                                                    modal-period-permit
+                                                                                                    data-subject-id="{{ $subject->teacherSubject->id }}">
+                                                                                                    <span>{{ __('Activate note upload') }}</span>
+                                                                                                </x-dropdown-item>
+                                                                                            @endcan
+                                                                                            @can('groups.teachers.edit')
+                                                                                                <x-dropdown-item type="button"
+                                                                                                    :link="route(
+                                                                                                        'group.export.student-list-guide',
+                                                                                                        $subject->teacherSubject,
+                                                                                                    )">
+                                                                                                    <span>{{ __('Download auxiliary template') }}</span>
+                                                                                                </x-dropdown-item>
+                                                                                            @endcan
+                                                                                        </div>
                                                                                     </div>
-                                                                                </div>
-                                                                                <!-- Dropdown Button End -->
-                                                                            @endif
+                                                                                    <!-- Dropdown Button End -->
+                                                                                @endif
                                                                             @endcanany
                                                                         </td>
                                                                     </tr>
@@ -416,10 +426,11 @@
                                                                     <div
                                                                         class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
                                                                         {{ __('End date') }}<br /><b>{{ $period->end }}</b>
-                                                                    </div><div
-                                                                    class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
-                                                                    {{ __('Grades upload') }}<br /><b>{{ $period->dateUploadingNotes() }}</b>
-                                                                </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-4 col-md-2 lh-base h6 m-0 text-center @if (!$isActive) text-light @endif">
+                                                                        {{ __('Grades upload') }}<br /><b>{{ $period->dateUploadingNotes() }}</b>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -547,27 +558,70 @@
                                 <div class="tab-pane fade" id="summaryTab" role="tabpanel">
 
                                     <div class="row g-2">
-                                        <div class="col-12 mb-5">
+
+                                        <!-- Absences Start -->
+                                        <div class="col-12 mt-3 mb-5">
+                                            <h2 class="small-title">{{ __('Absences') }}</h2>
                                             <div class="card">
-                                                <div class="h-100 d-flex flex-column justify-content-between card-body align-items-center">
-                                                    <div class="sw-13">
-                                                        <div
-                                                                logro="progress"
-                                                                role="progressbar"
-                                                                class="progress-bar-circle position-relative text-muted text-sm"
-                                                                data-trail-color=""
-                                                                aria-valuemax="{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTimeSelectAll, $group->studyTimeSelectAll->maximum_grade) }}"
-                                                                aria-valuenow="{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTimeSelectAll, $avgGrade) }}"
-                                                                data-hide-all-text="false"
-                                                                data-stroke-width="3"
-                                                                data-trail-width="1"
-                                                                data-duration="0"
-                                                        ></div>
-                                                    </div>
-                                                    <div class="heading text-center mb-0 sh-8 d-flex align-items-center lh-1-25">{{ __('Grade point average') }}</div>
+                                                <div class="card-body">
+
+                                                    <table logro='dataTableBoxed' data-order='[]'
+                                                        class="table responsive stripe">
+                                                        <thead>
+                                                            <tr>
+                                                                <th
+                                                                    class="text-muted text-small text-uppercase p-0 pb-2">
+                                                                    {{ __('date') }}</th>
+                                                                <th
+                                                                    class="text-muted text-small text-uppercase p-0 pb-2">
+                                                                    {{ __('subject') }}</th>
+                                                                <th
+                                                                    class="text-muted text-small text-uppercase p-0 pb-2">
+                                                                    {{ __('student') }}</th>
+                                                                <th
+                                                                    class="text-muted text-small text-uppercase p-0 pb-2">
+                                                                    {{ __('type') }}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($absences as $absence)
+
+                                                                <tr>
+                                                                    <td>{{ $absence->attendance->dateLabel() }}</td>
+                                                                    <td>{{ $absence->attendance->teacherSubjectGroup->subject->resourceSubject->name }}</td>
+                                                                    <td>{{ $absence->student->getCompleteNames() }}</td>
+                                                                    <td>{{ $absence->attend->getLabelText() }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- Absences End -->
+
+                                        <!-- Grade Point Average Start -->
+                                        <div class="col-12 mb-5">
+                                            <div class="card">
+                                                <div
+                                                    class="h-100 d-flex flex-column justify-content-between card-body align-items-center">
+                                                    <div class="sw-13">
+                                                        <div logro="progress" role="progressbar"
+                                                            class="progress-bar-circle position-relative text-muted text-sm"
+                                                            data-trail-color=""
+                                                            aria-valuemax="{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTimeSelectAll, $group->studyTimeSelectAll->maximum_grade) }}"
+                                                            aria-valuenow="{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTimeSelectAll, $avgGrade) }}"
+                                                            data-hide-all-text="false" data-stroke-width="3"
+                                                            data-trail-width="1" data-duration="0"></div>
+                                                    </div>
+                                                    <div
+                                                        class="heading text-center mb-0 sh-8 d-flex align-items-center lh-1-25">
+                                                        {{ __('Grade point average') }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Grade Point Average End -->
                                     </div>
 
                                 </div>
@@ -633,52 +687,50 @@
     @endcan
 
     @hasrole('SUPPORT')
-    @if (!$group->specialty && !$periods->isEmpty())
-        <!-- Modal Delete Group -->
-        <div class="modal fade" id="generateGradeReport"
-            aria-labelledby="modalGenerateGradeReport" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalGenerateGradeReport">
-                            {{ __('Generate grade report') }}</h5>
-                        <button type="button" class="btn-close"
-                            data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form action="{{ route('group.reportGrade', $group) }}"
-                        method="POST">
-                        @csrf
+        @if (!$group->specialty && !$periods->isEmpty())
+            <!-- Modal Delete Group -->
+            <div class="modal fade" id="generateGradeReport" aria-labelledby="modalGenerateGradeReport"
+                data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalGenerateGradeReport">
+                                {{ __('Generate grade report') }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('group.reportGrade', $group) }}" method="POST">
+                            @csrf
 
-                        <div class="modal-body">
+                            <div class="modal-body">
 
-                            <div class="form-group">
-                                <x-label>{{ __('select period') }}</x-label>
-                                <select logro='select2' name="periodGradeReport">
-                                    <option label="&nbsp;"></option>
-                                    @foreach ($periods as $period)
-                                        <option value="{{ $period->id }}">
-                                            {{ $period->name }}
-                                        </option>
-                                    @endforeach
+                                <div class="form-group">
+                                    <x-label>{{ __('select period') }}</x-label>
+                                    <select logro='select2' name="periodGradeReport">
+                                        <option label="&nbsp;"></option>
+                                        @foreach ($periods as $period)
+                                            <option value="{{ $period->id }}">
+                                                {{ $period->name }}
+                                            </option>
+                                        @endforeach
 
-                                    {{-- Para generar el reporte final --}}
-                                    @if ($periods->count() === $countPeriods)
-                                    <option value="FINAL">FINAL</option>
-                                    @endif
-                                </select>
+                                        {{-- Para generar el reporte final --}}
+                                        @if ($periods->count() === $countPeriods)
+                                            <option value="FINAL">FINAL</option>
+                                        @endif
+                                    </select>
+                                </div>
+
                             </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-danger"
-                                data-bs-dismiss="modal">{{ __('Close') }}</button>
-                            <button type="submit" id="btn-generateGradeReport" class="btn btn-primary">{{ __('Generate') }}</button>
-                        </div>
-                    </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-danger"
+                                    data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                <button type="submit" id="btn-generateGradeReport"
+                                    class="btn btn-primary">{{ __('Generate') }}</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    @endif
+        @endif
     @endhasrole
 @endsection

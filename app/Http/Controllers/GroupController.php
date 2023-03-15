@@ -10,6 +10,7 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Models\AcademicWorkload;
+use App\Models\AttendanceStudent;
 use App\Models\Data\RoleUser;
 use App\Models\Grade;
 use App\Models\Group;
@@ -235,6 +236,14 @@ class GroupController extends Controller
         }
         $avgGrade = Grade::whereIn('teacher_subject_group_id', $teacherSubject)->avg('final');
 
+        $absences = AttendanceStudent::whereIn('attend', ['N', 'J', 'L'])
+        ->withWhereHas(
+            'attendance',
+            fn ($attend) => $attend->whereIn('teacher_subject_group_id', $teacherSubject)
+                ->with('teacherSubjectGroup.subject')
+        )->with('student')
+        ->orderByDesc('created_at')
+        ->get();
 
         $countPeriods = Period::where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)->count();
         $periods = Period::where('school_year_id', $Y->id)
@@ -256,7 +265,8 @@ class GroupController extends Controller
             'areas' => $areas,
             'countPeriods' => $countPeriods,
             'periods' => $periods,
-            'avgGrade' => $avgGrade
+            'avgGrade' => $avgGrade,
+            'absences' => $absences
         ]);
     }
 
