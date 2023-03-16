@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\support;
 
+use App\Exports\TeachersCountData;
 use App\Exports\TeachersWithNoAttendance;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -44,6 +45,10 @@ class AccessSupportController extends Controller
 
             case 'attendance-teacher':
                 return self::asistenciaDocentes();
+                break;
+
+            case 'data-teacher':
+                return self::datosDocentes();
                 break;
 
         }
@@ -114,5 +119,17 @@ class AccessSupportController extends Controller
 
 
         return Excel::download(new TeachersWithNoAttendance($title, $teachers), $title .'.xlsx');
+    }
+
+    protected function datosDocentes()
+    {
+
+        $title = 'Cantidad documentos de Docentes';
+
+        $teachers = \App\Models\Teacher::withCount('hierarchies', 'degrees', 'employments')
+        ->get();
+
+        return Excel::download(new TeachersCountData($title, $teachers), $title . '.xlsx');
+
     }
 }
