@@ -90,7 +90,7 @@ class SmtpMail extends Controller
     public function sendEmailEnrollmentNotification(Student $student, Group $group)
     {
         if ($student->person_charge !== NULL) {
-
+            /*  */
             $tutor = $student->myTutorIs;
 
             if ($tutor->user->email_verified_at !== NULL ) {

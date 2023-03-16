@@ -1499,7 +1499,7 @@ class StudentController extends Controller
         $date = Carbon::now()->format('d/m/Y');
 
         $student = Student::find($student);
-        $tutor = PersonCharge::select('id', 'name')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
+        $tutor = PersonCharge::select('id', 'name')->where('id', $student->person_charge)->first();
 
         $pdf = Pdf::loadView('logro.pdf.matriculate', [
             'SCHOOL' => $SCHOOL,
@@ -1533,7 +1533,7 @@ class StudentController extends Controller
     {
         $SCHOOL = SchoolController::myschool()->getData();
 
-        $tutor = PersonCharge::select('id', 'name')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
+        $tutor = PersonCharge::select('id', 'name')->where('id', $student->person_charge)->first();
 
         $matricula = Pdf::loadView('logro.pdf.matriculate', [
             'SCHOOL' => $SCHOOL,

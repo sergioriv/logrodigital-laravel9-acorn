@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\support;
 
+use App\Exports\TeachersWithNoAttendance;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 
 class AccessSupportController extends Controller
@@ -32,8 +34,16 @@ class AccessSupportController extends Controller
                 self::resetPermissions();
                 break;
 
+            case 'fix-tutor':
+                self::fixTutor();
+                break;
+
             case 'myroles':
                 self::myRolesIS();
+                break;
+
+            case 'attendance-teacher':
+                return self::asistenciaDocentes();
                 break;
 
         }
@@ -68,5 +78,41 @@ class AccessSupportController extends Controller
     protected function myRolesIs()
     {
         dd( auth()->user()->getRoleNames() );
+    }
+
+    protected function fixTutor()
+    {
+        $students = \App\Models\Student::whereNotNull('person_charge')->get();
+
+        foreach ($students as $student) {
+
+            $personCharge = \App\Models\PersonCharge::select('id')->where('student_id', $student->id)->where('kinship_id', $student->person_charge)->first();
+
+            $student->update([
+                'person_charge' => $personCharge->id
+            ]);
+
+        }
+
+        dd($students->pluck('person_charge','id'));
+
+    }
+
+    protected function asistenciaDocentes()
+    {
+
+        $title = 'Docentes sin toma de asistencia';
+
+        $teachers = \App\Models\Teacher::whereNot(function ($not) {
+
+            $not->whereHas(
+                'teacherSubjectGroups',
+                fn ($tsg) => $tsg->whereHas('attendances')
+            );
+        })
+        ->get();
+
+
+        return Excel::download(new TeachersWithNoAttendance($title, $teachers), $title .'.xlsx');
     }
 }

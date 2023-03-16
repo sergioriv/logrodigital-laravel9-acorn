@@ -81,11 +81,6 @@ $title = __('Persons in Charge');
                                     <div class="tab-pane fade active show" role="tabpanel">
 
                                         <!-- Tutor Student Section Start -->
-                                        <h3>
-                                            @if (old('person_charge') == 2)
-                                                person charge
-                                            @endif
-                                        </h3>
                                         <section class="card-body mb-5 border-bottom">
                                             <div class="tooltip-label-end position-relative form-group">
                                                 <x-label class="small-title">{{ __('Tutor') }}
@@ -97,7 +92,7 @@ $title = __('Persons in Charge');
                                                         <option label="&nbsp;"></option>
                                                         @foreach ($kinships as $kinship)
                                                             <option value="{{ $kinship->id }}"
-                                                                @if ($student->person_charge ?? null !== null) @selected(old('person_charge', $student->person_charge) == $kinship->id) @endif>
+                                                                @if ($student?->myTutorIs !== null) @selected(old('person_charge', $student?->myTutorIs->kinship_id) == $kinship->id) @endif>
                                                                 {{ __($kinship->name) }}
                                                             </option>
                                                         @endforeach

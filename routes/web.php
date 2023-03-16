@@ -30,6 +30,7 @@ use App\Http\Controllers\RestorePasswordController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\SecretariatController;
+use App\Http\Controllers\SendMailMasiveController;
 use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFileController;
@@ -430,6 +431,16 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::get('voting/{voting}/students', 'download_students')->name('voting.download.students');
     });
 
+
+
+    /*
+     *
+     * Send Mail Masive
+     *
+     *  */
+    Route::controller(SendMailMasiveController::class)->group( function () {
+        Route::post('send-mail/group/{group}', 'forGroup')->name('send-mail.group');
+    });
 
 
     /*

@@ -302,7 +302,7 @@ class Student extends Model
     }
     public function myTutorIs()
     {
-        switch ($this->person_charge) {
+        /* switch ($this->person_charge) {
             case 1:
                 return $this->mother();
                 break;
@@ -314,7 +314,8 @@ class Student extends Model
             default:
                 return $this->tutor();
                 break;
-        }
+        } */
+        return $this->belongsTo(PersonCharge::class, 'person_charge', 'id');
     }
     public function files()
     {

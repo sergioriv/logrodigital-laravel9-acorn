@@ -126,6 +126,17 @@
                                                 </a>
                                             @endif
                                         @endhasrole
+                                        @hasrole('SUPPORT')
+                                        <form action="{{ route('send-mail.group', $group) }}" method="POST">
+                                            @csrf
+
+                                            <button type="submit" class="dropdown-item btn-sm btn-icon btn-icon-start">
+                                                <i data-acorn-icon="email"></i>
+                                                <span>Enviar correo a acudientes</span>
+                                            </button>
+
+                                        </form>
+                                        @endhasrole
                                     </div>
                                 </div>
                                 <!-- Dropdown Button End -->

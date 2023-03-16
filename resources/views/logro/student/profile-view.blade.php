@@ -288,7 +288,7 @@
                     @if ($student->mother)
                         <h2 class="small-title">
                             {{ __('Mother Information') }}
-                            @if ($student->person_charge == 1)
+                            @if ($student->person_charge === $student->mother->id)
                                 ({{ __('Tutor') }})
                             @endif
                         </h2>
@@ -380,7 +380,7 @@
                     @if ($student->father)
                         <h2 class="small-title">
                             {{ __('Father Information') }}
-                            @if ($student->person_charge == 2)
+                            @if ($student->person_charge === $student->father->id)
                                 ({{ __('Tutor') }})
                             @endif
                         </h2>

@@ -1380,7 +1380,7 @@
                                             <option label="&nbsp;"></option>
                                             @foreach ($kinships as $kinship)
                                                 <option value="{{ $kinship->id }}"
-                                                    @if ($student->person_charge ?? null !== null) @selected(old('person_charge', $student->person_charge) == $kinship->id) @endif>
+                                                    @if ($student?->myTutorIs !== null) @selected(old('person_charge', $student?->myTutorIs->kinship_id) == $kinship->id) @endif>
                                                     {{ __($kinship->name) }}
                                                 </option>
                                             @endforeach

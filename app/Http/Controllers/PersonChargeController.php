@@ -126,7 +126,7 @@ class PersonChargeController extends Controller
 
                 try {
 
-                    PersonCharge::create([
+                    $mother = PersonCharge::create([
                         'id' => $motherCreate->getUser()->id,
                         'student_id' => $student->id,
                         'name' => $request->mother_name,
@@ -209,7 +209,7 @@ class PersonChargeController extends Controller
 
                 try {
 
-                    PersonCharge::create([
+                    $teacher = PersonCharge::create([
                         'id' => $fatherCreate->getUser()->id,
                         'student_id' => $student->id,
                         'name' => $request->father_name,
@@ -296,7 +296,7 @@ class PersonChargeController extends Controller
 
                     try {
 
-                        PersonCharge::create([
+                        $tutor = PersonCharge::create([
                             'id' => $tutorCreate->getUser()->id,
                             'student_id' => $student->id,
                             'name' => $request->tutor_name,
@@ -369,7 +369,11 @@ class PersonChargeController extends Controller
 
 
         $student->update([
-            'person_charge' => $request->person_charge
+            'person_charge' => match($request->person_charge){
+                "1" => $mother->id,
+                "2" => $father->id,
+                default => $tutor?->id
+            }
         ]);
 
         if ($wizard === TRUE) {
