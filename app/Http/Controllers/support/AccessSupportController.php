@@ -115,6 +115,8 @@ class AccessSupportController extends Controller
                 fn ($tsg) => $tsg->whereHas('attendances')
             );
         })
+        ->orderBy('last_names')
+        ->orderBy('names')
         ->get();
 
 
@@ -127,6 +129,8 @@ class AccessSupportController extends Controller
         $title = 'Cantidad documentos de Docentes';
 
         $teachers = \App\Models\Teacher::withCount('hierarchies', 'degrees', 'employments')
+        ->orderBy('last_names')
+        ->orderBy('names')
         ->get();
 
         return Excel::download(new TeachersCountData($title, $teachers), $title . '.xlsx');
