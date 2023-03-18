@@ -402,7 +402,7 @@
     <section class="card mt-1">
         <div class="card-header">
             Datos de la Madre
-            @if ($student->person_charge === $student->mother->id)
+            @if ($student->person_charge === $student?->mother?->id)
                 (Acudiente)
             @endif
         </div>
@@ -449,7 +449,7 @@
     <section class="card mt-1">
         <div class="card-header">
             Datos de Padre
-            @if ($student->person_charge === $student->father->id)
+            @if ($student->person_charge === $student?->father?->id)
                 (Acudiente)
             @endif
         </div>
