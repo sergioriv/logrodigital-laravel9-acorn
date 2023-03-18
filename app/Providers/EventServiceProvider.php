@@ -19,6 +19,10 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
+        \Illuminate\Auth\Events\Login::class => [
+            \App\Listeners\LogActivityListener::class.'@login',
+        ],
+
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             \SocialiteProviders\Azure\AzureExtendSocialite::class.'@handle',
         ],

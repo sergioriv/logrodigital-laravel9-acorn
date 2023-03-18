@@ -163,6 +163,24 @@ class SmtpMail extends Controller
         return $this->send_email($content->toContent());
     }
 
+    /* Enviar escrito por un usuario, enviado a los tutores */
+    public function mailToTutor($subject, $message, $name, $email)
+    {
+        if ( ! is_null($email) ) {
+
+            $this->subject = $subject;
+            $this->userName = $name;
+            $this->userEmail = $email;
+
+            $content = (new ContentMail)
+                ->title(Lang::get('Hi') .', '. $name)
+                ->line($message);
+
+            return $this->send_email($content->toContent());
+        }
+        return false;
+    }
+
 
     /* Mail Alert
      *

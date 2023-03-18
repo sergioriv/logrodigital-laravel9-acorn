@@ -127,15 +127,11 @@
                                             @endif
                                         @endhasrole
                                         @hasrole('SUPPORT')
-                                        <form action="{{ route('send-mail.group', $group) }}" method="POST">
-                                            @csrf
-
-                                            <button type="submit" class="dropdown-item btn-sm btn-icon btn-icon-start">
-                                                <i data-acorn-icon="email"></i>
-                                                <span>Enviar correo a acudientes</span>
-                                            </button>
-
-                                        </form>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#openModelSendMailTutors"
+                                        class="dropdown-item btn-sm btn-icon btn-icon-start">
+                                            <i data-acorn-icon="email"></i>
+                                            <span>Enviar correo a acudientes</span>
+                                        </a>
                                         @endhasrole
                                     </div>
                                 </div>
@@ -655,7 +651,8 @@
     </div>
 
     @can('group.subject.period.active')
-        <!-- Modal Period Permit -->
+
+        <!-- Modal Period Permit Start -->
         <div class="modal fade" id="addPeriodPermit" aria-labelledby="modalPeriodPermit" data-bs-backdrop="static"
             data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -702,11 +699,14 @@
                 </div>
             </div>
         </div>
+        <!-- Modal Period Permit End -->
+
     @endcan
 
     @hasrole('SUPPORT')
         @if (!$group->specialty && !$periods->isEmpty())
-            <!-- Modal Delete Group -->
+
+            <!-- Modal Grades Report Start -->
             <div class="modal fade" id="generateGradeReport" aria-labelledby="modalGenerateGradeReport"
                 data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -749,6 +749,61 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal Grades Report End -->
+
         @endif
+    @endhasrole
+
+    @hasrole('SUPPORT')
+
+        <!-- Modal Send Email Tutors Start -->
+        <div class="modal fade" id="openModelSendMailTutors" aria-labelledby="modalSendMailTutors" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalSendMailTutors">
+                            {{ __('Activate note upload') }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">NO DISPONIBLE</div>
+                    {{-- <form action="{{ route('send-mail.group', $group) }}" id="sendMailTutorsForm" method="POST">
+                        @csrf
+
+                        <div class="modal-body">
+
+                            <div class="row g-2">
+
+                                <!-- Subject Mail -->
+                                <div class="col-12">
+                                    <div class="form-group position-relative">
+                                        <x-label required>{{ __('Email subject') }}</x-label>
+                                        <x-input type="text" name="email_subject" maxlength="191" value="" required />
+                                    </div>
+                                </div>
+
+                                <!-- Message Mail -->
+                                <div class="col-12">
+                                    <div class="form-group position-relative">
+                                        <x-label required>{{ __('Email message') }}</x-label>
+                                        <textarea rows="5" maxlength="3000" name="email_message" class="form-control" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger"
+                                data-bs-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="submit" class="btn btn-primary">
+                                {{ __('Send') }}</button>
+                        </div>
+                    </form> --}}
+                </div>
+            </div>
+        </div>
+        <!-- Modal Send Email Tutors End -->
+
     @endhasrole
 @endsection

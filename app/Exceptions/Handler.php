@@ -56,6 +56,11 @@ class Handler extends ExceptionHandler
 
 
     public function handleException(Throwable $e){
+
+        if ($e->getPrevious() instanceof \Illuminate\Session\TokenMismatchException) {
+            return redirect()->route('login');
+        }
+
         if ($e instanceof ErrorException) {
 
             \Illuminate\Support\Facades\Log::alert(
