@@ -581,7 +581,7 @@
                         <div class="modal-body">
 
                             <div class="row mb-3 position-relative">
-                                <x-label for="date" class="col-sm-3 col-form-label text-sm-start text-center">{{ __('Choose date') }}</x-label>
+                                <x-label for="date" class="col-sm-3 col-form-label text-sm-start text-center font-weight-bold text-danger" required>{{ __('Choose date') }}</x-label>
                                 <div class="col-sm-9">
                                     <x-input :value="old('date', today()->format('Y-m-d'))" logro="datePickerBefore" name="date"
                                         data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" class="text-center" required />
