@@ -475,7 +475,8 @@
                                     <div class="row d-flex align-items-start justify-content-between">
                                         <!-- Attendance Available Start -->
                                         <div class="col-12 col-md-6 h5 text-md-start text-center align-self-center">
-                                            {{ __('Attendance for this week') . ': ' . $attendanceAvailable }}</div>
+                                            {{-- __('Attendanceforthisweek').':'.$attendanceAvailable --}}
+                                        </div>
                                         <!-- Attendance Available End -->
 
                                         <div class="col-12 col-md-6 text-md-end text-center">

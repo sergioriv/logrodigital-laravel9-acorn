@@ -403,7 +403,7 @@ class TeacherController extends Controller
             'subject' => $subject,
             'studentsGroup' => $studentsGroup,
             'periods' => $periods,
-            'attendanceAvailable' => $weeklyLoad->hours_week - $attendancesWeek,
+            'attendanceAvailable' => TRUE,
             'attendances' => $attendances,
             'descriptors' => $descriptors,
             'descriptorsInclusive' => $descriptorsInclusive
