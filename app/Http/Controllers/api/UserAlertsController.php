@@ -27,12 +27,12 @@ class UserAlertsController extends Controller
 
     private function forTeachers()
     {
-        return UserAlertController::myAlerts()->count();
+        return UserAlertController::myAlerts()->getAlerts()->count();
     }
 
     private function forOrientation()
     {
-        return UserAlertController::myAlerts()->count();
+        return UserAlertController::myAlerts()->getAlerts()->count();
     }
 
     private function forCoordination()
@@ -42,22 +42,22 @@ class UserAlertsController extends Controller
         /*
          * Alertas generadas para el usuario
          */
-        $count += UserAlertController::myAlerts()->count();
+        $count += UserAlertController::myAlerts()->getAlerts()->count();
 
         /*
          * Permisos solicitados por docentes
          */
-        $count += TeacherPermitController::pendingPermits()->count();
+        $count += TeacherPermitController::pendingPermits()->groupByTeacher()->count();
 
         /*
          * Permisos solicitados por orientadores
          */
-        $count += OrientationPermitController::pendingPermits()->count();
+        $count += OrientationPermitController::pendingPermits()->groupByOrientator()->count();
 
         /*
          * Permisos solicitados por coordinadores
          */
-        $count += CoordinationPermitController::pendingPermits()->count();
+        $count += CoordinationPermitController::pendingPermits()->groupByCoordinator()->count();
 
         return $count;
     }

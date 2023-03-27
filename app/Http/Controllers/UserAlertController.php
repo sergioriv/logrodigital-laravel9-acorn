@@ -11,13 +11,18 @@ use App\Models\Orientation;
 use App\Models\Student;
 use App\Models\TeacherSubjectGroup;
 use App\Models\UserAlert;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class UserAlertController extends Controller
 {
-    public function __construct()
+    protected $studentAlerts;
+
+    public function __construct(Collection $studentAlerts = null)
     {
         $this->middleware('hasroles:TEACHER,COORDINATOR')->only('teacher_to_orientation');
+
+        $this->studentAlerts = $studentAlerts;
     }
 
     public static function orientation_to_coordinator(Coordination $coordinator, Student $student, Request $request)
@@ -159,14 +164,25 @@ class UserAlertController extends Controller
 
     public static function myAlerts()
     {
-        return UserAlert::whereJsonContains('for_users', auth()->id())
+        return new static(UserAlert::whereJsonContains('for_users', auth()->id())
             ->whereNot(fn ($not) => $not->whereJsonContains('checked', auth()->id()) )
             ->orderByDesc('priority')
             ->orderBy('created_at')
             ->with(['student' => fn($student) => $student->with(['group:id,name']) ])
             ->with('created_user')
-            ->get()->groupBy(function ($alert) {
-                return $alert->student_id;
-            });
+            ->get()
+        );
+    }
+
+    public function getAlerts()
+    {
+        return $this->studentAlerts;
+    }
+
+    public function groupByStudents()
+    {
+        return $this->studentAlerts->groupBy(function ($alert) {
+            return $alert->student_id;
+        });
     }
 }

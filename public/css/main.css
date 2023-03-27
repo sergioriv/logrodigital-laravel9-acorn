@@ -205,9 +205,6 @@ html[data-dimension="mobile"] .logro-badge-right-bottom {
 }
 
 
-.modal-dialog {
-    margin: .5rem auto !important;
-}
 .logro-modal-image img {
     margin: auto;
     max-width: 100%;

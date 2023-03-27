@@ -6,15 +6,20 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Orientation;
 use App\Models\OrientationPermit;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrientationPermitController extends Controller
 {
-    public function __construct()
+    protected $orientationPermits;
+
+    public function __construct(Collection $orientationPermits = null)
     {
         $this->middleware('hasroles:SUPPORT,SECRETARY,ORIENTATION')->only('store');
+
+        $this->orientationPermits = $orientationPermits;
     }
 
     public function store(Orientation $orientation, Request $request)
@@ -135,7 +140,19 @@ class OrientationPermitController extends Controller
 
     public static function pendingPermits($status = 0)
     {
-        return OrientationPermit::where('status', 0)->get()->groupBy(function ($permit) {
+        return new static(
+            OrientationPermit::where('status', 0)->get()
+        );
+    }
+
+    public function getPermits()
+    {
+        return $this->orientationPermits;
+    }
+
+    public function groupByOrientator()
+    {
+        return $this->orientationPermits->groupBy(function ($permit) {
             return $permit->orientation_id;
         });
     }

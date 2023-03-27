@@ -63,7 +63,6 @@ class DashboardController extends Controller
 
     private function dashCoordination()
     {
-
         return view('dashboard.coordination', [
             'teacherPermits' => TeacherPermitController::pendingPermits(),
             'coordinationPermits' => CoordinationPermitController::pendingPermits(),

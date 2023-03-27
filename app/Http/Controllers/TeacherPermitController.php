@@ -6,15 +6,20 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Teacher;
 use App\Models\TeacherPermit;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TeacherPermitController extends Controller
 {
-    public function __construct()
+    protected $teacherPermits;
+
+    public function __construct(Collection $teacherPermits = null)
     {
         $this->middleware('hasroles:SUPPORT,SECRETARY,TEACHER')->only('store');
         $this->middleware('hasroles:COORDINATOR')->only('acceptedOrDenied');
+
+        $this->teacherPermits = $teacherPermits;
     }
 
     public function store(Teacher $teacher, Request $request)
@@ -135,7 +140,19 @@ class TeacherPermitController extends Controller
 
     public static function pendingPermits($status = 0)
     {
-        return TeacherPermit::where('status', $status)->get()->groupBy(function ($permit) {
+        return new static(
+            TeacherPermit::where('status', $status)->get()
+        );
+    }
+
+    public function getPermits()
+    {
+        return $this->teacherPermits;
+    }
+
+    public function groupByTeacher()
+    {
+        return $this->teacherPermits->groupBy(function ($permit) {
             return $permit->teacher_id;
         });
     }

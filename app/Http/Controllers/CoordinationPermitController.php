@@ -6,15 +6,20 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Coordination;
 use App\Models\CoordinationPermit;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CoordinationPermitController extends Controller
 {
-    public function __construct()
+    protected $coordinationPermits;
+
+    public function __construct(Collection $coordinationPermits = null)
     {
         $this->middleware('hasroles:SUPPORT,SECRETARY,COORDINATOR')->only('store');
+
+        $this->coordinationPermits = $coordinationPermits;
     }
 
     public function store(Coordination $coordination, Request $request)
@@ -135,7 +140,19 @@ class CoordinationPermitController extends Controller
 
     public static function pendingPermits($status = 0)
     {
-        return CoordinationPermit::where('status', 0)->get()->groupBy(function ($permit) {
+        return new static(
+            CoordinationPermit::where('status', 0)->get()
+        );
+    }
+
+    public function getPermits()
+    {
+        return $this->coordinationPermits;
+    }
+
+    public function groupByCoordinator()
+    {
+        return $this->coordinationPermits->groupBy(function ($permit) {
             return $permit->coordination_id;
         });
     }

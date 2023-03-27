@@ -19,6 +19,13 @@
 @section('js_page')
     <script src="/js/forms/select2.js"></script>
     <script src="/js/pages/dashboard.coordination.js"></script>
+    @if ($alertsStudents->getAlerts()->count())
+        <script>
+            $(document).ready(function() {
+                $("#modalFullScreen").modal('show');
+            });
+        </script>
+    @endif
 @endsection
 
 @section('content')
@@ -55,7 +62,9 @@
         </div>
         <!-- Title and Top Buttons End -->
 
-        @if (count($teacherPermits) || count($coordinationPermits) || count($orientationPermits))
+        @if (count($teacherPermits->getPermits()) ||
+                count($coordinationPermits->getPermits()) ||
+                count($orientationPermits->getPermits()))
             <!-- Alerts Section Start -->
             <section class="scroll-section">
                 <h2 class="small-title">{{ __('Permits requested') }}</h2>
@@ -65,7 +74,7 @@
 
                         <div class="accordion accordion-flush" id="accordionFlushPermits">
 
-                            @if (count($teacherPermits))
+                            @if (count($teacherPermits->getPermits()))
                                 <!-- Accordeon Teacher Permits Start -->
                                 <div class="accordion-item">
                                     <div class="accordion-header" id="flush-heading-teachers">
@@ -73,7 +82,7 @@
                                             data-bs-target="#flush-collapse-teachers" aria-expanded="false"
                                             aria-controls="flush-collapse-teachers">
                                             <span
-                                                class="font-weight-bold me-1">{{ '(' . $teacherPermits->count() . ')' }}</span>
+                                                class="font-weight-bold me-1">{{ '(' . $teacherPermits->groupByTeacher()->count() . ')' }}</span>
                                             {{ __('Teachers') }}
                                         </button>
                                     </div>
@@ -81,7 +90,7 @@
                                         aria-labelledby="flush-heading-teachers" data-bs-parent="#accordionFlushPermits">
                                         <div class="accordion-body px-5">
 
-                                            @foreach ($teacherPermits as $permit)
+                                            @foreach ($teacherPermits->groupByTeacher() as $permit)
                                                 <div class="w-100 mb-2">
                                                     <span
                                                         class="font-weight-bold me-1">{{ '(' . $permit->count() . ')' }}</span>
@@ -97,7 +106,7 @@
                                 <!-- Accordeon Teacher Permits End -->
                             @endif
 
-                            @if (count($coordinationPermits))
+                            @if (count($coordinationPermits->getPermits()))
                                 <!-- Accordeon Coordination Permits Start -->
                                 <div class="accordion-item">
                                     <div class="accordion-header" id="flush-heading-coordinators">
@@ -105,7 +114,7 @@
                                             data-bs-target="#flush-collapse-coordinators" aria-expanded="false"
                                             aria-controls="flush-collapse-coordinators">
                                             <span
-                                                class="font-weight-bold me-1">{{ '(' . $coordinationPermits->count() . ')' }}</span>
+                                                class="font-weight-bold me-1">{{ '(' . $coordinationPermits->groupByCoordinator()->count() . ')' }}</span>
                                             {{ __('Coordinators') }}
                                         </button>
                                     </div>
@@ -114,7 +123,7 @@
                                         data-bs-parent="#accordionFlushPermits">
                                         <div class="accordion-body px-5">
 
-                                            @foreach ($coordinationPermits as $permit)
+                                            @foreach ($coordinationPermits->groupByCoordinator() as $permit)
                                                 <div class="w-100 mb-2">
                                                     <span
                                                         class="font-weight-bold me-1">{{ '(' . $permit->count() . ')' }}</span>
@@ -131,7 +140,7 @@
                                 <!-- Accordeon Coordination Permits End -->
                             @endif
 
-                            @if (count($orientationPermits))
+                            @if (count($orientationPermits->getPermits()))
                                 <!-- Accordeon Orientation Permits Start -->
                                 <div class="accordion-item">
                                     <div class="accordion-header" id="flush-heading-orientation">
@@ -139,7 +148,7 @@
                                             data-bs-target="#flush-collapse-orientation" aria-expanded="false"
                                             aria-controls="flush-collapse-orientation">
                                             <span
-                                                class="font-weight-bold me-1">{{ '(' . $orientationPermits->count() . ')' }}</span>
+                                                class="font-weight-bold me-1">{{ '(' . $orientationPermits->groupByOrientator()->count() . ')' }}</span>
                                             {{ __('Counselors') }}
                                         </button>
                                     </div>
@@ -147,7 +156,7 @@
                                         aria-labelledby="flush-heading-orientation" data-bs-parent="#accordionFlushPermits">
                                         <div class="accordion-body px-5">
 
-                                            @foreach ($orientationPermits as $permit)
+                                            @foreach ($orientationPermits->groupByOrientator() as $permit)
                                                 <div class="w-100 mb-2">
                                                     <span
                                                         class="font-weight-bold me-1">{{ '(' . $permit->count() . ')' }}</span>
@@ -174,7 +183,7 @@
         <!-- Alerts Section Start -->
         <section class="scroll-section">
             <h2 class="small-title">{{ __('Alerts') }}</h2>
-            <x-dash.alerts-students :content="$alertsStudents" />
+            <x-dash.alerts-students :content="$alertsStudents->groupByStudents()" />
         </section>
         <!-- Alerts Section End -->
 
@@ -183,6 +192,39 @@
             <x-dash.modal.multiple-annotation-observer />
         </section>
         <!-- Add Annotation Observer Modal End -->
+
+        <!-- Quality Alert Students Modal Start -->
+        <section>
+            <x-dash.modal.modal-fullscreen>
+                <div class="text-center">
+                    <div class="display-1">
+                        {{ __('You have :COUNT alerts pending to read.', ['COUNT' => $alertsStudents->getAlerts()->count()]) }}
+                    </div>
+
+                    @if ($alertsStudents->getAlerts()->where('priority', 1)->count())
+                        <div class="display-2 text-danger">
+                            {{ __(':COUNT are high priority alerts.', ['COUNT' => $alertsStudents->getAlerts()->where('priority', 1)->count()]) }}
+                        </div>
+                    @endif
+
+                    @if (count($teacherPermits->getPermits()) ||
+                            count($coordinationPermits->getPermits()) ||
+                            count($orientationPermits->getPermits()))
+                        <div class="display-1 mt-4">
+                            {{ __(':COUNT permit applications.', [
+                                'COUNT' =>
+                                    count($teacherPermits->getPermits()) +
+                                    count($coordinationPermits->getPermits()) +
+                                    count($orientationPermits->getPermits()),
+                            ]) }}
+                        </div>
+                    @endif
+
+                    <div class="display-6 mt-6">{{ __('Check them on your main panel.') }}</div>
+                </div>
+            </x-dash.modal.modal-fullscreen>
+        </section>
+        <!-- Quality Alert Students Modal End -->
 
     </div>
 @endsection
