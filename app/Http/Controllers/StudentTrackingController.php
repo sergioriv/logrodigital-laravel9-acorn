@@ -54,8 +54,10 @@ class StudentTrackingController extends Controller
     {
         $request->validate([
             'entity_remit' => ['required', 'min:1', 'max:191'],
+            'header_remit' => ['nullable', Rule::exists('headers_remissions', 'id')],
             'reason_entity' => ['required', 'string', 'min:10', 'max:5000'],
-            'orientation_intervention' => ['required', 'string', 'min:10', 'max:5000']
+            'orientation_intervention' => ['required', 'string', 'min:10', 'max:5000'],
+            'risk_or_vulnerabilities' => ['nullable', 'string', 'max:5000']
         ]);
 
         StudentTrackingRemit::create([
@@ -64,7 +66,9 @@ class StudentTrackingController extends Controller
             'type_tracking' => 'REMIT',
             'entity_remit' => $request->entity_remit,
             'reason_entity' => $request->reason_entity,
-            'orientation_intervention' => $request->orientation_intervention
+            'orientation_intervention' => $request->orientation_intervention,
+            'header_remit' => $request->header_remit,
+            'risk_or_vulnerabilities' => $request->risk_or_vulnerabilities
         ]);
 
         self::tab();

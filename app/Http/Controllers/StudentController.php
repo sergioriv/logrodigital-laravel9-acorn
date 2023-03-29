@@ -25,6 +25,7 @@ use App\Models\EthnicGroup;
 use App\Models\Gender;
 use App\Models\Group;
 use App\Models\GroupStudent;
+use App\Models\HeadersRemission;
 use App\Models\Headquarters;
 use App\Models\HealthManager;
 use App\Models\IcbfProtectionMeasure;
@@ -66,11 +67,11 @@ class StudentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('hasroles:SUPPORT,SECRETARY,STUDENT')->only(
+        /* $this->middleware('hasroles:SUPPORT,SECRETARY,STUDENT')->only(
             'pdf_carnet',
             'pdf_observations',
             'pdf_certificate',
-            'pdf_matriculate');
+            'pdf_matriculate'); */
 
         $this->middleware('can:students.info')->only(
             'update'
@@ -722,6 +723,7 @@ class StudentController extends Controller
             'groupsStudent' => [],
             'nationalCountry' => NationalCountry::country(),
             'coordinators' => $orientationOptions['coordinators'],
+            'headers_remission' => HeadersRemission::all(),
             'handbook'      => SchoolController::myschool()->handbook(),
         ]);
     }
@@ -739,6 +741,11 @@ class StudentController extends Controller
             $existOrientation = (bool)Orientation::count();
         }
 
+        $coordinators = null;
+        if ($myRole === RoleUser::TEACHER_ROL) {
+            $coordinators = Coordination::all();
+        }
+
         $attendance = Attendance::withWhereHas(
                 'student',
                 fn ($s) => $s->where('student_id', $student->id)
@@ -749,7 +756,8 @@ class StudentController extends Controller
         return view('logro.student.profile-view', [
             'student' => $student,
             'existOrientation' => $existOrientation,
-            'attendance' => $attendance
+            'attendance' => $attendance,
+            'coordinators' => $coordinators
         ]);
     }
 

@@ -2894,9 +2894,9 @@
         @hasanyrole('ORIENTATION|SUPPORT')
             @if ($student->enrolled === 1)
                 <!-- Modal Add Advice -->
-                <div class="modal fade" id="addAdviceModal" aria-labelledby="modalAddAdvice" data-bs-backdrop="static"
+                <div class="modal fade modal-close-out" id="addAdviceModal" aria-labelledby="modalAddAdvice" data-bs-backdrop="static"
                     data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalAddAdvice">{{ __('Add advice') }}</h5>
@@ -2909,9 +2909,9 @@
                 </div>
 
                 <!-- Modal Add Remit -->
-                <div class="modal fade" id="addRemitModal" aria-labelledby="modalAddRemit" data-bs-backdrop="static"
+                <div class="modal fade modal-close-out" id="addRemitModal" aria-labelledby="modalAddRemit" data-bs-backdrop="static"
                     data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalAddRemit">{{ __('Remit') }}</h5>
@@ -2924,9 +2924,9 @@
                 </div>
 
                 <!-- Modal Add Teachers -->
-                <div class="modal fade" id="addTeacherModal" aria-labelledby="modalAddTeacher" data-bs-backdrop="static"
+                <div class="modal fade modal-close-out" id="addTeacherModal" aria-labelledby="modalAddTeacher" data-bs-backdrop="static"
                     data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalAddTeacher">{{ __('Recommendation for teachers') }}</h5>
@@ -2939,9 +2939,9 @@
                 </div>
 
                 <!-- Modal Add Coordination -->
-                <div class="modal fade" id="addCoordinationModal" aria-labelledby="modalAddCoordination"
+                <div class="modal fade modal-close-out" id="addCoordinationModal" aria-labelledby="modalAddCoordination"
                     data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalAddCoordination">{{ __('Recommendation to coordination') }}
@@ -2955,9 +2955,9 @@
                 </div>
 
                 <!-- Modal Add Family -->
-                <div class="modal fade" id="addFamilyModal" aria-labelledby="modalAddFamily" data-bs-backdrop="static"
+                <div class="modal fade modal-close-out" id="addFamilyModal" aria-labelledby="modalAddFamily" data-bs-backdrop="static"
                     data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalAddFamily">{{ __('recommendation to the family') }}</h5>
@@ -2972,9 +2972,9 @@
         @endhasanyrole
 
         <!-- Modal View Info Tracking -->
-        <div class="modal fade" id="viewTracking" aria-labelledby="modalViewTracking" data-bs-backdrop="static"
+        <div class="modal fade modal-close-out" id="viewTracking" aria-labelledby="modalViewTracking" data-bs-backdrop="static"
             data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title logro-label" id="modalViewTracking"></h5>

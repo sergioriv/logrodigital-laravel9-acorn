@@ -5,6 +5,19 @@
 
         <div class="row g-3">
 
+            @hasrole('TEACHER')
+            <!-- Select a coordinator -->
+            <div class="w-100 form-group position-relative">
+                <x-label required>{{ __('select a coordinator') }}</x-label>
+                <select name="coordinator" logro="select2" required>
+                    <option label="&nbsp;"></option>
+                    @foreach ($coordinators as $coordinator)
+                        <option value="{{ $coordinator->uuid }}">{{ $coordinator->getFullName() }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @endhasrole
+
             <!-- Recommendation To Orientation -->
             <div class="form-group position-relative">
                 <x-label required>{{ __('recommendation to orientation') }}</x-label>

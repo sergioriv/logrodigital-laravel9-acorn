@@ -31,6 +31,10 @@ class StudentTracking extends Model
     {
         return $this->belongsTo(Coordination::class, 'coordination_id', 'id');
     }
+    public function headerRemit()
+    {
+        return $this->belongsTo(HeadersRemission::class, 'header_remit', 'id');
+    }
 
 
     protected function typeTracking(): Attribute

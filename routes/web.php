@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DescriptorController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\HeadersRemissionController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\OrientationController;
 use App\Http\Controllers\OrientationDegreeController;
@@ -393,6 +394,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('students/{student}/report-to-orientation', [UserAlertController::class, 'teacher_to_orientation'])->name('teacher.report.students.store');
 
     Route::get('alert/{alert}/checked', [UserAlertController::class, 'checked'])->name('alert.checked');
+    Route::get('alert/{alert}/approval', [UserAlertController::class, 'approval'])->name('alert.approval');
 
 
     /*
@@ -414,6 +416,14 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::delete('remove-user', 'removeUser')->name('voting.remove-user');
     });
 
+
+
+    /*
+     *
+     * Headers Remissions
+     *
+     *  */
+    Route::middleware('hasroles:ORIENTATION')->resource('headers-remissions', HeadersRemissionController::class)->except('destroy', 'show')->names('headers-remissions');
 
 
     /*

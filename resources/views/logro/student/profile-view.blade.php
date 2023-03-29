@@ -70,17 +70,39 @@
                 </div>
                 <!-- Title End -->
 
-                @hasrole('TEACHER|COORDINATOR')
-                    @if ($existOrientation)
-                        <!-- Top Buttons Start -->
-                        <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                <!-- Top Buttons Start -->
+                <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                    @hasrole('TEACHER|COORDINATOR')
+                        @if ($existOrientation)
                             <!-- Remit to Orientation Button -->
-                            <x-button type="button" class="btn-outline-info" data-bs-toggle="modal"
+                            <x-button type="button" class="btn-outline-primary" data-bs-toggle="modal"
                                 data-bs-target="#addRemitToOrientation">{{ __('Remit to Orientation') }}</x-button>
+                        @endif
+                    @endhasrole
+
+                    <!-- Dropdown Button Start -->
+                    <div class="ms-1">
+                        <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only" data-bs-offset="0,3"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
+                            <i data-acorn-icon="more-horizontal"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+
+                            <x-dropdown-item type="button" :link="route('students.pdf.matriculate', $student)">
+                                <i data-acorn-icon="download"></i>
+                                <span>{{ __('Download enrollment sheet') }}</span>
+                            </x-dropdown-item>
+                            <x-dropdown-item type="button" :link="route('students.pdf.observations', $student)">
+                                <i data-acorn-icon="download"></i>
+                                <span>{{ __('Download observer') }}</span>
+                            </x-dropdown-item>
+
                         </div>
-                        <!-- Top Buttons End -->
-                    @endif
-                @endhasrole
+                    </div>
+                    <!-- Dropdown Button End -->
+
+                </div>
+                <!-- Top Buttons End -->
 
             </div>
         </section>
@@ -113,9 +135,10 @@
                                 @endif
 
                                 @if ($student->fallas->count())
-                                <div class="mt-2">
-                                    <a href="{{ route('attendances.student.download', $student) }}">{{ $student->fallas->count() }} Fallas</a>
-                                </div>
+                                    <div class="mt-2">
+                                        <a href="{{ route('attendances.student.download', $student) }}">{{ $student->fallas->count() }}
+                                            Fallas</a>
+                                    </div>
                                 @endif
 
                             </div>

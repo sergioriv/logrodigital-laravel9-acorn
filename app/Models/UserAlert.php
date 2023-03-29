@@ -19,13 +19,16 @@ class UserAlert extends Model
         'student_id',
         'created_user_type',
         'created_user_id',
-        'checked'
+        'checked',
+        'user_approval_id',
+        'approval'
     ];
 
     protected $casts = [
         'for_users' => 'array',
         'checked' => 'array',
-        'priority' => 'boolean'
+        'priority' => 'boolean',
+        'approval' => 'boolean'
     ];
 
 
@@ -44,5 +47,15 @@ class UserAlert extends Model
             'second_last_name',
             'group_id'
         );
+    }
+
+    public function user_approval()
+    {
+        return $this->belongsTo(Coordination::class, 'user_approval_id', 'id');
+    }
+
+    public function approvalCheck()
+    {
+        return $this->approval ? '<i class="icon bi-check-circle text-primary ms-1"></i>' : '';
     }
 }

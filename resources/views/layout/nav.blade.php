@@ -186,6 +186,15 @@
             </li>
             @endhasrole
 
+            @hasrole('ORIENTATION')
+            <li>
+                <a href="{{ route('headers-remissions.index') }}" data-href="/headers-remissions">
+                    <i data-acorn-icon="content" class="icon"></i>
+                    <span class="label">{{ __('Headers remissions') }}</span>
+                </a>
+            </li>
+            @endhasrole
+
             @hasrole('VOTING_COORDINATOR')
             <li>
                 <a href="{{ route('voting.index') }}" data-href="/voting">

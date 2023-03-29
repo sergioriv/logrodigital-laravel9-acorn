@@ -20,7 +20,9 @@ class StudentTrackingRemit extends Model
         'type_tracking',
         'entity_remit',
         'reason_entity',
-        'orientation_intervention'
+        'orientation_intervention',
+        'header_remit',
+        'risk_or_vulnerabilities'
     ];
 
 

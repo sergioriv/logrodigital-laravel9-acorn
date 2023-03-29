@@ -236,9 +236,11 @@
         </div>
     </section>
 
-    <section class="p-1 mt-1">
-        La presente Remisión es radicada por parte de la {{ $SCHOOL->name ?? 'Institución' }}, ante las entidades y autoridades competentes, quienes según lo dispuesto en la ley 1098 de 2006 (Código de Infancia y Adolescencia) y en la Constitución Política de Colombia, deberán realizar las diligencias pertinentes, en procura de proteger los derechos, la salud y la vida de los niños, niñas y adolescentes.
-    </section>
+    @if ( ! is_null($tracking->header_remit) )
+        <section class="p-1 mt-1">
+            {{ $tracking?->headerRemit->content }}
+        </section>
+    @endif
 
     <section class="card mt-1">
         <div class="card-header">Datos del Estudiante</div>
@@ -436,11 +438,11 @@
         @endif
     </section>
 
-    @if ( ! is_null($tracking->student->risks_vulnerabilities) )
+    @if ( ! is_null($tracking->risk_or_vulnerabilities) )
         <section class="card mt-1">
             <div class="card-header">Riegos o vulnerabilidades del estudiante</div>
             <div class="card-content">
-                <div class="p-1">{{ $tracking->student->risks_vulnerabilities }}</div>
+                <div class="p-1">{{ nl2br($tracking->risk_or_vulnerabilities) }}</div>
             </div>
         </section>
     @endif
@@ -449,7 +451,7 @@
         <div class="card-header">{{ __('Reason for remit') }}</div>
         <div class="card-content">
             <div class="p-1">
-                {{ $tracking->reason_entity }}
+                {{ nl2br($tracking->reason_entity) }}
             </div>
         </div>
     </section>
@@ -459,7 +461,7 @@
         <div class="card-header">{{ __('Orientation Intervention') }}</div>
         <div class="card-content">
             <div class="p-1">
-                {{ $tracking->orientation_intervention }}
+                {{ nl2br($tracking->orientation_intervention) }}
             </div>
         </div>
     </section>

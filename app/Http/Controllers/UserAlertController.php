@@ -13,6 +13,7 @@ use App\Models\TeacherSubjectGroup;
 use App\Models\UserAlert;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserAlertController extends Controller
 {
@@ -100,6 +101,7 @@ class UserAlertController extends Controller
         if ($student->enrolled) {
 
             $request->validate([
+                'coordinator' => ['nullable', Rule::exists((new Coordination)->getTable(), 'uuid')],
                 'recommendations_orientation' => ['required', 'string', 'min:10', 'max:5000'],
                 'actions_teacher' => ['required', 'string', 'min:10', 'max:5000'],
                 'priority_orientation' => ['nullable', 'boolean']
@@ -113,6 +115,14 @@ class UserAlertController extends Controller
 
             $orientatorsArray = $orientators->pluck('id')->toArray();
 
+            $myRole = UserController::role_auth();
+            if ($myRole === RoleUser::COORDINATION_ROL) {
+                $approval_id = auth()->id();
+            } else {
+                $uuidCoordination = Coordination::select('id')->where('uuid', $request->coordinator)->first();
+                $approval_id = $uuidCoordination->id;
+            }
+
             UserAlert::create([
                 'for_users' => $orientatorsArray,
                 'priority' => $request->priority_orientation === '1' ? TRUE : FALSE,
@@ -121,7 +131,9 @@ class UserAlertController extends Controller
                 'student_id' => $student->id,
                 'created_user_type' => UserController::myModelIs(),
                 'created_user_id' => auth()->id(),
-                'checked' => []
+                'checked' => [],
+                'user_approval_id' => $approval_id,
+                'approval' => $myRole === RoleUser::COORDINATION_ROL ? TRUE : FALSE
             ]);
 
 
@@ -155,6 +167,22 @@ class UserAlertController extends Controller
             ]);
 
             Notify::success(__('Read alert!'));
+            return redirect()->back();
+        }
+
+        return redirect()->back()->withErrors(__('Not allowed'));
+    }
+
+    /* access for methode GET */
+    public function approval(UserAlert $alert)
+    {
+        if (auth()->id() === $alert->user_approval_id) {
+
+            $alert->update([
+                'approval' => TRUE
+            ]);
+
+            Notify::success(__('Read remit!'));
             return redirect()->back();
         }
 

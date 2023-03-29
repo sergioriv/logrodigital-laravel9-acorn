@@ -9,6 +9,7 @@ use App\Models\Data\RoleUser;
 use App\Models\OrientationPermit;
 use App\Models\Student;
 use App\Models\TeacherPermit;
+use App\Models\UserAlert;
 
 class DashboardController extends Controller
 {
@@ -63,11 +64,22 @@ class DashboardController extends Controller
 
     private function dashCoordination()
     {
+        $remitPending = UserAlert::where('user_approval_id', auth()->id())
+            ->where('approval', 0)
+            ->orderBy('created_at')
+            ->with(['student' => fn($student) => $student->with(['group:id,name']) ])
+            ->with('created_user')
+            ->get()
+            ->groupBy(function ($alert) {
+                return $alert->student_id;
+            });
+
         return view('dashboard.coordination', [
             'teacherPermits' => TeacherPermitController::pendingPermits(),
             'coordinationPermits' => CoordinationPermitController::pendingPermits(),
             'orientationPermits' => OrientationPermitController::pendingPermits(),
-            'alertsStudents' => UserAlertController::myAlerts()
+            'alertsStudents' => UserAlertController::myAlerts(),
+            'remitPending' => $remitPending
         ]);
     }
 }

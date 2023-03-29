@@ -180,6 +180,15 @@
             <!-- Alerts Section Start -->
         @endif
 
+        @if (count($remitPending))
+            <!-- Alerts Section Start -->
+            <section class="scroll-section">
+                <h2 class="small-title">{{ __('Remits') }}</h2>
+                <x-dash.alerts-students :content="$remitPending" name="remits" />
+            </section>
+            <!-- Alerts Section End -->
+        @endif
+
         <!-- Alerts Section Start -->
         <section class="scroll-section">
             <h2 class="small-title">{{ __('Alerts') }}</h2>

@@ -314,3 +314,7 @@ html[data-dimension="mobile"] .logro-badge-right-bottom {
     box-shadow: none !important;
     /* box-shadow: inset 0 0 0 4px rgba(var(--alternate-rgb), 0.6) !important; */
 }
+
+.text-sub {
+    vertical-align: sub !important;
+}
