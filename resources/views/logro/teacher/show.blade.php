@@ -467,7 +467,7 @@
                                         @foreach ($teacher->permits as $permit)
                                             <tr>
                                                 <td align="center" class="text-small">{{ $permit->created_at }}</td>
-                                                <td></td>
+                                                <td>{{ $permit->typePermit->name }}</td>
                                                 <td>{{ $permit->description }} </td>
                                                 <td>
                                                     {!! $permit->status->getLabelHtml() !!}

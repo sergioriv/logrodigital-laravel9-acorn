@@ -328,6 +328,8 @@
                                         <tr>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
                                                 {{ __('Date of application') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
+                                                {{ __('type') }}</th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
                                                 {{ __('short description') }}</th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
@@ -343,6 +345,7 @@
                                         @foreach ($coordination->permits as $permit)
                                             <tr>
                                                 <td align="center" class="text-small">{{ $permit->created_at }}</td>
+                                                <td>{{ $permit->typePermit->name }}</td>
                                                 <td>{{ $permit->description }} </td>
                                                 <td>
                                                     {!! $permit->status->getLabelHtml() !!}
