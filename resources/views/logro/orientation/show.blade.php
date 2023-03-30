@@ -355,13 +355,13 @@
 
                             @hasanyrole('SUPPORT|SECRETARY')
                                 <!-- Permits Buttons Start -->
-                                <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
+                                {{-- <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
                                     <a type="button" data-bs-toggle="modal" data-bs-target="#addPermitTeacherModal"
                                         class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
                                         <i data-acorn-icon="plus"></i>
                                         <span>{{ __('Add permit') }}</span>
                                     </a>
-                                </div>
+                                </div> --}}
                                 <!-- Permits Buttons End -->
                             @endhasanyrole
 
@@ -629,7 +629,7 @@
                         <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Add permit') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    @include('logro.orientation.permit.create')
+                    {{-- @include('logro.orientation.permit.create') --}}
                 </div>
             </div>
         </div>
