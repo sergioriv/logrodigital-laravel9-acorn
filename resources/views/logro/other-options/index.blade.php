@@ -9,6 +9,9 @@
 @endsection
 
 @section('js_vendor')
+    <script src="/js/vendor/jquery.validate/jquery.validate.min.js"></script>
+    <script src="/js/vendor/jquery.validate/additional-methods.min.js"></script>
+    <script src="/js/vendor/jquery.validate/localization/messages_es.min.js"></script>
     <script src="/js/vendor/datatables.min.js"></script>
 @endsection
 
@@ -16,7 +19,7 @@
     <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
     <script src="/js/plugins/datatable/datatables_boxed.js"></script>
     <script>
-        jQuery("[type-permission]").click(function () {
+        jQuery("[type-permission]").click(function() {
             const _this = $(this);
             let _modal = $('#modalOtherOptions');
 
@@ -54,8 +57,7 @@
                                 <div class="">{{ __('Permission type') }}</div>
                             </div>
                             <div class="col-md-4 text-end">
-                                <button type="button" class="btn btn-icon-start btn-link py-0"
-                                    type-permission="create">
+                                <button type="button" class="btn btn-icon-start btn-link py-0" type-permission="create">
                                     <i data-acorn-icon="plus" data-acorn-size="13"></i>
                                     <span>{{ __('Create') }}</span>
                                 </button>
@@ -65,8 +67,7 @@
                     <div class="card-body">
 
                         <div>
-                            <table logro='dataTableBoxed' data-order='[]'
-                                    class="data-table responsive stripe">
+                            <table logro='dataTableBoxed' data-order='[]' class="data-table responsive stripe">
                                 <thead>
                                     <tr>
                                         <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('Name') }}</th>
@@ -82,14 +83,12 @@
                                                 <div class="ms-1">
                                                     <button type="button"
                                                         class="btn btn-sm btn-icon-only text-primary px-1"
-                                                        data-bs-offset="0,3" data-bs-toggle="dropdown"
-                                                        aria-haspopup="true" aria-expanded="false" data-submenu>
-                                                        <i data-acorn-icon="more-vertical"
-                                                            data-acorn-size="15"></i>
+                                                        data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false" data-submenu>
+                                                        <i data-acorn-icon="more-vertical" data-acorn-size="15"></i>
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-end">
-                                                        <div class="dropdown-item cursor-pointer"
-                                                            type-permission="edit"
+                                                        <div class="dropdown-item cursor-pointer" type-permission="edit"
                                                             type-permission-id="{{ $typePermit->id }}">
                                                             <span>{{ __('Edit') }}</span>
                                                         </div>

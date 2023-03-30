@@ -1,11 +1,11 @@
 <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">{{ __('Permission type') .' | '. $title }}</h5>
+            <h5 class="modal-title">{{ __('Permission type') . ' | ' . $title }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
-        <form action="{{ $route }}" method="POST" id="typePermissionForm" onsubmit="preventDf('typePermissionForm')">
+        <form action="{{ $route }}" method="POST" id="typePermissionForm">
             @csrf
             @method($method)
 
@@ -25,9 +25,9 @@
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
                 <button type="submit" class="btn btn-outline-primary">
                     @if ($method === 'PUT')
-                    {{ __('Update') }}
+                        {{ __('Update') }}
                     @else
-                    {{ __('Create') }}
+                        {{ __('Create') }}
                     @endif
                 </button>
             </div>
@@ -35,3 +35,11 @@
         </form>
     </div>
 </div>
+
+<script>
+    const typePermissionForm = document.getElementById("typePermissionForm");
+
+    typePermissionForm.addEventListener("submit", (event) => {
+        $("button[type='submit']", typePermissionForm).prop("disabled", true);
+    });
+</script>
