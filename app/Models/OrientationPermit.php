@@ -17,6 +17,7 @@ class OrientationPermit extends Model
     protected $fillable = [
         'user_id',
         'orientation_id',
+        'type_permit_id',
         'description',
         'start',
         'end',
@@ -37,6 +38,11 @@ class OrientationPermit extends Model
     public function accept_deny()
     {
         return $this->morphTo('accept_deny', 'accept_deny_type', 'accept_deny_id', 'id')->select('id', 'names', 'last_names');
+    }
+
+    public function typePermit()
+    {
+        return $this->belongsTo(TypePermitsTeacher::class, 'type_permit_id', 'id');
     }
 
     /* Accesores */

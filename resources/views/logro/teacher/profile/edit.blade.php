@@ -423,7 +423,7 @@
                                 <a type="button" data-bs-toggle="modal" data-bs-target="#addPermitTeacherModal"
                                     class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
                                     <i data-acorn-icon="send"></i>
-                                    <span>Solicitar permiso</span>
+                                    <span>{{ __('Request permission') }}</span>
                                 </a>
                             </div>
                             <!-- Permits Buttons End -->
@@ -435,6 +435,8 @@
                                         <tr>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
                                                 {{ __('Date of application') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2 text-center">
+                                                {{ __('type') }}</th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
                                                 {{ __('short description') }}</th>
                                             <th class="text-muted text-small text-uppercase p-0 pb-2">
@@ -448,6 +450,7 @@
                                         @foreach ($teacher->permits as $permit)
                                             <tr>
                                                 <td align="center" class="text-small">{{ $permit->created_at }}</td>
+                                                <td>{{ $permit->typePermit->name }}</td>
                                                 <td>{{ $permit->description }}</td>
                                                 <td>
                                                     {!! $permit->status->getLabelHtml() !!}
@@ -707,7 +710,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Add permit') }}</h5>
+                    <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Request permission') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 @hasrole('TEACHER')

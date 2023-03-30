@@ -9,6 +9,7 @@ use App\Models\TeacherPermit;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class TeacherPermitController extends Controller
 {
@@ -25,6 +26,7 @@ class TeacherPermitController extends Controller
     public function store(Teacher $teacher, Request $request)
     {
         $request->validate([
+            'type_permit' => ['required', Rule::exists('type_permits_teachers', 'id')],
             'short_description' => ['required', 'string', 'max:1000'],
             'permit_date_start' => ['required', 'date'],
             'permit_date_end' => ['required', 'date'],
@@ -37,6 +39,7 @@ class TeacherPermitController extends Controller
             TeacherPermit::create([
                 'user_id' => auth()->id(),
                 'teacher_id' => $teacher->id,
+                'type_permit_id' => $request->type_permit,
                 'description' => $request->short_description,
                 'start' => $request->permit_date_start,
                 'end' => $request->permit_date_end

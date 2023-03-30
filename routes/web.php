@@ -20,6 +20,7 @@ use App\Http\Controllers\OrientationDegreeController;
 use App\Http\Controllers\OrientationEmploymentHistoryController;
 use App\Http\Controllers\OrientationHierarchyController;
 use App\Http\Controllers\OrientationPermitController;
+use App\Http\Controllers\OtherOptionsController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\PeriodPermitController;
 use App\Http\Controllers\PersonChargeController;
@@ -395,6 +396,22 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
     Route::get('alert/{alert}/checked', [UserAlertController::class, 'checked'])->name('alert.checked');
     Route::get('alert/{alert}/approval', [UserAlertController::class, 'approval'])->name('alert.approval');
+
+
+
+    /*
+     *
+     * Other Options
+     *
+     *  */
+    Route::middleware('hasroles:SUPPORT,SECRETARY')->controller(OtherOptionsController::class)->group( function () {
+        Route::get('other-options', 'index')->name('other-options.index');
+
+        Route::get('other-options/type-permission', 'create');
+        Route::post('other-options/type-permission', 'store')->name('type-permission.store');
+        Route::put('other-options/type-permissions/{typePermission}', 'update')->name('type-permission.update');
+    });
+
 
 
     /*

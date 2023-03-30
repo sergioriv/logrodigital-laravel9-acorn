@@ -171,6 +171,15 @@
             </li>
             @endcan
 
+            @hasanyrole('SUPPORT|SECRETARY')
+            <li>
+                <a href="{{ route('other-options.index') }}" data-href="/other-options">
+                    <i class="icon icon-18 bi-gear"></i>
+                    <span class="label">{{ __('Other options') }}</span>
+                </a>
+            </li>
+            @endhasanyrole
+
             @hasrole('TEACHER')
             <li>
                 <a href="{{ route('teacher.my.subjects') }}" data-href="/myinstitution">

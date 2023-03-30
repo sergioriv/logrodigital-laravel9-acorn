@@ -10,6 +10,7 @@ use App\Models\Data\RoleUser;
 use App\Models\Data\TypeAdministrativeAct;
 use App\Models\Data\TypeAppointment;
 use App\Models\Orientation;
+use App\Models\TypePermitsTeacher;
 use App\Rules\MaritalStatusRule;
 use App\Rules\TypeAdminActRule;
 use App\Rules\TypeAppointmentRule;
@@ -174,6 +175,7 @@ class OrientationController extends Controller
                 'teacher' => $orientation,
                 'cities' => City::with('department')->get(),
                 'maritalStatus' => MaritalStatus::data(),
+                'typePermit' => TypePermitsTeacher::all()
             ]);
         }
 

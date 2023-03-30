@@ -10,6 +10,7 @@ use App\Models\Data\MaritalStatus;
 use App\Models\Data\RoleUser;
 use App\Models\Data\TypeAdministrativeAct;
 use App\Models\Data\TypeAppointment;
+use App\Models\TypePermitsTeacher;
 use App\Rules\MaritalStatusRule;
 use App\Rules\TypeAdminActRule;
 use App\Rules\TypeAppointmentRule;
@@ -169,6 +170,7 @@ class CoordinationController extends Controller
                 'teacher' => $coordination,
                 'cities' => City::with('department')->get(),
                 'maritalStatus' => MaritalStatus::data(),
+                'typePermit' => TypePermitsTeacher::all()
             ]);
         }
 

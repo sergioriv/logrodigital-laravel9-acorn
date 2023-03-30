@@ -23,6 +23,7 @@ use App\Models\Descriptor;
 use App\Models\Group;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
+use App\Models\TypePermitsTeacher;
 use App\Rules\MaritalStatusRule;
 use App\Rules\TypeAdminActRule;
 use App\Rules\TypeAppointmentRule;
@@ -202,6 +203,7 @@ class TeacherController extends Controller
                 'teacher' => $teacher,
                 'cities' => City::with('department')->get(),
                 'maritalStatus' => MaritalStatus::data(),
+                'typePermit' => TypePermitsTeacher::all()
             ]);
         }
 
