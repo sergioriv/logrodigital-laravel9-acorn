@@ -438,15 +438,6 @@
         @endif
     </section>
 
-    @if ( ! is_null($tracking->risk_or_vulnerabilities) )
-        <section class="card mt-1">
-            <div class="card-header">Riegos o vulnerabilidades del estudiante</div>
-            <div class="card-content">
-                <div class="p-1">{{ nl2br($tracking->risk_or_vulnerabilities) }}</div>
-            </div>
-        </section>
-    @endif
-
     <section class="card mt-1">
         <div class="card-header">{{ __('Reason for remit') }}</div>
         <div class="card-content">
@@ -465,6 +456,15 @@
             </div>
         </div>
     </section>
+    @endif
+
+    @if ( ! is_null($tracking->risk_or_vulnerabilities) )
+        <section class="card mt-1">
+            <div class="card-header">Riegos o vulnerabilidades del estudiante</div>
+            <div class="card-content">
+                <div class="p-1">{{ nl2br($tracking->risk_or_vulnerabilities) }}</div>
+            </div>
+        </section>
     @endif
 
     <section class="card mt-4">
