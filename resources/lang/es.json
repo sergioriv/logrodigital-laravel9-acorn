@@ -743,6 +743,9 @@
     "Permission type": "Tipo de permiso",
     "Permission type created!": "Tipo de permiso creado!",
     "Permission type updated!": "Tipo de permiso actualizado!",
+    "No assistance is available for that week.": "No hay asistencia disponible para esa semana.",
+    "You have :COUNT assistance shots available for that week.": "Dispone de :COUNT tomas de asistencia para esa semana.",
+    "select teachers": "seleccione los docentes",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Current password": "Contraseña actual",

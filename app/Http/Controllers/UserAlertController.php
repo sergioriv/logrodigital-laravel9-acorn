@@ -9,6 +9,7 @@ use App\Models\Coordination;
 use App\Models\Data\RoleUser;
 use App\Models\Orientation;
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use App\Models\UserAlert;
 use Illuminate\Database\Eloquent\Collection;
@@ -60,16 +61,10 @@ class UserAlertController extends Controller
     {
         if ($student->enrolled && UserController::role_auth() === RoleUser::ORIENTATION_ROL) {
 
-            $teachersGroup = TeacherSubjectGroup::with('teacher')->where('group_id', $student->group_id)->distinct()->get(['teacher_id']);
-
-            if (!$teachersGroup->count()) {
-                return __('The group has no teachers');
-            }
-
-            $teachers = $teachersGroup->pluck('teacher_id')->toArray();
+            $teachers = Teacher::select('id', 'names', 'last_names', 'institutional_email')->whereIn('uuid', $request->tracking_teachers);
 
             UserAlert::create([
-                'for_users' => $teachers,
+                'for_users' => $teachers->pluck('id')->toArray(),
                 'priority' => $request->priority_teacher === '1' ? TRUE : FALSE,
                 'message' => $request->recommendations_teachers,
                 'student_id' => $student->id,
@@ -83,7 +78,7 @@ class UserAlertController extends Controller
 
                 SmtpMail::init()->sendMailAlert(
                     __('An alert has been generated for the student :STUDENT_NAME', ['STUDENT_NAME' => $student->getCompleteNames()]),
-                    $teachersGroup,
+                    $teachers->get(['id']),
                     $request->recommendations_teachers
                 );
             }

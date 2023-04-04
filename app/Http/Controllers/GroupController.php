@@ -240,9 +240,8 @@ class GroupController extends Controller
         ->withWhereHas(
             'attendance',
             fn ($attend) => $attend->whereIn('teacher_subject_group_id', $teacherSubject)
-                ->with('teacherSubjectGroup.subject')
+                ->with('teacherSubjectGroup.subject')->orderBy('date')
         )->with('student')
-        ->orderByDesc('created_at')
         ->get();
 
         $countPeriods = Period::where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)->count();

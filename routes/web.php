@@ -265,11 +265,14 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     /* Route Teacher User */
     Route::get('mysubjects', [TeacherController::class, 'mysubjects'])->name('teacher.my.subjects');
     Route::get('mysubjects/{subject}', [TeacherController::class, 'mysubjects_show'])->name('teacher.my.subjects.show');
+    Route::get('mysubjects/{subject}/attendance-limit-week', [TeacherController::class, 'attendanceLimitWeek']);
+
     Route::post('attendance/{subject}', [AttendanceStudentController::class, 'subject'])->name('attendance.subject');
     Route::get('attendance/absences', [AttendanceStudentController::class, 'absences_view']);
     Route::get('attendance/{attendance}/edit', [AttendanceStudentController::class, 'absences_edit']);
     Route::put('attendance/{attendance}/edit', [AttendanceStudentController::class, 'absences_update'])->name('attendance.update');
     Route::get('attendances/student/{student}', [AttendanceStudentController::class, 'reportForStudent'])->name('attendances.student.download');
+
 
 
     /* Route Students */

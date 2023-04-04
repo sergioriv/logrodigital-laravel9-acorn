@@ -4,7 +4,7 @@
     <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3 mb-1">
         <div class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
             <input class="form-control datatable-search" placeholder="{{ __('Search') }}"
-                data-datatable="#datatable_student_observer" @if (!$student->observer) disabled @endif />
+                data-datatable="#datatable_student_observer" @if (!$observer) disabled @endif />
             <span class="search-magnifier-icon">
                 <i data-acorn-icon="search"></i>
             </span>
@@ -36,7 +36,7 @@
 </div>
 <!-- Controls End -->
 
-@if (count($student->observer))
+@if (count($observer))
 
     <!-- Table Start -->
     <div class="">
@@ -47,7 +47,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($student->observer as $observation)
+                @foreach ($observer as $observation)
                     <tr>
                         <td>
                             <div class="col-12 d-flex align-items-end">
@@ -93,7 +93,7 @@
                                     @endif
 
                                     <span class="position-absolute text-extra-small text-alternate opacity-75 b-2 e-2">
-                                        {{ $observation->creatorName() }}
+                                        {{ $observation->user_creator?->getFullName() }}
                                         | {{ $observation->date }}
                                     </span>
 

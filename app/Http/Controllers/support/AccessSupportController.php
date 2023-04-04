@@ -5,10 +5,12 @@ namespace App\Http\Controllers\support;
 use App\Exports\TeachersCountData;
 use App\Exports\TeachersWithNoAttendance;
 use App\Http\Controllers\Controller;
+use App\Models\AttendanceStudent;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 
 class AccessSupportController extends Controller
 {
@@ -51,6 +53,9 @@ class AccessSupportController extends Controller
                 return self::datosDocentes();
                 break;
 
+            case 'test-attendance':
+                return self::testAttendance();
+                break;
         }
     }
 
@@ -62,7 +67,7 @@ class AccessSupportController extends Controller
 
     protected function addVoting()
     {
-        if ( ! Role::where('name', 'VOTING_COORDINATOR')->first()) {
+        if (!Role::where('name', 'VOTING_COORDINATOR')->first()) {
 
             Role::create([
                 'name' => 'VOTING_COORDINATOR'
@@ -82,7 +87,7 @@ class AccessSupportController extends Controller
 
     protected function myRolesIs()
     {
-        dd( auth()->user()->getRoleNames() );
+        dd(auth()->user()->getRoleNames());
     }
 
     protected function fixTutor()
@@ -96,11 +101,9 @@ class AccessSupportController extends Controller
             $student->update([
                 'person_charge' => $personCharge->id
             ]);
-
         }
 
-        dd($students->pluck('person_charge','id'));
-
+        dd($students->pluck('person_charge', 'id'));
     }
 
     protected function asistenciaDocentes()
@@ -115,12 +118,12 @@ class AccessSupportController extends Controller
                 fn ($tsg) => $tsg->whereHas('attendances')
             );
         })
-        ->orderBy('last_names')
-        ->orderBy('names')
-        ->get();
+            ->orderBy('last_names')
+            ->orderBy('names')
+            ->get();
 
 
-        return Excel::download(new TeachersWithNoAttendance($title, $teachers), $title .'.xlsx');
+        return Excel::download(new TeachersWithNoAttendance($title, $teachers), $title . '.xlsx');
     }
 
     protected function datosDocentes()
@@ -129,11 +132,41 @@ class AccessSupportController extends Controller
         $title = 'Cantidad documentos de Docentes';
 
         $teachers = \App\Models\Teacher::withCount('hierarchies', 'degrees', 'employments')
-        ->orderBy('last_names')
-        ->orderBy('names')
-        ->get();
+            ->orderBy('last_names')
+            ->orderBy('names')
+            ->get();
 
         return Excel::download(new TeachersCountData($title, $teachers), $title . '.xlsx');
+    }
 
+    protected function testAttendance()
+    {
+
+        $attendArray = [
+            'Y',
+            'N',
+            'J',
+            'L'
+        ];
+
+        $attendance = Str::uuid()->toString();
+        for ($i = 0; $i < 10; $i++) {
+
+            $row = [];
+            for ($j = 0; $j < 1000; $j++) {
+                $row[] = [
+                    'attendance_id' => $attendance,
+                    'student_id' => \App\Models\Student::all()->random()->id,
+                    'attend' => $attendArray[random_int(0, 3)]
+                ];
+            }
+
+            AttendanceStudent::insert($row);
+
+            usleep(10000);
+        }
+
+        // return redirect('admin/test-attendance?' . AttendanceStudent::count('student_id'));
+        dd('hecho' . AttendanceStudent::count('student_id'));
     }
 }

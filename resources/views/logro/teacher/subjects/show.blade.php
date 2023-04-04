@@ -1,5 +1,9 @@
 @php
     $title = $subject->subject->resourceSubject->public_name;
+
+    $periodActive = $periods->filter(function ($p) {
+        return $p->active();
+    });
 @endphp
 @extends('layout', ['title' => $title])
 
@@ -16,7 +20,9 @@
 @endsection
 
 @section('js_page')
+    @if ($periodActive->count())
     <script src="/js/pages/pasteGrades.js?d=1669929322185"></script>
+    @endif
     <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
     <script src="/js/plugins/datatable/datatables_boxed.js"></script>
 
@@ -32,7 +38,7 @@
             })
         });
 
-        jQuery("[absences='edit']").click(function () {
+        jQuery("[absences='edit']").click(function() {
             let attendance = $(this).attr('attendance-id');
             $.get(HOST + '/attendance/' + attendance + '/edit', null, function(content) {
                 $('#editAttendance .modal-content').html(content);
@@ -40,7 +46,7 @@
             })
         });
 
-        jQuery("[attendanceStudent].form-check-input").click(function () {
+        jQuery("[attendanceStudent].form-check-input").click(function() {
 
             var studentCode = $(this).data('code');
 
@@ -51,6 +57,32 @@
             } else {
                 $('#dropdown' + studentCode).removeClass('d-none');
             }
+        });
+
+        jQuery("#attendance-date").on('change', function() {
+            $.get(HOST + '/mysubjects/{{ $subject->id }}/attendance-limit-week', {
+                date: $(this).val()
+            }, function(res) {
+                if ( ! res.data.active ) {
+                    $("form#addAttendanceForm button[type='submit']").prop("disabled", true);
+                } else {
+                    $("form#addAttendanceForm button[type='submit']").prop("disabled", false);
+                }
+                $("#alert-attendance").html(res.data.content);
+            })
+        });
+
+        $(document).ready(function () {
+            $.get(HOST + '/mysubjects/{{ $subject->id }}/attendance-limit-week', {
+                date: $(this).val()
+            }, function(res) {
+                if ( ! res.data.active ) {
+                    $("form#addAttendanceForm button[type='submit']").prop("disabled", true);
+                } else {
+                    $("form#addAttendanceForm button[type='submit']").prop("disabled", false);
+                }
+                $("#alert-attendance").html(res.data.content);
+            })
         });
     </script>
 @endsection
@@ -375,7 +407,8 @@
                                                                                     <div
                                                                                         class="modal-dialog modal-dialog-centered">
                                                                                         <div class="modal-content">
-                                                                                            <div class="modal-header text-start">
+                                                                                            <div
+                                                                                                class="modal-header text-start">
                                                                                                 <h5 class="modal-title"
                                                                                                     id="modalTitleDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
                                                                                                     {{ __('Descriptors') }}
@@ -392,49 +425,55 @@
                                                                                                     logro="dataTableBoxed"
                                                                                                     class="data-table responsive nowrap stripe dataTable no-footer dtr-inline">
                                                                                                     <thead>
-                                                                                                        <th class="empty">&nbsp;</th>
-                                                                                                        <th class="text-muted text-center text-small text-uppercase">{{ __('Content') }}</th>
+                                                                                                        <th class="empty">
+                                                                                                            &nbsp;</th>
+                                                                                                        <th
+                                                                                                            class="text-muted text-center text-small text-uppercase">
+                                                                                                            {{ __('Content') }}
+                                                                                                        </th>
                                                                                                     </thead>
                                                                                                     <tbody>
-                                                                                                    @if (is_null($studentG->inclusive))
-                                                                                                        @php
-                                                                                                            $descriptorsFor = $descriptors;
-                                                                                                        @endphp
-                                                                                                    @else
-                                                                                                        @php
-                                                                                                            $descriptorsFor = $descriptorsInclusive;
-                                                                                                        @endphp
-                                                                                                    @endif
-                                                                                                    @foreach ($descriptorsFor as $descriptor)
+                                                                                                        @if (is_null($studentG->inclusive))
+                                                                                                            @php
+                                                                                                                $descriptorsFor = $descriptors;
+                                                                                                            @endphp
+                                                                                                        @else
+                                                                                                            @php
+                                                                                                                $descriptorsFor = $descriptorsInclusive;
+                                                                                                            @endphp
+                                                                                                        @endif
+                                                                                                        @foreach ($descriptorsFor as $descriptor)
+                                                                                                            @php
+                                                                                                                $descriptorChecked =
+                                                                                                                    $studentG->studentDescriptors
+                                                                                                                        ->filter(function ($filter) use ($descriptor) {
+                                                                                                                            return $filter->descriptor_id == $descriptor->id;
+                                                                                                                        })
+                                                                                                                        ->first() ?? false;
+                                                                                                            @endphp
 
-                                                                                                    @php
-                                                                                                        $descriptorChecked = $studentG->studentDescriptors->filter(function ($filter) use ($descriptor) {
-                                                                                                            return $filter->descriptor_id == $descriptor->id;
-                                                                                                        })->first() ?? false
-                                                                                                    @endphp
-
-                                                                                                        <tr>
-                                                                                                            <td
-                                                                                                                class="text-alternate col-1">
-                                                                                                                <div
-                                                                                                                    class="form-check ms-2 mb-0">
-                                                                                                                    <input
-                                                                                                                        class="form-check-input"
-                                                                                                                        logro="studentCheck"
-                                                                                                                        type="checkbox"
-                                                                                                                        name="students[{{ $studentG->code }}][descriptors][]"
-                                                                                                                        id="P{{ $period->id }}-student{{ $studentG->id }}"
-                                                                                                                        value="{{ $descriptor->id }}"
-                                                                                                                        @checked($descriptorChecked)>
-                                                                                                                </div>
-                                                                                                            </td>
-                                                                                                            <td
-                                                                                                                class="text-alternate text-start">
-                                                                                                                <label
-                                                                                                                    for="P{{ $period->id }}-student{{ $studentG->id }}">{{ $descriptor->content }}</label>
-                                                                                                            </td>
-                                                                                                        </tr>
-                                                                                                    @endforeach
+                                                                                                            <tr>
+                                                                                                                <td
+                                                                                                                    class="text-alternate col-1">
+                                                                                                                    <div
+                                                                                                                        class="form-check ms-2 mb-0">
+                                                                                                                        <input
+                                                                                                                            class="form-check-input"
+                                                                                                                            logro="studentCheck"
+                                                                                                                            type="checkbox"
+                                                                                                                            name="students[{{ $studentG->code }}][descriptors][]"
+                                                                                                                            id="P{{ $period->id }}-student{{ $studentG->id }}"
+                                                                                                                            value="{{ $descriptor->id }}"
+                                                                                                                            @checked($descriptorChecked)>
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td
+                                                                                                                    class="text-alternate text-start">
+                                                                                                                    <label
+                                                                                                                        for="P{{ $period->id }}-student{{ $studentG->id }}">{{ $descriptor->content }}</label>
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        @endforeach
                                                                                                     </tbody>
                                                                                                 </table>
                                                                                             </div>
@@ -473,18 +512,10 @@
 
                                     <!-- Groups Buttons Start -->
                                     <div class="row d-flex align-items-start justify-content-between">
-                                        <!-- Attendance Available Start -->
-                                        <div class="col-12 col-md-6 h5 text-md-start text-center align-self-center">
-                                            {{-- __('Attendanceforthisweek').':'.$attendanceAvailable --}}
-                                        </div>
-                                        <!-- Attendance Available End -->
-
-                                        <div class="col-12 col-md-6 text-md-end text-center">
+                                        <div class="col-12 text-md-end text-center">
 
                                             <!-- Add Attendance Button Start -->
-                                            <button type="button"
-                                                @if ($attendanceAvailable) data-bs-toggle="modal" data-bs-target="#addAttendance"
-                                                @else disabled @endif
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#addAttendance"
                                                 class="btn btn-primary">
                                                 <span>{{ __('Take attendance') }}</span>
                                             </button>
@@ -516,9 +547,11 @@
                                                                     <td class="text-center">
                                                                         {{ $attendance->absences_count }}</td>
                                                                     <td class="text-end">
-                                                                        <div class="d-flex align-items-start justify-content-end">
+                                                                        <div
+                                                                            class="d-flex align-items-start justify-content-end">
                                                                             @if ($attendance->absences_count)
-                                                                                <x-button class="btn-sm btn-outline-primary"
+                                                                                <x-button
+                                                                                    class="btn-sm btn-outline-primary"
                                                                                     absences='view'
                                                                                     attendance-id="{{ $attendance->id }}">
                                                                                     {{ __('see absences') }}</x-button>
@@ -526,21 +559,26 @@
 
                                                                             <!-- Dropdown Button Start -->
                                                                             <div class="ms-2">
-                                                                                <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
-                                                                                    data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                                <button type="button"
+                                                                                    class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                                    data-bs-offset="0,3"
+                                                                                    data-bs-toggle="dropdown"
+                                                                                    aria-haspopup="true"
                                                                                     aria-expanded="false" data-submenu>
-                                                                                    <i data-acorn-icon="more-horizontal"></i>
+                                                                                    <i
+                                                                                        data-acorn-icon="more-horizontal"></i>
                                                                                 </button>
-                                                                                <div class="dropdown-menu dropdown-menu-end">
+                                                                                <div
+                                                                                    class="dropdown-menu dropdown-menu-end">
                                                                                     <div class="dropdown-item">
-                                                                                        <div
-                                                                                            absences='edit'
-                                                                                            attendance-id="{{ $attendance->id }}">{{ __('Edit') }}</span>
+                                                                                        <div absences='edit'
+                                                                                            attendance-id="{{ $attendance->id }}">
+                                                                                            {{ __('Edit') }}</span>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
+                                                                                <!-- Dropdown Button End -->
                                                                             </div>
-                                                                            <!-- Dropdown Button End -->
-                                                                        </div>
 
                                                                     </td>
                                                                 </tr>
@@ -564,96 +602,99 @@
         </div>
     </div>
 
-    @if ($attendanceAvailable)
-        <!-- Modal Add Attendance -->
-        <div class="modal fade" id="addAttendance" aria-labelledby="modalAddAttendance" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalAddAttendance">
-                            {{ __('Take attendance') . ': ' . $subject->group->name . ' | ' . $title }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form action="{{ route('attendance.subject', $subject) }}" id="addAttendanceForm" method="POST">
-                        @csrf
+    <!-- Modal Add Attendance -->
+    <div class="modal fade" id="addAttendance" aria-labelledby="modalAddAttendance" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAddAttendance">
+                        {{ __('Take attendance') . ': ' . $subject->group->name . ' | ' . $title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('attendance.subject', $subject) }}" id="addAttendanceForm" method="POST">
+                    @csrf
 
-                        <div class="modal-body">
+                    <div class="modal-body">
 
-                            <div class="row mb-3 position-relative">
-                                <x-label for="date" class="col-sm-3 col-form-label text-sm-start text-center font-weight-bold text-danger" required>{{ __('Choose date') }}</x-label>
-                                <div class="col-sm-9">
-                                    <x-input :value="old('date', today()->format('Y-m-d'))" logro="datePickerBefore" name="date"
-                                        data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" class="text-center" required />
-                                </div>
+                        <div id="alert-attendance"></div>
+
+                        <div class="row mb-3 position-relative">
+                            <x-label for="date"
+                                class="col-sm-3 col-form-label text-sm-start text-center font-weight-bold text-danger"
+                                required>{{ __('Choose date') }}</x-label>
+                            <div class="col-sm-9">
+                                <x-input :value="old('date', now()->format('Y-m-d'))" id="attendance-date" logro="datePickerBefore" name="date"
+                                    data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" class="text-center"
+                                    required />
                             </div>
+                        </div>
 
-                            <table class="table table-striped mb-0">
-                                <tbody>
-                                    @foreach ($studentsGroup as $studentG)
-                                        <tr>
-                                            <td>
-                                                <label class="form-check custom-icon mb-0 unchecked-opacity-25">
-                                                    <input type="checkbox" class="form-check-input"
-                                                        name="studentsAttendance[{{ $studentG->code }}]" value="1"
-                                                        attendanceStudent
-                                                        data-code="{{ $studentG->code }}"
-                                                        checked>
-                                                    <span class="form-check-label">
-                                                        <span class="content">
-                                                            <span class="heading mb-1 d-block lh-1-25">
-                                                                {{ $studentG->getCompleteNames() }}
-                                                                <x-tag-student :student="$studentG" />
-                                                            </span>
+                        <table class="table table-striped mb-0">
+                            <tbody>
+                                @foreach ($studentsGroup as $studentG)
+                                    <tr>
+                                        <td>
+                                            <label class="form-check custom-icon mb-0 unchecked-opacity-25">
+                                                <input type="checkbox" class="form-check-input"
+                                                    name="studentsAttendance[{{ $studentG->code }}]" value="1"
+                                                    attendanceStudent data-code="{{ $studentG->code }}" checked>
+                                                <span class="form-check-label">
+                                                    <span class="content">
+                                                        <span class="heading mb-1 d-block lh-1-25">
+                                                            {{ $studentG->getCompleteNames() }}
+                                                            <x-tag-student :student="$studentG" />
                                                         </span>
                                                     </span>
-                                                </label>
-                                            </td>
-                                            <td>
-                                                <!-- Dropdown Button Start -->
-                                                <div id="dropdown{{ $studentG->code }}" class="d-none">
-                                                    <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
-                                                        data-bs-offset="0,3"
-                                                        data-bs-toggle="dropdown"
-                                                        aria-haspopup="true"
-                                                        aria-expanded="false"
-                                                        data-bs-auto-close="inside">
-                                                        <i class="icon bi-three-dots-vertical"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <div class="dropdown-item">
-                                                            <label class="form-label cursor-pointer">
-                                                                <input type="radio" name="studentsAttendance[{{ $studentG->code }}][type]" value="late-arrival" />
-                                                                {{ __('Late arrival') }}
-                                                            </label>
-                                                        </div>
-                                                        <div class="dropdown-item">
-                                                            <label class="form-label cursor-pointer">
-                                                                <input type="radio" name="studentsAttendance[{{ $studentG->code }}][type]" value="justified" />
-                                                                {{ __('Justified') }}
-                                                            </label>
-                                                        </div>
+                                                </span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <!-- Dropdown Button Start -->
+                                            <div id="dropdown{{ $studentG->code }}" class="d-none">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                    data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false" data-bs-auto-close="inside">
+                                                    <i class="icon bi-three-dots-vertical"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <div class="dropdown-item">
+                                                        <label class="form-label cursor-pointer">
+                                                            <input type="radio"
+                                                                name="studentsAttendance[{{ $studentG->code }}][type]"
+                                                                value="late-arrival" />
+                                                            {{ __('Late arrival') }}
+                                                        </label>
+                                                    </div>
+                                                    <div class="dropdown-item">
+                                                        <label class="form-label cursor-pointer">
+                                                            <input type="radio"
+                                                                name="studentsAttendance[{{ $studentG->code }}][type]"
+                                                                value="justified" />
+                                                            {{ __('Justified') }}
+                                                        </label>
                                                     </div>
                                                 </div>
-                                                <!-- Dropdown Button End -->
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                            </div>
+                                            <!-- Dropdown Button End -->
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-danger"
-                                data-bs-dismiss="modal">{{ __('Close') }}</button>
-                            <button type="submit" class="btn btn-primary">
-                                {{ __('Save') }}</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
             </div>
         </div>
-    @endif
+    </div>
 
     <!-- Modal View Absences -->
     <div class="modal fade" id="viewAbsences" aria-labelledby="modalViewAbsences" data-bs-backdrop="static"
@@ -674,10 +715,8 @@
     </div>
 
     <!-- Modal Edit Attendance -->
-    <div class="modal fade" id="editAttendance"
-    aria-labelledby="modalEditAbsences"
-    data-bs-backdrop="static"
-    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="editAttendance" aria-labelledby="modalEditAbsences" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content"></div>
         </div>

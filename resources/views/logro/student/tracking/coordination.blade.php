@@ -26,14 +26,14 @@
     <div class="modal-footer justify-content-between">
         <div>
             <div class="form-check form-check-inline">
-                <x-label class="form-check-label">
+                <x-label class="form-check-label text-danger font-weight-bold">
                     <input class="form-check-input" type="checkbox"
                         name="priority_coordinator" value="1" />
-                    {{ __('priority') }}
+                    {{ __('high priority') }}
                 </x-label>
             </div>
             <i data-acorn-icon="question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="{{ __('By checking priority, an email with the given information will be sent to the relevant users. If the user has not verified their account, the email will not be sent.') }}"></i>
+                title="{{ __('By checking high priority, an email with the given information will be sent to the relevant users. If the user has not verified their account, the email will not be sent.') }}"></i>
         </div>
         <div>
             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{{ __('Close') }}</button>

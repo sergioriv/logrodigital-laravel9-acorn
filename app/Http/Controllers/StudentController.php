@@ -41,9 +41,12 @@ use App\Models\Rh;
 use App\Models\Sisben;
 use App\Models\Student;
 use App\Models\StudentFileType;
+use App\Models\StudentObserver;
 use App\Models\StudentRemovalCode;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
+use App\Models\Teacher;
+use App\Models\TeacherSubjectGroup;
 use App\Models\TypesConflict;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -690,9 +693,16 @@ class StudentController extends Controller
 
 
         /* opciones de orientacion */
-        $orientationOptions = ['coordinators' => []];
+        $orientationOptions = ['coordinators' => [], 'myTeachers' => []];
         if ($user->hasPermissionTo('students.psychosocial')) {
             $orientationOptions['coordinators'] = Coordination::all();
+
+            $orientationOptions['myTeachers'] = Teacher::select('id', 'uuid', 'names', 'last_names')->whereHas('teacherSubjectGroups', function ($tsg) use ($student) {
+                    $tsg->where('group_id', $student->group_id);
+                })
+                ->orderBy('names')
+                ->orderBy('last_names')
+                ->get();
         }
 
 
@@ -723,8 +733,10 @@ class StudentController extends Controller
             'groupsStudent' => [],
             'nationalCountry' => NationalCountry::country(),
             'coordinators' => $orientationOptions['coordinators'],
+            'myTeachers' => $orientationOptions['myTeachers'],
             'headers_remission' => HeadersRemission::all(),
             'handbook'      => SchoolController::myschool()->handbook(),
+            'observer' => StudentObserver::where('student_id', $student->id)->with('user_creator')->get()
         ]);
     }
 
@@ -755,6 +767,7 @@ class StudentController extends Controller
 
         return view('logro.student.profile-view', [
             'student' => $student,
+            'observer' => StudentObserver::where('student_id', $student->id)->with('user_creator')->get(),
             'existOrientation' => $existOrientation,
             'attendance' => $attendance,
             'coordinators' => $coordinators

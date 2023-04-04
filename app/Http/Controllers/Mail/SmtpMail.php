@@ -13,6 +13,7 @@ use App\Models\School;
 use App\Models\Student;
 use App\Models\StudentTrackingCoordination;
 use App\Models\StudentTrackingTeacher;
+use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -201,15 +202,15 @@ class SmtpMail extends Controller
                  *  SEND TO TEACHERS
                  *
                  *  */
-                if ($collection instanceof TeacherSubjectGroup) {
+                if ($collection instanceof Teacher) {
 
-                    $this->userName = $collection->teacher->getFullName();
-                    $this->userEmail = $collection->teacher->institutional_email;
+                    $this->userName = $collection->getFullName();
+                    $this->userEmail = $collection->institutional_email;
 
-                    if ($collection->teacher->user->email_verified_at !== NULL) {
+                    if ( ! is_null($collection->user->email_verified_at) ) {
 
                         $content = (new ContentMail)
-                            ->title(Lang::get('Hi') .', '. $collection->teacher->getFullName())
+                            ->title(Lang::get('Hi') .', '. $collection->getFullName())
                             ->line($title)
                             ->line($recommendation);
 

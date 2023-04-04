@@ -12,6 +12,7 @@ use App\Models\StudentTrackingCoordination;
 use App\Models\StudentTrackingFamily;
 use App\Models\StudentTrackingRemit;
 use App\Models\StudentTrackingTeacher;
+use App\Models\Teacher;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -79,6 +80,7 @@ class StudentTrackingController extends Controller
     public function teachers_store(Request $request, Student $student)
     {
         $request->validate([
+            'tracking_teachers.*' => ['required'],
             'recommendations_teachers' => ['required', 'string', 'min:10', 'max:5000'],
             'priority_teacher' => ['nullable', 'boolean']
         ]);

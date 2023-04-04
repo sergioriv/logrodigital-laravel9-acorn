@@ -32,4 +32,13 @@ enum AttendStudentEnum: string
         };
     }
 
+    public function getLabelInTag()
+    {
+        return match($this) {
+            self::JUSTIFIED => '<span class="badge bg-outline-success me-1">' . __('Justified') . '</span>',
+            self::LATE_ARRIVAL => '<span class="badge bg-outline-success me-1">' . __('Late arrival') . '</span>',
+            default => ''
+        };
+    }
+
 }

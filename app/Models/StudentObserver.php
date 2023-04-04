@@ -35,9 +35,9 @@ class StudentObserver extends Model
         return $this->belongsTo(Student::class, 'student_id', 'id');
     }
 
-    public function creatorName()
+    public function user_creator()
     {
-        return $this->created_rol::where('id', $this->created_user_id)->first()->getFullName();
+        return $this->morphTo('user_creator', 'created_rol', 'created_user_id', 'id')->select('id', 'names', 'last_names');
     }
 
     /*

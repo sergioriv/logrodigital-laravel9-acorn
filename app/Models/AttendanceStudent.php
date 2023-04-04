@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class AttendanceStudent extends Model
 {
-    use Uuid;
+    // use Uuid;
+    public $timestamps = false;
 
     protected $fillable = [
         'attendance_id',
         'student_id',
         'attend',
-        'reason'
     ];
 
     protected $casts = [

@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
+use PhpParser\Node\Expr\FuncCall;
 
 class TeacherController extends Controller
 {
@@ -43,7 +44,7 @@ class TeacherController extends Controller
         $this->middleware('can:teachers.create')->only('create', 'store');
         $this->middleware('can:teachers.index')->only('show');
         $this->middleware('can:teachers.import')->only('export', 'export_instructive', 'import', 'import_store');
-        $this->middleware(OnlyTeachersMiddleware::class)->only('profile', 'profile_update', 'mysubjects', 'mysubjects_show', 'subjects', 'myDirectorGroup');
+        $this->middleware(OnlyTeachersMiddleware::class)->only('profile', 'profile_update', 'mysubjects', 'mysubjects_show', 'subjects', 'myDirectorGroup', 'attendanceLimitWeek');
     }
 
     public function index()
@@ -368,18 +369,6 @@ class TeacherController extends Controller
             ->withCount(['permits as permit' => fn ($p) => $p->where('teacher_subject_group_id', $subject->id)])
             ->orderBy('ordering')->get();
 
-        $weeklyLoad = AcademicWorkload::where('school_year_id', $Y->id)
-            ->where('study_year_id', $subject->group->study_year_id)
-            ->where('subject_id', $subject->subject->id)
-            ->first();
-
-        $attendancesWeek = Attendance::where('teacher_subject_group_id', $subject->id)
-            ->whereBetween('date', [
-                Carbon::now()->startOfWeek()->format('Y-m-d H:i:s'),
-                Carbon::now()->endOfWeek()->format('Y-m-d H:i:s')
-            ])->count();
-
-
 
         $attendances = Attendance::where('teacher_subject_group_id', $subject->id)
             ->withCount('absences')
@@ -399,13 +388,12 @@ class TeacherController extends Controller
             ->get();
 
 
-
         return view('logro.teacher.subjects.show', [
             'Y' => $Y,
             'subject' => $subject,
             'studentsGroup' => $studentsGroup,
             'periods' => $periods,
-            'attendanceAvailable' => TRUE,
+            // 'attendanceLimit' => $this->remainingAttendanceWeek($subject, now()->format('Y-m-d')),
             'attendances' => $attendances,
             'descriptors' => $descriptors,
             'descriptorsInclusive' => $descriptorsInclusive
@@ -439,6 +427,50 @@ class TeacherController extends Controller
     }
 
 
+
+    public function attendanceLimitWeek(TeacherSubjectGroup $subject, Request $request)
+    {
+        $date = $request->date ?? now()->format('Y-m-d');
+
+        return ['data' => $this->remainingAttendanceWeek($subject, $date)];
+    }
+
+    /*
+     * @param $tsg TeacherSubjetGroup
+     * @param $date format Y-m-d
+     * @return int
+     * */
+    public function remainingAttendanceWeek($tsg, $date)
+    {
+        if ($tsg->teacher_id === auth()->id()) {
+
+            $Y = SchoolYearController::current_year();
+
+            $hoursWeek = AcademicWorkload::where('school_year_id', $Y->id)
+                ->where('study_year_id', $tsg->group->study_year_id)
+                ->where('subject_id', $tsg->subject->id)
+                ->first()->hours_week;
+
+            $attendancesWeek = Attendance::where('teacher_subject_group_id', $tsg->id)
+                ->whereBetween('date', [
+                    Carbon::parse($date)->startOfWeek()->format('Y-m-d H:i:s'),
+                    Carbon::parse($date)->endOfWeek()->format('Y-m-d H:i:s')
+                ])->count();
+
+            return ['active' => (bool)($hoursWeek - $attendancesWeek), 'content' => $this->alertAttendanceWekkHtml($hoursWeek - $attendancesWeek)];
+        }
+
+        return false;
+    }
+
+    private function alertAttendanceWekkHtml($count)
+    {
+        if ( ! $count ) {
+            return '<div class="alert alert-danger" role="alert">'. __("No assistance is available for that week.") .'</div>';
+        }
+
+        return '<div class="alert alert-info" role="alert">' . __("You have :COUNT assistance shots available for that week.", ['COUNT' => $count]) . '</div>';
+    }
 
 
     public function export()

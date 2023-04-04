@@ -29,6 +29,17 @@ class AttendanceStudentController extends Controller
             'studentsAttendance.*.type' => ['in:late-arrival,justified']
         ]);
 
+        $limitWeek = (new TeacherController)->remainingAttendanceWeek($subject, $request->date);
+        if ( ! $limitWeek ) {
+            Notify::fail(__('Not allowed'));
+            return back();
+        } else {
+            if ( ! $limitWeek['active'] ) {
+                Notify::fail(__("No assistance is available for that week."));
+                return back();
+            }
+        }
+
         DB::beginTransaction();
 
         $attendance = Attendance::create([
@@ -145,8 +156,11 @@ class AttendanceStudentController extends Controller
 
             /* verifica si es diferente para ser actualizada */
             if ($attStudent->attend !== $newAttend) {
-                $attStudent->attend = $newAttend;
-                $attStudent->save();
+                DB::update("UPDATE attendance_students SET attend = ? WHERE attendance_id = ? AND student_id = ?", [
+                    $newAttend,
+                    $attendance->id,
+                    $attStudent->student->id
+                ]);
             }
         }
 
