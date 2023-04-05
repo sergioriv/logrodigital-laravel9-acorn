@@ -470,6 +470,9 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
      *  */
     Route::controller(SendMailMasiveController::class)->group( function () {
         Route::post('send-mail/group/{group}', 'forGroup')->name('send-mail.group');
+        Route::get('mails_sent', 'index')->name('mails-sent.index');
+        Route::get('mails_sent/{mail}', 'show')->name('mails-sent.show');
+        Route::get('mails_sent/{mail}/log', 'log');
     });
 
 

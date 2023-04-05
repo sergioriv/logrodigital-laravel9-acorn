@@ -18,4 +18,9 @@ class SentEmail extends Model
     ];
 
     protected $casts = ['sentTo' => 'array'];
+
+    public function created_user()
+    {
+        return $this->morphTo('created_user', 'created_user_type', 'created_user_id', 'id');
+    }
 }

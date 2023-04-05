@@ -727,6 +727,10 @@
     "Header created!": "Encabezado creado!",
     "Header updated!": "Encabezado actualizado!",
     "List of remission headers": "Cabeceras de remisión",
+    "List of mails sent": "Correos enviados",
+    "message": "mensaje",
+    "See record": "Ver registro",
+    "Mail send!": "Correo enviado!",
     "title": "título",
     "Headers remissions": "Cabeceras de remisión",
     "Create header remission": "Crear cabecera de remisión",
@@ -746,6 +750,7 @@
     "No assistance is available for that week.": "No hay asistencia disponible para esa semana.",
     "You have :COUNT assistance shots available for that week.": "Dispone de :COUNT tomas de asistencia para esa semana.",
     "select teachers": "seleccione los docentes",
+    "Mails sent": "Correos enviados",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Current password": "Contraseña actual",

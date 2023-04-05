@@ -126,7 +126,8 @@
                                                 </a>
                                             @endif
                                         @endhasrole
-                                        @hasrole('SUPPORT')
+                                        @hasrole('SUPPORT|COORDINATOR')
+                                        <div class="dropdown-divider"></div>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#openModelSendMailTutors"
                                         class="dropdown-item btn-sm btn-icon btn-icon-start">
                                             <i data-acorn-icon="email"></i>
@@ -754,12 +755,12 @@
         @endif
     @endhasrole
 
-    @hasrole('SUPPORT')
+    @hasrole('SUPPORT|COORDINATOR')
 
         <!-- Modal Send Email Tutors Start -->
-        <div class="modal fade" id="openModelSendMailTutors" aria-labelledby="modalSendMailTutors" data-bs-backdrop="static"
+        <div class="modal fade modal-close-out" id="openModelSendMailTutors" aria-labelledby="modalSendMailTutors" data-bs-backdrop="static"
             data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalSendMailTutors">
@@ -767,8 +768,7 @@
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">NO DISPONIBLE</div>
-                    {{-- <form action="{{ route('send-mail.group', $group) }}" id="sendMailTutorsForm" method="POST">
+                    <form action="{{ route('send-mail.group', $group) }}" id="sendMailTutorsForm" method="POST">
                         @csrf
 
                         <div class="modal-body">
@@ -799,7 +799,7 @@
                             <button type="submit" class="btn btn-primary">
                                 {{ __('Send') }}</button>
                         </div>
-                    </form> --}}
+                    </form>
                 </div>
             </div>
         </div>
