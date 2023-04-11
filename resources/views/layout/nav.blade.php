@@ -170,7 +170,7 @@
                 </a>
             </li>
             @endcan
-            @hasanyrole('SUPPORT|COORDINATOR')
+            @hasanyrole('SUPPORT') {{-- COORDINATOR --}}
             <li>
                 <a href="{{ route('mails-sent.index') }}" data-href="/mails_sent">
                     <i data-acorn-icon="inbox" class="icon" data-acorn-size="18"></i>

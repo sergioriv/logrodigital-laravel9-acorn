@@ -126,14 +126,14 @@
                                                 </a>
                                             @endif
                                         @endhasrole
-                                        @hasrole('SUPPORT|COORDINATOR')
+                                        @hasanyrole('SUPPORT') {{-- |COORDINATOR --}}
                                         <div class="dropdown-divider"></div>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#openModelSendMailTutors"
                                         class="dropdown-item btn-sm btn-icon btn-icon-start">
                                             <i data-acorn-icon="email"></i>
                                             <span>Enviar correo a acudientes</span>
                                         </a>
-                                        @endhasrole
+                                        @endhasanyrole
                                     </div>
                                 </div>
                                 <!-- Dropdown Button End -->
