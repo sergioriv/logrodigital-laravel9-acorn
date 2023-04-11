@@ -35,21 +35,24 @@ class PersonChargeController extends Controller
             ->first();
 
 
-        if ($mother !== null) {
-            $mother_id = $mother->id;
-        } else {
-            $mother_id = null;
-        }
-        if ($father !== null) {
-            $father_id = $father->id;
-        } else {
-            $father_id = null;
-        }
-        if ($tutor !== null) {
-            $tutor_id = $tutor->id;
-        } else {
-            $tutor_id = null;
-        }
+        // if ($mother !== null) {
+        //     $mother_id = $mother->id;
+        // } else {
+        //     $mother_id = null;
+        // }
+        // if ($father !== null) {
+        //     $father_id = $father->id;
+        // } else {
+        //     $father_id = null;
+        // }
+        // if ($tutor !== null) {
+        //     $tutor_id = $tutor->id;
+        // } else {
+        //     $tutor_id = null;
+        // }
+        $mother_id = null;
+        $father_id = null;
+        $tutor_id = null;
 
         $request->validate([
             /* PERSON CHARGE */
@@ -142,6 +145,7 @@ class PersonChargeController extends Controller
                         'occupation' => $request->mother_occupation
                     ]);
 
+                    $mother_id = $motherCreate->getUser()->id;
                     $sendEmailMother = true;
                 } catch (\Throwable $th) {
 
@@ -165,6 +169,8 @@ class PersonChargeController extends Controller
                         'birthdate' => $request->mother_birthdate,
                         'occupation' => $request->mother_occupation
                     ]);
+
+                    $mother_id = $mother->id;
 
                 } catch (\Throwable $th) {
 
@@ -209,7 +215,7 @@ class PersonChargeController extends Controller
 
                 try {
 
-                    $teacher = PersonCharge::create([
+                    $father = PersonCharge::create([
                         'id' => $fatherCreate->getUser()->id,
                         'student_id' => $student->id,
                         'name' => $request->father_name,
@@ -225,6 +231,7 @@ class PersonChargeController extends Controller
                         'occupation' => $request->father_occupation
                     ]);
 
+                    $father_id = $fatherCreate->getUser()->id;
                     $sendEmailFather = true;
                 } catch (\Throwable $th) {
 
@@ -249,6 +256,7 @@ class PersonChargeController extends Controller
                         'occupation' => $request->father_occupation
                     ]);
 
+                    $father_id = $father->id;
                 } catch (\Throwable $th) {
 
                     DB::rollBack();
@@ -312,6 +320,7 @@ class PersonChargeController extends Controller
                             'occupation' => $request->tutor_occupation
                         ]);
 
+                        $tutor_id = $tutorCreate->getUser()->id;
                         $sendEmailTutor = true;
                     } catch (\Throwable $th) {
 
@@ -337,6 +346,7 @@ class PersonChargeController extends Controller
                             'occupation' => $request->tutor_occupation
                         ]);
 
+                        $tutor_id = $tutor->id;
                     } catch (\Throwable $th) {
 
                         DB::rollBack();
@@ -370,9 +380,9 @@ class PersonChargeController extends Controller
 
         $student->update([
             'person_charge' => match($request->person_charge){
-                "1" => $mother->id,
-                "2" => $father->id,
-                default => $tutor?->id
+                "1" => $mother_id,
+                "2" => $father_id,
+                default => $tutor_id
             }
         ]);
 
