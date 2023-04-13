@@ -1,10 +1,21 @@
-<form action="{{ route('orientation.permits.store', $orientation) }}" id="addPermitTeacherForm"
-    class="tooltip-label-end" method="POST" novalidate>
+<form action="{{ route('add-permit') }}" id="addPermitTeacherForm" class="tooltip-label-end" method="POST" novalidate>
     @csrf
 
     <div class="modal-body">
 
         <div class="row g-3">
+            <div class="col-12">
+                <div class="w-100 position-relative form-group">
+                    <x-label required>{{ __('type permit') }}</x-label>
+                    <select name="type_permit" logro="select2">
+                        <option label=""></option>
+                        @foreach ($typePermit as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
             <div class="col-12">
                 <div class="position-relative form-group">
                     <x-label required>{{ __('short description') }}</x-label>
@@ -28,10 +39,8 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger"
-            data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
         <button type="submit" class="btn btn-outline-primary">
-            {{ __('Save') }}</button>
+            {{ __('Request') }}</button>
     </div>
 </form>
-

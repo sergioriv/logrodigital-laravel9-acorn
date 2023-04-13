@@ -705,30 +705,19 @@
     </div>
 
     <!-- Modal Add Permit Start -->
-    <div class="modal fade" id="addPermitTeacherModal" aria-labelledby="modalAddPermitTeacher" data-bs-backdrop="static"
-        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Request permission') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                @hasrole('TEACHER')
-                    @include('logro.teacher.permit.create')
-                @endhasrole
+    <x-modal.add-permit>
+        @hasrole('TEACHER')
+            @include('logro.teacher.permit.create')
+        @endhasrole
 
-                @hasrole('COORDINATOR')
-                    @php $coordination = $teacher @endphp
-                    @include('logro.coordination.permit.create')
-                @endhasrole
+        @hasrole('COORDINATOR')
+            @include('logro.coordination.permit.create')
+        @endhasrole
 
-                @hasrole('ORIENTATION')
-                    @php $orientation = $teacher @endphp
-                    @include('logro.orientation.permit.create')
-                @endhasrole
-            </div>
-        </div>
-    </div>
+        @hasrole('ORIENTATION')
+            @include('logro.orientation.permit.create')
+        @endhasrole
+    </x-modal.add-permit>
     <!-- Modal Add Permit End -->
 
     <!-- Modal Add Support Document Start -->

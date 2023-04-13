@@ -136,11 +136,9 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center flex-column">
                             <div class="mb-5 d-flex align-items-center flex-column">
-
                                 <!-- Avatar Form Start -->
                                 <x-avatar-profile :avatar="$teacher->user->avatar" class="mb-3" />
                                 <!-- Avatar Form End -->
-
                                 <div class="h5">{{ $teacher->getFullName() }}</div>
                                 <div class="text-muted text-uppercase">{{ __('Teacher') }}</div>
                                 <div class="text-muted text-capitalize">{{ __($teacher->type_appointment) }}</div>
@@ -148,7 +146,6 @@
                         </div>
 
                         <div class="nav flex-column mb-5" role="tablist">
-
                             <a class="nav-link @empty(session('tab')) active @endempty logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#informationTab" role="tab">
                                 <span class="align-middle">{{ __('Information') }}</span>
@@ -173,14 +170,12 @@
                                 data-bs-toggle="tab" href="#employmentsTab" role="tab">
                                 <span class="align-middle">{{ __('Employment history') }}</span>
                             </a>
-
                         </div>
 
                         <div class="d-flex flex-column">
                             <text class="text-muted text-small">{{ __('created at') }}:</text>
                             <text class="text-muted text-small">{{ $teacher->created_at }}</text>
                         </div>
-
                     </div>
                 </div>
                 <!-- Biography End -->

@@ -4,12 +4,21 @@
 @extends('layout', ['title' => $title])
 
 @section('css')
+    <link rel="stylesheet" href="/css/vendor/select2.min.css" />
+    <link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" />
+    <link rel="stylesheet" href="/css/vendor/bootstrap-datepicker3.standalone.min.css" />
 @endsection
 
 @section('js_vendor')
+    <script src="/js/vendor/select2.full.min.js"></script>
+    <script src="/js/vendor/select2.full.min.es.js"></script>
+    <script src="/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="/js/vendor/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
 @endsection
 
 @section('js_page')
+    <script src="/js/forms/select2.js"></script>
+
     @if ($alertsStudents->getAlerts()->count())
         <script>
             $(document).ready(function() {
@@ -27,10 +36,29 @@
         <div class="page-title-container">
             <div class="row">
                 <!-- Title Start -->
-                <div class="col-12 col-md-7">
+                <div class="col-12 col-md-7 mb-2 mb-md-0">
                     <h1 class="mb-1 pb-0 display-4" id="title">{{ $title }}</h1>
                 </div>
                 <!-- Title End -->
+
+                <!-- Top Buttons Start -->
+                <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                    <!-- Dropdown Button Start -->
+                    <div class="">
+                        <button class="btn btn-sm btn-icon btn-icon-only btn-foreground shadow align-top mt-n2"
+                            type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            <i data-acorn-icon="more-horizontal" data-acorn-size="15"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end shadow">
+                            <div class="dropdown-item btn-icon btn-icon-start cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#addPermitTeacherModal">
+                                <i data-acorn-icon="send"></i>
+                                <span class="lh-1-5">{{ __('Request permission') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Dropdown Button End -->
+                </div>
             </div>
         </div>
         <!-- Title and Top Buttons End -->
@@ -77,5 +105,10 @@
         </section>
         <!-- Quality Alert Students Modal End -->
 
+        <!-- Modal Add Permit Start -->
+        <x-modal.add-permit>
+            @include('logro.orientation.permit.create')
+        </x-modal.add-permit>
+        <!-- Modal Add Permit End -->
     </div>
 @endsection

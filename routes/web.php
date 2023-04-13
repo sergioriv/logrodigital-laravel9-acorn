@@ -23,6 +23,7 @@ use App\Http\Controllers\OrientationPermitController;
 use App\Http\Controllers\OtherOptionsController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\PeriodPermitController;
+use App\Http\Controllers\PermitController;
 use App\Http\Controllers\PersonChargeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RemarkController;
@@ -177,7 +178,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::get('teachers/instructive', 'export_instructive')->name('teachers.instructive');
     });
     Route::resource('teachers', TeacherController::class)->except('destroy','edit','update')->names('teacher');
-    Route::post('teachers/{teacher}/permit', [TeacherPermitController::class, 'store'])->name('teachers.permits.store');
+    // Route::post('teachers/{teacher}/permit', [TeacherPermitController::class, 'store'])->name('teachers.permits.store');
     Route::patch('teachers/{teacher}/permit', [TeacherPermitController::class, 'store_document'])->name('teachers.permits.document');
     Route::patch('teachers/{teacher}/permit/accept-or-deny', [TeacherPermitController::class, 'acceptedOrDenied'])->name('teachers.permit.accepted');
     Route::post('teachers/hierarchy', [TeacherHierarchyController::class, 'store'])->name('teacher.hierarchy.store');
@@ -185,6 +186,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('teachers/employment', [TeacherEmploymentHistoryController::class, 'store'])->name('teacher.employment.store');
     Route::get('teacher/{teacher}/guide-groups', [TeacherController::class, 'download_guide_group'])->name('teacher.guide-groups');
 
+    Route::post('add-permit', [PermitController::class, 'store'])->name('add-permit');
 
 
 
@@ -195,7 +197,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
     /* Route Coordination */
     Route::resource('coordination', CoordinationController::class)->only('index', 'show', 'create','store')->names('coordination');
-    Route::post('coordination/{coordination}/permit', [CoordinationPermitController::class, 'store'])->name('coordination.permits.store');
+    // Route::post('coordination/{coordination}/permit', [CoordinationPermitController::class, 'store'])->name('coordination.permits.store');
     Route::patch('coordination/{coordination}/permit', [CoordinationPermitController::class, 'store_document'])->name('coordination.permits.document');
     Route::patch('coordination/{coordination}/permit/accept-or-deny', [CoordinationPermitController::class, 'acceptedOrDenied'])->name('coordination.permit.accepted');
     Route::post('coordination/hierarchy', [CoordinationHierarchyController::class, 'store'])->name('coordination.hierarchy.store');
@@ -206,7 +208,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
     /* Route Orientation */
     Route::resource('orientation', OrientationController::class)->only('index', 'show', 'create','store')->names('orientation');
-    Route::post('orientation/{orientation}/permit', [OrientationPermitController::class, 'store'])->name('orientation.permits.store');
+    // Route::post('orientation/{orientation}/permit', [OrientationPermitController::class, 'store'])->name('orientation.permits.store');
     Route::patch('orientation/{orientation}/permit', [OrientationPermitController::class, 'store_document'])->name('orientation.permits.document');
     Route::patch('orientation/{orientation}/permit/accept-or-deny', [OrientationPermitController::class, 'acceptedOrDenied'])->name('orientation.permit.accepted');
     Route::post('orientation/hierarchy', [OrientationHierarchyController::class, 'store'])->name('orientation.hierarchy.store');

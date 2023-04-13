@@ -1,4 +1,4 @@
-<form action="{{ route('teachers.permits.store', $teacher) }}" id="addPermitTeacherForm"
+<form action="{{ route('add-permit') }}" id="addPermitTeacherForm"
     class="tooltip-label-end" method="POST" novalidate>
     @csrf
 

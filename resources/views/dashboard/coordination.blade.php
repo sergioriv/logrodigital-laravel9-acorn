@@ -53,6 +53,14 @@
                                 <i class="icon bi-journal-medical icon-16 me-1"></i>
                                 <span class="lh-1-5">{{ __('Add annotation to Observer') }}</span>
                             </div>
+
+                            <div class="dropdown-divider"></div>
+
+                            <div class="dropdown-item btn-icon btn-icon-start cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#addPermitTeacherModal">
+                                <i data-acorn-icon="send"></i>
+                                <span class="lh-1-5">{{ __('Request permission') }}</span>
+                            </div>
                         </div>
                     </div>
                     <!-- Dropdown Button End -->
@@ -235,5 +243,10 @@
         </section>
         <!-- Quality Alert Students Modal End -->
 
+        <!-- Modal Add Permit Start -->
+        <x-modal.add-permit>
+            @include('logro.coordination.permit.create')
+        </x-modal.add-permit>
+        <!-- Modal Add Permit End -->
     </div>
 @endsection

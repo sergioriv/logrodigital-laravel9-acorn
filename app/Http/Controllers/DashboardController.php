@@ -9,6 +9,7 @@ use App\Models\Data\RoleUser;
 use App\Models\OrientationPermit;
 use App\Models\Student;
 use App\Models\TeacherPermit;
+use App\Models\TypePermitsTeacher;
 use App\Models\UserAlert;
 
 class DashboardController extends Controller
@@ -39,7 +40,8 @@ class DashboardController extends Controller
     private function dashTeacher()
     {
         return view('dashboard.teacher', [
-            'alertsStudents' => UserAlertController::myAlerts()
+            'alertsStudents' => UserAlertController::myAlerts(),
+            'typePermit' => TypePermitsTeacher::all()
         ]);
     }
 
@@ -58,7 +60,8 @@ class DashboardController extends Controller
 
         return view('dashboard.orientation', [
             'alertsStudents' => UserAlertController::myAlerts(),
-            'pendingStudents' => $pendingStudents
+            'pendingStudents' => $pendingStudents,
+            'typePermit' => TypePermitsTeacher::all()
         ]);
     }
 
@@ -79,7 +82,8 @@ class DashboardController extends Controller
             'coordinationPermits' => CoordinationPermitController::pendingPermits(),
             'orientationPermits' => OrientationPermitController::pendingPermits(),
             'alertsStudents' => UserAlertController::myAlerts(),
-            'remitPending' => $remitPending
+            'remitPending' => $remitPending,
+            'typePermit' => TypePermitsTeacher::all()
         ]);
     }
 }
