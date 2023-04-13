@@ -315,4 +315,10 @@ class CoordinationController extends Controller
         if (is_dir(public_path('app/coordinators/' . $uuid)))
             File::deleteDirectory(public_path('app/coordinators/' . $uuid));
     }
+
+    public function permitTab(Coordination $coordination)
+    {
+        session()->flash('tab', 'permits');
+        return redirect()->route('coordination.show', $coordination);
+    }
 }

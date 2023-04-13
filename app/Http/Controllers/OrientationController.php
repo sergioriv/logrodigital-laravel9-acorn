@@ -318,4 +318,10 @@ class OrientationController extends Controller
         if (is_dir(public_path('app/orientators/' . $uuid)))
             File::deleteDirectory(public_path('app/orientators/' . $uuid));
     }
+
+    public function permitTab(Orientation $orientation)
+    {
+        session()->flash('tab', 'permits');
+        return redirect()->route('orientation.show', $orientation);
+    }
 }

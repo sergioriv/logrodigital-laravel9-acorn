@@ -185,6 +185,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('teachers/degree', [TeacherDegreeController::class, 'store'])->name('teacher.degree.store');
     Route::post('teachers/employment', [TeacherEmploymentHistoryController::class, 'store'])->name('teacher.employment.store');
     Route::get('teacher/{teacher}/guide-groups', [TeacherController::class, 'download_guide_group'])->name('teacher.guide-groups');
+    Route::get('teacher/{teacher}/permit-tab', [TeacherController::class, 'permitTab'])->name('teacher.show.permit-tab');
 
     Route::post('add-permit', [PermitController::class, 'store'])->name('add-permit');
 
@@ -203,6 +204,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('coordination/hierarchy', [CoordinationHierarchyController::class, 'store'])->name('coordination.hierarchy.store');
     Route::post('coordination/degree', [CoordinationDegreeController::class, 'store'])->name('coordination.degree.store');
     Route::post('coordination/employment', [CoordinationEmploymentHistoryController::class, 'store'])->name('coordination.employment.store');
+    Route::get('coordination/{coordination}/permit-tab', [CoordinationController::class, 'permitTab'])->name('coordination.show.permit-tab');
 
 
 
@@ -214,6 +216,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('orientation/hierarchy', [OrientationHierarchyController::class, 'store'])->name('orientation.hierarchy.store');
     Route::post('orientation/degree', [OrientationDegreeController::class, 'store'])->name('orientation.degree.store');
     Route::post('orientation/employment', [OrientationEmploymentHistoryController::class, 'store'])->name('orientation.employment.store');
+    Route::get('orientation/{orientation}/permit-tab', [OrientationController::class, 'permitTab'])->name('orientation.show.permit-tab');
 
 
 

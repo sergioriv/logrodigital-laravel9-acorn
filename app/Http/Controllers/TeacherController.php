@@ -560,4 +560,10 @@ class TeacherController extends Controller
         if (is_dir(public_path('app/teachers/' . $uuid)))
             File::deleteDirectory(public_path('app/teachers/' . $uuid));
     }
+
+    public function permitTab(Teacher $teacher)
+    {
+        session()->flash('tab', 'permits');
+        return redirect()->route('teacher.show', $teacher);
+    }
 }

@@ -79,7 +79,6 @@
 
                 <div class="card mb-5">
                     <div class="card-body">
-
                         <div class="accordion accordion-flush" id="accordionFlushPermits">
 
                             @if (count($teacherPermits->getPermits()))
@@ -103,8 +102,8 @@
                                                     <span
                                                         class="font-weight-bold me-1">{{ '(' . $permit->count() . ')' }}</span>
                                                     {{ $permit[0]->teacher->getFullName() }}
-                                                    <a href="{{ route('teacher.show', $permit[0]->teacher->uuid) }}"><i
-                                                            class="icon bi-box-arrow-in-up-right text-primary ms-2"></i></a>
+                                                    <a href="{{ route('teacher.show.permit-tab', $permit[0]->teacher->uuid) }}">
+                                                        <i class="icon bi-box-arrow-in-up-right text-primary ms-2"></i></a>
                                                 </div>
                                             @endforeach
 
@@ -137,7 +136,7 @@
                                                         class="font-weight-bold me-1">{{ '(' . $permit->count() . ')' }}</span>
                                                     {{ $permit[0]->coordination->getFullName() }}
                                                     <a
-                                                        href="{{ route('coordination.show', $permit[0]->coordination->uuid) }}"><i
+                                                        href="{{ route('coordination.show.permit-tab', $permit[0]->coordination->uuid) }}"><i
                                                             class="icon bi-box-arrow-in-up-right text-primary ms-2"></i></a>
                                                 </div>
                                             @endforeach
@@ -170,7 +169,7 @@
                                                         class="font-weight-bold me-1">{{ '(' . $permit->count() . ')' }}</span>
                                                     {{ $permit[0]->orientation->getFullName() }}
                                                     <a
-                                                        href="{{ route('orientation.show', $permit[0]->orientation->uuid) }}"><i
+                                                        href="{{ route('orientation.show.permit-tab', $permit[0]->orientation->uuid) }}"><i
                                                             class="icon bi-box-arrow-in-up-right text-primary ms-2"></i></a>
                                                 </div>
                                             @endforeach
