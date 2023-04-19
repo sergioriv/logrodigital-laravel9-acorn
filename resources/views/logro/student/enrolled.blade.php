@@ -31,9 +31,9 @@ $title = __('Students') .' '. __('enrolled');
                     </div>
                     <!-- Title End -->
 
-                    @can('students.index')
                     <!-- Top Buttons Start -->
                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
+                        @can('students.create')
                         <!-- Add New Button Start -->
                         <a href="{{ route('students.create') }}"
                             class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
@@ -41,7 +41,9 @@ $title = __('Students') .' '. __('enrolled');
                             <span>{{ __('Add New') }}</span>
                         </a>
                         <!-- Add New Button End -->
+                        @endcan
 
+                        @hasanyrole('SECRETARY|COORDINATOR|TEACHER|SUPPORT')
                         <!-- Dropdown Button Start -->
                         <div class="ms-1">
                             <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only"
@@ -57,9 +59,9 @@ $title = __('Students') .' '. __('enrolled');
                             </div>
                         </div>
                         <!-- Dropdown Button End -->
+                        @endhasanyrole
                     </div>
                     <!-- Top Buttons End -->
-                    @endcan
                 </div>
             </div>
             <!-- Title and Top Buttons End -->

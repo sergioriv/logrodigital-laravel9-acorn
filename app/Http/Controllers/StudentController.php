@@ -81,12 +81,14 @@ class StudentController extends Controller
         );
 
         $this->middleware('can:students.index')->only(
-            'export_enrolled_generate',
-            'export_enrolled_view',
             'export_noenrolled',
             'inclusive_students',
-            // 'enrolled',
             'no_enrolled'
+        );
+
+        $this->middleware('hasroles:SECRETARY,COORDINATOR,TEACHER,SUPPORT')->only(
+            'export_enrolled_generate',
+            'export_enrolled_view'
         );
 
         $this->middleware('can:students.create')->only(
