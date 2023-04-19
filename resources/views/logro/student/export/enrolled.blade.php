@@ -260,6 +260,17 @@
                                 </label>
                             </div>
                         </div>
+
+                        <!-- Health Manager -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[health_manager]"
+                                        value="1">
+                                    {{ __('health manager') }}
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

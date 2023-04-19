@@ -95,6 +95,8 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
                 array_push($row, $student->neighborhood);
             if ($this->attributes['sisben'])
                 array_push($row, $student->sisben?->name);
+            if ($this->attributes['health_manager'])
+                array_push($row, $student->healthManager?->name);
 
 
             array_push($array, $row);
@@ -155,6 +157,8 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
             array_push($titles, "Barrio");
         if ($this->attributes['sisben'])
             array_push($titles, "Sisben");
+        if ($this->attributes['health_manager'])
+            array_push($titles, "Administradora de salud");
 
 
         return $titles;
