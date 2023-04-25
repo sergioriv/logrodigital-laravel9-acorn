@@ -13,6 +13,7 @@ class StudentDescriptor extends Model
 
     public $fillable = [
         'teacher_subject_group_id',
+        'period_id',
         'student_id',
         'descriptor_id'
     ];

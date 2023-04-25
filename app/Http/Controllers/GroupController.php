@@ -248,12 +248,15 @@ class GroupController extends Controller
         $periods = Period::where('school_year_id', $Y->id)
             ->where('study_time_id', $group->study_time_id)
             ->when(RoleUser::TEACHER_ROL === $roleAuth, function ($query){
+                // para el director de grupo
                 return $query->with('remarks')->where('start', '>=', today()->format('Y-m-d'));
             }, function ($query) {
-                return $query->where('end', '<=', today()->format('Y-m-d'));
+                // si no es director, poder descargar el reporte de notas
+                return $query->where('start_grades', '<=', today()->format('Y-m-d'));
             })
             ->orderBy('ordering')->get();
-
+            // 'start_grades',
+            // 'end_grades',
 
         return view('logro.group.show')->with([
             'Y' => $Y,

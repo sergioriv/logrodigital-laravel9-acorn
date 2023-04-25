@@ -30,21 +30,22 @@
                 <!-- Title End -->
 
                 <section class="scroll-section">
-                    <form method="POST" action="{{ route('subject.descriptors.store', $subject) }}" class="tooltip-end-bottom" novalidate>
+                    <form method="POST" action="{{ route('subject.descriptors.store', $subject) }}" class="tooltip-end-bottom">
                         @csrf
 
                         <div class="card mb-3">
                             <div class="card-body">
 
-                                <div class="row g-3">
+                                <div>
 
                                     <!-- Study Year -->
-                                    <div class="col-12">
-                                        <div class="position-relative form-group w-100">
-                                            <x-label>{{ __('Study Year') }}
-                                                <x-required />
-                                            </x-label>
-                                            <select logro="select2" name="study_year" required>
+                                    <div class="row mb-3 align-items-start form-group">
+                                        <label
+                                            class="col-sm-5 col-md-4 col-lg-3 col-form-label"
+                                        >{{ __('Study Year') }} <x-required /></label>
+                                        <div
+                                            class="col-sm-7 col-md-8 col-lg-9 position-relative">
+                                            <select logro="select2" name="study_year" class="w-100" required>
                                                 <option label="&nbsp;"></option>
                                                 @foreach ($studyYears as $sy)
                                                     <option value="{{ $sy->uuid }}"
@@ -54,26 +55,49 @@
                                         </div>
                                     </div>
 
-                                    <!-- Name -->
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <x-label>{{ __('Content') }}</x-label>
-                                            <textarea class="form-control" name="content" rows="2" required autofocus>{{ old('content') }}</textarea>
+                                    <!-- Period -->
+                                    <div class="row mb-3 align-items-start form-group">
+                                        <label
+                                            class="col-sm-5 col-md-4 col-lg-3 col-form-label"
+                                        >{{ __('Period') }} <x-required /></label>
+                                        <div
+                                            class="col-sm-7 col-md-8 col-lg-9 position-relative">
+                                            <select logro="select2" name="period" class="w-100" required>
+                                                <option label="&nbsp;"></option>
+                                                @for ($period = 1; $period <= 6; $period++)
+                                                    <option
+                                                        value="{{ $period }}"
+                                                        @selected(old('period') == $period)
+                                                    >{{ __('Period') }} {{ $period }}</option>
+                                                @endfor
+                                            </select>
                                         </div>
                                     </div>
 
-                                    <!-- Public Name -->
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input cursor-pointer" type="checkbox" id="switchInclusive"
-                                            name="inclusive" value="1" />
-                                            <label class="form-check-label cursor-pointer" for="switchInclusive">{{ __('Is it an inclusion descriptor?') }}</label>
+                                    <!-- Is Inclusive -->
+                                    <div class="row mb-3 align-items-start form-group">
+                                        <label
+                                            class="col-sm-5 col-md-4 col-lg-3 col-form-label"
+                                        >{{ __('Is it an inclusion descriptor?') }} <x-required /></label>
+                                        <div
+                                            class="col-sm-7 col-md-8 col-lg-9 position-relative">
+                                            <select logro="select2" name="inclusive" class="w-100" required>
+                                                <option value="0">{{ __('No') }}</option>
+                                                <option value="1">{{ __('Yes') }}</option>
+                                            </select>
                                         </div>
                                     </div>
 
+                                    <!-- Content -->
+                                    <div class="row align-items-start form-group">
+                                        <label
+                                            class="col-sm-5 col-md-4 col-lg-3 col-form-label">{{ __('Content') }} <x-required /></label>
+                                        <div
+                                            class="col-sm-7 col-md-8 col-lg-9 position-relative">
+                                            <textarea class="form-control" name="content" rows="2" maxlength="1000" required autofocus>{{ old('content') }}</textarea>
+                                        </div>
+                                    </div>
                                 </div>
-
-
                             </div>
                         </div>
 

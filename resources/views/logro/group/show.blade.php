@@ -105,6 +105,7 @@
                                                     </a>
                                                 @endif
                                             @endunless
+                                            <div class="dropdown-divider"></div>
                                         @endcan
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                             href="{{ route('group.export.student-list', $group) }}">
@@ -118,6 +119,7 @@
                                         </a>
                                         @hasrole('SUPPORT')
                                             @if (!$group->specialty && !$periods->isEmpty())
+                                                <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
                                                     id="openModelGenerateGradeReport" data-bs-toggle="modal"
                                                     data-bs-target="#generateGradeReport">

@@ -48,7 +48,7 @@ class Group extends Model
 
     public function studyYear()
     {
-        return $this->belongsTo(StudyYear::class);
+        return $this->belongsTo(StudyYear::class, 'study_year_id', 'id');
     }
 
     public function teacher()

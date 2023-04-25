@@ -249,6 +249,8 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::get('subject/{subject}/descriptors', [DescriptorController::class, 'index'])->name('subject.descriptors');
     Route::get('subject/{subject}/descriptors/create', [DescriptorController::class, 'create'])->name('subject.descriptors.create');
     Route::post('subject/{subject}/descriptors', [DescriptorController::class, 'store'])->name('subject.descriptors.store');
+    Route::get('subject/{subject}/descriptors/import', [DescriptorController::class, 'import_view'])->name('subject.descriptors.import');
+    Route::post('subject/{subject}/descriptors/import', [DescriptorController::class, 'import_store'])->name('subject.descriptors.import.store');
 
 
     /* Permit Period */

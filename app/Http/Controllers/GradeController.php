@@ -44,6 +44,7 @@ class GradeController extends Controller
 
         $group = $subject->group;
         $studyTime = $subject->group->studyTimeSelectAll;
+        $studyYear = $subject->group->studyYear;
 
         /* Verifica si PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
         $round = static::round($studyTime->round);
@@ -61,16 +62,10 @@ class GradeController extends Controller
         DB::beginTransaction();
         foreach ($request->students as $code => $grades) {
 
-            if ($group->specialty) {
+            if ($group->specialty) { $student = Student::where('code', $code)->where('group_specialty_id', $group->id)->first(); }
+            else { $student = Student::where('code', $code)->where('group_id', $group->id)->first(); }
 
-                $student = Student::where('code', $code)->where('group_specialty_id', $group->id)->first();
-            } else {
-
-                $student = Student::where('code', $code)->where('group_id', $group->id)->first();
-            }
-
-
-            if (!$student) {
+            if ( ! $student ) {
 
                 DB::rollBack();
                 return redirect()->back()->withErrors(__(
@@ -86,15 +81,26 @@ class GradeController extends Controller
              * Se ajustan los decimales y redondeo definido para la Jornada del grupo
              *
              *  */
-            $gradeConceptual = round($grades['conceptual'], $studyTime->decimal, $round);
-            $gradeProcedural = round($grades['procedural'], $studyTime->decimal, $round);
-            $gradeAttitudinal = round($grades['attitudinal'], $studyTime->decimal, $round);
+            $gradeConceptual = null;
+            $gradeProcedural = null;
+            $gradeAttitudinal = null;
+            $gradeFinal = null;
 
-            $gradeFinal = (($gradeConceptual * $studyTime->conceptual) / 100)
-                + (($gradeProcedural * $studyTime->procedural) / 100)
-                + (($gradeAttitudinal * $studyTime->attitudinal) / 100);
+            if ($studyYear->useGrades()) {
+                if ($studyYear->useComponents()) {
+                    $gradeConceptual = round($grades['conceptual'], $studyTime->decimal, $round);
+                    $gradeProcedural = round($grades['procedural'], $studyTime->decimal, $round);
+                    $gradeAttitudinal = round($grades['attitudinal'], $studyTime->decimal, $round);
 
-            $gradeFinal = round($gradeFinal, $studyTime->decimal, $round);
+                    $gradeFinal = (($gradeConceptual * $studyTime->conceptual) / 100)
+                        + (($gradeProcedural * $studyTime->procedural) / 100)
+                        + (($gradeAttitudinal * $studyTime->attitudinal) / 100);
+
+                    $gradeFinal = round($gradeFinal, $studyTime->decimal, $round);
+                } else {
+                    $gradeFinal = round($grades['final'], $studyTime->decimal, $round);
+                }
+            }
 
             try {
                 Grade::updateOrCreate(
@@ -111,38 +117,37 @@ class GradeController extends Controller
                     ]
                 );
             } catch (Exception $e) {
-
                 DB::rollBack();
-                return redirect()->back()->withErrors(__(
-                    "The student (:STUDENT) doesn't belong to the group: :GROUP",
-                    [
-                        'STUDENT' => $code,
-                        'GROUP' => $group->name
-                    ]
-                ));
+                return redirect()->back()->withErrors(__('An error has occurred'));
             }
 
 
             /* Guardando los descriptores */
-            if (isset($grades['descriptors']) && is_array( $grades['descriptors'] )) {
-                try {
+            if ($studyYear->useDescriptors()) {
+                if (isset($grades['descriptors']) && is_array( $grades['descriptors'] )) {
+                    try {
 
-                    /* borrar los descriptores asignados para agregar los que vienen */
-                    StudentDescriptor::where('student_id', $student->id)->where('teacher_subject_group_id', $subject->id)->delete();
+                        /* borrar los descriptores asignados para agregar los que vienen */
+                        StudentDescriptor::where('student_id', $student->id)
+                            ->where('teacher_subject_group_id', $subject->id)
+                            ->where('period_id', $period->id)
+                            ->delete();
 
-                    foreach ($grades['descriptors'] as $descriptor) {
-                        StudentDescriptor::create([
-                            'teacher_subject_group_id' => $subject->id,
-                            'student_id' => $student->id,
-                            'descriptor_id' => $descriptor
-                        ]);
+                        foreach ($grades['descriptors'] as $descriptor) {
+                            StudentDescriptor::create([
+                                'teacher_subject_group_id' => $subject->id,
+                                'period_id' => $period->id,
+                                'student_id' => $student->id,
+                                'descriptor_id' => $descriptor
+                            ]);
+                        }
+
+                    } catch (\Throwable $th) {
+
+                        DB::rollBack();
+                        Notify::fail(__('saving error'));
+                        return back();
                     }
-
-                } catch (\Throwable $th) {
-
-                    DB::rollBack();
-                    Notify::fail(__('saving error'));
-                    return back();
                 }
             }
         }
@@ -243,7 +248,6 @@ class GradeController extends Controller
         }
 
 
-
         /* Obtiene las areas y asignaturas del grupo que corresponde */
         $areasWithSubjects = $this->teacher_subject($Y, $group);
         $this->countAreas = $areasWithSubjects->count();
@@ -277,7 +281,7 @@ class GradeController extends Controller
 
 
         $groupStudents = GroupStudent::where('group_id', $group->id)
-                ->with('student')
+                ->with('student:id,first_name,second_name,first_last_name,second_last_name')
                 ->get();
 
 
@@ -305,10 +309,8 @@ class GradeController extends Controller
             );
         }
 
-
         /* Generate Zip and Download */
         return (new ZipController($pathUuid))->downloadGradesGroup($group->name);
-
     }
 
     private function reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $teacherSubjects, $student, $pathReport)
@@ -320,9 +322,7 @@ class GradeController extends Controller
             : $currentPeriod . ' - ' . $Y->name;
 
 
-
         /* Si el estudiante pertenece a un grupo de especialidad */
-
         $existGroupSpecialty = Group::where('study_year_id', $group->study_year_id)
             ->where('headquarters_id', $group->headquarters_id)
             ->where('study_time_id', $group->study_time_id)
@@ -333,20 +333,19 @@ class GradeController extends Controller
             ->whereNotNull('specialty_area_id')->first();
 
 
-
         /* Si el estudiante tiene un grupo de especialidad, se agregará a la lista general con su area y asignatura de especialidad */
         if ($existGroupSpecialty) {
 
             $areaSpecialty = $this->teacher_subject($Y, $existGroupSpecialty)->first();
+            $areasWithSubjects[$this->countAreas] = $areaSpecialty;
 
             foreach ($areaSpecialty->subjects as $subjectSpecialty) {
                 if (!is_null($subjectSpecialty->teacherSubject))
                     array_push($teacherSubjects, $subjectSpecialty->teacherSubject->id);
             }
-
-            $areasWithSubjects[$this->countAreas] = $areaSpecialty;
+        } else {
+            unset($areasWithSubjects[$this->countAreas]);
         }
-
 
 
         /* Notas del estudiante de los periodos y asignaturas del StudyYear actual */
@@ -370,8 +369,6 @@ class GradeController extends Controller
             $descriptors = NULL;
         }
 
-
-
         $pdf = Pdf::loadView('logro.pdf.report-notes', [
             'SCHOOL' => $SCHOOL,
             'date' => now()->format('d/m/Y'),
@@ -389,15 +386,11 @@ class GradeController extends Controller
 
         $pdf->setPaper([0.0, 0.0, 612, 1008]);
         $pdf->setOption('dpi', 72);
-
-
-
         $pdf->save($pathReport . "Reporte de notas - ". $student->getCompleteNames() . '.pdf');
     }
 
     public function teacher_subject($Y, $group)
     {
-
         $fn_sy = fn ($sy) =>
         $sy->where('school_year_id', $Y->id)
             ->where('study_year_id', $group->study_year_id);
@@ -413,18 +406,21 @@ class GradeController extends Controller
             ->with('resourceSubject')
             ->with(['teacherSubject' => $fn_tsg]);
 
+        return ResourceArea::when(
+            ! $group->specialty,
+                function ($query) { $query->whereNull('specialty'); },
+                function ($query) use ($group) { $query->where('id', $group->specialty_area_id); }
+        )->withWhereHas('subjects', $fn_sb)->orderBy('name')->get();
 
-        if (!$group->specialty) {
-
-            return ResourceArea::whereNull('specialty')
-                ->withWhereHas('subjects', $fn_sb)
-                ->orderBy('name')->get();
-        } else {
-
-            return ResourceArea::where('id', $group->specialty_area_id)
-                ->withWhereHas('subjects', $fn_sb)
-                ->orderBy('name')->get();
-        }
+        // if ( ! $group->specialty ) {
+        //     return ResourceArea::whereNull('specialty')
+        //         ->withWhereHas('subjects', $fn_sb)
+        //         ->orderBy('name')->get();
+        // } else {
+        //     return ResourceArea::where('id', $group->specialty_area_id)
+        //         ->withWhereHas('subjects', $fn_sb)
+        //         ->orderBy('name')->get();
+        // }
     }
 
     public static function areaNoteStudent($area, $periods, $grades, $studyTime)

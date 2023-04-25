@@ -13,9 +13,15 @@ class StudyYear extends Model
 
     protected $fillable = [
         'name',
-        'resource_study_year_id'
+        'resource_study_year_id',
+        'use_grades',
+        'use_components',
+        'use_descriptors'
     ];
 
+    public function useGrades(): bool { return $this->use_grades == 1; }
+    public function useComponents(): bool { return $this->use_components == 1; }
+    public function useDescriptors(): bool { return $this->use_descriptors == 1; }
 
     public function resource()
     {

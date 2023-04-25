@@ -14,6 +14,7 @@ class Descriptor extends Model
     public $fillable = [
         'resource_study_year_id',
         'resource_subject_id',
+        'period',
         'inclusive',
         'content'
     ];
@@ -28,5 +29,13 @@ class Descriptor extends Model
     public function resourceSubject()
     {
         return $this->belongsTo(ResourceSubject::class);
+    }
+
+    public function isInclusiveHtml()
+    {
+        if ($this->inclusive) {
+            return '<span class="badge bg-outline-warning">' . __('inclusive') . '</span>';
+        }
+        return null;
     }
 }

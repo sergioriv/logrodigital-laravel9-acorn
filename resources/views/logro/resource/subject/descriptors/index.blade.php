@@ -40,6 +40,22 @@
                                 <span>{{ __('Add New') }}</span>
                             </a>
                             <!-- Add New Button End -->
+
+                            <!-- Dropdown Button Start -->
+                            <div class="ms-1">
+                                <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only"
+                                    data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false" data-submenu>
+                                    <i data-acorn-icon="more-horizontal"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item btn-icon btn-icon-start" href="{{ route('subject.descriptors.import', $subject) }}">
+                                        <i data-acorn-icon="upload"></i>
+                                        <span>{{ __("Import") }} excel</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Dropdown Button End -->
                         </div>
                         <!-- Top Buttons End -->
                     </div>
@@ -74,8 +90,9 @@
                             <thead>
                                 <tr>
                                     <th class="text-muted text-small text-uppercase">{{ __('Study Year') }}</th>
+                                    <th class="text-muted text-small text-uppercase text-center">{{ __('Period') }}</th>
+                                    <th class="text-muted text-small text-uppercase text-center">{{ __('inclusive') }}</th>
                                     <th class="text-muted text-small text-uppercase">{{ __('Content') }}</th>
-                                    <th class="text-muted text-small text-uppercase">{{ __('inclusive') }}</th>
                                     <th class="text-muted text-small text-uppercase">{{ __('Created at') }}</th>
                                 </tr>
                             </thead>
@@ -83,8 +100,9 @@
                                 @foreach ($descriptors as $descriptor)
                                     <tr>
                                         <td>{{ __($descriptor->resourceStudyYear->name) }}</td>
+                                        <td align="center">{{ $descriptor->period }}</td>
+                                        <td align="center">{!! $descriptor->isInclusiveHtml() !!}</td>
                                         <td>{{ $descriptor->content }}</td>
-                                        <td>{{ $descriptor->inclusive ? __('inclusive') : null }}</td>
                                         <td class="text-small">{{ $descriptor->created_at }}</td>
                                     </tr>
                                 @endforeach

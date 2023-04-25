@@ -138,35 +138,4 @@ class AccessSupportController extends Controller
 
         return Excel::download(new TeachersCountData($title, $teachers), $title . '.xlsx');
     }
-
-    protected function testAttendance()
-    {
-
-        $attendArray = [
-            'Y',
-            'N',
-            'J',
-            'L'
-        ];
-
-        $attendance = Str::uuid()->toString();
-        for ($i = 0; $i < 10; $i++) {
-
-            $row = [];
-            for ($j = 0; $j < 1000; $j++) {
-                $row[] = [
-                    'attendance_id' => $attendance,
-                    'student_id' => \App\Models\Student::all()->random()->id,
-                    'attend' => $attendArray[random_int(0, 3)]
-                ];
-            }
-
-            AttendanceStudent::insert($row);
-
-            usleep(10000);
-        }
-
-        // return redirect('admin/test-attendance?' . AttendanceStudent::count('student_id'));
-        dd('hecho' . AttendanceStudent::count('student_id'));
-    }
 }

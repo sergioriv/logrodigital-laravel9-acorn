@@ -350,6 +350,7 @@ class TeacherController extends Controller
         }
 
         $Y = SchoolYearController::current_year();
+        $studyYear = $subject->group->studyYear;
 
         $studentsGroup = Student::singleData()->whereHas('groupYear', fn ($gr) => $gr->where('group_id', $subject->group_id))
             ->withCount([
@@ -377,23 +378,29 @@ class TeacherController extends Controller
             ->get();
 
 
-        $descriptors = Descriptor::where('resource_subject_id', $subject->subject->resource_subject_id)
-            ->where('resource_study_year_id', $subject->group->studyYear->resource_study_year_id)
-            ->whereNull('inclusive')
-            ->get();
+        $descriptors = null;
+        $descriptorsInclusive = null;
+        if ( $studyYear->useDescriptors() ) {
+            $descriptors = Descriptor::where('resource_subject_id', $subject->subject->resource_subject_id)
+                ->where('resource_study_year_id', $studyYear->resource_study_year_id)
+                ->where(function ($query) {
+                    $query->whereNull('inclusive')->orWhere('inclusive', '0');
+                })
+                ->get();
 
-        $descriptorsInclusive = Descriptor::where('resource_subject_id', $subject->subject->resource_subject_id)
-            ->where('resource_study_year_id', $subject->group->studyYear->resource_study_year_id)
-            ->where('inclusive', 1)
-            ->get();
+            $descriptorsInclusive = Descriptor::where('resource_subject_id', $subject->subject->resource_subject_id)
+                ->where('resource_study_year_id', $studyYear->resource_study_year_id)
+                ->where('inclusive', 1)
+                ->get();
+        }
 
 
         return view('logro.teacher.subjects.show', [
             'Y' => $Y,
+            'studyYear' => $studyYear,
             'subject' => $subject,
             'studentsGroup' => $studentsGroup,
             'periods' => $periods,
-            // 'attendanceLimit' => $this->remainingAttendanceWeek($subject, now()->format('Y-m-d')),
             'attendances' => $attendances,
             'descriptors' => $descriptors,
             'descriptorsInclusive' => $descriptorsInclusive

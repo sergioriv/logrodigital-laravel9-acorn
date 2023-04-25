@@ -116,7 +116,7 @@
                                         <span class="breadcrumb-item text-muted">
                                             <div class="text-muted d-inline-block">
                                                 <i data-acorn-icon="calendar" class="me-1" data-acorn-size="12"></i>
-                                                <span class="align-middle">{{ $subject->group->studyYear->name }}</span>
+                                                <span class="align-middle">{{ $studyYear->name }}</span>
                                             </div>
                                         </span>
                                     </div>
@@ -191,17 +191,21 @@
                                                             <th
                                                                 class="text-center text-muted text-small text-uppercase p-0 pb-2">
                                                                 {{ __('absences') }}</th>
+
+                                                            @if ($studyYear->useGrades())
                                                             <th
                                                                 class="text-center text-muted text-small text-uppercase p-0 pb-2">
                                                                 {{ __('Definitive') }}</th>
                                                             <th
                                                                 class="text-center text-muted text-small text-uppercase p-0 pb-2">
                                                                 {{ __('Performance') }}</th>
+                                                            @endif
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($studentsGroup as $studentG)
                                                             <tr>
+                                                                <!-- Student Name -->
                                                                 <td scope="row">
                                                                     <a href="{{ route('students.show', $studentG) }}"
                                                                         class="list-item-heading body">
@@ -209,16 +213,24 @@
                                                                     </a>
                                                                     {!! $studentG->tag() !!}
                                                                 </td>
+
+                                                                <!-- Absences Student -->
                                                                 <td class="text-center">
                                                                     {{ $studentG->attendance_student_count ?: null }}
                                                                 </td>
+
+                                                                @if ($studyYear->useGrades())
+                                                                <!-- Definitive Grade -->
                                                                 <td class="text-center">
                                                                     @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->id, $subject) @endphp
                                                                     {{ $defStudent }}
                                                                 </td>
+
+                                                                <!-- Performance Definitive Grade -->
                                                                 <td class="text-center text-capitalize">
                                                                     {!! \App\Http\Controllers\GradeController::performance($subject->group->studyTimeSelectAll, $defStudent) !!}
                                                                 </td>
+                                                                @endif
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -298,14 +310,19 @@
                                                             <thead>
                                                                 <tr class="text-small text-uppercase text-center">
                                                                     <th>&nbsp;</th>
-                                                                    <th>{{ __('conceptual') }}<br />{{ $period->studyTime->conceptual }}%
-                                                                    </th>
-                                                                    <th>{{ __('procedural') }}<br />{{ $period->studyTime->procedural }}%
-                                                                    </th>
-                                                                    <th>{{ __('attitudinal') }}<br />{{ $period->studyTime->attitudinal }}%
-                                                                    </th>
-                                                                    <th>{{ __('final') }}<br />100%</th>
+
+                                                                    @if ($studyYear->useGrades())
+                                                                        @if ($studyYear->useComponents())
+                                                                        <th>{{ __('conceptual') }}<br />{{ $period->studyTime->conceptual }}%</th>
+                                                                        <th>{{ __('procedural') }}<br />{{ $period->studyTime->procedural }}%</th>
+                                                                        <th>{{ __('attitudinal') }}<br />{{ $period->studyTime->attitudinal }}%</th>
+                                                                        @endif
+                                                                    <th>{{ __('final') }}</th>
+                                                                    @endif
+
+                                                                    @if ($studyYear->useDescriptors())
                                                                     <th>&nbsp;</th>
+                                                                    @endif
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -314,177 +331,209 @@
                                                                     @php
                                                                         $GxPS = \App\Http\Controllers\GradeController::forPeriod($subject->id, $period->id, $studentG->id);
                                                                     @endphp
-
                                                                     <tr>
+                                                                        <!-- Student Names -->
                                                                         <td scope="row">
                                                                             <a href="{{ route('students.show', $studentG) }}"
                                                                                 class="list-item-heading body">
                                                                                 {{ $studentG->getCompleteNames() }}
                                                                             </a>
-
                                                                             {!! $studentG->tag() !!}
-
                                                                         </td>
+
+                                                                        @if ($studyYear->useGrades())
+
+                                                                            @if ($studyYear->useComponents())
+                                                                            <!-- Conceptual grade -->
+                                                                            <td scope="row" class="col-1">
+                                                                                @if ($isActive)
+                                                                                    <x-input type="number"
+                                                                                        id="{{ $period->id }}-grade-{{ $gradeNumber }}"
+                                                                                        min="{{ $period->studyTime->minimum_grade }}"
+                                                                                        max="{{ $period->studyTime->maximum_grade }}"
+                                                                                        step="{{ $period->studyTime->step }}"
+                                                                                        name="students[{{ $studentG->code }}][conceptual]"
+                                                                                        value="{{ $GxPS->conceptual ?? null }}" />
+                                                                                @else
+                                                                                    <div class="form-control bg-light">
+                                                                                        {{ $GxPS->conceptual ?? null }}</div>
+                                                                                @endif
+                                                                            </td>
+
+                                                                            <!-- Procedural grade -->
+                                                                            <td scope="row" class="col-1">
+                                                                                @if ($isActive)
+                                                                                    <x-input type="number"
+                                                                                        id="{{ $period->id }}-grade-{{ $gradeNumber + 1 }}"
+                                                                                        min="{{ $period->studyTime->minimum_grade }}"
+                                                                                        max="{{ $period->studyTime->maximum_grade }}"
+                                                                                        step="{{ $period->studyTime->step }}"
+                                                                                        name="students[{{ $studentG->code }}][procedural]"
+                                                                                        value="{{ $GxPS->procedural ?? null }}" />
+                                                                                @else
+                                                                                    <div class="form-control bg-light">
+                                                                                        {{ $GxPS->procedural ?? null }}</div>
+                                                                                @endif
+                                                                            </td>
+
+                                                                            <!-- Attitudinal grade -->
+                                                                            <td scope="row" class="col-1">
+                                                                                @if ($isActive)
+                                                                                    <x-input type="number"
+                                                                                        id="{{ $period->id }}-grade-{{ $gradeNumber + 2 }}"
+                                                                                        min="{{ $period->studyTime->minimum_grade }}"
+                                                                                        max="{{ $period->studyTime->maximum_grade }}"
+                                                                                        step="{{ $period->studyTime->step }}"
+                                                                                        name="students[{{ $studentG->code }}][attitudinal]"
+                                                                                        value="{{ $GxPS->attitudinal ?? null }}" />
+                                                                                @else
+                                                                                    <div class="form-control bg-light">
+                                                                                        {{ $GxPS->attitudinal ?? null }}</div>
+                                                                                @endif
+                                                                            </td>
+                                                                            @endif
+
+                                                                        <!-- Final grade -->
                                                                         <td scope="row" class="col-1">
-                                                                            @if ($isActive)
+                                                                            @if ($isActive && ! $studyYear->useComponents())
                                                                                 <x-input type="number"
                                                                                     id="{{ $period->id }}-grade-{{ $gradeNumber }}"
                                                                                     min="{{ $period->studyTime->minimum_grade }}"
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
-                                                                                    name="students[{{ $studentG->code }}][conceptual]"
-                                                                                    value="{{ $GxPS->conceptual ?? null }}" />
+                                                                                    name="students[{{ $studentG->code }}][final]"
+                                                                                    value="{{ $GxPS->final ?? null }}" />
                                                                             @else
                                                                                 <div class="form-control bg-light">
-                                                                                    {{ $GxPS->conceptual ?? null }}</div>
+                                                                                    {{ $GxPS->final ?? null }}</div>
                                                                             @endif
                                                                         </td>
-                                                                        <td scope="row" class="col-1">
-                                                                            @if ($isActive)
-                                                                                <x-input type="number"
-                                                                                    id="{{ $period->id }}-grade-{{ $gradeNumber + 1 }}"
-                                                                                    min="{{ $period->studyTime->minimum_grade }}"
-                                                                                    max="{{ $period->studyTime->maximum_grade }}"
-                                                                                    step="{{ $period->studyTime->step }}"
-                                                                                    name="students[{{ $studentG->code }}][procedural]"
-                                                                                    value="{{ $GxPS->procedural ?? null }}" />
-                                                                            @else
-                                                                                <div class="form-control bg-light">
-                                                                                    {{ $GxPS->procedural ?? null }}</div>
-                                                                            @endif
-                                                                        </td>
-                                                                        <td scope="row" class="col-1">
-                                                                            @if ($isActive)
-                                                                                <x-input type="number"
-                                                                                    id="{{ $period->id }}-grade-{{ $gradeNumber + 2 }}"
-                                                                                    min="{{ $period->studyTime->minimum_grade }}"
-                                                                                    max="{{ $period->studyTime->maximum_grade }}"
-                                                                                    step="{{ $period->studyTime->step }}"
-                                                                                    name="students[{{ $studentG->code }}][attitudinal]"
-                                                                                    value="{{ $GxPS->attitudinal ?? null }}" />
-                                                                            @else
-                                                                                <div class="form-control bg-light">
-                                                                                    {{ $GxPS->attitudinal ?? null }}</div>
-                                                                            @endif
-                                                                        </td>
+                                                                        @endif
 
-                                                                        <td scope="row" class="col-1">
-                                                                            <div class="form-control bg-light">
-                                                                                {{ $GxPS->final ?? null }}</div>
-                                                                        </td>
-
+                                                                        @if ($studyYear->useDescriptors())
+                                                                        <!-- Descriptors -->
                                                                         <td class="text-end">
+
+                                                                            @php
+                                                                                if (is_null($studentG->inclusive)) {
+                                                                                    $descriptorsFor = $descriptors->where('period', $period->ordering);
+                                                                                } else {
+                                                                                    $descriptorsFor = $descriptorsInclusive->where('period', $period->ordering);
+                                                                                }
+                                                                            @endphp
+
                                                                             @if ($isActive)
-                                                                                <!-- Dropdown Button Start -->
-                                                                                <div>
-                                                                                    <button type="button"
-                                                                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
-                                                                                        data-bs-offset="0,3"
-                                                                                        data-bs-toggle="dropdown"
-                                                                                        aria-haspopup="true"
-                                                                                        aria-expanded="false" data-submenu>
-                                                                                        <i
-                                                                                            data-acorn-icon="more-vertical"></i>
-                                                                                    </button>
+                                                                                @if ( ! count($descriptorsFor) )
                                                                                     <div
-                                                                                        class="dropdown-menu dropdown-menu-end">
-                                                                                        <x-dropdown-item type="button"
-                                                                                            data-bs-toggle="modal"
-                                                                                            data-bs-target="#modalDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
-                                                                                            <span>{{ __('Add descriptors') }}</span>
-                                                                                        </x-dropdown-item>
+                                                                                        class="btn btn-sm text-light border-light btn-icon btn-icon-only cursor-default">
+                                                                                        <i data-acorn-icon="more-vertical"></i>
                                                                                     </div>
-                                                                                </div>
-                                                                                <!-- Dropdown Button End -->
+                                                                                @else
+                                                                                    <!-- Dropdown Button Start -->
+                                                                                    <div>
+                                                                                        <button type="button"
+                                                                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                                            data-bs-offset="0,3"
+                                                                                            data-bs-toggle="dropdown"
+                                                                                            aria-haspopup="true"
+                                                                                            aria-expanded="false" data-submenu>
+                                                                                            <i
+                                                                                                data-acorn-icon="more-vertical"></i>
+                                                                                        </button>
+                                                                                        <div
+                                                                                            class="dropdown-menu dropdown-menu-end">
+                                                                                            <x-dropdown-item type="button"
+                                                                                                data-bs-toggle="modal"
+                                                                                                data-bs-target="#modalDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
+                                                                                                <span>{{ __('Add descriptors') }}</span>
+                                                                                            </x-dropdown-item>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- Dropdown Button End -->
 
-                                                                                <!-- Modal Period Remark Start -->
-                                                                                <div class="modal fade"
-                                                                                    id="modalDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
-                                                                                    aria-labelledby="modalTitleDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
-                                                                                    data-bs-backdrop="static"
-                                                                                    data-bs-keyboard="false"
-                                                                                    tabindex="-1" aria-hidden="true">
-                                                                                    <div
-                                                                                        class="modal-dialog modal-dialog-centered">
-                                                                                        <div class="modal-content">
-                                                                                            <div
-                                                                                                class="modal-header text-start">
-                                                                                                <h5 class="modal-title"
-                                                                                                    id="modalTitleDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
-                                                                                                    {{ __('Descriptors') }}
-                                                                                                    -
-                                                                                                    {{ $studentG->getCompleteNames() }}
-                                                                                                </h5>
-                                                                                                <button type="button"
-                                                                                                    class="btn-close"
-                                                                                                    data-bs-dismiss="modal"
-                                                                                                    aria-label="Close"></button>
-                                                                                            </div>
-                                                                                            <div class="modal-body">
-                                                                                                <table
-                                                                                                    logro="dataTableBoxed"
-                                                                                                    class="data-table responsive nowrap stripe dataTable no-footer dtr-inline">
-                                                                                                    <thead>
-                                                                                                        <th class="empty">
-                                                                                                            &nbsp;</th>
-                                                                                                        <th
-                                                                                                            class="text-muted text-center text-small text-uppercase">
-                                                                                                            {{ __('Content') }}
-                                                                                                        </th>
-                                                                                                    </thead>
-                                                                                                    <tbody>
-                                                                                                        @if (is_null($studentG->inclusive))
-                                                                                                            @php
-                                                                                                                $descriptorsFor = $descriptors;
-                                                                                                            @endphp
-                                                                                                        @else
-                                                                                                            @php
-                                                                                                                $descriptorsFor = $descriptorsInclusive;
-                                                                                                            @endphp
-                                                                                                        @endif
-                                                                                                        @foreach ($descriptorsFor as $descriptor)
-                                                                                                            @php
-                                                                                                                $descriptorChecked =
-                                                                                                                    $studentG->studentDescriptors
-                                                                                                                        ->filter(function ($filter) use ($descriptor) {
-                                                                                                                            return $filter->descriptor_id == $descriptor->id;
-                                                                                                                        })
-                                                                                                                        ->first() ?? false;
-                                                                                                            @endphp
+                                                                                    <!-- Modal Period Remark Start -->
+                                                                                    <div class="modal fade"
+                                                                                        id="modalDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
+                                                                                        aria-labelledby="modalTitleDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
+                                                                                        data-bs-backdrop="static"
+                                                                                        data-bs-keyboard="false"
+                                                                                        tabindex="-1" aria-hidden="true">
+                                                                                        <div
+                                                                                            class="modal-dialog modal-dialog-centered">
+                                                                                            <div class="modal-content">
+                                                                                                <div
+                                                                                                    class="modal-header text-start">
+                                                                                                    <h5 class="modal-title"
+                                                                                                        id="modalTitleDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}">
+                                                                                                        {{ __('Descriptors') }}
+                                                                                                        -
+                                                                                                        {{ $studentG->getCompleteNames() }}
+                                                                                                    </h5>
+                                                                                                    <button type="button"
+                                                                                                        class="btn-close"
+                                                                                                        data-bs-dismiss="modal"
+                                                                                                        aria-label="Close"></button>
+                                                                                                </div>
+                                                                                                <div class="modal-body">
+                                                                                                    <table
+                                                                                                        logro="dataTableBoxed"
+                                                                                                        class="data-table responsive nowrap stripe dataTable no-footer dtr-inline">
+                                                                                                        <thead>
+                                                                                                            <th class="empty">
+                                                                                                                &nbsp;</th>
+                                                                                                            <th
+                                                                                                                class="text-muted text-center text-small text-uppercase">
+                                                                                                                {{ __('Content') }}
+                                                                                                            </th>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            @foreach ($descriptorsFor as $descriptor)
+                                                                                                                @php
+                                                                                                                    $descriptorChecked =
+                                                                                                                        $studentG->studentDescriptors
+                                                                                                                            ->filter(function ($filter) use ($descriptor) {
+                                                                                                                                return $filter->descriptor_id == $descriptor->id;
+                                                                                                                            })
+                                                                                                                            ->first() ?? false;
+                                                                                                                @endphp
 
-                                                                                                            <tr>
-                                                                                                                <td
-                                                                                                                    class="text-alternate col-1">
-                                                                                                                    <div
-                                                                                                                        class="form-check ms-2 mb-0">
-                                                                                                                        <input
-                                                                                                                            class="form-check-input"
-                                                                                                                            logro="studentCheck"
-                                                                                                                            type="checkbox"
-                                                                                                                            name="students[{{ $studentG->code }}][descriptors][]"
-                                                                                                                            id="P{{ $period->id }}-student{{ $studentG->id }}"
-                                                                                                                            value="{{ $descriptor->id }}"
-                                                                                                                            @checked($descriptorChecked)>
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td
-                                                                                                                    class="text-alternate text-start">
-                                                                                                                    <label
-                                                                                                                        for="P{{ $period->id }}-student{{ $studentG->id }}">{{ $descriptor->content }}</label>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        @endforeach
-                                                                                                    </tbody>
-                                                                                                </table>
+                                                                                                                <tr>
+                                                                                                                    <td
+                                                                                                                        class="text-alternate col-1">
+                                                                                                                        <div
+                                                                                                                            class="form-check ms-2 mb-0">
+                                                                                                                            <input
+                                                                                                                                class="form-check-input"
+                                                                                                                                logro="studentCheck"
+                                                                                                                                type="checkbox"
+                                                                                                                                name="students[{{ $studentG->code }}][descriptors][]"
+                                                                                                                                id="P{{ $period->id }}-student{{ $studentG->id }}"
+                                                                                                                                value="{{ $descriptor->id }}"
+                                                                                                                                @checked($descriptorChecked)>
+                                                                                                                        </div>
+                                                                                                                    </td>
+                                                                                                                    <td
+                                                                                                                        class="text-alternate text-start">
+                                                                                                                        <label
+                                                                                                                            for="P{{ $period->id }}-student{{ $studentG->id }}">{{ $descriptor->content }}</label>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            @endforeach
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                @endif
                                                                             @endif
                                                                         </td>
+                                                                        @endif
                                                                     </tr>
                                                                     @if ($isActive)
-                                                                        @php $gradeNumber = $gradeNumber + 3 @endphp
+                                                                        @php
+                                                                            $gradeNumber = $studyYear->useComponents() ? $gradeNumber + 3 : $gradeNumber + 1;
+                                                                        @endphp
                                                                     @endif
                                                                 @endforeach
                                                             </tbody>
