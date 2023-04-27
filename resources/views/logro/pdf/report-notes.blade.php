@@ -429,7 +429,7 @@
                             <td class="f-size-6 text-center">0</td>
                             <td class="f-size-6">
                                 @if (!is_null($subject->teacherSubject))
-                                    {{ $subject->teacherSubject->teacher->getFullName() }}
+                                    {{ $subject->teacherSubject?->teacher?->getFullName() }}
                                 @endif
                             </td>
                             @foreach ($periods as $period)

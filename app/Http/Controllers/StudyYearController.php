@@ -275,7 +275,7 @@ class StudyYearController extends Controller
         {
             Excel::store(
                 new GroupStudentListGuide($teacherSubjectGroup),
-                $pathReport . __('auxiliary template') .'_'. $teacherSubjectGroup->subject->resourceSubject->name .'_'. $teacherSubjectGroup->group->headquarters->name .'_'. $teacherSubjectGroup->group->studyTime->name .'_'. $teacherSubjectGroup->group->name .'_'. $teacherSubjectGroup->teacher->getFullName() . '.xlsx',
+                $pathReport . __('auxiliary template') .'_'. $teacherSubjectGroup->subject->resourceSubject->name .'_'. $teacherSubjectGroup->group->headquarters->name .'_'. $teacherSubjectGroup->group->studyTime->name .'_'. $teacherSubjectGroup->group->name .'_'. $teacherSubjectGroup?->teacher?->getFullName() . '.xlsx',
                 'public'
             );
         }

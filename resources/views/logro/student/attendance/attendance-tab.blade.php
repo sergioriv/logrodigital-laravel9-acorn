@@ -15,7 +15,7 @@
                 <tr>
                     <td>{{ $attendStudent->dateLabel() }}</td>
                     <td>{{ $attendStudent->teacherSubjectGroup->subject->resourceSubject->name }}</td>
-                    <td>{{ $attendStudent->teacherSubjectGroup->teacher->getFullName() }}</td>
+                    <td>{{ $attendStudent->teacherSubjectGroup?->teacher?->getFullName() }}</td>
                     <td>{{ $attendStudent->student->attend->getLabelText() }}</td>
                 </tr>
             @endforeach

@@ -35,6 +35,19 @@
         jQuery('#openModelGenerateGradeReport').click(function() {
             $('button#btn-generateGradeReport').prop('disabled', false);
         });
+
+        jQuery('[grades-view]').on('click', function () {
+            let studentId = $(this).attr('grades-view');
+            let modalStudentGradesString = "#modalStudentGrades";
+
+            $.get(HOST + '/group/{{ $group->id }}/student/grades/view', {
+                studentId: studentId
+            }, function (data) {
+                $(modalStudentGradesString + 'Label').html(data.title);
+                $(modalStudentGradesString + 'Content').html(data.content);
+                $(modalStudentGradesString).modal('show');
+            })
+        });
     </script>
 @endsection
 
@@ -228,6 +241,27 @@
                                                                         {{ $studentG->groupOfSpecialty->groupSpecialty->name }}
                                                                     @endif
                                                                 </td>
+                                                                @hasanyrole('SUPPORT|COORDINATOR')
+                                                                <td align="right">
+                                                                    <!-- Dropdown Button Start -->
+                                                                    <div class="ms-1 dropstart">
+                                                                        <button type="button" class="btn btn-sm btn-icon btn-icon-only text-primary"
+                                                                            data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                            aria-expanded="false" data-submenu>
+                                                                            <i data-acorn-icon="more-vertical"></i>
+                                                                        </button>
+                                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                                            <div class="dropdown-item btn-sm btn-icon btn-icon-start cursor-pointer"
+                                                                                grades-view="{{ $studentG->id }}"
+                                                                            >
+                                                                                <i data-acorn-icon="file-text"></i>
+                                                                                <span>{{ __('Grades') }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- Dropdown Button End -->
+                                                                </td>
+                                                                @endhasanyrole
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -339,7 +373,7 @@
                                                                         </td>
                                                                         <td>
                                                                             @unless(is_null($subject->teacherSubject))
-                                                                                {{ $subject->teacherSubject->teacher->getFullName() ?? null }}
+                                                                                {{ $subject->teacherSubject?->teacher?->getFullName() }}
                                                                             @endunless
                                                                         </td>
                                                                         <td class="col-1 text-center">
@@ -356,7 +390,7 @@
                                                                         <td class="col-1 text-end">
                                                                             @canany(['groups.teachers.edit',
                                                                                 'group.subject.period.active'])
-                                                                                @if ($subject?->teacherSubject)
+                                                                                @if ($subject?->teacherSubject?->teacher)
                                                                                     <!-- Dropdown Button Start -->
                                                                                     <div class="ms-1">
                                                                                         <button type="button"
@@ -758,6 +792,21 @@
     @endhasrole
 
     @hasrole('SUPPORT|COORDINATOR')
+
+        <!-- Modal Student Grades Start -->
+        <div class="modal fade modal-close-out" id="modalStudentGrades" aria-labelledby="modalStudentGradesLabel" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalStudentGradesLabel">{{ __('Grades') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div id="modalStudentGradesContent"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Student Grades End -->
 
         <!-- Modal Send Email Tutors Start -->
         <div class="modal fade modal-close-out" id="openModelSendMailTutors" aria-labelledby="modalSendMailTutors" data-bs-backdrop="static"

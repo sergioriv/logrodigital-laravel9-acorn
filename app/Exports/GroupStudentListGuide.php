@@ -163,7 +163,7 @@ class GroupStudentListGuide implements WithColumnWidths, WithEvents
             $workSheet->setCellValue('A2', static::$subTitle);
             $workSheet->setCellValue('W1', 'PERIODO');
             $workSheet->setCellValue('A3', 'GRUPO: ' . static::$GROUP->name);
-            $workSheet->setCellValue('C3', 'DOCENTE: ' . static::$TSG?->teacher->getFullName());
+            $workSheet->setCellValue('C3', 'DOCENTE: ' . static::$TSG?->teacher?->getFullName());
             $workSheet->setCellValue('C4', 'ÁREA: ' . static::$TSG?->subject->resourceArea->name);
             $workSheet->setCellValue('J4', 'ASIGNATURA: ' . static::$TSG?->subject->resourceSubject->name);
             $workSheet->setCellValue('R4', 'NIV');

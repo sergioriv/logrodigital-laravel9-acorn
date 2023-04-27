@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
+use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\OnlyTeachersMiddleware;
+use App\Models\Data\RoleUser;
 use App\Models\Grade;
 use App\Models\Group;
 use App\Models\GroupStudent;
@@ -32,6 +34,7 @@ class GradeController extends Controller
     public function __construct()
     {
         $this->middleware(OnlyTeachersMiddleware::class)->only('store');
+        $this->middleware('hasroles:SUPPORT,COORDINATOR')->only('editGradesStudent', 'saveGradesForStudent');
     }
 
     public function store(TeacherSubjectGroup $subject, Request $request)
@@ -223,6 +226,130 @@ class GradeController extends Controller
 
 
 
+
+    /*
+     *
+     *
+     *  REPORT OF NOTES
+     *
+     *
+     * */
+    public function editGradesStudent(Request $request, Group $group)
+    {
+        $request->validate([
+            'studentId' => ['required', Rule::exists('students', 'id')]
+        ]);
+
+        $existsInGroup = GroupStudent::query()
+            ->whereGroupId($group->id)
+            ->whereStudentId($request->studentId)
+            ->with('student:id,first_name,second_name,first_last_name,second_last_name')
+            ->first();
+
+        if ( ! $existsInGroup ) return false;
+
+        $Y = SchoolYearController::current_year();
+        $areas = $this->teacher_subject($Y, $group);
+        $studyTime = $group->studyTimeSelectAll;
+
+        $teacherSubject = [];
+        foreach ($areas as $area) {
+            foreach ($area->subjects as $subject) {
+                if (!is_null($subject->teacherSubject))
+                    array_push($teacherSubject, $subject->teacherSubject->id);
+            }
+        }
+
+        $grades = Grade::whereIn('teacher_subject_group_id', $teacherSubject)->whereStudentId($request->studentId)->get();
+
+        $periods = Period::query()
+            ->where('school_year_id', $Y->id)
+            ->where('study_time_id', $group->study_time_id)
+            ->where('start', '<=', today()->format('Y-m-d'))
+            ->orderBy('ordering')->get();
+
+        $content = view('logro.grades.student', [
+            'studentId' => $request->studentId,
+            'groupId' => $group->id,
+            'studyTime' => $studyTime,
+            'periods' => $periods,
+            'areas' => $areas,
+            'grades' => $grades
+        ])->render();
+
+        return [
+            'title' => $existsInGroup->student->getCompleteNames(),
+            'content' => $content
+        ];
+    }
+
+    public function saveGradesForStudent(Request $request, Group $group, Student $student)
+    {
+        if ( ! GroupStudent::whereGroupId($group->id)->whereStudentId($student->id)->first() ) {
+            Notify::fail("El estudiante no pertenece a este grupo");
+            return back();
+        }
+
+        $Y = SchoolYearController::current_year();
+        $periods = $request->input('period');
+
+        foreach ($periods as $periodId => $grades) {
+
+            if ( is_array($grades) ) {
+
+                // ya existe la calificacion y actualizará su valor
+                if ( array_key_exists('grades', $grades) ) {
+                    foreach ($grades['grades'] as $grade => $value) {
+                        $gradeFind = Grade::whereId($grade)->wherePeriodId($periodId)->first();
+                        if ( !is_null($gradeFind) ) if ($gradeFind->final != $value) $gradeFind->update(['final' => $value]);
+                    }
+                }
+
+                // no existe una calificacion guardada pero si existe un docente asignado
+                if ( array_key_exists('grades_teachers', $grades) ) {
+                    foreach ($grades['grades_teachers'] as $teacherSubject => $value) {
+                        if ( ! is_null($value) ) $this->createGrade($teacherSubject, $periodId, $student->id, $value);
+                    }
+                }
+
+                // no existe una calificacion guardada ni existe un docente asignado
+                if ( array_key_exists('grades_subjects', $grades) ) {
+                    foreach ($grades['grades_subjects'] as $subject => $value) {
+                        if ( ! is_null($value) ) {
+                            $teacherSubject = TeacherSubjectGroup::updateOrCreate(
+                                [
+                                    'school_year_id' => $Y->id,
+                                    'group_id' => $group->id,
+                                    'subject_id' => $subject
+                                ],
+                                []
+                            );
+
+                            $this->createGrade($teacherSubject->id, $periodId, $student->id, $value);
+                        }
+                    }
+                }
+            }
+        }
+
+        Notify::success(__('Grades saved!'));
+        return back();
+    }
+
+    private function createGrade($teacherSubject, $periodId, $studentId, $value)
+    {
+        Grade::create([
+            'teacher_subject_group_id' => $teacherSubject,
+            'period_id' => $periodId,
+            'student_id' => $studentId,
+            'conceptual' => null,
+            'procedural' => null,
+            'attitudinal' => null,
+            'final' => $value
+        ]);
+    }
+
+
     /*
      *
      *
@@ -411,16 +538,6 @@ class GradeController extends Controller
                 function ($query) { $query->whereNull('specialty'); },
                 function ($query) use ($group) { $query->where('id', $group->specialty_area_id); }
         )->withWhereHas('subjects', $fn_sb)->orderBy('name')->get();
-
-        // if ( ! $group->specialty ) {
-        //     return ResourceArea::whereNull('specialty')
-        //         ->withWhereHas('subjects', $fn_sb)
-        //         ->orderBy('name')->get();
-        // } else {
-        //     return ResourceArea::where('id', $group->specialty_area_id)
-        //         ->withWhereHas('subjects', $fn_sb)
-        //         ->orderBy('name')->get();
-        // }
     }
 
     public static function areaNoteStudent($area, $periods, $grades, $studyTime)

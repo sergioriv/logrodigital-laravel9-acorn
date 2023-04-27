@@ -531,13 +531,13 @@ class TeacherController extends Controller
         foreach ($TSG as $teacherSubjectGroup) {
             Excel::store(
                 new GroupStudentListGuide($teacherSubjectGroup),
-                $pathReport . __('auxiliary template') . '_' . $teacherSubjectGroup->subject->resourceSubject->name . '_' . $teacherSubjectGroup->group->headquarters->name . '_' . $teacherSubjectGroup->group->studyTime->name . '_' . $teacherSubjectGroup->group->name . '_' . $teacherSubjectGroup->teacher->getFullName() . '.xlsx',
+                $pathReport . __('auxiliary template') . '_' . $teacherSubjectGroup->subject->resourceSubject->name . '_' . $teacherSubjectGroup->group->headquarters->name . '_' . $teacherSubjectGroup->group->studyTime->name . '_' . $teacherSubjectGroup->group->name . '_' . $teacherSubjectGroup?->teacher?->getFullName() . '.xlsx',
                 'public'
             );
         }
 
         /* Generate Zip and Download */
-        return (new ZipController($pathUuid))->downloadAllGuideGroups(Str::slug($teacher->getFullName()));
+        return (new ZipController($pathUuid))->downloadAllGuideGroups(Str::slug($teacher?->getFullName()));
     }
     /*
      *

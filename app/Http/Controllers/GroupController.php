@@ -249,14 +249,13 @@ class GroupController extends Controller
             ->where('study_time_id', $group->study_time_id)
             ->when(RoleUser::TEACHER_ROL === $roleAuth, function ($query){
                 // para el director de grupo
-                return $query->with('remarks')->where('start', '>=', today()->format('Y-m-d'));
+                return $query->with('remarks');
             }, function ($query) {
                 // si no es director, poder descargar el reporte de notas
                 return $query->where('start_grades', '<=', today()->format('Y-m-d'));
             })
             ->orderBy('ordering')->get();
-            // 'start_grades',
-            // 'end_grades',
+
 
         return view('logro.group.show')->with([
             'Y' => $Y,
@@ -602,7 +601,7 @@ class GroupController extends Controller
     /* Export */
     public function exportStudentListGuide(TeacherSubjectGroup $subject)
     {
-        return Excel::download(new GroupStudentListGuide($subject), __('auxiliary template') .'_'. $subject->subject->resourceSubject->name .'_'. $subject->group->name .'_'. $subject->teacher->getFullName() . '.xlsx');
+        return Excel::download(new GroupStudentListGuide($subject), __('auxiliary template') .'_'. $subject->subject->resourceSubject->name .'_'. $subject->group->name .'_'. $subject?->teacher?->getFullName() . '.xlsx');
     }
     public function exportStudentList(Group $group)
     {

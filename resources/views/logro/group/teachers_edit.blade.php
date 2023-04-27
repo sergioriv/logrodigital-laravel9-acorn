@@ -60,7 +60,7 @@
                                                                 class="logro-select2">
                                                                 <option label="&nbsp;"></option>
                                                                 @foreach ($teachers as $teacher)
-                                                                    <option @if($TSG) @selected($TSG->teacher->id === $teacher->id) @endif
+                                                                    <option @if($TSG) @selected($TSG->teacher?->id === $teacher->id) @endif
                                                                         value="{{ $subject->id . '~' . $teacher->uuid }}">
                                                                         {{ $teacher->getFullName() }}
                                                                     </option>

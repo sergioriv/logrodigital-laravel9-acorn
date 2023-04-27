@@ -259,8 +259,8 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
     /* Qualification */
     Route::post('mysubjects/{subject}/qualify', [GradeController::class, 'store'])->name('subject.qualify.students');
-
-
+    Route::get('group/{group}/student/grades/view', [GradeController::class, 'editGradesStudent']);
+    Route::patch('group/{group}/student/{student}/qualification', [GradeController::class, 'saveGradesForStudent'])->name('group.student.save-qualification');
 
 
     /* Route TeacherSubjectGroups */

@@ -20,7 +20,7 @@
 @endsection
 
 @section('js_page')
-    @if ($periodActive->count())
+    @if ($periodActive->count() && $studyYear->useGrades())
     <script src="/js/pages/pasteGrades.js?d=1669929322185"></script>
     @endif
     <script src="/js/cs/datatable.extend.js?d=1670967386206"></script>
@@ -288,13 +288,15 @@
                                                     <div class="card-body accordion-content pt-0">
 
                                                         @if ($isActive)
-                                                            <div class="mb-3 d-flex justify-content-end">
-                                                                <x-button type="button"
-                                                                    class="btn-outline-primary btn-sm" id="clickPaste"
-                                                                    data-period-id="{{ $period->id }}">
-                                                                    {{ __('Paste values from Excel') }}
-                                                                </x-button>
-                                                            </div>
+                                                            @if ($studyYear->useGrades())
+                                                                <div class="mb-3 d-flex justify-content-end">
+                                                                    <x-button type="button"
+                                                                        class="btn-outline-primary btn-sm" id="clickPaste"
+                                                                        data-period-id="{{ $period->id }}">
+                                                                        {{ __('Paste values from Excel') }}
+                                                                    </x-button>
+                                                                </div>
+                                                            @endif
 
                                                             <form
                                                                 action="{{ route('subject.qualify.students', $subject) }}"
@@ -479,8 +481,7 @@
                                                                                                         logro="dataTableBoxed"
                                                                                                         class="data-table responsive nowrap stripe dataTable no-footer dtr-inline">
                                                                                                         <thead>
-                                                                                                            <th class="empty">
-                                                                                                                &nbsp;</th>
+                                                                                                            <th class="empty">&nbsp;</th>
                                                                                                             <th
                                                                                                                 class="text-muted text-center text-small text-uppercase">
                                                                                                                 {{ __('Content') }}
@@ -507,7 +508,7 @@
                                                                                                                                 logro="studentCheck"
                                                                                                                                 type="checkbox"
                                                                                                                                 name="students[{{ $studentG->code }}][descriptors][]"
-                                                                                                                                id="P{{ $period->id }}-student{{ $studentG->id }}"
+                                                                                                                                id="P{{ $period->id }}-student{{ $studentG->id }}-descriptor{{ $descriptor->id }}"
                                                                                                                                 value="{{ $descriptor->id }}"
                                                                                                                                 @checked($descriptorChecked)>
                                                                                                                         </div>
@@ -515,7 +516,7 @@
                                                                                                                     <td
                                                                                                                         class="text-alternate text-start">
                                                                                                                         <label
-                                                                                                                            for="P{{ $period->id }}-student{{ $studentG->id }}">{{ $descriptor->content }}</label>
+                                                                                                                            for="P{{ $period->id }}-student{{ $studentG->id }}-descriptor{{ $descriptor->id }}">{{ $descriptor->content }}</label>
                                                                                                                     </td>
                                                                                                                 </tr>
                                                                                                             @endforeach

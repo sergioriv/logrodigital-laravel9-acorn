@@ -15,7 +15,7 @@ class TeacherSubjectGroup extends Model
 
     protected $fillable = [
         'school_year_id',
-        'teacher_id',
+        'teacher_id', //null
         'subject_id',
         'group_id'
     ];
