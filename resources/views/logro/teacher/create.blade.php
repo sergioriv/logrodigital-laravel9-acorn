@@ -66,7 +66,7 @@ $title = __('Create Teacher');
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <x-label required>{{ __('date of entry into the institution') }}</x-label>
-                                            <x-input :value="old('date_entry')" name="date_entry" logro="datePickerAll" required />
+                                            <x-input :value="old('date_entry')" name="date_entry" placeholder="yyyy-mm-dd" logro="datePickerAll" required />
                                         </div>
                                     </div>
                                 </div>

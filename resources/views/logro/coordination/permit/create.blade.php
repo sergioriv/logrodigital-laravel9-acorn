@@ -26,11 +26,11 @@
                 <div class="input-daterange input-group row g-3" datePickerRange>
                     <div class="position-relative form-group col-6">
                         <x-label required>{{ __('start date') }}</x-label>
-                        <x-input name="permit_date_start" required />
+                        <x-input name="permit_date_start" placeholder="yyyy-mm-dd" required />
                     </div>
                     <div class="position-relative form-group col-6">
                         <x-label required>{{ __('end date') }}</x-label>
-                        <x-input name="permit_date_end" required />
+                        <x-input name="permit_date_end" placeholder="yyyy-mm-dd" required />
                     </div>
                 </div>
             </div>

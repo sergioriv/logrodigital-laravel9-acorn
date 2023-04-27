@@ -34,8 +34,8 @@ class PermitController extends Controller
         $request->validate([
             'type_permit' => ['required', Rule::exists('type_permits_teachers', 'id')],
             'short_description' => ['required', 'string', 'max:1000'],
-            'permit_date_start' => ['required', 'date'],
-            'permit_date_end' => ['required', 'date'],
+            'permit_date_start' => ['required', 'date', 'date_format:Y-m-d'],
+            'permit_date_end' => ['required', 'date', 'date_format:Y-m-d'],
         ]);
 
         DB::beginTransaction();
@@ -68,8 +68,8 @@ class PermitController extends Controller
         $request->validate([
             'type_permit' => ['required', Rule::exists('type_permits_teachers', 'id')],
             'short_description' => ['required', 'string', 'max:1000'],
-            'permit_date_start' => ['required', 'date'],
-            'permit_date_end' => ['required', 'date'],
+            'permit_date_start' => ['required', 'date', 'date_format:Y-m-d'],
+            'permit_date_end' => ['required', 'date', 'date_format:Y-m-d'],
         ]);
 
         DB::beginTransaction();
@@ -102,8 +102,8 @@ class PermitController extends Controller
         $request->validate([
             'type_permit' => ['required', Rule::exists('type_permits_teachers', 'id')],
             'short_description' => ['required', 'string', 'max:1000'],
-            'permit_date_start' => ['required', 'date'],
-            'permit_date_end' => ['required', 'date'],
+            'permit_date_start' => ['required', 'date', 'date_format:Y-m-d'],
+            'permit_date_end' => ['required', 'date', 'date_format:Y-m-d'],
         ]);
 
         DB::beginTransaction();

@@ -31,7 +31,7 @@ class StudentTrackingController extends Controller
     public function advice_store(Request $request, Student $student)
     {
         $request->validate([
-            'date' => ['required', 'date'],
+            'date' => ['required', 'date', 'date_format:Y-m-d'],
             'time' => ['required']
         ]);
 

@@ -80,7 +80,7 @@ class PersonChargeController extends Controller
             'mother_address' => [$mother_required, 'string', 'max:100'],
             'mother_telephone' => [$mother_required, 'string', 'max:20'],
             'mother_cellphone' => [$mother_required, 'string', 'max:20'],
-            'mother_birthdate' => [$mother_required, 'date'],
+            'mother_birthdate' => [$mother_required, 'date', 'date_format:Y-m-d'],
             'mother_occupation' => [$mother_required, 'string', 'max:191'],
 
             /* FATHER */
@@ -92,7 +92,7 @@ class PersonChargeController extends Controller
             'father_address' => [$father_required, 'string', 'max:100'],
             'father_telephone' => [$father_required, 'string', 'max:20'],
             'father_cellphone' => [$father_required, 'string', 'max:20'],
-            'father_birthdate' => [$father_required, 'date'],
+            'father_birthdate' => [$father_required, 'date', 'date_format:Y-m-d'],
             'father_occupation' => [$father_required, 'string', 'max:191'],
 
             /* FATHER */
@@ -104,7 +104,7 @@ class PersonChargeController extends Controller
             'tutor_address' => [$tutor_required, 'string', 'max:100'],
             'tutor_telephone' => [$tutor_required, 'string', 'max:20'],
             'tutor_cellphone' => [$tutor_required, 'string', 'max:20'],
-            'tutor_birthdate' => [$tutor_required, 'date'],
+            'tutor_birthdate' => [$tutor_required, 'date', 'date_format:Y-m-d'],
             'tutor_occupation' => [$tutor_required, 'string', 'max:191']
 
         ]);

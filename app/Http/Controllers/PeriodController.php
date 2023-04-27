@@ -36,11 +36,11 @@ class PeriodController extends Controller
         $request->validate([
             'period' => ['required', 'array'],
             'period.*.*' => ['required'],
-            'period.*.start' => ['date'],
-            'period.*.end' => ['date'],
+            'period.*.start' => ['date', 'date_format:Y-m-d'],
+            'period.*.end' => ['date', 'date_format:Y-m-d'],
             'period.*.workload' => ['numeric'],
-            'period.*.start_grades' => ['date'],
-            'period.*.end_grades' => ['date'],
+            'period.*.start_grades' => ['date', 'date_format:Y-m-d'],
+            'period.*.end_grades' => ['date', 'date_format:Y-m-d'],
         ]);
 
         return $this->save($request, $studyTime);

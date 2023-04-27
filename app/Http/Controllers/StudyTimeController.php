@@ -137,46 +137,6 @@ class StudyTimeController extends Controller
         ]);
     }
 
-    /* public function edit(StudyTime $studyTime)
-    {
-        return view('logro.studytime.edit')->with('studyTime', $studyTime);
-    } */
-
-    /* public function update(Request $request, StudyTime $studyTime)
-    {
-        $request->validate([
-            'name' => ['required', 'string', Rule::unique('study_times')->ignore($studyTime->id)]
-        ]);
-
-        $studyTime->update([
-            'name' => $request->name
-        ]);
-
-        Notify::success(__('Study time updated!'));
-        return redirect()->route('studyTime.show', $studyTime);
-    } */
-
-    /* public function periods_create(StudyTime $studyTime)
-    {
-        return view('logro.studytime.wizard-periods')->with([
-            'studyTime' => $studyTime,
-        ]);
-    } */
-
-    /* public function periods_store(Request $request, StudyTime $studyTime)
-    {
-
-        $request->validate([
-            'period' => ['required', 'array'],
-            'period.*.*' => ['required'],
-            'period.*.start' => ['date'],
-            'period.*.end' => ['date'],
-            'period.*.workload' => ['numeric'],
-            'period.*.days' => ['numeric']
-        ]);
-        return PeriodController::create($request, $studyTime);
-    } */
-
     /*
      * study times that did not complete the creation process are eliminated.
      */
