@@ -14,7 +14,7 @@ class GenerateStudentCode {
         }
         $k = date('y') . $k;
 
-        if ( Student::where('code', $k)->count() ) {
+        if ( Student::where('code', $k)->count('id') ) {
             GenerateStudentCode::code();
         }
 
