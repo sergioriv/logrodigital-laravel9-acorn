@@ -14,8 +14,8 @@ class GenerateStudentCode {
         }
         $k = date('y') . $k;
 
-        if ( Student::where('code', $k)->first() ) {
-            static::code();
+        if ( Student::where('code', $k)->count() ) {
+            GenerateStudentCode::code();
         }
 
         return $k;

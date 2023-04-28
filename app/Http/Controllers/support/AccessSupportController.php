@@ -6,6 +6,7 @@ use App\Exports\TeachersCountData;
 use App\Exports\TeachersWithNoAttendance;
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceStudent;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -53,8 +54,8 @@ class AccessSupportController extends Controller
                 return self::datosDocentes();
                 break;
 
-            case 'test-attendance':
-                return self::testAttendance();
+            case 'fix-student-code':
+                return self::fixStudentCode();
                 break;
         }
     }
@@ -137,5 +138,25 @@ class AccessSupportController extends Controller
             ->get();
 
         return Excel::download(new TeachersCountData($title, $teachers), $title . '.xlsx');
+    }
+
+    protected function fixStudentCode()
+    {
+        $studentWithoutCode = Student::where('code', 0)->get();
+        $arr = [];
+        if ($studentWithoutCode) {
+
+            foreach ($studentWithoutCode as $student) {
+                $code = GenerateStudentCode::code();
+                $update = $student->update([
+                    'code' => $code
+                ])
+                ? 'actualizado'
+                : 'error';
+                $arr[] = [$student->id, $code, $update];
+            }
+        }
+
+        return $arr;
     }
 }
