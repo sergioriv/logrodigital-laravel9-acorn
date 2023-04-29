@@ -371,8 +371,8 @@ class TeacherController extends Controller
             ])->get();
 
         if ( $studyYear->useGrades() ) {
-            $studentsGroup->map(function($user, $key) use ($studyTime) {
-                return $user->setAttribute('finalGrade', GradeController::calculateGradeWithEvaluationComponents($user->grades, $studyTime));
+            $studentsGroup->map(function($student, $key) use ($studyTime) {
+                return $student->setAttribute('finalGrade', GradeController::calculateGradeWithEvaluationComponents($student->grades, $studyTime));
             });
         }
 
