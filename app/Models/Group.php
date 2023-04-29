@@ -38,7 +38,7 @@ class Group extends Model
 
     public function studyTime()
     {
-        return $this->belongsTo(StudyTime::class)->select('id', 'name');
+        return $this->belongsTo(StudyTime::class);
     }
 
     public function studyTimeSelectAll()

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\GroupStudentList;
+use App\Exports\GroupStudentListGradesInstructive;
 use App\Exports\GroupStudentListGuide;
 use App\Exports\StudentsWithFiles;
 use App\Http\Controllers\Mail\SmtpMail;
@@ -38,7 +39,7 @@ class GroupController extends Controller
         $this->middleware('can:groups.students.matriculate')->only('matriculate', 'matriculate_update');
         $this->middleware('can:groups.teachers.edit')->only('teacher_edit', 'teacher_update');
 
-        $this->middleware(YearCurrentMiddleware::class)->except('index', 'filter', 'show', 'exportStudentList');
+        $this->middleware(YearCurrentMiddleware::class)->except('index', 'filter', 'show', 'exportStudentList', 'exportGradesInstructive');
     }
 
     public function index()
@@ -606,6 +607,11 @@ class GroupController extends Controller
     public function exportStudentList(Group $group)
     {
         return Excel::download(new GroupStudentList($group), __('student list :GROUP', ['GROUP' => $group->name]) . '.xlsx');
+    }
+
+    public function exportGradesInstructive(TeacherSubjectGroup $subject)
+    {
+        return Excel::download(new GroupStudentListGradesInstructive($subject->group), 'plantilla_de_notas_' . $subject->group->name . '.xlsx');
     }
 
     public function exportStudentsWithFiles(Group $group)

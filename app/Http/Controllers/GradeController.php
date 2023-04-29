@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\OnlyTeachersMiddleware;
+use App\Imports\GroupGradesImport;
 use App\Models\Data\RoleUser;
 use App\Models\Grade;
 use App\Models\Group;
@@ -24,6 +25,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GradeController extends Controller
 {
@@ -91,17 +94,17 @@ class GradeController extends Controller
 
             if ($studyYear->useGrades()) {
                 if ($studyYear->useComponents()) {
-                    $gradeConceptual = round($grades['conceptual'], $studyTime->decimal, $round);
-                    $gradeProcedural = round($grades['procedural'], $studyTime->decimal, $round);
-                    $gradeAttitudinal = round($grades['attitudinal'], $studyTime->decimal, $round);
+                    $gradeConceptual = GradeController::validateGradeWithStudyTime($studyTime, $grades['conceptual']);
+                    $gradeProcedural = GradeController::validateGradeWithStudyTime($studyTime, $grades['procedural']);
+                    $gradeAttitudinal = GradeController::validateGradeWithStudyTime($studyTime, $grades['attitudinal']);
 
                     $gradeFinal = (($gradeConceptual * $studyTime->conceptual) / 100)
                         + (($gradeProcedural * $studyTime->procedural) / 100)
                         + (($gradeAttitudinal * $studyTime->attitudinal) / 100);
 
-                    $gradeFinal = round($gradeFinal, $studyTime->decimal, $round);
+                    $gradeFinal = GradeController::validateGradeWithStudyTime($studyTime, $gradeFinal);
                 } else {
-                    $gradeFinal = round($grades['final'], $studyTime->decimal, $round);
+                    $gradeFinal = GradeController::validateGradeWithStudyTime($studyTime, $grades['final']);
                 }
             }
 
@@ -166,24 +169,14 @@ class GradeController extends Controller
         return redirect()->route('teacher.my.subjects.show', $subject);
     }
 
-    /* Notas por periodo y estudiante */
-    public static function forPeriod($subject, $period, $student)
+    /*
+     * Nota general por estudiante
+     * @param $grades array
+     * @param $ST StudyTime
+    */
+    public static function calculateGradeWithEvaluationComponents($grades, $ST)
     {
-        return Grade::where('teacher_subject_group_id', $subject)
-            ->where('period_id', $period)
-            ->where('student_id', $student)
-            ->first();
-    }
-
-    /* Nota general por estudiante */
-    public static function forStudent($student, $subject)
-    {
-        $grades = Grade::select('period_id', 'final')->where('teacher_subject_group_id', $subject->id)
-            ->where('student_id', $student)->get();
-
-        if (count($grades)) {
-
-            $studyTime = $subject->group->studyTimeSelectAll;
+        if (count($grades) || ! is_null($grades) ) {
 
             $def = 0;
             foreach ($grades as $g) {
@@ -192,13 +185,13 @@ class GradeController extends Controller
             }
 
             /* Verifica decimales y PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
-            $def = number_format(round($def, $studyTime->decimal, static::round($studyTime->round)), $studyTime->decimal);
+            $def = number_format(round($def, $ST->decimal, $ST->round ? PHP_ROUND_HALF_UP : PHP_ROUND_HALF_DOWN), $ST->decimal);
 
         } else {
             $def = null;
         }
 
-        return $def;
+        return ['definitive' => (float)$def, 'performance' => static::performanceHtml($ST, $def)];
     }
 
     private static function round($r)
@@ -206,15 +199,16 @@ class GradeController extends Controller
         return $r ? PHP_ROUND_HALF_UP : PHP_ROUND_HALF_DOWN;
     }
 
-    public static function performance($studyTime, $value)
+    private static function performanceHtml($studyTime, $value)
     {
-        if ( ! is_null($value) )
-
-            return $value > $studyTime->high_performance ? __('superior')
-            : ($value > $studyTime->basic_performance ? __('high')
-            : ($value > $studyTime->low_performance ? __('basic')
-            : '<span class="alert alert-danger px-2 py-1">' . __('low') . '</span>'));
-
+        if ( ! is_null($value) ) {
+            return match(true) {
+                $value > $studyTime->high_performance => __('superior'),
+                $value > $studyTime->basic_performance => __('hight'),
+                $value > $studyTime->low_performance => __('basic'),
+                default => '<span class="alert alert-danger px-2 py-1">' . __('low') . '</span>',
+            };
+        }
 
         return null;
     }
@@ -223,8 +217,6 @@ class GradeController extends Controller
         return $value > $studyTime->high_performance ? __('superior') : ($value > $studyTime->basic_performance ? __('high') : ($value > $studyTime->low_performance ? __('basic') :
                     __('low')));
     }
-
-
 
 
     /*
@@ -349,6 +341,19 @@ class GradeController extends Controller
         ]);
     }
 
+    public function importGroupGradesForPeriod(Request $request, TeacherSubjectGroup $subject, Period $period)
+    {
+        $request->validate([
+            'grades_file' => ['required', 'file', 'max:5000', 'mimes:xls,xlsx']
+        ]);
+
+        $studyTime = $subject->group->studyTime;
+
+        Excel::import(new GroupGradesImport($subject, $studyTime, $period->id), $request->file('grades_file'));
+
+        Notify::success(__('Loaded Excel!'));
+        return back();
+    }
 
     /*
      *
@@ -404,7 +409,6 @@ class GradeController extends Controller
                 return $query->where('ordering', '<=', $currentPeriod->ordering);
             })
             ->orderBy('ordering')->get();
-
 
 
         $groupStudents = GroupStudent::where('group_id', $group->id)
@@ -607,5 +611,18 @@ class GradeController extends Controller
         }
 
         return $studyTime->minimum_grade;
+    }
+
+    public static function validateGradeWithStudyTime(StudyTime $studyTime, float | null $grade)
+    {
+        if (is_null($grade)) return null;
+
+        $min = $studyTime->minimum_grade;
+        $max = $studyTime->maximum_grade;
+
+        if ($grade < $min) throw ValidationException::withMessages(['data' => 'La nota no puede ser inferior a ' . $min]);
+        if ($grade > $max) throw ValidationException::withMessages(['data' => 'La nota no puede ser superior a ' . $max]);
+
+        return GradeController::numberFormat($studyTime, $grade);
     }
 }

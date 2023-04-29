@@ -261,7 +261,8 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('mysubjects/{subject}/qualify', [GradeController::class, 'store'])->name('subject.qualify.students');
     Route::get('group/{group}/student/grades/view', [GradeController::class, 'editGradesStudent']);
     Route::patch('group/{group}/student/{student}/qualification', [GradeController::class, 'saveGradesForStudent'])->name('group.student.save-qualification');
-
+    Route::get('group/export-grades/{subject}', [GroupController::class, 'exportGradesInstructive'])->name('group.export.grades-instructive');
+    Route::patch('group/import-grades/{subject}/period/{period}', [GradeController::class, 'importGroupGradesForPeriod'])->name('group.import.subject-grades');
 
     /* Route TeacherSubjectGroups */
     Route::resource('teachers/{teacher}/subjects', TeacherSubjectGroupController::class)->names('teacher.subjects');

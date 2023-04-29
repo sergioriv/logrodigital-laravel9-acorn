@@ -222,13 +222,14 @@
                                                                 @if ($studyYear->useGrades())
                                                                 <!-- Definitive Grade -->
                                                                 <td class="text-center">
-                                                                    @php $defStudent = \App\Http\Controllers\GradeController::forStudent($studentG->id, $subject) @endphp
-                                                                    {{ $defStudent }}
+                                                                    {{ $studentG?->finalGrade['definitive'] ?: null }}
                                                                 </td>
 
                                                                 <!-- Performance Definitive Grade -->
                                                                 <td class="text-center text-capitalize">
-                                                                    {!! \App\Http\Controllers\GradeController::performance($subject->group->studyTimeSelectAll, $defStudent) !!}
+                                                                    @if ($studentG?->finalGrade['definitive'])
+                                                                    {!! $studentG?->finalGrade['performance'] !!}
+                                                                    @endif
                                                                 </td>
                                                                 @endif
                                                             </tr>
@@ -295,6 +296,94 @@
                                                                         data-period-id="{{ $period->id }}">
                                                                         {{ __('Paste values from Excel') }}
                                                                     </x-button>
+                                                                    <!-- Dropdown Button Start -->
+                                                                    <div class="ms-1">
+                                                                        <button type="button"
+                                                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                            data-bs-offset="0,3"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-haspopup="true"
+                                                                            aria-expanded="false" data-submenu>
+                                                                            <i
+                                                                                data-acorn-icon="more-vertical"></i>
+                                                                        </button>
+                                                                        <div
+                                                                            class="dropdown-menu dropdown-menu-end">
+                                                                            <a
+                                                                                class="dropdown-item btn-icon btn-icon-start"
+                                                                                href="{{ route('group.export.grades-instructive', $subject) }}"
+                                                                            >
+                                                                                <i data-acorn-icon="download"></i>
+                                                                                <span class="ms-1">Descargar plantilla</span>
+                                                                            </a>
+                                                                            <x-dropdown-item type="button"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#importGrades-P{{ $period->id }}"
+                                                                            >
+                                                                                <i data-acorn-icon="upload"></i>
+                                                                                <span class="ms-1">Cargar plantilla con notas</span>
+                                                                            </x-dropdown-item>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- Dropdown Button End -->
+
+                                                                    <!-- Modal Edit Attendance -->
+                                                                    <div class="modal fade modal-close-out" id="importGrades-P{{ $period->id }}" aria-labelledby="importGrades-P{{ $period->id }}Label" data-bs-backdrop="static"
+                                                                        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h5 class="modal-title" id="importGrades-P{{ $period->id }}Label">
+                                                                                        {{ $period->name }} | Cargar plantilla con notas
+                                                                                    </h5>
+                                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <div class="card-body border-danger">
+                                                                                        <div class="row g-3">
+                                                                                            <div class="h3 text-danger text-center">Importante!</div>
+                                                                                            <div>Las columnas requeridas son (<strong>codigo</strong>, <strong>nota</strong>)</div>
+                                                                                            <div class="alert alert-light ps-0">
+                                                                                                <ul class="mb-0">
+                                                                                                    <li>
+                                                                                                        <article class="font-weight-bold mb-2">
+                                                                                                            Dentro del instructivo, encontrarán códigos únicos asignados a cada estudiante; estos códigos no deben ser reemplazados ni modificados para una correcta carga de notas.
+                                                                                                        </article>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <article class="font-weight-bold">
+                                                                                                            En caso de tener notas con decimales, se recomienda utilizar comas (<span class="icon-24" style="line-height: 0.1;">,</span>).
+                                                                                                        </article>
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                            </div>
+                                                                                            <div class="text-center">
+                                                                                                <a
+                                                                                                    class="btn btn-background hover-outline"
+                                                                                                    href="{{ route('group.export.grades-instructive', $subject) }}">Descargar plantilla</a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <form method="POST" action="{{ route('group.import.subject-grades', [$subject, $period]) }}"
+                                                                                        enctype="multipart/form-data"
+                                                                                    >
+                                                                                        @csrf
+                                                                                        @method('PATCH')
+
+                                                                                        <div class="d-flex align-items-end content-container gap-2">
+                                                                                                <x-input type="file" class="d-block" name="grades_file" />
+                                                                                                <x-button type="submit"
+                                                                                                    class="btn-primary">
+                                                                                                    Cargar plantilla con notas
+                                                                                                </x-button>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             @endif
 
@@ -331,7 +420,11 @@
                                                                 @php $gradeNumber = 1; @endphp
                                                                 @foreach ($studentsGroup as $studentG)
                                                                     @php
-                                                                        $GxPS = \App\Http\Controllers\GradeController::forPeriod($subject->id, $period->id, $studentG->id);
+                                                                        if ($studyYear->useGrades()) {
+                                                                            $studentGradeXPeriod = $studentG->grades->filter(function ($Sgrade) use ($period) {
+                                                                                return $Sgrade->period->id == $period->id;
+                                                                            })->first();
+                                                                        }
                                                                     @endphp
                                                                     <tr>
                                                                         <!-- Student Names -->
@@ -344,7 +437,6 @@
                                                                         </td>
 
                                                                         @if ($studyYear->useGrades())
-
                                                                             @if ($studyYear->useComponents())
                                                                             <!-- Conceptual grade -->
                                                                             <td scope="row" class="col-1">
@@ -355,10 +447,10 @@
                                                                                         max="{{ $period->studyTime->maximum_grade }}"
                                                                                         step="{{ $period->studyTime->step }}"
                                                                                         name="students[{{ $studentG->code }}][conceptual]"
-                                                                                        value="{{ $GxPS->conceptual ?? null }}" />
+                                                                                        value="{{ $studentGradeXPeriod->conceptual ?? null }}" />
                                                                                 @else
                                                                                     <div class="form-control bg-light">
-                                                                                        {{ $GxPS->conceptual ?? null }}</div>
+                                                                                        {{ $studentGradeXPeriod->conceptual ?? null }}</div>
                                                                                 @endif
                                                                             </td>
 
@@ -371,10 +463,10 @@
                                                                                         max="{{ $period->studyTime->maximum_grade }}"
                                                                                         step="{{ $period->studyTime->step }}"
                                                                                         name="students[{{ $studentG->code }}][procedural]"
-                                                                                        value="{{ $GxPS->procedural ?? null }}" />
+                                                                                        value="{{ $studentGradeXPeriod->procedural ?? null }}" />
                                                                                 @else
                                                                                     <div class="form-control bg-light">
-                                                                                        {{ $GxPS->procedural ?? null }}</div>
+                                                                                        {{ $studentGradeXPeriod->procedural ?? null }}</div>
                                                                                 @endif
                                                                             </td>
 
@@ -387,10 +479,10 @@
                                                                                         max="{{ $period->studyTime->maximum_grade }}"
                                                                                         step="{{ $period->studyTime->step }}"
                                                                                         name="students[{{ $studentG->code }}][attitudinal]"
-                                                                                        value="{{ $GxPS->attitudinal ?? null }}" />
+                                                                                        value="{{ $studentGradeXPeriod->attitudinal ?? null }}" />
                                                                                 @else
                                                                                     <div class="form-control bg-light">
-                                                                                        {{ $GxPS->attitudinal ?? null }}</div>
+                                                                                        {{ $studentGradeXPeriod->attitudinal ?? null }}</div>
                                                                                 @endif
                                                                             </td>
                                                                             @endif
@@ -404,10 +496,10 @@
                                                                                     max="{{ $period->studyTime->maximum_grade }}"
                                                                                     step="{{ $period->studyTime->step }}"
                                                                                     name="students[{{ $studentG->code }}][final]"
-                                                                                    value="{{ $GxPS->final ?? null }}" />
+                                                                                    value="{{ $studentGradeXPeriod->final ?? null }}" />
                                                                             @else
                                                                                 <div class="form-control bg-light">
-                                                                                    {{ $GxPS->final ?? null }}</div>
+                                                                                    {{ $studentGradeXPeriod->final ?? null }}</div>
                                                                             @endif
                                                                         </td>
                                                                         @endif
@@ -454,7 +546,7 @@
                                                                                     <!-- Dropdown Button End -->
 
                                                                                     <!-- Modal Period Remark Start -->
-                                                                                    <div class="modal fade"
+                                                                                    <div class="modal fade modal-close-out"
                                                                                         id="modalDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
                                                                                         aria-labelledby="modalTitleDescriptors-P{{ $period->id }}-STUDENT{{ $studentG->id }}"
                                                                                         data-bs-backdrop="static"

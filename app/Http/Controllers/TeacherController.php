@@ -20,6 +20,7 @@ use App\Models\SchoolYear;
 use App\Models\Student;
 use App\Models\AcademicWorkload;
 use App\Models\Descriptor;
+use App\Models\Grade;
 use App\Models\Group;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
@@ -341,7 +342,6 @@ class TeacherController extends Controller
 
     public function mysubjects_show(TeacherSubjectGroup $subject)
     {
-
         /*
          * Para que el Rol TEACHER solo pueda acceder a sus asignaturas de el año actual
          *  */
@@ -351,18 +351,30 @@ class TeacherController extends Controller
 
         $Y = SchoolYearController::current_year();
         $studyYear = $subject->group->studyYear;
+        $studyTime = $subject->group->studyTime;
 
-        $studentsGroup = Student::singleData()->whereHas('groupYear', fn ($gr) => $gr->where('group_id', $subject->group_id))
-            ->withCount([
+        $studentsGroup = Student::singleData()
+            ->whereHas(
+                'groupYear', fn ($gr) => $gr->where('group_id', $subject->group_id)
+            )->when($studyYear->useGrades(), function ($query) use ($subject) {
+                $query->with([
+                    'grades' => fn($grades) => $grades->where('teacher_subject_group_id', $subject->id)->with('period:id,workload')
+                ]);
+            })->withCount([
                 'attendanceStudent' =>
                 fn ($attS) => $attS->whereIn('attend', ['N', 'J', 'L'])
                     ->whereHas(
-                        'attendance',
-                        fn ($att) => $att->where('teacher_subject_group_id', $subject->id)
+                        'attendance', fn ($att) => $att->where('teacher_subject_group_id', $subject->id)
                     )
-            ])
-            ->with(['studentDescriptors' => fn ($des) => $des->where('teacher_subject_group_id', $subject->id)->with('descriptor')])
-            ->get();
+            ])->with([
+                'studentDescriptors' => fn ($des) => $des->where('teacher_subject_group_id', $subject->id)->with('descriptor')
+            ])->get();
+
+        if ( $studyYear->useGrades() ) {
+            $studentsGroup->map(function($user, $key) use ($studyTime) {
+                return $user->setAttribute('finalGrade', GradeController::calculateGradeWithEvaluationComponents($user->grades, $studyTime));
+            });
+        }
 
 
         $periods = Period::where('school_year_id', $Y->id)
