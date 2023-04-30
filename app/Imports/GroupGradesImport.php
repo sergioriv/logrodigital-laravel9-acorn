@@ -63,15 +63,17 @@ class GroupGradesImport implements ToCollection, WithHeadingRow
                 /* validate max and min */
                 $gradeformating = GradeController::validateGradeWithStudyTime($this->ST, $grade);
 
-                Grade::updateOrCreate([
-                        'teacher_subject_group_id' => $this->tsg->id,
-                        'period_id' => $this->periodId,
-                        'student_id' => $student->id
-                    ],
-                    [
-                        'final' => $gradeformating
-                    ]
-                );
+                if ( ! is_null($gradeformating) ) {
+                    Grade::updateOrCreate([
+                            'teacher_subject_group_id' => $this->tsg->id,
+                            'period_id' => $this->periodId,
+                            'student_id' => $student->id
+                        ],
+                        [
+                            'final' => $gradeformating
+                        ]
+                    );
+                }
             }
         }
     }

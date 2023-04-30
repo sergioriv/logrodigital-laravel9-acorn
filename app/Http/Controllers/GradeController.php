@@ -613,9 +613,10 @@ class GradeController extends Controller
         return $studyTime->minimum_grade;
     }
 
-    public static function validateGradeWithStudyTime(StudyTime $studyTime, float | null $grade)
+    public static function validateGradeWithStudyTime(StudyTime $studyTime, $grade)
     {
         if (is_null($grade)) return null;
+        if (!is_numeric($grade)) return null;
 
         $min = $studyTime->minimum_grade;
         $max = $studyTime->maximum_grade;
