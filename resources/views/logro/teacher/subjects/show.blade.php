@@ -136,12 +136,15 @@
                                         <i data-acorn-icon="more-horizontal"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item btn-icon btn-icon-start"
-                                            href="{{ route('group.export.student-list', $subject->group) }}">
-                                            <i data-acorn-icon="download"></i>
-                                            <span>{{ __('Download student list') }}</span>
-                                        </a>
-                                        <div class="dropdown-divider"></div>
+                                        @if ($studyYear->useGrades())
+                                            <a class="dropdown-item btn-icon btn-icon-start"
+                                                href="{{ route('group.export.grades-instructive', $subject) }}"
+                                            >
+                                                <i data-acorn-icon="download"></i>
+                                                <span>Descargar plantilla de notas</span>
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                        @endif
                                         <a class="dropdown-item"
                                             href="{{ route('teacher.subject.descriptors', [$subject->subject->resourceSubject->id, $studyYear->id]) }}">
                                             <span>{{ __('Descriptors') }}</span>
@@ -337,7 +340,7 @@
                                                                                 href="{{ route('group.export.grades-instructive', $subject) }}"
                                                                             >
                                                                                 <i data-acorn-icon="download"></i>
-                                                                                <span class="ms-1">Descargar plantilla</span>
+                                                                                <span class="ms-1">Descargar plantilla de notas</span>
                                                                             </a>
                                                                             <x-dropdown-item type="button"
                                                                                 data-bs-toggle="modal"
