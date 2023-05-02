@@ -198,18 +198,18 @@
                                                                 {{ __('absences') }}</th>
 
                                                             @if ($studyYear->useGrades())
-                                                            @foreach ($periods as $period)
-                                                                <th
+                                                                @foreach ($periods as $period)
+                                                                    <th
+                                                                        class="text-center text-muted text-small text-uppercase p-0 pb-2">
+                                                                        {{ 'P' . $period->ordering }}
+                                                                    </th>
+                                                                @endforeach
+                                                                {{-- <th
                                                                     class="text-center text-muted text-small text-uppercase p-0 pb-2">
-                                                                    {{ 'P' . $period->ordering }}
-                                                                </th>
-                                                            @endforeach
-                                                            <th
-                                                                class="text-center text-muted text-small text-uppercase p-0 pb-2">
-                                                                {{ __('Definitive') }}</th>
-                                                            <th
-                                                                class="text-center text-muted text-small text-uppercase p-0 pb-2">
-                                                                {{ __('Performance') }}</th>
+                                                                    {{ __('Definitive') }}</th> --}}
+                                                                {{-- <th
+                                                                    class="text-center text-muted text-small text-uppercase p-0 pb-2">
+                                                                    {{ __('Performance') }}</th> --}}
                                                             @endif
                                                         </tr>
                                                     </thead>
@@ -232,28 +232,28 @@
 
                                                                 @if ($studyYear->useGrades())
 
-                                                                <!-- Grade periods -->
-                                                                @foreach ($periods as $period)
-                                                                @php
-                                                                    $studentGradePeriod = $studentG->grades->filter(function ($Sgrade) use ($period) {
-                                                                        return $Sgrade->period->id == $period->id;
-                                                                    })->first();
-                                                                @endphp
-                                                                    <td class="text-center text-small">
-                                                                        {{ $studentGradePeriod->final ?? null }}
-                                                                    </td>
-                                                                @endforeach
-                                                                <!-- Definitive Grade -->
-                                                                <td class="text-center text-small">
-                                                                    {{ $studentG?->finalGrade['definitive'] ?: null }}
-                                                                </td>
+                                                                    <!-- Grade periods -->
+                                                                    @foreach ($periods as $period)
+                                                                    @php
+                                                                        $studentGradePeriod = $studentG->grades->filter(function ($Sgrade) use ($period) {
+                                                                            return $Sgrade->period->id == $period->id;
+                                                                        })->first();
+                                                                    @endphp
+                                                                        <td class="text-center text-small">
+                                                                            {{ $studentGradePeriod->final ?? null }}
+                                                                        </td>
+                                                                    @endforeach
+                                                                    <!-- Definitive Grade -->
+                                                                    {{-- <td class="text-center text-small">
+                                                                        {{ $studentG?->finalGrade['definitive'] ?: null }}
+                                                                    </td> --}}
 
-                                                                <!-- Performance Definitive Grade -->
-                                                                <td class="text-center text-small text-capitalize">
-                                                                    @if ($studentG?->finalGrade['definitive'])
-                                                                    {!! $studentG?->finalGrade['performance'] !!}
-                                                                    @endif
-                                                                </td>
+                                                                    <!-- Performance Definitive Grade -->
+                                                                    {{-- <td class="text-center text-small text-capitalize">
+                                                                        @if ($studentG?->finalGrade['definitive'])
+                                                                        {!! $studentG?->finalGrade['performance'] !!}
+                                                                        @endif
+                                                                    </td> --}}
                                                                 @endif
                                                             </tr>
                                                         @endforeach

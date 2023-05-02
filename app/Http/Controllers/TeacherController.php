@@ -351,16 +351,12 @@ class TeacherController extends Controller
 
         $Y = SchoolYearController::current_year();
         $studyYear = $subject->group->studyYear;
-        $studyTime = $subject->group->studyTime;
+        // $studyTime = $subject->group->studyTime;
 
         $studentsGroup = Student::singleData()
             ->whereHas(
                 'groupYear', fn ($gr) => $gr->where('group_id', $subject->group_id)
-            )->when($studyYear->useGrades(), function ($query) use ($subject) {
-                $query->with([
-                    'grades' => fn($grades) => $grades->where('teacher_subject_group_id', $subject->id)->with('period:id,workload')
-                ]);
-            })->withCount([
+            )->withCount([
                 'attendanceStudent' =>
                 fn ($attS) => $attS->whereIn('attend', ['N', 'J', 'L'])
                     ->whereHas(
@@ -370,11 +366,16 @@ class TeacherController extends Controller
                 'studentDescriptors' => fn ($des) => $des->where('teacher_subject_group_id', $subject->id)->with('descriptor')
             ])->get();
 
-        if ( $studyYear->useGrades() ) {
-            $studentsGroup->map(function($student, $key) use ($studyTime) {
-                return $student->setAttribute('finalGrade', GradeController::calculateGradeWithEvaluationComponents($student->grades, $studyTime));
-            });
-        }
+        // if ( $studyYear->useGrades() ) {
+        //     ->when($studyYear->useGrades(), function ($query) use ($subject) {
+        //         $query->with([
+        //             'grades' => fn($grades) => $grades->where('teacher_subject_group_id', $subject->id)->with('period:id,workload')
+        //         ]);
+        //     })
+        //     $studentsGroup->map(function($student, $key) use ($studyTime) {
+        //         return $student->setAttribute('finalGrade', GradeController::calculateGradeWithEvaluationComponents($student->grades, $studyTime));
+        //     });
+        // }
 
 
         $periods = Period::where('school_year_id', $Y->id)

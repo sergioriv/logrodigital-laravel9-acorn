@@ -38,7 +38,7 @@ $title = __('Import descriptors');
                             <div>Las columnas requeridas son: (<strong>period</strong>, <strong>inclusive</strong>, <strong>content</strong>)</div>
                             <div class="alert alert-light ps-0">
                                 <ul>
-                                    <li>La columna <strong>period</strong> debe contener un número entre 1 y 6 que indicarán el número del periodo.</li>
+                                    <li>La columna <strong>period</strong> debe contener un número entre 1 y 6 que hace referencia al número del periodo.</li>
                                     <li>La columna <strong>inclusive</strong> recibe "si" o "1" para el caso de ser un descriptor de inclusion.</li>
                                 </ul>
                             </div>
