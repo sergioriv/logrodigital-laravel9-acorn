@@ -130,7 +130,7 @@
                                             <i data-acorn-icon="download"></i>
                                             <span>{{ __('Information general from student list') }}</span>
                                         </a>
-                                        @hasrole('SUPPORT')
+                                        @hasanyrole('SUPPORT|COORDINATOR|SECRETARY')
                                             @if (!$group->specialty && !$periods->isEmpty())
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
@@ -140,7 +140,7 @@
                                                     <span>{{ __('Grade report') }}</span>
                                                 </a>
                                             @endif
-                                        @endhasrole
+                                        @endhasanyrole
                                         @hasanyrole('SUPPORT') {{-- |COORDINATOR --}}
                                         <div class="dropdown-divider"></div>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#openModelSendMailTutors"
@@ -740,7 +740,7 @@
 
     @endcan
 
-    @hasrole('SUPPORT')
+    @hasanyrole('SUPPORT|COORDINATOR|SECRETARY')
         @if (!$group->specialty && !$periods->isEmpty())
 
             <!-- Modal Grades Report Start -->
@@ -789,7 +789,7 @@
             <!-- Modal Grades Report End -->
 
         @endif
-    @endhasrole
+    @endhasanyrole
 
     @hasrole('SUPPORT|COORDINATOR')
 
