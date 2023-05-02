@@ -141,6 +141,11 @@
                                             <i data-acorn-icon="download"></i>
                                             <span>{{ __('Download student list') }}</span>
                                         </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item"
+                                            href="{{ route('teacher.subject.descriptors', [$subject->subject->resourceSubject->id, $studyYear->id]) }}">
+                                            <span>{{ __('Descriptors') }}</span>
+                                        </a>
                                     </div>
                                 </div>
                                 <!-- Dropdown Button End -->
@@ -553,7 +558,7 @@
                                                                                         data-bs-keyboard="false"
                                                                                         tabindex="-1" aria-hidden="true">
                                                                                         <div
-                                                                                            class="modal-dialog modal-dialog-centered">
+                                                                                            class="modal-dialog modal-dialog-centered modal-lg">
                                                                                             <div class="modal-content">
                                                                                                 <div
                                                                                                     class="modal-header text-start">
@@ -570,15 +575,9 @@
                                                                                                 </div>
                                                                                                 <div class="modal-body">
                                                                                                     <table
-                                                                                                        logro="dataTableBoxed"
-                                                                                                        class="data-table responsive nowrap stripe dataTable no-footer dtr-inline">
-                                                                                                        <thead>
-                                                                                                            <th class="empty">&nbsp;</th>
-                                                                                                            <th
-                                                                                                                class="text-muted text-center text-small text-uppercase">
-                                                                                                                {{ __('Content') }}
-                                                                                                            </th>
-                                                                                                        </thead>
+                                                                                                        {{-- logro="dataTableBoxed" --}}
+                                                                                                        {{-- class="data-table responsive stripe dataTable no-footer dtr-inline" --}}
+                                                                                                        class="table table-striped mb-0">
                                                                                                         <tbody>
                                                                                                             @foreach ($descriptorsFor as $descriptor)
                                                                                                                 @php

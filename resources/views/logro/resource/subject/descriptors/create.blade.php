@@ -24,13 +24,18 @@
                 <!-- Title Start -->
                 <section class="scroll-section" id="title">
                     <div class="page-title-container">
-                        <h1 class="mb-1 pb-0 display-4">{{ $title .' | '. $subject->name }}</h1>
+                        <h1 class="mb-1 pb-0 display-4">{{ $title .' | '. $subject->public_name }}</h1>
                     </div>
                 </section>
                 <!-- Title End -->
 
                 <section class="scroll-section">
-                    <form method="POST" action="{{ route('subject.descriptors.store', $subject) }}" class="tooltip-end-bottom">
+
+                    <form method="POST" action="{{
+                        $studyYears instanceof \App\Models\StudyYear
+                        ? route('teacher.subject.descriptors.store', [$subject, $studyYears->id])
+                        : route('subject.descriptors.store', $subject)
+                        }}" class="tooltip-end-bottom">
                         @csrf
 
                         <div class="card mb-3">
@@ -38,22 +43,24 @@
 
                                 <div>
 
-                                    <!-- Study Year -->
-                                    <div class="row mb-3 align-items-start form-group">
-                                        <label
-                                            class="col-sm-5 col-md-4 col-lg-3 col-form-label"
-                                        >{{ __('Study Year') }} <x-required /></label>
-                                        <div
-                                            class="col-sm-7 col-md-8 col-lg-9 position-relative">
-                                            <select logro="select2" name="study_year" class="w-100" required>
-                                                <option label="&nbsp;"></option>
-                                                @foreach ($studyYears as $sy)
-                                                    <option value="{{ $sy->uuid }}"
-                                                        @selected(old('study_year') == $sy->uuid)>{{ __($sy->name) }}</option>
-                                                @endforeach
-                                            </select>
+                                    @unless ($studyYears instanceof \App\Models\StudyYear)
+                                        <!-- Study Year -->
+                                        <div class="row mb-3 align-items-start form-group">
+                                            <label
+                                                class="col-sm-5 col-md-4 col-lg-3 col-form-label"
+                                            >{{ __('Study Year') }} <x-required /></label>
+                                            <div
+                                                class="col-sm-7 col-md-8 col-lg-9 position-relative">
+                                                <select logro="select2" name="study_year" class="w-100" required>
+                                                    <option label="&nbsp;"></option>
+                                                    @foreach ($studyYears as $sy)
+                                                        <option value="{{ $sy->uuid }}"
+                                                            @selected(old('study_year') == $sy->uuid)>{{ __($sy->name) }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endunless
 
                                     <!-- Period -->
                                     <div class="row mb-3 align-items-start form-group">

@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof ErrorException) {
 
-            \Illuminate\Support\Facades\Log::alert(
+            \Illuminate\Support\Facades\Log::warning(
                 'ERROR AL INTENTAR ACCEDER: (' .
                 auth()->id() .':' .
                 json_encode(auth()->user()->getRoleNames()->toArray()) . ') ' .

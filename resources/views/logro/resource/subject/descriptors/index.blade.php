@@ -1,5 +1,5 @@
 @php
-    $title = __('Descriptors') .' | '. $subject->name;
+    $title = __('Descriptors') .' | '. $subject->public_name;
 @endphp
 @extends('layout', ['title' => $title])
 
@@ -34,13 +34,14 @@
                         <!-- Top Buttons Start -->
                         <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
                             <!-- Add New Button Start -->
-                            <a href="{{ route('subject.descriptors.create', $subject) }}"
+                            <a href="{{ route($studyYear ? 'teacher.subject.descriptors.create' : 'subject.descriptors.create', [$subject, $studyYear]) }}"
                                 class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
                                 <i data-acorn-icon="plus"></i>
                                 <span>{{ __('Add New') }}</span>
                             </a>
                             <!-- Add New Button End -->
 
+                            @unless ($studyYear)
                             <!-- Dropdown Button Start -->
                             <div class="ms-1">
                                 <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only"
@@ -56,6 +57,7 @@
                                 </div>
                             </div>
                             <!-- Dropdown Button End -->
+                            @endunless
                         </div>
                         <!-- Top Buttons End -->
                     </div>
@@ -89,7 +91,9 @@
                         <table id="datatable_descriptors" class="data-table" logro="datatable">
                             <thead>
                                 <tr>
+                                    @unless ($studyYear)
                                     <th class="text-muted text-small text-uppercase">{{ __('Study Year') }}</th>
+                                    @endunless
                                     <th class="text-muted text-small text-uppercase text-center">{{ __('Period') }}</th>
                                     <th class="text-muted text-small text-uppercase text-center">{{ __('inclusive') }}</th>
                                     <th class="text-muted text-small text-uppercase">{{ __('Content') }}</th>
@@ -99,7 +103,9 @@
                             <tbody>
                                 @foreach ($descriptors as $descriptor)
                                     <tr>
+                                        @unless ($studyYear)
                                         <td>{{ __($descriptor->resourceStudyYear->name) }}</td>
+                                        @endunless
                                         <td align="center">{{ $descriptor->period }}</td>
                                         <td align="center">{!! $descriptor->isInclusiveHtml() !!}</td>
                                         <td>{{ $descriptor->content }}</td>

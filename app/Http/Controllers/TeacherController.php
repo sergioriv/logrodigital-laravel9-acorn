@@ -398,11 +398,15 @@ class TeacherController extends Controller
                 ->where(function ($query) {
                     $query->whereNull('inclusive')->orWhere('inclusive', '0');
                 })
+                ->orderBy('content')
+                ->orderBy('created_at')
                 ->get();
 
             $descriptorsInclusive = Descriptor::where('resource_subject_id', $subject->subject->resource_subject_id)
                 ->where('resource_study_year_id', $studyYear->resource_study_year_id)
                 ->where('inclusive', 1)
+                ->orderBy('content')
+                ->orderBy('created_at')
                 ->get();
         }
 

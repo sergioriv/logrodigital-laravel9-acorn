@@ -39,9 +39,6 @@ class DescriptorImport implements ToCollection, WithHeadingRow
             if(!isset( $row['period'] )) {
                 throw ValidationException::withMessages(['data' => 'La columna (period) no existe']);
             } else
-            if(!isset( $row['inclusive'] )) {
-                throw ValidationException::withMessages(['data' => 'La columna (inclusive) no existe']);
-            } else
             if(!isset( $row['content'] )) {
                 throw ValidationException::withMessages(['data' => 'La columna (content) no existe']);
             }

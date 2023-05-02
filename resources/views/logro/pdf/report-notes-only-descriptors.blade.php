@@ -171,6 +171,22 @@
             margin-top: 20px;
         }
 
+        .ms-1 {
+            margin-left: 5px;
+        }
+
+        .ms-2 {
+            margin-left: 10px;
+        }
+
+        .ms-3 {
+            margin-left: 15px;
+        }
+
+        .ms-4 {
+            margin-left: 20px;
+        }
+
         .mb-1 {
             margin-bottom: 5px;
         }
@@ -344,89 +360,34 @@
                         <div class="table-title">AREAS Y ASIGNATURAS</div>
                     </th>
                     <th>
-                        <div class="table-title">%</div>
-                    </th>
-                    <th>
-                        <div class="table-title">F</div>
-                    </th>
-                    <th>
                         <div class="table-title">DOCENTE</div>
                     </th>
-
-                    @foreach ($periods as $period)
-                        <th>
-                            <div class="table-title">P{{ $period->ordering }}</div>
-                        </th>
-                    @endforeach
-                    @if ('FINAL' === $currentPeriod)
-                        <th>
-                            <div class="table-title">FINAL</div>
-                        </th>
-                    @endif
                     <th>
-                        <div class="table-title">DESEMPEÑO
-                            {{ $currentPeriod !== 'FINAL' ? 'P' . $currentPeriod->ordering : 'FINAL' }}</div>
+                        <div class="table-title">FALLAS</div>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="text-center">
-                    <td colspan="4">&nbsp;</td>
-                    @foreach ($periods as $period)
-                        <td class="f-size-5">{{ "{$period->workload}%" }}</td>
-                    @endforeach
-                    @if ('FINAL' === $currentPeriod)
-                        <td class="f-size-5">&nbsp;</td>
-                    @endif
-                </tr>
-                <tr>
-                    <td class="h-5p"></td>
-                </tr>
-
                 @php $overallAvg = 0 @endphp
 
                 @foreach ($areas as $area)
-                    @php
-                        $areaNotes = \App\Http\Controllers\GradeController::areaNoteStudent($area, $periods, $grades, $studyTime);
-                        $overallAvg += $areaNotes['overallAvg'];
-
-                        $lastAreaGrade = null;
-                    @endphp
 
                     {{-- Datos de Área --}}
                     <tr class="bold separator-bottom separator-top">
-                        <td colspan="4">{{ $area->name }}</td>
-                        @foreach ($periods as $period)
-                            <td class="text-center" style="width: 20px">{{ $areaNotes['area'][$period->ordering] }}
-                            </td>
-                            @if ($loop->last && $currentPeriod !== 'FINAL')
-                                @php $lastAreaGrade = $areaNotes['area'][$period->ordering] @endphp
-                            @endif
-                        @endforeach
-                        @if ('FINAL' === $currentPeriod)
-                            @php $lastAreaGrade = $areaNotes['total'] @endphp
-                            <td class="text-center">{{ $areaNotes['total'] }}</td>
-                        @endif
-                        <td class="text-center text-capitalize">
-                            @if ($lastAreaGrade)
-                                {{ \App\Http\Controllers\GradeController::performanceString($studyTime, $lastAreaGrade) }}
-                            @endif
-                        </td>
+                        <td colspan="3">{{ $area->name }}</td>
                     </tr>
 
                     {{-- Asignaturas del Área --}}
                     @foreach ($area->subjects as $subject)
                         @php $lastPeriodGrade = null @endphp
                         <tr>
-                            <td class="f-size-6">{{ $subject->resourceSubject->public_name }}</td>
-                            <td class="f-size-6 text-center">
-                                @if (!is_null($subject->academicWorkload))
-                                {{ $subject->academicWorkload->course_load }}
-                                @else
-                                {{ '0' }}
+                            <td>{{ $subject->resourceSubject->public_name }}</td>
+                            <td>
+                                @if (!is_null($subject->teacherSubject))
+                                    {{ $subject->teacherSubject?->teacher?->getFullName() }}
                                 @endif
-                                %</td>
-                            <td class="f-size-6 text-center">  <!-- FALLAS -->
+                            </td>
+                            <td class="text-center">  <!-- FALLAS -->
                                 @php
                                     $absencesSubject = $absencesTSG->filter(function ($tsg) use ($subject) {
                                         return $tsg->id == $subject->teacherSubject?->id;
@@ -434,43 +395,24 @@
                                 @endphp
                                 {{ $absencesSubject->attendances_count ?? 0 }}
                             </td>
-                            <td class="f-size-6">
-                                @if (!is_null($subject->teacherSubject))
-                                    {{ $subject->teacherSubject?->teacher?->getFullName() }}
-                                @endif
-                            </td>
-                            @foreach ($periods as $period)
-                                @php
-                                    $gradePeriod =
-                                        $grades
-                                            ->filter(function ($g) use ($subject, $period) {
-                                                if (!is_null($subject->teacherSubject))
-                                                    return $g->teacher_subject_group_id == $subject->teacherSubject->id
-                                                        && $g->period_id == $period->id;
-                                            })
-                                            ->first()->final ?? $studyTime->minimum_grade;
-                                @endphp
-
-                                @if ($loop->last && $currentPeriod !== 'FINAL')
-                                    @php $lastPeriodGrade = $gradePeriod @endphp
-                                @endif
-
-                                <td class="f-size-6 text-center">
-                                    {{ \App\Http\Controllers\GradeController::numberFormat($studyTime, $gradePeriod) }}
-                                </td>
-                            @endforeach
-
-                            @if ('FINAL' === $currentPeriod)
-                            @php $lastPeriodGrade = $areaNotes['totalSubject'][$subject->id] @endphp
-                                <td class="f-size-6 text-center">{{ $areaNotes['totalSubject'][$subject->id] }}</td>
-                            @endif
-
-                            <td class="f-size-6 text-center text-capitalize">
-                                {{-- @unless('FINAL' === $currentPeriod) --}}
-                                    {{ \App\Http\Controllers\GradeController::performanceString($studyTime, $lastPeriodGrade) }}
-                                {{-- @endunless --}}
-                            </td>
                         </tr>
+                        @php
+                            $descriptorsSubject = $descriptors->filter(function ($descriptor) use ($subject) {
+                                return $descriptor->teacher_subject_group_id == $subject->teacherSubject?->id;
+                            });
+                        @endphp
+                        @if (count($descriptorsSubject))
+                            @foreach ($descriptorsSubject as $studentDescriptor)
+                            <tr>
+                                <td colspan="3">
+                                    <div class="ms-3">&raquo;<span class="ms-1">{{ $studentDescriptor->descriptor->content }}</span></div>
+                                </td>
+                            </tr>
+                            @endforeach
+                            <tr>
+                                <td colspan="3">&nbsp;</td>
+                            </tr>
+                        @endif
                     @endforeach
                     <tr>
                         <td colspan="5" class="h-5p"></td>
@@ -478,11 +420,6 @@
                 @endforeach
             </tbody>
         </table>
-
-        <div class="text-center bold table-title">
-            PROMEDIO GENERAL:
-            {{ \App\Http\Controllers\GradeController::numberFormat($studyTime, $overallAvg / count($areas)) }}
-        </div>
     </section>
 
     @if ('FINAL' !== $currentPeriod)
@@ -492,44 +429,9 @@
     </section>
     @endif
 
-    <section class="p-1 card mt-1">
-        <div class="f-size-5">
-            Rangos de desempeño:
-            <text class="text-capitalize f-size-5">
-            {{ __('low') . " ({$studyTime->lowRange()})" }}
-            | {{ __('basic') . " ({$studyTime->basicRange()})" }}
-            | {{ __('high') . " ({$studyTime->highRange()})" }}
-            | {{ __('superior') . " ({$studyTime->superiorRange()})" }}
-            </text>
-        </div>
-        <div class="f-size-5">Desempeño <b class="f-size-5">Bajo</b> corresponde al área o asignatura perdida.</div>
-        <div class="f-size-5"><b class="f-size-5">%</b> carga académica.
-        | <b class="f-size-5">F</b> cantidad de fallas periodo.</div>
-    </section>
-
-
     <!-- Descriptors Section Start -->
     @if ('FINAL' !== $currentPeriod)
-    @if (!$descriptors->isEmpty())
 
-        <!-- New Page -->
-        <div class="page-break"></div>
-
-        <section>
-            <p class="text-center text-uppercase">{{ __('Descriptors') }}</p>
-            @foreach ($descriptors as $descriptor)
-            <div class="card p-1">
-                <div class="text-center bold table-title">{{ $descriptor->subject->resourceSubject->name }}</div>
-                <ul>
-                    @foreach ($descriptor->descriptorsStudent as $descriptorStudent)
-                    <li>{{ $descriptorStudent->descriptor->content }} @if($descriptorStudent->descriptor->inclusive) {{ '('. __('inclusive') .')' }} @endif</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endforeach
-        </section>
-
-    @endif
     @endif
     <!-- Descriptors Section End -->
 

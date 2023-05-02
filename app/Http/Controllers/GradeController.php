@@ -6,6 +6,7 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\OnlyTeachersMiddleware;
 use App\Imports\GroupGradesImport;
+use App\Models\Attendance;
 use App\Models\Data\RoleUser;
 use App\Models\Grade;
 use App\Models\Group;
@@ -17,6 +18,7 @@ use App\Models\ResourceArea;
 use App\Models\Student;
 use App\Models\StudentDescriptor;
 use App\Models\StudyTime;
+use App\Models\StudyYear;
 use App\Models\TeacherSubjectGroup;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
@@ -373,7 +375,6 @@ class GradeController extends Controller
                 'periodGradeReport' => ['required', Rule::exists('periods', 'id')->where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)]
             ]);
 
-
             $currentPeriod = Period::find($request->periodGradeReport);
         } else {
             $currentPeriod = 'FINAL';
@@ -400,16 +401,20 @@ class GradeController extends Controller
 
 
         $studyTime = StudyTime::find($group->study_time_id);
+        $studyYear = StudyYear::find($group->study_year_id);
 
 
         /* Extraer los periodos del StudyTime del grupo */
-        $periods = Period::where('school_year_id', $group->school_year_id)
-            ->where('study_time_id', $group->study_time_id)
-            ->when($currentPeriod !== 'FINAL', function ($query) use ($currentPeriod) {
-                return $query->where('ordering', '<=', $currentPeriod->ordering);
-            })
-            ->orderBy('ordering')->get();
-
+        if ( $studyYear->useGrades() ) {
+            $periods = Period::where('school_year_id', $group->school_year_id)
+                ->where('study_time_id', $group->study_time_id)
+                ->when($currentPeriod !== 'FINAL', function ($query) use ($currentPeriod) {
+                    return $query->where('ordering', '<=', $currentPeriod->ordering);
+                })
+                ->orderBy('ordering')->get();
+        } else {
+            $periods = $currentPeriod;
+        }
 
         $groupStudents = GroupStudent::where('group_id', $group->id)
                 ->with('student:id,first_name,second_name,first_last_name,second_last_name')
@@ -430,6 +435,7 @@ class GradeController extends Controller
                 $Y,
                 $SCHOOL,
                 $group,
+                $studyYear,
                 $studyTime,
                 $currentPeriod,
                 $periods,
@@ -444,7 +450,7 @@ class GradeController extends Controller
         return (new ZipController($pathUuid))->downloadGradesGroup($group->name);
     }
 
-    private function reportForStudentPeriod($Y, $SCHOOL, $group, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $teacherSubjects, $student, $pathReport)
+    private function reportForStudentPeriod($Y, $SCHOOL, $group, $studyYear, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $teacherSubjects, $student, $pathReport)
     {
 
         /* Nombre para el reporte de notas, en caso de ser el reporte final, dirá Final */
@@ -480,40 +486,75 @@ class GradeController extends Controller
 
 
         /* Notas del estudiante de los periodos y asignaturas del StudyYear actual */
-        $grades = Grade::where('student_id', $student->id)
-            ->whereIn('period_id', $periods->pluck('id'))
-            ->get();
+        if ( $studyYear->useGrades() ) {
+            $grades = Grade::where('student_id', $student->id)
+                ->whereIn('period_id', $periods->pluck('id'))
+                ->get();
+        } else {
+            $grades = null;
+        }
 
         if ($currentPeriod !== 'FINAL') {
 
             $remark = Remark::where('group_id', $group->id)->where('period_id', $currentPeriod->id)->where('student_id', $student->id)->first()->remark ?? null;
 
-            $descriptors = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
-                ->withWhereHas('descriptorsStudent',
-                    fn ($descriptor) => $descriptor->where('student_id', $student->id)->with('descriptor')
-                )
-                ->with(['subject' => fn ($sj) => $sj->with('resourceSubject')])
-                ->get();
+            if ( $studyYear->useGrades() ) {
+                $descriptors = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
+                    ->withWhereHas('descriptorsStudent',
+                        fn ($descriptor) => $descriptor->where('student_id', $student->id)->with('descriptor')
+                    )->with(['subject' => fn ($sj) => $sj->with('resourceSubject')])
+                    ->get();
+            } else {
+                $descriptors = StudentDescriptor::whereIn('teacher_subject_group_id', $teacherSubjects)
+                    ->where('period_id', $currentPeriod->id)
+                    ->where('student_id', $student->id)
+                    ->with('descriptor')
+                    ->get();
+            }
         }
         else {
             $remark = NULL;
             $descriptors = NULL;
         }
 
-        $pdf = Pdf::loadView('logro.pdf.report-notes', [
-            'SCHOOL' => $SCHOOL,
-            'date' => now()->format('d/m/Y'),
-            'student' => $student,
-            'areas' => $areasWithSubjects,
-            'periods' => $periods,
-            'currentPeriod' => $currentPeriod,
-            'grades' => $grades,
-            'group' => $group,
-            'studyTime' => $studyTime,
-            'titleReportNotes' => $titleReportNotes,
-            'remark' => $remark,
-            'descriptors' => $descriptors
-        ]);
+        $absencesTSG = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
+            ->withCount(['attendances' => function ($query) use ($student, $currentPeriod) {
+                $query->whereBetween('date', [$currentPeriod->start, $currentPeriod->end]) ->whereHas('student', function ($queryAttend) use ($student) {
+                    $queryAttend->where('student_id', $student->id)->whereIn('attend', ['N', 'L']);
+                });
+            }])->get();
+
+        if ( $studyYear->useGrades() ) {
+            $pdf = Pdf::loadView('logro.pdf.report-notes', [
+                'SCHOOL' => $SCHOOL,
+                'date' => now()->format('d/m/Y'),
+                'student' => $student,
+                'areas' => $areasWithSubjects,
+                'periods' => $periods,
+                'currentPeriod' => $currentPeriod,
+                'grades' => $grades,
+                'absencesTSG' => $absencesTSG,
+                'group' => $group,
+                'studyTime' => $studyTime,
+                'titleReportNotes' => $titleReportNotes,
+                'remark' => $remark,
+                'descriptors' => $descriptors
+            ]);
+        } else {
+            $pdf = Pdf::loadView('logro.pdf.report-notes-only-descriptors', [
+                'SCHOOL' => $SCHOOL,
+                'date' => now()->format('d/m/Y'),
+                'student' => $student,
+                'areas' => $areasWithSubjects,
+                'currentPeriod' => $currentPeriod,
+                'absencesTSG' => $absencesTSG,
+                'group' => $group,
+                'studyTime' => $studyTime,
+                'titleReportNotes' => $titleReportNotes,
+                'remark' => $remark,
+                'descriptors' => $descriptors
+            ]);
+        }
 
         $pdf->setPaper([0.0, 0.0, 612, 1008]);
         $pdf->setOption('dpi', 72);

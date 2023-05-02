@@ -24,7 +24,7 @@ $title = __('Import descriptors');
             <!-- Title Start -->
             <section class="scroll-section" id="title">
                 <div class="page-title-container">
-                    <h1 class="mb-1 pb-0 display-4">{{ $title .' | '. $subject->name }}</h1>
+                    <h1 class="mb-1 pb-0 display-4">{{ $title .' | '. $subject->public_name }}</h1>
                 </div>
             </section>
             <!-- Title End -->
@@ -33,14 +33,16 @@ $title = __('Import descriptors');
 
                 <div class="card mb-5">
                     <div class="card-body">
-                        <span class="h5 text-danger">Importante!</span>
-                        <p>
-                            <ul>
-                                agregar un texto
-                                {{-- <li>Las cabeceras del documento no deben ser modificadas ni excluidas del documento a cargar</li> --}}
-                                {{-- <li>Recuerda copiar y pegar los datos del instructivo <a target="_blank" href="{{ route("students.data.instructive") }}">{{ __("Data instructive") }}</a> en las columnas correspondientes para no sufrir errores en la importación del excel</li> --}}
-                            </ul>
-                        </p>
+                        <div class="row g-2">
+                            <span class="h3 text-danger">Importante!</span>
+                            <div>Las columnas requeridas son: (<strong>period</strong>, <strong>inclusive</strong>, <strong>content</strong>)</div>
+                            <div class="alert alert-light ps-0">
+                                <ul>
+                                    <li>La columna <strong>period</strong> debe contener un número entre 1 y 6 que indicarán el número del periodo.</li>
+                                    <li>La columna <strong>inclusive</strong> recibe "si" o "1" para el caso de ser un descriptor de inclusion.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

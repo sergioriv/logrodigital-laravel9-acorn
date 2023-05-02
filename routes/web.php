@@ -251,6 +251,12 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('subject/{subject}/descriptors', [DescriptorController::class, 'store'])->name('subject.descriptors.store');
     Route::get('subject/{subject}/descriptors/import', [DescriptorController::class, 'import_view'])->name('subject.descriptors.import');
     Route::post('subject/{subject}/descriptors/import', [DescriptorController::class, 'import_store'])->name('subject.descriptors.import.store');
+    /* access for teachers */
+    Route::get('subject/{subject}/{studyYear}/descriptors', [DescriptorController::class, 'index'])->name('teacher.subject.descriptors');
+    Route::get('subject/{subject}/{studyYear}/descriptors/create', [DescriptorController::class, 'create'])->name('teacher.subject.descriptors.create');
+    Route::post('subject/{subject}/{studyYear}/descriptors', [DescriptorController::class, 'store'])->name('teacher.subject.descriptors.store');
+    Route::get('subject/{subject}/{studyYear}/descriptors/import', [DescriptorController::class, 'import_view'])->name('teacher.subject.descriptors.import');
+    Route::post('subject/{subject}/{studyYear}/descriptors/import', [DescriptorController::class, 'import_store'])->name('teacher.subject.descriptors.import.store');
 
 
     /* Permit Period */

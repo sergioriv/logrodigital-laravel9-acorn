@@ -96,9 +96,11 @@
                                                     <i data-acorn-icon="more-vertical"></i>
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
-                                                    <x-dropdown-item type="button" :link="route('subject.descriptors', $subject->id)">
+                                                    <a
+                                                        class="dropdown-item"
+                                                        href="{{ route('subject.descriptors', $subject->id) }}">
                                                         <span>{{ __('Descriptors') }}</span>
-                                                    </x-dropdown-item>
+                                                    </a>
                                                 </div>
                                             </div>
                                             <!-- Dropdown Button End -->
