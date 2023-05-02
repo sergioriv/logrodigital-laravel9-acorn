@@ -493,18 +493,18 @@
     @endif
 
     <section class="p-1 card mt-1">
-        <div class="f-size-5">
+        <div class="f-size-6">
             Rangos de desempeño:
-            <text class="text-capitalize f-size-5">
+            <text class="text-capitalize f-size-6">
             {{ __('low') . " ({$studyTime->lowRange()})" }}
             | {{ __('basic') . " ({$studyTime->basicRange()})" }}
             | {{ __('high') . " ({$studyTime->highRange()})" }}
             | {{ __('superior') . " ({$studyTime->superiorRange()})" }}
             </text>
         </div>
-        <div class="f-size-5">Desempeño <b class="f-size-5">Bajo</b> corresponde al área o asignatura perdida.</div>
-        <div class="f-size-5"><b class="f-size-5">%</b> carga académica.
-        | <b class="f-size-5">F</b> cantidad de fallas periodo.</div>
+        <div class="f-size-6">Desempeño <b class="f-size-6">Bajo</b> corresponde al área o asignatura perdida.</div>
+        <div class="f-size-6"><b class="f-size-6">%</b> carga académica.
+        | <b class="f-size-6">F</b> cantidad de fallas periodo.</div>
     </section>
 
 
