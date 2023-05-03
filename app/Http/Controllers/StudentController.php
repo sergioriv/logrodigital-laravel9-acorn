@@ -742,6 +742,69 @@ class StudentController extends Controller
         ]);
     }
 
+    private function my_grade_subjects($Y, $student)
+    {
+        $group = $student->group;
+        $periods = \App\Models\Period::where('study_time_id', $group->study_time_id)->orderBy('ordering')->get();
+        $areas = \App\Models\ResourceArea::query()
+            ->when(
+                ! $group->specialty,
+                    function ($query) { $query->whereNull('specialty'); },
+                    function ($query) use ($group) { $query->where('id', $group->specialty_area_id); }
+            )->withWhereHas(
+                'subjects', function ($query) use ($Y, $group, $student) {
+                    $query->where('school_year_id', $Y->id)->with('resourceSubject')
+                    ->withWhereHas(
+                        'academicWorkload', function ($query) use ($Y, $group) {
+                            $query->where('school_year_id', $Y->id)->where('study_year_id', $group->study_year_id)->select('id', 'course_load', 'subject_id');
+                        }
+                    )->with([
+                        'teacherSubject' => function ($query) use ($Y, $group, $student) {
+                            $query->where('school_year_id', $Y->id)->where('group_id', $group->id)->with([
+                                'grades' => function ($query) use ($student) {
+                                    $query->where('student_id', $student->id);
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            )
+            ->orderBy('name')->get()
+            ->map(function ($areasMap) use ($periods) {
+                $finals = 0;
+                return [
+                    'id' => $areasMap->id,
+                    'name' => $areasMap->name,
+                    'subjects' => $areasMap->subjects->map(function ($subjectMap) use (&$finals, $periods) {
+
+                        $gradesXSubject = $subjectMap?->teacherSubject?->grades;
+
+                        $subjectResult = [
+                            'id' => $subjectMap->id,
+                            'resource_name' => $subjectMap->resourceSubject->name,
+                            'academic_workload' => $subjectMap->academicWorkload->course_load,
+                            'teacher_subject_group' => $subjectMap?->teacherSubject?->id,
+                            'grades' => $gradesXSubject ? $gradesXSubject->map(function ($gradeMap) {
+                                return [
+                                    'id' => $gradeMap->id,
+                                    'period_id' => $gradeMap->period_id,
+                                    'final' => $gradeMap->final,
+                                ];
+                            }) : []
+                        ];
+
+                        $finals = GradeController::totalWorkloadForSubject($subjectResult, $periods);
+
+                        return [$subjectResult];
+                    }),
+                    'grade_finals' => $finals
+                ];
+            });
+            ;
+
+        return $areas;
+    }
+
     /* Tienen acceso Coordinacion y Docentes */
     private function view($student)
     {

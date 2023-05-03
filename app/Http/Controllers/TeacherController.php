@@ -356,7 +356,11 @@ class TeacherController extends Controller
         $studentsGroup = Student::singleData()
             ->whereHas(
                 'groupYear', fn ($gr) => $gr->where('group_id', $subject->group_id)
-            )->withCount([
+            )->when($studyYear->useGrades(), function ($query) use ($subject) {
+                        $query->with([
+                            'grades' => fn($grades) => $grades->where('teacher_subject_group_id', $subject->id)->with('period:id,workload')
+                        ]);
+            })->withCount([
                 'attendanceStudent' =>
                 fn ($attS) => $attS->whereIn('attend', ['N', 'J', 'L'])
                     ->whereHas(

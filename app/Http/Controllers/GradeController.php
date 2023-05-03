@@ -243,7 +243,7 @@ class GradeController extends Controller
         if ( ! $existsInGroup ) return false;
 
         $Y = SchoolYearController::current_year();
-        $areas = $this->teacher_subject($Y, $group);
+        $areas = GradeController::teacher_subject($Y, $group);
         $studyTime = $group->studyTimeSelectAll;
 
         $teacherSubject = [];
@@ -382,7 +382,7 @@ class GradeController extends Controller
 
 
         /* Obtiene las areas y asignaturas del grupo que corresponde */
-        $areasWithSubjects = $this->teacher_subject($Y, $group);
+        $areasWithSubjects = GradeController::teacher_subject($Y, $group);
         $this->countAreas = $areasWithSubjects->count();
 
         if (!$this->countAreas) {
@@ -473,7 +473,7 @@ class GradeController extends Controller
         /* Si el estudiante tiene un grupo de especialidad, se agregará a la lista general con su area y asignatura de especialidad */
         if ($existGroupSpecialty) {
 
-            $areaSpecialty = $this->teacher_subject($Y, $existGroupSpecialty)->first();
+            $areaSpecialty = GradeController::teacher_subject($Y, $existGroupSpecialty)->first();
             $areasWithSubjects[$this->countAreas] = $areaSpecialty;
 
             foreach ($areaSpecialty->subjects as $subjectSpecialty) {
@@ -561,7 +561,7 @@ class GradeController extends Controller
         $pdf->save($pathReport . "Reporte de notas - ". $student->getCompleteNames() . '.pdf');
     }
 
-    public function teacher_subject($Y, $group)
+    public static function teacher_subject($Y, $group)
     {
         $fn_sy = fn ($sy) =>
         $sy->where('school_year_id', $Y->id)
@@ -641,6 +641,17 @@ class GradeController extends Controller
         $total = static::numberFormat($studyTime, $total);
 
         return ['overallAvg' => $overallAvg, 'area' => $areaNotes, 'total' => $total, 'totalSubject' => $totalSubject];
+    }
+
+    public static function totalWorkloadForSubject($subjectResult, $periods)
+    {
+        $subjectWorkload = [];
+        if ($periods) {
+            foreach ($periods as $period) {
+                $subjectWorkload[$period->name] = 1.5;
+            }
+        }
+        return $subjectWorkload;
     }
 
     public static function numberFormat($studyTime, $value)
