@@ -11,12 +11,12 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($attendance as $attendStudent)
+            @foreach ($absences as $absenceStudent)
                 <tr>
-                    <td>{{ $attendStudent->dateLabel() }}</td>
-                    <td>{{ $attendStudent->teacherSubjectGroup->subject->resourceSubject->name }}</td>
-                    <td>{{ $attendStudent->teacherSubjectGroup?->teacher?->getFullName() }}</td>
-                    <td>{{ $attendStudent->student->attend->getLabelText() }}</td>
+                    <td>{{ $absenceStudent->dateLabel() }}</td>
+                    <td>{{ $absenceStudent->teacherSubjectGroup->subject->resourceSubject->name }}</td>
+                    <td>{{ $absenceStudent->teacherSubjectGroup?->teacher?->getFullName() }}</td>
+                    <td>{{ $absenceStudent->student->attend->getLabelText() }}</td>
                 </tr>
             @endforeach
         </tbody>

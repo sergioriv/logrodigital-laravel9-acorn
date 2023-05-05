@@ -375,6 +375,10 @@
                                     </a>
                                 @endif --}}
                             @endcan
+                            <a class="nav-link @if (session('tab') === 'grades') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#gradesTab" role="tab">
+                                <span class="align-middle">{{ __('Grades') }}</span>
+                            </a>
                         </div>
 
                         <div class="d-flex flex-column">
@@ -2046,7 +2050,7 @@
 
                 <!-- Observer Tab Start -->
                 <div class="tab-pane fade @if (session('tab') === 'observer') active show @endif" id="observerTab"
-                role="tabpanel">
+                    role="tabpanel">
 
                     <!-- Observer Section Start -->
                     <h2 class="small-title">{{ __('Observer') }}</h2>
@@ -2640,6 +2644,20 @@
                     @endif --}}
                     <!-- PIAR Tab End -->
                 @endcan
+
+                <!-- Grades Tab Start -->
+                <div class="tab-pane fade @if (session('tab') === 'grades') active show @endif" id="gradesTab"
+                    role="tabpanel">
+
+                    <h2 class="small-title">{{ __('Grades') }}</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            @include('logro.student.grades.report-tab')
+                        </div>
+                    </div>
+                </div>
+                <!-- Grades Tab End -->
+
             </div>
             <!-- Right Side End -->
         </section>

@@ -448,7 +448,7 @@
                                                     return $g->teacher_subject_group_id == $subject->teacherSubject->id
                                                         && $g->period_id == $period->id;
                                             })
-                                            ->first()->final ?? $studyTime->minimum_grade;
+                                            ->first()->final ?? null;
                                 @endphp
 
                                 @if ($loop->last && $currentPeriod !== 'FINAL')
@@ -467,7 +467,9 @@
 
                             <td class="f-size-6 text-center text-capitalize">
                                 {{-- @unless('FINAL' === $currentPeriod) --}}
-                                    {{ \App\Http\Controllers\GradeController::performanceString($studyTime, $lastPeriodGrade) }}
+                                @if (!is_null($gradePeriod))
+                                {{ \App\Http\Controllers\GradeController::performanceString($studyTime, $lastPeriodGrade) }}
+                                @endif
                                 {{-- @endunless --}}
                             </td>
                         </tr>

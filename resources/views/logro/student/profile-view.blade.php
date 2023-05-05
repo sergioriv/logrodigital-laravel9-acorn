@@ -157,14 +157,22 @@
                                 data-bs-toggle="tab" href="#observerTab" role="tab">
                                 <span class="align-middle">{{ __('Observer') }}</span>
                             </a>
-                            <a class="nav-link @if (session('tab') === 'attendance') active @endif logro-toggle px-0 border-bottom border-separator-light"
-                                data-bs-toggle="tab" href="#attendanceTab" role="tab">
-                                <span class="align-middle">{{ __('Attendances') }}</span>
-                            </a>
+                            @if ($absences)
+                                <a class="nav-link @if (session('tab') === 'attendance') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                    data-bs-toggle="tab" href="#attendanceTab" role="tab">
+                                    <span class="align-middle">{{ __('Absences') }}</span>
+                                </a>
+                            @endif
                             @if ($student->isInclusive())
                                 <a class="nav-link logro-toggle px-0 border-bottom border-separator-light"
                                     data-bs-toggle="tab" href="#psychosocialTab" role="tab">
                                     <span class="align-middle">{{ __('Psychosocial Information') }}</span>
+                                </a>
+                            @endif
+                            @if ($areasWithGrades)
+                                <a class="nav-link @if (session('tab') === 'grades') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                    data-bs-toggle="tab" href="#gradesTab" role="tab">
+                                    <span class="align-middle">{{ __('Grades') }}</span>
                                 </a>
                             @endif
                         </div>
@@ -597,21 +605,23 @@
                 </div>
                 <!-- Observer Tab End -->
 
-                <!-- Attendances Tab Start -->
-                <div class="tab-pane fade @if (session('tab') === 'attendance') active show @endif" id="attendanceTab"
-                    role="tabpanel">
+                @if ($absences)
+                    <!-- Attendances Tab Start -->
+                    <div class="tab-pane fade @if (session('tab') === 'attendance') active show @endif" id="attendanceTab"
+                        role="tabpanel">
 
-                    <!-- Attendance Section Start -->
-                    <h2 class="small-title">{{ __('Attendances') }}</h2>
-                    <section class="card mb-5">
-                        <div class="card-body">
-                            @include('logro.student.attendance.attendance-tab')
-                        </div>
-                    </section>
-                    <!-- Attendance Section End -->
+                        <!-- Attendance Section Start -->
+                        <h2 class="small-title">{{ __('Absences') }}</h2>
+                        <section class="card mb-5">
+                            <div class="card-body">
+                                @include('logro.student.attendance.attendance-tab')
+                            </div>
+                        </section>
+                        <!-- Attendance Section End -->
 
-                </div>
-                <!-- Attendances Tab End -->
+                    </div>
+                    <!-- Attendances Tab End -->
+                @endif
 
                 @if ($student->isInclusive())
                     <!-- Psychosocial Information Tab Start -->
@@ -652,6 +662,21 @@
 
                     </div>
                     <!-- Psychosocial Information Tab End -->
+                @endif
+
+                @if ($areasWithGrades)
+                    <!-- Grades Tab Start -->
+                    <div class="tab-pane fade @if (session('tab') === 'grades') active show @endif" id="gradesTab"
+                        role="tabpanel">
+
+                        <h2 class="small-title">{{ __('Grades') }}</h2>
+                        <div class="card">
+                            <div class="card-body">
+                                @include('logro.student.grades.report-tab')
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Grades Tab End -->
                 @endif
 
             </div>

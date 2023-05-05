@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
-use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\OnlyTeachersMiddleware;
 use App\Imports\GroupGradesImport;
-use App\Models\Attendance;
-use App\Models\Data\RoleUser;
 use App\Models\Grade;
 use App\Models\Group;
 use App\Models\GroupStudent;
@@ -643,19 +640,112 @@ class GradeController extends Controller
         return ['overallAvg' => $overallAvg, 'area' => $areaNotes, 'total' => $total, 'totalSubject' => $totalSubject];
     }
 
-    public static function totalWorkloadForSubject($subjectResult, $periods)
+    /**
+     * @return array [periods, areas with grades]
+     *  */
+    public static function studentGrades($Y, $student)
     {
-        $subjectWorkload = [];
-        if ($periods) {
-            foreach ($periods as $period) {
-                $subjectWorkload[$period->name] = 1.5;
+        $groups = GroupStudent::where('student_id', $student->id)
+        ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id) )
+        ->get();
+
+        $groupsIDS = $groups->pluck('group_id')->toArray();
+        $studyYear = $groups->first()->group->studyYear;
+        $studyTime = $groups->first()->group->studyTime;
+
+        $periods = Period::where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
+
+        $areas = ResourceArea::query()
+            ->withWhereHas(
+                'subjects', function ($query) use ($Y, $groupsIDS, $studyYear, $student) {
+                    $query->where('school_year_id', $Y->id)->with('resourceSubject')
+                    ->withWhereHas(
+                        'academicWorkload', function ($query) use ($Y, $studyYear) {
+                            $query->where('school_year_id', $Y->id)->where('study_year_id', $studyYear->id)->select('id', 'course_load', 'subject_id');
+                        }
+                    )->with([
+                        'teacherSubject' => function ($query) use ($Y, $groupsIDS, $student) {
+                            $query->where('school_year_id', $Y->id)->whereIn('group_id', $groupsIDS)->with([
+                                'grades' => function ($query) use ($student) {
+                                    $query->where('student_id', $student->id);
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            )
+            ->orderBy('name')->get()
+            ->map(function ($areasMap) use ($periods, $studyTime) {
+                $areaMap = [
+                    'id' => $areasMap->id,
+                    'name' => $areasMap->name,
+                    'subjects' => $areasMap->subjects->map(function ($subjectMap) use ($studyTime, $periods) {
+                        $subjectGrade = $subjectMap?->teacherSubject?->grades;
+                        return [
+                            'id' => $subjectMap->id,
+                            'resource_name' => $subjectMap->resourceSubject->name,
+                            'academic_workload' => $subjectMap->academicWorkload->course_load,
+                            'academic_wordload_porcentage' => (float)($subjectMap->academicWorkload->course_load / 100),
+                            'teacher_subject_group' => $subjectMap?->teacherSubject?->id,
+                            'grades' => $subjectGrade ? $subjectGrade->map(function ($gradeMap) use ($studyTime) {
+                                return [
+                                    'id' => $gradeMap->id,
+                                    'period_id' => $gradeMap->period_id,
+                                    'final' => $gradeMap->final ?: $studyTime->minimum_grade,
+                                ];
+                            }) : []
+                        ];
+                    }),
+                ];
+
+                $areaMap['period_grades'] = GradeController::periodGradesXArea($areaMap, $periods)->map(function ($periodGradeMap) use ($studyTime) {
+                    return GradeController::numberFormat($studyTime, $periodGradeMap);
+                });
+
+                return $areaMap;
+            });
+
+        $periods->map(function ($period) use ($studyTime, $areas) {
+            return $period->setAttribute('gradeAVG', GradeController::periodAVG($studyTime, $period, $areas));
+        });
+
+        return ['periods' => $periods, 'areasGrade' => $areas];
+    }
+
+    private static function periodAVG($studyTime, $period, $gradeAreas)
+    {
+        $periodAVG = 0;
+        foreach ($gradeAreas as $gradeArea) {
+            $periodAVG += $gradeArea['period_grades'][$period->id] ?: 0;
+        }
+        return GradeController::numberFormat($studyTime, ($periodAVG / count($gradeAreas)) );
+    }
+
+    /**
+     * @return collect
+     *  */
+    public static function periodGradesXArea($area, $periods)
+    {
+        $periodTotal = [];
+        foreach ($periods as $period) {
+            $periodTotal[$period->id] = 0;
+            foreach ($area['subjects'] as $subject) {
+                foreach ($subject['grades'] as $grade) {
+                    $periodTotal[$period->id] +=
+                        $grade['period_id'] === $period->id
+                        ? $grade['final'] * $subject['academic_wordload_porcentage']
+                        : 0;
+                }
             }
         }
-        return $subjectWorkload;
+
+        return collect($periodTotal);
     }
 
     public static function numberFormat($studyTime, $value)
     {
+        if (is_null($value) || !$value) return NULL;
+
         if ($value) {
 
             $round = $studyTime->round === 1 ? PHP_ROUND_HALF_UP : PHP_ROUND_HALF_DOWN;

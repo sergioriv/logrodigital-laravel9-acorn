@@ -12,7 +12,6 @@ use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\YearCurrentMiddleware;
 use App\Imports\StudentsImport;
 use App\Models\Attendance;
-use App\Models\AttendanceStudent;
 use App\Models\City;
 use App\Models\Coordination;
 use App\Models\Country;
@@ -46,13 +45,11 @@ use App\Models\StudentRemovalCode;
 use App\Models\StudyTime;
 use App\Models\StudyYear;
 use App\Models\Teacher;
-use App\Models\TeacherSubjectGroup;
 use App\Models\TypesConflict;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use iio\libmergepdf\Merger;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -708,6 +705,8 @@ class StudentController extends Controller
         }
 
 
+        $studentGradesxGroup = GradeController::studentGrades($Y, $student);
+
         return view('logro.student.profile')->with([
             'Y' => $Y,
             'YAvailable' => $YAvailable->id,
@@ -738,80 +737,19 @@ class StudentController extends Controller
             'myTeachers' => $orientationOptions['myTeachers'],
             'headers_remission' => HeadersRemission::all(),
             'handbook'      => SchoolController::myschool()->handbook(),
-            'observer' => StudentObserver::where('student_id', $student->id)->with('user_creator')->get()
+            'observer' => StudentObserver::where('student_id', $student->id)->with('user_creator')->get(),
+            'periods' => $studentGradesxGroup['periods'],
+            'areasWithGrades' => $studentGradesxGroup['areasGrade']
         ]);
     }
 
-    private function my_grade_subjects($Y, $student)
-    {
-        $group = $student->group;
-        $periods = \App\Models\Period::where('study_time_id', $group->study_time_id)->orderBy('ordering')->get();
-        $areas = \App\Models\ResourceArea::query()
-            ->when(
-                ! $group->specialty,
-                    function ($query) { $query->whereNull('specialty'); },
-                    function ($query) use ($group) { $query->where('id', $group->specialty_area_id); }
-            )->withWhereHas(
-                'subjects', function ($query) use ($Y, $group, $student) {
-                    $query->where('school_year_id', $Y->id)->with('resourceSubject')
-                    ->withWhereHas(
-                        'academicWorkload', function ($query) use ($Y, $group) {
-                            $query->where('school_year_id', $Y->id)->where('study_year_id', $group->study_year_id)->select('id', 'course_load', 'subject_id');
-                        }
-                    )->with([
-                        'teacherSubject' => function ($query) use ($Y, $group, $student) {
-                            $query->where('school_year_id', $Y->id)->where('group_id', $group->id)->with([
-                                'grades' => function ($query) use ($student) {
-                                    $query->where('student_id', $student->id);
-                                }
-                            ]);
-                        }
-                    ]);
-                }
-            )
-            ->orderBy('name')->get()
-            ->map(function ($areasMap) use ($periods) {
-                $finals = 0;
-                return [
-                    'id' => $areasMap->id,
-                    'name' => $areasMap->name,
-                    'subjects' => $areasMap->subjects->map(function ($subjectMap) use (&$finals, $periods) {
-
-                        $gradesXSubject = $subjectMap?->teacherSubject?->grades;
-
-                        $subjectResult = [
-                            'id' => $subjectMap->id,
-                            'resource_name' => $subjectMap->resourceSubject->name,
-                            'academic_workload' => $subjectMap->academicWorkload->course_load,
-                            'teacher_subject_group' => $subjectMap?->teacherSubject?->id,
-                            'grades' => $gradesXSubject ? $gradesXSubject->map(function ($gradeMap) {
-                                return [
-                                    'id' => $gradeMap->id,
-                                    'period_id' => $gradeMap->period_id,
-                                    'final' => $gradeMap->final,
-                                ];
-                            }) : []
-                        ];
-
-                        $finals = GradeController::totalWorkloadForSubject($subjectResult, $periods);
-
-                        return [$subjectResult];
-                    }),
-                    'grade_finals' => $finals
-                ];
-            });
-            ;
-
-        return $areas;
-    }
 
     /* Tienen acceso Coordinacion y Docentes */
     private function view($student)
     {
+        $Y = SchoolYearController::current_year();
         $existOrientation = false;
-        /*
-         * Para que el Rol TEACHER solo pueda ver estudiantes que esten en sus listados en el año actual
-         *  */
+
         $myRole = UserController::role_auth();
         if ($myRole === RoleUser::TEACHER_ROL
             || $myRole === RoleUser::COORDINATION_ROL) {
@@ -823,18 +761,26 @@ class StudentController extends Controller
             $coordinators = Coordination::all();
         }
 
-        $attendance = Attendance::withWhereHas(
-                'student',
-                fn ($s) => $s->where('student_id', $student->id)
-            )->with('teacherSubjectGroup.subject', 'teacherSubjectGroup.teacher')
-            ->orderByDesc('date')
-            ->get();
+        $absences = null;
+        $studentGradesxGroup = ['periods' => null, 'areasGrade' => null];
+        if (auth()->id() === $student->group->teacher_id) {
+            $absences = Attendance::withWhereHas(
+                    'student',
+                    fn ($s) => $s->where('student_id', $student->id)->whereIn('attend', ['N', 'L', 'J'])
+                )->with('teacherSubjectGroup.subject', 'teacherSubjectGroup.teacher')
+                ->orderByDesc('date')
+                ->get();
+
+            $studentGradesxGroup = GradeController::studentGrades($Y, $student);
+        }
 
         return view('logro.student.profile-view', [
             'student' => $student,
+            'periods' => $studentGradesxGroup['periods'],
+            'areasWithGrades' => $studentGradesxGroup['areasGrade'],
             'observer' => StudentObserver::where('student_id', $student->id)->with('user_creator')->get(),
             'existOrientation' => $existOrientation,
-            'attendance' => $attendance,
+            'absences' => $absences,
             'coordinators' => $coordinators
         ]);
     }
