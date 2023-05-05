@@ -651,6 +651,9 @@ class GradeController extends Controller
         ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id) )
         ->get();
 
+        // dd($groups);
+        if (!count($groups)) return  ['periods' => NULL, 'areasGrade' => NULL];
+
         $groupsIDS = $groups->pluck('group_id')->toArray();
         $studyYear = $groups->first()->group->studyYear;
         $studyTime = $groups->first()->group->studyTime;

@@ -2652,7 +2652,11 @@
                     <h2 class="small-title">{{ __('Grades') }}</h2>
                     <div class="card">
                         <div class="card-body">
-                            @include('logro.student.grades.report-tab')
+                            @if ($areasWithGrades)
+                                @include('logro.student.grades.report-tab')
+                            @else
+                                <h6 class="text-center">El estudiante no cuenta con calificaciones para este año</h6>
+                            @endif
                         </div>
                     </div>
                 </div>
