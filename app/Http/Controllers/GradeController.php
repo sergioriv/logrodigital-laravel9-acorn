@@ -108,19 +108,21 @@ class GradeController extends Controller
             }
 
             try {
-                Grade::updateOrCreate(
-                    [
-                        'teacher_subject_group_id' => $subject->id,
-                        'period_id' => $period->id,
-                        'student_id' => $student->id
-                    ],
-                    [
-                        'conceptual'    => $gradeConceptual,
-                        'procedural'    => $gradeProcedural,
-                        'attitudinal'   => $gradeAttitudinal,
-                        'final'         => $gradeFinal
-                    ]
-                );
+                if ( ! is_null($gradeFinal) ) {
+                    Grade::updateOrCreate(
+                        [
+                            'teacher_subject_group_id' => $subject->id,
+                            'period_id' => $period->id,
+                            'student_id' => $student->id
+                        ],
+                        [
+                            'conceptual'    => $gradeConceptual,
+                            'procedural'    => $gradeProcedural,
+                            'attitudinal'   => $gradeAttitudinal,
+                            'final'         => $gradeFinal
+                        ]
+                    );
+                }
             } catch (Exception $e) {
                 DB::rollBack();
                 return redirect()->back()->withErrors(__('An error has occurred'));
