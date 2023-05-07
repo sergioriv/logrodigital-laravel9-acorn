@@ -397,7 +397,7 @@
                     <tr class="bold separator-bottom separator-top">
                         <td colspan="4">{{ $area->name }}</td>
                         @foreach ($periods as $period)
-                            <td class="text-center" style="width: 20px">{{ $areaNotes['area'][$period->ordering] }}
+                            <td class="text-center" style="width: 20px">{{ $areaNotes['area'][$period->ordering] ?? '-' }}
                             </td>
                             @if ($loop->last && $currentPeriod !== 'FINAL')
                                 @php $lastAreaGrade = $areaNotes['area'][$period->ordering] @endphp
@@ -405,7 +405,7 @@
                         @endforeach
                         @if ('FINAL' === $currentPeriod)
                             @php $lastAreaGrade = $areaNotes['total'] @endphp
-                            <td class="text-center">{{ $areaNotes['total'] }}</td>
+                            <td class="text-center">{{ $areaNotes['total'] ?? '-' }}</td>
                         @endif
                         <td class="text-center text-capitalize">
                             @if ($lastAreaGrade)
@@ -456,13 +456,13 @@
                                 @endif
 
                                 <td class="f-size-6 text-center">
-                                    {{ \App\Http\Controllers\GradeController::numberFormat($studyTime, $gradePeriod) }}
+                                    {{ \App\Http\Controllers\GradeController::numberFormat($studyTime, $gradePeriod) ?? '-' }}
                                 </td>
                             @endforeach
 
                             @if ('FINAL' === $currentPeriod)
                             @php $lastPeriodGrade = $areaNotes['totalSubject'][$subject->id] @endphp
-                                <td class="f-size-6 text-center">{{ $areaNotes['totalSubject'][$subject->id] }}</td>
+                                <td class="f-size-6 text-center">{{ $areaNotes['totalSubject'][$subject->id] ?? '-' }}</td>
                             @endif
 
                             <td class="f-size-6 text-center text-capitalize">
