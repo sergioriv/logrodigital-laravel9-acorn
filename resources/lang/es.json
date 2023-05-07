@@ -755,6 +755,11 @@
     "Grades saved!": "Calificaciones guardadas!",
     "Grades": "Calificaciones",
     "average": "promedio",
+    "Group directors": "Directores de grupo",
+    "Change group director": "Cambiar director de grupo",
+    "Select a teacher": "Seleccione un docente",
+    "Minimum grade: :MIN": "Calificación mínima: :MIN",
+    "Maximum grade: :MAX": "Calificación máxima: :MAX",
 
     "Welcome to Logro Digital!": "¡Bienvenido a Logro Digital!",
     "Current password": "Contraseña actual",

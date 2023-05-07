@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DescriptorController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupDirectorController;
 use App\Http\Controllers\HeadersRemissionController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\OrientationController;
@@ -239,6 +240,10 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('groups/{group}/transfer-students', [TransferController::class, 'groupStudents_hss'])->name('group.transfer-students.hss');
     Route::post('groups/transfer-sel-group', [TransferController::class, 'selectionGroup'])->name('group.transfer-students.selGroup');
     Route::post('groups/{group}/grade-report', [GradeController::class, 'reportForGroup'])->name('group.reportGrade');
+
+
+    /* Route Group Directors */
+    Route::resource('group-directors', GroupDirectorController::class)->only('index', 'edit', 'update')->names('group-directors');
 
 
     /* Remarks */

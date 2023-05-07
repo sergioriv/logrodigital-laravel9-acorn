@@ -72,13 +72,13 @@ class TeacherController extends Controller
             'type_appointment' => ['required', new TypeAppointmentRule],
             'type_admin_act' => ['required', new TypeAdminActRule],
             'appointment_number' => ['nullable', 'max:20'],
-            'date_appointment' => ['required_with:appointment_number'],
+            'date_appointment' => ['required_with:appointment_number', 'date', 'date_format:Y-m-d'],
             'file_appointment' => ['required_with:appointment_number', 'file', 'mimes:pdf', 'max:2048'],
             'possession_certificate' => ['nullable', 'max:20'],
-            'date_possession_certificate' => ['required_with:possession_certificate'],
+            'date_possession_certificate' => ['required_with:possession_certificate', 'date', 'date_format:Y-m-d'],
             'file_possession_certificate' => ['required_with:possession_certificate', 'file', 'mimes:pdf', 'max:2048'],
             'transfer_resolution' => ['nullable', 'max:20'],
-            'date_transfer_resolution' => ['required_with:transfer_resolution'],
+            'date_transfer_resolution' => ['required_with:transfer_resolution', 'date', 'date_format:Y-m-d'],
             'file_transfer_resolution' => ['required_with:transfer_resolution', 'file', 'mimes:pdf', 'max:2048'],
         ]);
 
@@ -233,13 +233,13 @@ class TeacherController extends Controller
             'marital_status' => ['nullable', new MaritalStatusRule],
 
             'appointment_number' => ['nullable', 'max:20'],
-            'date_appointment' => ['required_with:appointment_number'],
+            'date_appointment' => ['required_with:appointment_number', 'date', 'date_format:Y-m-d'],
             'file_appointment' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
             'possession_certificate' => ['nullable', 'max:20'],
-            'date_possession_certificate' => ['required_with:possession_certificate'],
+            'date_possession_certificate' => ['required_with:possession_certificate', 'date', 'date_format:Y-m-d'],
             'file_possession_certificate' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
             'transfer_resolution' => ['nullable', 'max:20'],
-            'date_transfer_resolution' => ['required_with:transfer_resolution'],
+            'date_transfer_resolution' => ['required_with:transfer_resolution', 'date', 'date_format:Y-m-d'],
             'file_transfer_resolution' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
 
             'signature' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],

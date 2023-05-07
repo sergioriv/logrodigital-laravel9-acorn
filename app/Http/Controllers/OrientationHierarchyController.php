@@ -29,7 +29,7 @@ class OrientationHierarchyController extends Controller
         $request->validate([
             'hierarchy_number' => ['required', 'max:20'],
             'hierarchy_resolution' => ['required', 'max:191'],
-            'hierarchy_date' => ['required', 'date' ,'before:today'],
+            'hierarchy_date' => ['required', 'date', 'date_format:Y-m-d', 'before:today'],
             'hierarchy_file' => ['required', 'file', 'mimes:pdf', 'max:2048']
         ]);
 

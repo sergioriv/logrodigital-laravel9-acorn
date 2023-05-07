@@ -28,8 +28,8 @@ class CoordinationEmploymentHistoryController extends Controller
 
         $request->validate([
             'employment_institution' => ['required', 'max:191'],
-            'employment_date_start' => ['required', 'date' ,'before:today'],
-            'employment_date_end' => ['required', 'date' ,'before:today'],
+            'employment_date_start' => ['required', 'date', 'date_format:Y-m-d', 'before:today'],
+            'employment_date_end' => ['required', 'date', 'date_format:Y-m-d', 'before:today'],
             'employment_file' => ['required', 'file', 'mimes:pdf', 'max:2048']
         ]);
 

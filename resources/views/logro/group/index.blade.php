@@ -56,6 +56,25 @@ $title = __('Groups');
                             @endif
                             @endcan
 
+                            @hasanyrole('SUPPORT|COORDINATOR|SECRETARY')
+                            <!-- Dropdown Button Start -->
+                            <div class="ms-1">
+                                <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only"
+                                    data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false" data-submenu>
+                                    <i data-acorn-icon="more-horizontal"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item"
+                                        href="{{ route('group-directors.index') }}">
+                                        <i class="icon bi-award"></i>
+                                        <span class="ms-1">{{ __('Group directors') }}</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Dropdown Button End -->
+                            @endhasanyrole
+
                         </div>
                         <!-- Top Buttons End -->
                     </div>

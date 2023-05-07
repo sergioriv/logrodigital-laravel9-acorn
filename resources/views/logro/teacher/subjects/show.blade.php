@@ -275,6 +275,12 @@
 
                                     <section class="scroll-section mb-n2" id="periodsCard">
 
+                                        <div class="alert alert-danger text-center">
+                                            {{ __('Minimum grade: :MIN', ['MIN' => $subject->group->studyTime->minimum_grade]) }}
+                                            -
+                                            {{ __('Maximum grade: :MAX', ['MAX' => $subject->group->studyTime->maximum_grade]) }}
+                                        </div>
+
                                         @foreach ($periods as $period)
                                             @php $isActive = $period->active() || $period->permit ? TRUE : FALSE @endphp
 

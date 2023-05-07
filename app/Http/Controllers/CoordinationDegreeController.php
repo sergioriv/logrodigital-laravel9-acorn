@@ -29,7 +29,7 @@ class CoordinationDegreeController extends Controller
         $request->validate([
             'degree_name' => ['required', 'max:191'],
             'degree_institution' => ['required', 'max:191'],
-            'degree_date' => ['required', 'date' ,'before:today'],
+            'degree_date' => ['required', 'date', 'date_format:Y-m-d', 'before:today'],
             'degree_file' => ['required', 'file', 'mimes:pdf', 'max:2048']
         ]);
 
