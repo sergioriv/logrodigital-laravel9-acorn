@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
+use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\OnlyTeachersMiddleware;
 use App\Imports\GroupGradesImport;
+use App\Models\Data\RoleUser;
 use App\Models\Grade;
 use App\Models\Group;
 use App\Models\GroupStudent;
@@ -645,8 +647,10 @@ class GradeController extends Controller
     /**
      * @return array [periods, areas with grades]
      *  */
-    public static function studentGrades($Y, $student)
+    public static function studentGrades($Y, $student, $currentGroup = null, $periods = null)
     {
+        if (UserController::role_auth() == 'STUDENT') return ['periods' => NULL, 'areasGrade' => NULL];
+
         $groups = GroupStudent::where('student_id', $student->id)
         ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id) )
         ->get();
@@ -654,10 +658,15 @@ class GradeController extends Controller
         if (!count($groups)) return ['periods' => NULL, 'areasGrade' => NULL];
 
         $groupsIDS = $groups->pluck('group_id')->toArray();
-        $studyYear = $groups->first()->group->studyYear;
-        $studyTime = $groups->first()->group->studyTime;
+        if ($currentGroup) {
+            $studyYear = $currentGroup->studyYear;
+            $studyTime = $currentGroup->studyTime;
+        } else {
+            $studyYear = $groups->first()->group->studyYear;
+            $studyTime = $groups->first()->group->studyTime;
+        }
 
-        $periods = Period::where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
+        if (is_null($periods)) $periods = Period::where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
 
         $areas = ResourceArea::query()
             ->withWhereHas(

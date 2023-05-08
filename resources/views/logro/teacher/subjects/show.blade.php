@@ -471,7 +471,7 @@
                                                                         @if ($studyYear->useGrades())
                                                                             @if ($studyYear->useComponents())
                                                                             <!-- Conceptual grade -->
-                                                                            <td scope="row" class="col-1">
+                                                                            <td scope="row" class="col-4 col-md-3 col-lg-2 col-xl-1">
                                                                                 @if ($isActive)
                                                                                     <x-input type="number"
                                                                                         id="{{ $period->id }}-grade-{{ $gradeNumber }}"
@@ -487,7 +487,7 @@
                                                                             </td>
 
                                                                             <!-- Procedural grade -->
-                                                                            <td scope="row" class="col-1">
+                                                                            <td scope="row" class="col-4 col-md-3 col-lg-2 col-xl-1">
                                                                                 @if ($isActive)
                                                                                     <x-input type="number"
                                                                                         id="{{ $period->id }}-grade-{{ $gradeNumber + 1 }}"
@@ -503,7 +503,7 @@
                                                                             </td>
 
                                                                             <!-- Attitudinal grade -->
-                                                                            <td scope="row" class="col-1">
+                                                                            <td scope="row" class="col-4 col-md-3 col-lg-2 col-xl-1">
                                                                                 @if ($isActive)
                                                                                     <x-input type="number"
                                                                                         id="{{ $period->id }}-grade-{{ $gradeNumber + 2 }}"
@@ -520,7 +520,7 @@
                                                                             @endif
 
                                                                         <!-- Final grade -->
-                                                                        <td scope="row" class="col-1">
+                                                                        <td scope="row" class="col-4 col-md-3 col-lg-2 col-xl-1">
                                                                             @if ($isActive && ! $studyYear->useComponents())
                                                                                 <x-input type="number"
                                                                                     id="{{ $period->id }}-grade-{{ $gradeNumber }}"

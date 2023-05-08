@@ -704,7 +704,6 @@ class StudentController extends Controller
                 ->get();
         }
 
-
         $studentGradesxGroup = GradeController::studentGrades($Y, $student);
 
         return view('logro.student.profile')->with([

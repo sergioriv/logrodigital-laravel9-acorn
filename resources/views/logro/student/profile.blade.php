@@ -375,10 +375,12 @@
                                     </a>
                                 @endif --}}
                             @endcan
-                            <a class="nav-link @if (session('tab') === 'grades') active @endif logro-toggle px-0 border-bottom border-separator-light"
-                                data-bs-toggle="tab" href="#gradesTab" role="tab">
-                                <span class="align-middle">{{ __('Grades') }}</span>
-                            </a>
+                            @hasanyrole('SUPPORT|SECRETARY|ORIENTATION')
+                                <a class="nav-link @if (session('tab') === 'grades') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                    data-bs-toggle="tab" href="#gradesTab" role="tab">
+                                    <span class="align-middle">{{ __('Grades') }}</span>
+                                </a>
+                            @endhasanyrole
                         </div>
 
                         <div class="d-flex flex-column">
@@ -2645,6 +2647,7 @@
                     <!-- PIAR Tab End -->
                 @endcan
 
+                @hasanyrole('SUPPORT|SECRETARY|ORIENTATION')
                 <!-- Grades Tab Start -->
                 <div class="tab-pane fade @if (session('tab') === 'grades') active show @endif" id="gradesTab"
                     role="tabpanel">
@@ -2661,6 +2664,7 @@
                     </div>
                 </div>
                 <!-- Grades Tab End -->
+                @endhasanyrole
 
             </div>
             <!-- Right Side End -->
