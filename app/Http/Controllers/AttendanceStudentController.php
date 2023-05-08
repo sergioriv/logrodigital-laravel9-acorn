@@ -29,16 +29,16 @@ class AttendanceStudentController extends Controller
             'studentsAttendance.*.type' => ['in:late-arrival,justified']
         ]);
 
-        $limitWeek = (new TeacherController)->remainingAttendanceWeek($subject, $request->date);
-        if ( ! $limitWeek ) {
-            Notify::fail(__('Not allowed'));
-            return back();
-        } else {
-            if ( ! $limitWeek['active'] ) {
-                Notify::fail(__("No assistance is available for that week."));
-                return back();
-            }
-        }
+        // $limitWeek = (new TeacherController)->remainingAttendanceWeek($subject, $request->date);
+        // if ( ! $limitWeek ) {
+        //     Notify::fail(__('Not allowed'));
+        //     return back();
+        // } else {
+        //     if ( ! $limitWeek['active'] ) {
+        //         Notify::fail(__("No assistance is available for that week."));
+        //         return back();
+        //     }
+        // }
 
         DB::beginTransaction();
 

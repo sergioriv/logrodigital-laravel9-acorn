@@ -59,31 +59,31 @@
             }
         });
 
-        jQuery("#attendance-date").on('change', function() {
-            $.get(HOST + '/mysubjects/{{ $subject->id }}/attendance-limit-week', {
-                date: $(this).val()
-            }, function(res) {
-                if ( ! res.data.active ) {
-                    $("form#addAttendanceForm button[type='submit']").prop("disabled", true);
-                } else {
-                    $("form#addAttendanceForm button[type='submit']").prop("disabled", false);
-                }
-                $("#alert-attendance").html(res.data.content);
-            })
-        });
+        // jQuery("#attendance-date").on('change', function() {
+        //     $.get(HOST + '/mysubjects/{{ $subject->id }}/attendance-limit-week', {
+        //         date: $(this).val()
+        //     }, function(res) {
+        //         if ( ! res.data.active ) {
+        //             $("form#addAttendanceForm button[type='submit']").prop("disabled", true);
+        //         } else {
+        //             $("form#addAttendanceForm button[type='submit']").prop("disabled", false);
+        //         }
+        //         $("#alert-attendance").html(res.data.content);
+        //     })
+        // });
 
-        $(document).ready(function () {
-            $.get(HOST + '/mysubjects/{{ $subject->id }}/attendance-limit-week', {
-                date: $(this).val()
-            }, function(res) {
-                if ( ! res.data.active ) {
-                    $("form#addAttendanceForm button[type='submit']").prop("disabled", true);
-                } else {
-                    $("form#addAttendanceForm button[type='submit']").prop("disabled", false);
-                }
-                $("#alert-attendance").html(res.data.content);
-            })
-        });
+        // $(document).ready(function () {
+        //     $.get(HOST + '/mysubjects/{{ $subject->id }}/attendance-limit-week', {
+        //         date: $(this).val()
+        //     }, function(res) {
+        //         if ( ! res.data.active ) {
+        //             $("form#addAttendanceForm button[type='submit']").prop("disabled", true);
+        //         } else {
+        //             $("form#addAttendanceForm button[type='submit']").prop("disabled", false);
+        //         }
+        //         $("#alert-attendance").html(res.data.content);
+        //     })
+        // });
     </script>
 @endsection
 
@@ -785,14 +785,15 @@
 
                     <div class="modal-body">
 
-                        <div id="alert-attendance"></div>
+                        {{-- <div id="alert-attendance"></div> --}}
 
                         <div class="row mb-3 position-relative">
                             <x-label for="date"
                                 class="col-sm-3 col-form-label text-sm-start text-center font-weight-bold text-danger"
                                 required>{{ __('Choose date') }}</x-label>
                             <div class="col-sm-9">
-                                <x-input :value="old('date', now()->format('Y-m-d'))" id="attendance-date" logro="datePickerBefore" name="date"
+                                {{-- id="attendance-date" --}}
+                                <x-input :value="old('date', now()->format('Y-m-d'))" logro="datePickerBefore" name="date"
                                     data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" class="text-center"
                                     required />
                             </div>
