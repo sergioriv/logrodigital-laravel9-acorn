@@ -139,6 +139,8 @@
                                                     <i data-acorn-icon="file-text" class="me-1"></i>
                                                     <span>{{ __('Grade report') }}</span>
                                                 </a>
+                                            @endif
+                                            @if ($group->studyYear->useGrades() && !$periods->isEmpty())
                                                 <a href="{{ route('group.consolidate-grades', $group) }}"
                                                     class="dropdown-item btn-sm btn-icon btn-icon-start">
                                                     <i data-acorn-icon="file-chart" class="me-1"></i>
@@ -666,8 +668,8 @@
                                                         <div logro="progress" role="progressbar"
                                                             class="progress-bar-circle position-relative text-muted text-sm"
                                                             data-trail-color=""
-                                                            aria-valuemax="{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTimeSelectAll, $group->studyTimeSelectAll->maximum_grade) }}"
-                                                            aria-valuenow="{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTimeSelectAll, $avgGrade) }}"
+                                                            aria-valuemax="{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTime, $group->studyTime->maximum_grade) }}"
+                                                            aria-valuenow="{{ \App\Http\Controllers\GradeController::numberFormat($group->studyTime, $avgGrade) }}"
                                                             data-hide-all-text="false" data-stroke-width="3"
                                                             data-trail-width="1" data-duration="0"></div>
                                                     </div>
