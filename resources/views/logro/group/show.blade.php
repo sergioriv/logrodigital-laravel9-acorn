@@ -116,9 +116,9 @@
                                                         <i data-acorn-icon="destination" class="me-1"></i>
                                                         <span>{{ __('Transfer students') }}</span>
                                                     </a>
+                                                    <div class="dropdown-divider"></div>
                                                 @endif
                                             @endunless
-                                            <div class="dropdown-divider"></div>
                                         @endcan
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                             href="{{ route('group.export.student-list', $group) }}">
@@ -141,6 +141,9 @@
                                                 </a>
                                             @endif
                                             @if ($group->studyYear->useGrades() && !$periods->isEmpty())
+                                                @if ($group->specialty)
+                                                <div class="dropdown-divider"></div>
+                                                @endif
                                                 <a href="{{ route('group.consolidate-grades', $group) }}"
                                                     class="dropdown-item btn-sm btn-icon btn-icon-start">
                                                     <i data-acorn-icon="file-chart" class="me-1"></i>
