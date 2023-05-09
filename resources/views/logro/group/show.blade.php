@@ -113,7 +113,7 @@
                                                 @if (!$group->specialty)
                                                     <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                                         href="{{ route('group.transfer-students', $group) }}">
-                                                        <i data-acorn-icon="destination"></i>
+                                                        <i data-acorn-icon="destination" class="me-1"></i>
                                                         <span>{{ __('Transfer students') }}</span>
                                                     </a>
                                                 @endif
@@ -122,12 +122,12 @@
                                         @endcan
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                             href="{{ route('group.export.student-list', $group) }}">
-                                            <i data-acorn-icon="download"></i>
+                                            <i data-acorn-icon="download" class="me-1"></i>
                                             <span>{{ __('Student list') }}</span>
                                         </a>
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                             href="{{ route('group.export.information-student-list', $group) }}">
-                                            <i data-acorn-icon="download"></i>
+                                            <i data-acorn-icon="download" class="me-1"></i>
                                             <span>{{ __('Information general from student list') }}</span>
                                         </a>
                                         @hasanyrole('SUPPORT|COORDINATOR|SECRETARY')
@@ -136,8 +136,13 @@
                                                 <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
                                                     id="openModelGenerateGradeReport" data-bs-toggle="modal"
                                                     data-bs-target="#generateGradeReport">
-                                                    <i data-acorn-icon="file-text"></i>
+                                                    <i data-acorn-icon="file-text" class="me-1"></i>
                                                     <span>{{ __('Grade report') }}</span>
+                                                </a>
+                                                <a href="{{ route('group.consolidate-grades', $group) }}"
+                                                    class="dropdown-item btn-sm btn-icon btn-icon-start">
+                                                    <i data-acorn-icon="file-chart" class="me-1"></i>
+                                                    <span>{{ __('Consolidation grades') }}</span>
                                                 </a>
                                             @endif
                                         @endhasanyrole
@@ -145,7 +150,7 @@
                                         <div class="dropdown-divider"></div>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#openModelSendMailTutors"
                                         class="dropdown-item btn-sm btn-icon btn-icon-start">
-                                            <i data-acorn-icon="email"></i>
+                                            <i data-acorn-icon="email" class="me-1"></i>
                                             <span>Enviar correo a acudientes</span>
                                         </a>
                                         @endhasanyrole

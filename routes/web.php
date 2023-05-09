@@ -4,6 +4,7 @@ use App\Http\Controllers\api\UserAlertsController;
 use App\Http\Controllers\AttendanceStudentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChangeEmailAddressAdmin;
+use App\Http\Controllers\ConsolidateGradesByArea;
 use App\Http\Controllers\CoordinationController;
 use App\Http\Controllers\CoordinationDegreeController;
 use App\Http\Controllers\CoordinationEmploymentHistoryController;
@@ -240,6 +241,8 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('groups/{group}/transfer-students', [TransferController::class, 'groupStudents_hss'])->name('group.transfer-students.hss');
     Route::post('groups/transfer-sel-group', [TransferController::class, 'selectionGroup'])->name('group.transfer-students.selGroup');
     Route::post('groups/{group}/grade-report', [GradeController::class, 'reportForGroup'])->name('group.reportGrade');
+
+    Route::get('groups/{group}/consolidate-grades', [ConsolidateGradesByArea::class, 'make'])->name('group.consolidate-grades');
 
 
     /* Route Group Directors */
