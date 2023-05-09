@@ -583,7 +583,7 @@ class GradeController extends Controller
             ! $group->specialty,
                 function ($query) { $query->whereNull('specialty'); },
                 function ($query) use ($group) { $query->where('id', $group->specialty_area_id); }
-        )->withWhereHas('subjects', $fn_sb)->orderBy('name')->get();
+        )->withWhereHas('subjects', $fn_sb)->orderBy('last')->orderBy('name')->get();
     }
 
     public static function areaNoteStudent($area, $periods, $grades, $studyTime)
@@ -687,6 +687,7 @@ class GradeController extends Controller
                     ]);
                 }
             )
+            ->orderBy('last')
             ->orderBy('name')->get()
             ->map(function ($areasMap) use ($periods, $studyTime) {
                 $areaMap = [
