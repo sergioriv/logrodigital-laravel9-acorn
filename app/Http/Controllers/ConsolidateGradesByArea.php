@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ConsolidateGeneralGradesGroup;
 use App\Models\Group;
 use App\Models\Period;
 use App\Models\ResourceArea;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ConsolidateGradesByArea extends Controller
 {
@@ -32,7 +34,7 @@ class ConsolidateGradesByArea extends Controller
 
         /* Dirección para guardar los reportes generados */
         $pathUuid = Str::uuid();
-        $pathReport = "app/reports/". $pathUuid ."/";
+        $pathReport = "reports/". $pathUuid ."/";
 
         if (!File::isDirectory(public_path($pathReport))) {
             File::makeDirectory(public_path($pathReport), 0755, true, true);
@@ -110,18 +112,10 @@ class ConsolidateGradesByArea extends Controller
 
     private function generatePDF($areas, $students)
     {
-        // $periods = Period::where('school_year_id', $this->Y->id)->where('study_time_id', $this->ST->id)->orderBy('ordering')->get()
-        //     ->map(function ($periodMap) {
-        //         return [
-        //             'id' => $periodMap->id,
-        //             'ordering' => $periodMap->ordering,
-        //             'start' => $periodMap->start,
-        //             'end' => $periodMap->end,
-        //             'workload' => $periodMap->workload . '%',
-        //             'workload_porcentage' => (float)$periodMap->workload / 100
-        //         ];
-        //     });
+        /* Informe general */
+        Excel::store(new ConsolidateGeneralGradesGroup($this->G, $this->ST, $this->period, $areas, $students), $this->path .'Consolidado general - Group ' . $this->G->name . '.xlsx', 'public');
 
+        /* Informe por area */
         foreach ($areas as $area) {
             $pdf = Pdf::loadView('logro.pdf.consolidate-grades-by-area', [
                 'SCHOOL' => SchoolController::myschool()->getData(),
@@ -137,10 +131,10 @@ class ConsolidateGradesByArea extends Controller
             $pdf->setPaper([0.0, 0.0, 612, 1008], count($area['subjects']) < 5 ? 'portrait' : 'landscape');
 
             $pdf->setOption('dpi', 72);
-            $pdf->save($this->path . "Consolidado " . $area['name'] . " - Grupo " . $this->G->name . ".pdf");
+            $pdf->save('app/'.$this->path . "Consolidado " . $area['name'] . " - Grupo " . $this->G->name . ".pdf");
         }
 
         /* Generate Zip and Download */
-        return (new ZipController($this->path))->downloadConsolidateGradesByArea($this->G->name);
+        return (new ZipController('app/'.$this->path))->downloadConsolidateGradesByArea($this->G->name);
     }
 }
