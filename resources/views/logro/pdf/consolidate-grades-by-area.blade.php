@@ -124,9 +124,29 @@
         .p-2 {
             padding: 5px;
         }
+
+        .pb-1 {
+            padding-bottom: 2.5px;
+        }
+
+        .px-1 {
+            padding-left: 2.5px !important;
+            padding-right: 2.5px !important;
+        }
+
+        .px-2 {
+            padding-left: 5px !important;
+            padding-right: 5px !important;
+        }
+
+        .px-3 {
+            padding-left: 7.5px !important;
+            padding-right: 7.5px !important;
+        }
+
         .py-2 {
-            padding-top: 5px;
-            padding-bottom: 5px;
+            padding-top: 5px !important;
+            padding-bottom: 5px !important;
         }
 
         .p-se-1 {
@@ -271,6 +291,7 @@
         .text-start {
             text-align: left;
         }
+
         .text-end {
             text-align: right;
         }
@@ -293,9 +314,9 @@
         .low_performance {
             background-color: rgba(182, 40, 54, 0.15);
             color: #cf2637;
-            border-radius: 4px;
-            padding: 2px 4px;
+            font-size: inherit;
         }
+
         .grade_estimado {
             color: rgb(119, 119, 119);
         }
@@ -310,14 +331,6 @@
 
         .page-break {
             page-break-after: always;
-        }
-
-        .rotated_vertical {
-            -webkit-transform: rotate(270deg);
-            -moz-transform: rotate(270deg);
-            -ms-transform: rotate(270deg);
-            -o-transform: rotate(270deg);
-            transform: rotate(270deg);
         }
     </style>
 </head>
@@ -337,99 +350,146 @@
                     {{ $SCHOOL->name ?? null }}
                 </p>
                 <p>
-                    <strong>CONSOLIDADO DE CALIFICACIONES
-                        <br />
-                        {{ $area['name'] }}</strong>
-                    <br />
-                    GRUPO {{ $group->name }}
+                    <strong>CONSOLIDADO DE CALIFICACIONES</strong>
                 </p>
             </td>
             <td class="h-60p w-70p text-end align-bottom">{{ now()->format('d / m / Y') }}</td>
         </tr>
     </table>
 
+    @php
+        $subjectLosses = [];
+    @endphp
+
+    <section>
+        <div class="text-center bold f-size-8">
+            GRUPO {{ $group->name }}
+        </div>
+        <div class="text-center bold f-size-8">
+            {{ $area['name'] }}
+        </div>
+        <div class="text-center bold">
+            {{ $period->name }} - {{ $period->workload }}%
+        </div>
+    </section>
+
     <section class="mt-2 p-1 card">
         <table class="table w-100" border="0">
             <!-- Asignaturas -->
             <tr>
-                <th colspan="2">&nbsp;</th>
+                <th class="text-center" style="vertical-align: bottom; width:15px;">#</th>
+                <th class="text-start" style="vertical-align: bottom">Estudiantes</th>
                 @foreach ($area['subjects'] as $subject)
-                    <th colspan="{{ 1 + count($periods) }}">
-                        <div class="table-title">{{ $subject['resource_name'] }}</div>
-                    </th>
-                @endforeach
-            </tr>
-
-            <!-- Periodos -->
-            <tr>
-                <th class="h-50p py-2 text-center" style="vertical-align: bottom">#</th>
-                <th class="h-50p py-2 text-start" style="vertical-align: bottom">Estudiantes</th>
-                @foreach ($area['subjects'] as $subject)
-                @foreach ($periods as $period)
                     @php
-                        $periodName = 'P' . $period['ordering'] . ' - ' . $period['workload'];
+                        $subjectLosses[$subject['id']] = 0;
                     @endphp
-                    @if ($period['end'] > today())
-                        @php
-                            $periodName .= '<br>(estimado)';
-                        @endphp
-                    @endif
-                    <th class="text-center w-30p" align="center">
-                        <div class="rotated_vertical">{!! $periodName !!}</div>
+                    <th class="pb-1">
+                        <div class="table-title px-3">{{ $subject['resource_name'] }}</div>
                     </th>
-                    @if ($period['end'] < today())
-                        <th class="text-center w-30p" align="center">
-                            <div class="rotated_vertical">AC</div>
-                        </th>
-                    @endif
                 @endforeach
-                @endforeach
+                <th class="text-center pb-1" style="width: 40px;" align="center">
+                    <div class="table-title px-3">TOTAL ÁREA</div>
+                </th>
             </tr>
 
+            @php
+                $studentGradeArea = [];
+            @endphp
             @foreach ($students as $key => $student)
+                @php
+                    $studentAreaTotal = 0;
+                    $studentGradeArea[$student->id]['areaTotal'] = 0;
+                @endphp
                 <tr class="separator-top">
                     <td class="py-2" align="center">{{ ++$key }}</td>
                     <td>{{ $student->getCompleteNames() }}</td>
                     @foreach ($area['subjects'] as $subject)
                         @php
-                            $acumulado = 0;
-                            $currentPorcentage = 0;
-                            $estimado = 0;
+                            $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
+                                ->filter(function ($grade) use ($student, $period) {
+                                    return $student->id === $grade['student_id'] && $grade['period_id'] === $period->id;
+                                })
+                                ->first();
+                            $gradeFinal = $gradeByStudentByPeriod['final'] ?? null;
+                            $studentAreaTotal += $gradeByStudentByPeriod['final_workload'] ?? null;
+
+                            if ($gradeFinal <= $ST->low_performance && !is_null($gradeFinal)) {
+                                $gradeFinalHtml = "<text class='table-title low_performance'>{$gradeFinal}</text>";
+                                $subjectLosses[$subject['id']] += 1;
+                            } else {
+                                $gradeFinalHtml = $gradeFinal ?? '-';
+                            }
                         @endphp
-                        @foreach ($periods as $period)
-                            @php
-                                $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
-                                    ->filter(function ($grade) use ($student, $period) {
-                                        return $student->id === $grade['student_id'] && $grade['period_id'] === $period['id'];
-                                    })
-                                    ->first();
-                                $gradeFinal = $gradeByStudentByPeriod['final'] ?? null;
-                                $gradeFinalHtml = $gradeFinal <= $ST->low_performance && !is_null($gradeFinal)
-                                    ? "<text class='low_performance'>{$gradeFinal}</text>"
-                                    : $gradeFinal;
-                            @endphp
 
-                            <td class="text-center" style="width: 20px">
-                                {!! $gradeFinalHtml ?: ($GradeController::numberFormat($ST, $estimado) ? '<text class="grade_estimado">'. $GradeController::numberFormat($ST, $estimado) .'</text' : '-') !!}
-                            </td>
-                            @if ($period['end'] < today())
-                                @php
-                                    $acumulado += $gradeFinal * $period['workload_porcentage'];
-                                    $currentPorcentage += $period['workload_porcentage'];
-
-                                    if ($gradeFinal) {
-                                        $x = 3.0 - $acumulado;
-                                        $estimado += $x / (1 - $period['workload_porcentage']);
-                                    }
-                                @endphp
-                                <td class="text-center" style="width: 20px">
-                                    {{ $GradeController::numberFormat($ST, $acumulado) ?? '-' }}</td>
-                            @endif
-                        @endforeach
+                        <td class="text-center" style="width: 20px">
+                            {!! $gradeFinalHtml !!}
+                        </td>
                     @endforeach
+                    @php
+                        $studentGradeArea[$student->id]['areaTotal'] = $GradeController::numberFormat($ST, $studentAreaTotal);
+
+                        if ($studentAreaTotal <= $ST->low_performance && !is_null($studentGradeArea[$student->id]['areaTotal'])) {
+                            $areaLosses += 1;
+                        }
+                        if ($studentGradeArea[$student->id]['areaTotal'] <= $ST->low_performance && !is_null($studentGradeArea[$student->id]['areaTotal'])) {
+                            $studentGradeAreaHtml = "<text class='table-title low_performance'>{$studentGradeArea[$student->id]['areaTotal']}</text>";
+                        } else {
+                            $studentGradeAreaHtml = $studentGradeArea[$student->id]['areaTotal'] ?? '-';
+                        }
+                    @endphp
+                    <td align="center" class="bold">
+                        {!! $studentGradeAreaHtml !!}
+                    </td>
                 </tr>
             @endforeach
-            <tr></tr>
+            <tr class="separator-top">
+                <td colspan="{{ 3 + count($area['subjects']) }}">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-transform: uppercase; text-align: center;">Cant. Estudiantes que
+                    perdieron</td>
+                @foreach ($area['subjects'] as $subject)
+                    <th colspan="1">
+                        <div class="table-title {{ $subjectLosses[$subject['id']] > 0 ? 'low_performance' : null }}">
+                            {{ $subjectLosses[$subject['id']] }}</div>
+                    </th>
+                @endforeach
+                <th>
+                    <div class="table-title {{ $areaLosses > 0 ? 'low_performance' : null }}">{{ $areaLosses }}
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- Mejores estudiantes -->
+    <section class="mt-2 p-1 card">
+        <table class="table w-100" border="0">
+            <tr>
+                <th colspan="2">
+                    <div class="table-title">ESTUDIANTES CON MEJOR PROMEDIO</div>
+                </th>
+            </tr>
+            @php
+                $topStudents = array_keys($studentGradeArea, max($studentGradeArea));
+            @endphp
+            @foreach ($topStudents as $topStudent)
+            @unless (is_null($studentGradeArea[$topStudent]['areaTotal']))
+                <tr>
+                    <td>
+                        {{ $students->filter(function ($student) use ($topStudent) {
+                                return $student->id === $topStudent;
+                            })->first()->getCompleteNames() }}
+                    </td>
+                    <td>
+                        {{ $studentGradeArea[$topStudent]['areaTotal'] }}
+                    </td>
+                </tr>
+            @endunless
+            @endforeach
         </table>
     </section>
 </body>

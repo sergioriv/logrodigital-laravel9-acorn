@@ -769,7 +769,8 @@ class StudentController extends Controller
                 )->with('teacherSubjectGroup.subject', 'teacherSubjectGroup.teacher')
                 ->orderByDesc('date')
                 ->get();
-
+        }
+        if (auth()->id() === $student->group->teacher_id || RoleUser::COORDINATION_ROL === UserController::role_auth()) {
             $studentGradesxGroup = GradeController::studentGrades($Y, $student);
         }
 

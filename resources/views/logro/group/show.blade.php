@@ -36,6 +36,10 @@
             $('button#btn-generateGradeReport').prop('disabled', false);
         });
 
+        jQuery('#openModelConsolidateGradeReport').click(function() {
+            $('button#btn-consolidateGradeReport').prop('disabled', false);
+        });
+
         jQuery('[grades-view]').on('click', function () {
             let studentId = $(this).attr('grades-view');
             let modalStudentGradesString = "#modalStudentGrades";
@@ -144,8 +148,9 @@
                                                 @if ($group->specialty)
                                                 <div class="dropdown-divider"></div>
                                                 @endif
-                                                <a href="{{ route('group.consolidate-grades', $group) }}"
-                                                    class="dropdown-item btn-sm btn-icon btn-icon-start">
+                                                <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
+                                                    id="openModelConsolidateGradeReport" data-bs-toggle="modal"
+                                                    data-bs-target="#consolidateGradeReport">
                                                     <i data-acorn-icon="file-chart" class="me-1"></i>
                                                     <span>{{ __('Consolidation grades') }}</span>
                                                 </a>
@@ -797,6 +802,51 @@
                 </div>
             </div>
             <!-- Modal Grades Report End -->
+
+            <!-- Modal Consolidate Report Start -->
+            <div class="modal fade" id="consolidateGradeReport" aria-labelledby="modalConsolidateGradeReport"
+                data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalConsolidateGradeReport">
+                                {{ __('Consolidation grades') }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('group.consolidate-grades', $group) }}" method="POST">
+                            @csrf
+
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <x-label>{{ __('select period') }}</x-label>
+                                    <select logro='select2' name="periodConsolidateGrades">
+                                        <option label="&nbsp;"></option>
+                                        @foreach ($periods as $period)
+                                            <option value="{{ $period->id }}">
+                                                {{ $period->name }}
+                                            </option>
+                                        @endforeach
+
+                                        {{-- Para generar el reporte final --}}
+                                        @if ($periods->count() === $countPeriods)
+                                            <option value="FINAL">FINAL</option>
+                                        @endif
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-danger"
+                                    data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                <button type="submit" id="btn-consolidateGradeReport"
+                                    class="btn btn-primary">{{ __('Generate') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Consolidate Report End -->
 
         @endif
     @endhasanyrole

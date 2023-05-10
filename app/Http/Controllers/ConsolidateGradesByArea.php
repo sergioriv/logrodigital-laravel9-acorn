@@ -10,6 +10,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ConsolidateGradesByArea extends Controller
 {
@@ -19,10 +20,16 @@ class ConsolidateGradesByArea extends Controller
     private $SY;
 
     public $path;
+    private $period;
 
 
-    public function make(Group $group)
+    public function make(Request $request, Group $group)
     {
+        $request->validate([
+            'periodConsolidateGrades' => ['required', Rule::exists('periods', 'id')]
+        ]);
+        $this->period = Period::find($request->periodConsolidateGrades);
+
         /* Dirección para guardar los reportes generados */
         $pathUuid = Str::uuid();
         $pathReport = "app/reports/". $pathUuid ."/";
@@ -61,7 +68,7 @@ class ConsolidateGradesByArea extends Controller
                             'teacherSubject' => function ($query) use ($studentsIDS) {
                                 $query->where('school_year_id', $this->Y->id)->where('group_id', $this->G->id)->with([
                                     'grades' => function ($query) use ($studentsIDS) {
-                                        $query->whereIn('student_id', $studentsIDS);
+                                        $query->whereIn('student_id', $studentsIDS)->where('period_id', $this->period->id);
                                     }
                                 ]);
                             }
@@ -76,18 +83,21 @@ class ConsolidateGradesByArea extends Controller
                     'name' => $areaMap->name,
                     'subjects' => $areaMap->subjects->map(function ($subjectMap) {
                         $subjectGrade = $subjectMap?->teacherSubject?->grades;
+                        $academic_porcentage = (float)($subjectMap->academicWorkload->course_load / 100);
                         return [
                             'id' => $subjectMap->id,
-                            'resource_name' => $subjectMap->resourceSubject->name,
+                            'resource_name' => $subjectMap->resourceSubject->public_name,
                             'academic_workload' => $subjectMap->academicWorkload->course_load,
-                            'academic_wordload_porcentage' => (float)($subjectMap->academicWorkload->course_load / 100),
+                            'academic_wordload_porcentage' => $academic_porcentage,
                             'teacher_subject_group' => $subjectMap?->teacherSubject?->id,
-                            'gradesByStudent' => $subjectGrade ? $subjectGrade->map(function ($gradeMap) {
+                            'gradesByStudent' => $subjectGrade ? $subjectGrade->map(function ($gradeMap) use ($academic_porcentage) {
+                                $gradeFinal = $gradeMap->final ?: $this->ST->minimum_grade;
                                 return [
                                     'id' => $gradeMap->id,
                                     'period_id' => $gradeMap->period_id,
                                     'student_id' => $gradeMap->student_id,
-                                    'final' => $gradeMap->final ?: $this->ST->minimum_grade
+                                    'final' => $gradeFinal,
+                                    'final_workload' => $gradeFinal * $academic_porcentage
                                 ];
                             }) : []
                         ];
@@ -95,36 +105,36 @@ class ConsolidateGradesByArea extends Controller
                 ];
             });
 
-
         return $this->generatePDF($areas, $students);
     }
 
     private function generatePDF($areas, $students)
     {
-        $periods = Period::where('school_year_id', $this->Y->id)->where('study_time_id', $this->ST->id)->orderBy('ordering')->get()
-            ->map(function ($periodMap) {
-                return [
-                    'id' => $periodMap->id,
-                    'ordering' => $periodMap->ordering,
-                    'start' => $periodMap->start,
-                    'end' => $periodMap->end,
-                    'workload' => $periodMap->workload . '%',
-                    'workload_porcentage' => (float)$periodMap->workload / 100
-                ];
-            });
+        // $periods = Period::where('school_year_id', $this->Y->id)->where('study_time_id', $this->ST->id)->orderBy('ordering')->get()
+        //     ->map(function ($periodMap) {
+        //         return [
+        //             'id' => $periodMap->id,
+        //             'ordering' => $periodMap->ordering,
+        //             'start' => $periodMap->start,
+        //             'end' => $periodMap->end,
+        //             'workload' => $periodMap->workload . '%',
+        //             'workload_porcentage' => (float)$periodMap->workload / 100
+        //         ];
+        //     });
 
         foreach ($areas as $area) {
             $pdf = Pdf::loadView('logro.pdf.consolidate-grades-by-area', [
                 'SCHOOL' => SchoolController::myschool()->getData(),
                 'group' => $this->G,
                 'ST' => $this->ST,
-                'periods' => $periods,
+                'period' => $this->period,
                 'area' => $area,
                 'students' => $students,
-                'GradeController' => GradeController::class
+                'GradeController' => GradeController::class,
+                'areaLosses' => 0
             ]);
 
-            $pdf->setPaper([0.0, 0.0, 612, 1008], count($area['subjects']) < 3 ? 'portrait' : 'landscape');
+            $pdf->setPaper([0.0, 0.0, 612, 1008], count($area['subjects']) < 5 ? 'portrait' : 'landscape');
 
             $pdf->setOption('dpi', 72);
             $pdf->save($this->path . "Consolidado " . $area['name'] . " - Grupo " . $this->G->name . ".pdf");
