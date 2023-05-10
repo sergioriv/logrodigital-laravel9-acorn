@@ -251,10 +251,7 @@ class GroupController extends Controller
             ->when(RoleUser::TEACHER_ROL === $roleAuth, function ($query){
                 // para el director de grupo
                 return $query->with('remarks');
-            }, function ($query) {
-                // si no es director, poder descargar el reporte de notas
-                return $query->where('start_grades', '<=', today()->format('Y-m-d'));
-            })
+            })->where('start_grades', '<=', today()->format('Y-m-d'))
             ->orderBy('ordering')->get();
 
 

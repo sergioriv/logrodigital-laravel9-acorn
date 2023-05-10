@@ -130,7 +130,7 @@
                                             <i data-acorn-icon="download" class="me-1"></i>
                                             <span>{{ __('Information general from student list') }}</span>
                                         </a>
-                                        @hasanyrole('SUPPORT|COORDINATOR|SECRETARY')
+                                        @hasanyrole('SUPPORT|COORDINATOR|SECRETARY|TEACHER|TEACHER')
                                             @if (!$group->specialty && !$periods->isEmpty())
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
@@ -750,7 +750,7 @@
 
     @endcan
 
-    @hasanyrole('SUPPORT|COORDINATOR|SECRETARY')
+    @hasanyrole('SUPPORT|COORDINATOR|SECRETARY|TEACHER')
         @if (!$group->specialty && !$periods->isEmpty())
 
             <!-- Modal Grades Report Start -->
