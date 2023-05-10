@@ -757,7 +757,6 @@
 
     @hasanyrole('SUPPORT|COORDINATOR|SECRETARY|TEACHER')
         @if (!$group->specialty && !$periods->isEmpty())
-
             <!-- Modal Grades Report Start -->
             <div class="modal fade" id="generateGradeReport" aria-labelledby="modalGenerateGradeReport"
                 data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -802,7 +801,8 @@
                 </div>
             </div>
             <!-- Modal Grades Report End -->
-
+        @endif
+        @if ($group->studyYear->useGrades() && !$periods->isEmpty())
             <!-- Modal Consolidate Report Start -->
             <div class="modal fade" id="consolidateGradeReport" aria-labelledby="modalConsolidateGradeReport"
                 data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -847,7 +847,6 @@
                 </div>
             </div>
             <!-- Modal Consolidate Report End -->
-
         @endif
     @endhasanyrole
 
