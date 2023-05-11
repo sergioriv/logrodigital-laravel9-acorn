@@ -818,7 +818,7 @@
 
                             <div class="modal-body">
 
-                                @if ($groupsSpecialty && !$group->specialty)
+                                @if (count($groupsSpecialty) && !$group->specialty)
                                 <div class="form-group mb-2">
                                     <x-label>{{ __('select a group') }}</x-label>
                                     <select logro='select2' name="groupConsolidateGrades">
