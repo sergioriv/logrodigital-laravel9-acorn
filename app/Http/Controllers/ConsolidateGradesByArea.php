@@ -56,18 +56,23 @@ class ConsolidateGradesByArea extends Controller
         $this->SY = $group->studyYear;
         $this->ST = $group->studyTime;
 
+        $students = Student::singleData()->whereHas('groupYear', fn ($gr) => $gr->where('group_id', $group->id))->get();
+        $studentsIDS = $students->pluck('id')->toArray();
+
         $groupsSpecialty = Group::where('school_year_id', $this->Y->id)
             ->where('specialty', TRUE)
             ->where('school_year_id', $group->school_year_id)
             ->where('headquarters_id', $group->headquarters_id)
             ->where('study_time_id', $group->study_time_id)
             ->where('study_year_id', $group->study_year_id)
+            ->whereHas(
+                'groupStudents',
+                function ($query) use ($studentsIDS){
+                    $query->whereIn('student_id', $studentsIDS);
+                }
+            )
             ->get();
         $groupsIDS = [$group->id, ...$groupsSpecialty->pluck('id')->toArray()];
-
-
-        $students = Student::singleData()->whereHas('groupYear', fn ($gr) => $gr->where('group_id', $group->id))->get();
-        $studentsIDS = $students->pluck('id')->toArray();
 
         $students->map(function ($studentMap) use ($group) {
                 $groupSpecialty = Group::where('school_year_id', $this->Y->id)
@@ -85,8 +90,26 @@ class ConsolidateGradesByArea extends Controller
                 return $studentMap->setAttribute('specialty', $groupSpecialty->specialty_area_id ?? null);
             });
 
+        $areasInitial = ResourceArea::query()
+            ->select('id')
+            ->whereNull('specialty')
+            ->whereHas(
+                'subjects',
+                function ($query) {
+                    $query->where('school_year_id', $this->Y->id)
+                        ->whereHas(
+                            'academicWorkload',
+                            function ($query) {
+                                $query->where('school_year_id', $this->Y->id)->where('study_year_id', $this->SY->id);
+                            }
+                        );
+                }
+            )
+            ->get()->pluck('id')->toArray();
+        $areasIDS = array_merge($areasInitial, $groupsSpecialty->pluck('specialty_area_id')->toArray());
 
         $areas = ResourceArea::query()
+            ->whereIn('id', $areasIDS)
             ->withWhereHas(
                 'subjects',
                 function ($query) use ($studentsIDS, $groupsIDS) {
@@ -146,7 +169,6 @@ class ConsolidateGradesByArea extends Controller
     private function generatePDF($areas, $students)
     {
         /* Informe general */
-        // return Excel::download(new ConsolidateGeneralGradesGroup($this->G, $this->ST, $this->period, $areas, $students), 'Consolidado general - Group ' . $this->G->name . '.xlsx');
         Excel::store(new ConsolidateGeneralGradesGroup($this->G, $this->ST, $this->period, $areas, $students), $this->path .'Consolidado general - Group ' . $this->G->name . '.xlsx', 'public');
 
         /* Informe por area */
