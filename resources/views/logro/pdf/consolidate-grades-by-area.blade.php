@@ -395,11 +395,6 @@
             @php
                 $studentGradeArea = [];
 
-                if ($area['isSpecialty']) {
-                    $students = $students->filter(function ($filter) use ($area) {
-                        return $filter->specialty === $area['id'];
-                    });
-                }
                 $key = 0;
             @endphp
             @foreach ($students as $student)
