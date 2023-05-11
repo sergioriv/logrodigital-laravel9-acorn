@@ -77,6 +77,8 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
         }
         $headers[] = 'ASIGNATURAS PERIDIDAS';
         $headers[] = 'ÁREAS PERDIDAS';
+        $headers[] = 'PROMEDIO';
+        $headers[] = 'PUESTO';
 
         $array = [
             [__('Group') . ': ' . $this->group->name],
@@ -85,6 +87,31 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             [null],
             $headers
         ];
+
+        $position = [];
+        foreach ($this->students as $student) {
+            $average = 0;
+            $countSubjects = 0;
+            foreach ($this->areas as $area) {
+                foreach ($area['subjects'] as $subject) {
+
+                    $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
+                        ->filter(function ($grade) use ($student) {
+                            return $student->id === $grade['student_id'] && $grade['period_id'] === $this->period->id;
+                        })
+                        ->first();
+
+                    $gradeSubject = $gradeByStudentByPeriod['final'] ?? null;
+
+                    $average += $gradeSubject;
+                    $countSubjects++;
+                }
+            }
+            $average = ($average / $countSubjects);
+            $position[$student->id] = $average;
+        }
+
+        arsort($position);
 
         /* Estudiantes */
         foreach ($this->students as $key => $student) {
@@ -108,12 +135,12 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
 
                     $gradeSubject = $gradeByStudentByPeriod['final'] ?? null;
                     $row[] = $this->gradeController::numberFormat($this->ST, $gradeSubject) ?? '-';
+
                     $sumArea += $gradeByStudentByPeriod['final_workload'] ?? null;
 
                     if ($gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
                         $subjectsLosses++;
                     }
-
 
                     /* total area */
                     if (++$keySubject === count($area['subjects'])) {
@@ -126,8 +153,13 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                     }
                 }
             }
+
             $row[] = $subjectsLosses ?: '0';
             $row[] = $areasLosses ?: '0';
+            $row[] = $this->gradeController::numberFormat($this->ST, $position[$student->id]) ?: '0';
+
+            $puesto = array_search($student->id, array_keys($position));
+            $row[] = ++$puesto;
 
             $array[] = $row;
         }
