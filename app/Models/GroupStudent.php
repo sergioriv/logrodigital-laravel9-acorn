@@ -25,6 +25,12 @@ class GroupStudent extends Model
         return $this->belongsTo(Group::class);
     }
 
+    public function groupPrimary()
+    {
+        return $this->belongsTo(Group::class, 'group_id', 'id')
+                    ->where('school_year_id', SchoolYearController::current_year()->id)
+                    ->whereNull('specialty');
+    }
     public function groupSpecialty()
     {
         return $this->belongsTo(Group::class, 'group_id', 'id')

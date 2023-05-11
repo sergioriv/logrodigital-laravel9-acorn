@@ -220,9 +220,15 @@ class GroupController extends Controller
         $roleAuth = UserController::role_auth();
 
 
-        $studentsGroup = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $group->id))
-                ->with('groupOfSpecialty')
-                ->get();
+        $studentsGroup = Student::singleData()->whereHas(
+                'groupYear', fn($gr) => $gr->where('group_id', $group->id)
+            )
+            ->when(
+                $group->specialty,
+                    function ($when) { $when->with('groupOfPrimary'); },
+                    function ($when) { $when->with('groupOfSpecialty'); }
+            )
+            ->get();
 
         $areas = $this->subjects_teacher($Y, $group);
 

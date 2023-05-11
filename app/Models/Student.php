@@ -277,6 +277,12 @@ class Student extends Model
         return $this->hasMany(GroupStudent::class);
     }
 
+    public function groupOfPrimary()
+    {
+        return $this->hasOne(GroupStudent::class)
+                ->withWhereHas('groupPrimary');
+    }
+
     public function groupOfSpecialty()
     {
         return $this->hasOne(GroupStudent::class)

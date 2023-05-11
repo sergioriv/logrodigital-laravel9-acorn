@@ -254,6 +254,8 @@
                                                                 <td>
                                                                     @if (is_null($group->specialty) && !is_null($studentG->groupOfSpecialty))
                                                                         {{ $studentG->groupOfSpecialty->groupSpecialty->name }}
+                                                                    @elseif (!is_null($group->specialty) && !is_null($studentG->groupOfPrimary))
+                                                                        {{ $studentG->groupOfPrimary->groupPrimary->name }}
                                                                     @endif
                                                                 </td>
                                                                 @hasanyrole('SUPPORT|COORDINATOR')
