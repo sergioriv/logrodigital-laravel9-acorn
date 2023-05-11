@@ -242,7 +242,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::post('groups/transfer-sel-group', [TransferController::class, 'selectionGroup'])->name('group.transfer-students.selGroup');
     Route::post('groups/{group}/grade-report', [GradeController::class, 'reportForGroup'])->name('group.reportGrade');
 
-    Route::post('groups/consolidate/grades', [ConsolidateGradesByArea::class, 'make'])->name('group.consolidate-grades');
+    Route::post('groups/{group}/consolidate/grades', [ConsolidateGradesByArea::class, 'make'])->name('group.consolidate-grades');
 
 
     /* Route Group Directors */

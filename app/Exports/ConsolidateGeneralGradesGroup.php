@@ -22,6 +22,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
     private $gradeController;
     private $spaceCellVoid = "  ";
     private $colAreas = [];
+    private $colAreasSpecialty = [];
 
     public function __construct($group, $ST, $period, $areas, $students)
     {
@@ -70,6 +71,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                     $headers[] = "ÁREA: " . $area['name'];
                     $headers[] = $this->spaceCellVoid;
                     $this->colAreas[] = $colAreas;
+                    if ($area['isSpecialty']) $this->colAreasSpecialty[] = $colAreas;
 
                     $colAreas++;
                 }
@@ -77,6 +79,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
         }
         $headers[] = 'ASIGNATURAS PERIDIDAS';
         $headers[] = 'ÁREAS PERDIDAS';
+        $headers[] = 'ASIGNATURAS EVALUADAS';
         $headers[] = 'PROMEDIO';
         $headers[] = 'PUESTO';
 
@@ -104,10 +107,18 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                     $gradeSubject = $gradeByStudentByPeriod['final'] ?? null;
 
                     $average += $gradeSubject;
-                    $countSubjects++;
+                    if (!$area['isSpecialty']) {
+                        $countSubjects++;
+                    }
                 }
             }
-            $average = ($average / $countSubjects);
+
+            $myAreaSpecialty = collect($this->areas)->filter(function ($filter) use ($student) {
+                return $filter['id'] === $student->specialty;
+            })->first() ?? ['subjects' => []];
+
+            $totalSubjects = $countSubjects + count($myAreaSpecialty['subjects']) ?? 0;
+            $average = ($average / $totalSubjects) ?? 0;
             $position[$student->id] = $average;
         }
 
@@ -115,6 +126,8 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
 
         /* Estudiantes */
         foreach ($this->students as $key => $student) {
+            $average = 0;
+            $countSubjects = 0;
             $subjectsLosses = 0;
             $areasLosses = 0;
 
@@ -138,6 +151,11 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
 
                     $sumArea += $gradeByStudentByPeriod['final_workload'] ?? null;
 
+                    $average += $gradeSubject;
+                    if (!$area['isSpecialty']) {
+                        $countSubjects++;
+                    }
+
                     if ($gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
                         $subjectsLosses++;
                     }
@@ -154,10 +172,25 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                 }
             }
 
+            /* ASIGNATURAS PERDIDAS */
             $row[] = $subjectsLosses ?: '0';
+
+            /* AREAS PERDIDAS */
             $row[] = $areasLosses ?: '0';
+
+            /* ASIGNATURAS EVALUADAS */
+            $myAreaSpecialty = collect($this->areas)->filter(function ($filter) use ($student) {
+                return $filter['id'] === $student->specialty;
+            })->first() ?? ['subjects' => []];
+            $totalSubjects = $countSubjects + count($myAreaSpecialty['subjects']) ?? 0;
+            $average = ($average / $totalSubjects) ?? 0;
+            $row[] = $totalSubjects;
+            /* ASIGNATURAS EVALUADAS END */
+
+            /* PROMEDIO */
             $row[] = $this->gradeController::numberFormat($this->ST, $position[$student->id]) ?: '0';
 
+            /* POSITION */
             $puesto = array_search($student->id, array_keys($position));
             $row[] = ++$puesto;
 
@@ -207,6 +240,18 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                     'startColor' => [
                         'rgb' => 'DDDDDD'
+                    ],
+                ]
+            ];
+        }
+
+        foreach ($this->colAreasSpecialty as $col) {
+            $styles["{$col}{$start}:{$col}{$end}"] = [
+                'font' => ['bold' => true,],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => [
+                        'rgb' => '1EA8E7'
                     ],
                 ]
             ];

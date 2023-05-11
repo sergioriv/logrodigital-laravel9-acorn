@@ -20,6 +20,8 @@ class ResourceArea extends Model
         'specialty'
     ];
 
+    protected $casts = ['specialty' => 'bool'];
+
 
     /*
      * CHILDREN

@@ -394,53 +394,62 @@
 
             @php
                 $studentGradeArea = [];
-            @endphp
-            @foreach ($students as $key => $student)
-                @php
-                    $studentAreaTotal = 0;
-                    $studentGradeArea[$student->id]['areaTotal'] = 0;
-                @endphp
-                <tr class="separator-top">
-                    <td class="py-2" align="center">{{ ++$key }}</td>
-                    <td>{{ $student->getCompleteNames() }}</td>
-                    @foreach ($area['subjects'] as $subject)
-                        @php
-                            $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
-                                ->filter(function ($grade) use ($student, $period) {
-                                    return $student->id === $grade['student_id'] && $grade['period_id'] === $period->id;
-                                })
-                                ->first();
-                            $gradeFinal = $gradeByStudentByPeriod['final'] ?? null;
-                            $studentAreaTotal += $gradeByStudentByPeriod['final_workload'] ?? null;
 
-                            if ($gradeFinal <= $ST->low_performance && !is_null($gradeFinal)) {
-                                $gradeFinalHtml = "<text class='table-title low_performance'>{$gradeFinal}</text>";
-                                $subjectLosses[$subject['id']] += 1;
+                if ($area['isSpecialty']) {
+                    $students = $students->filter(function ($filter) use ($area) {
+                        return $filter->specialty === $area['id'];
+                    });
+                }
+                $key = 0;
+            @endphp
+            @foreach ($students as $student)
+
+                    @php
+                        $studentAreaTotal = 0;
+                        $studentGradeArea[$student->id]['areaTotal'] = 0;
+                    @endphp
+                    <tr class="separator-top">
+                        <td class="py-2" align="center">{{ ++$key }}</td>
+                        <td>{{ $student->getCompleteNames() }}</td>
+                        @foreach ($area['subjects'] as $subject)
+                            @php
+                                $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
+                                    ->filter(function ($grade) use ($student, $period) {
+                                        return $student->id === $grade['student_id'] && $grade['period_id'] === $period->id;
+                                    })
+                                    ->first();
+                                $gradeFinal = $gradeByStudentByPeriod['final'] ?? null;
+                                $studentAreaTotal += $gradeByStudentByPeriod['final_workload'] ?? null;
+
+                                if ($gradeFinal <= $ST->low_performance && !is_null($gradeFinal)) {
+                                    $gradeFinalHtml = "<text class='table-title low_performance'>{$gradeFinal}</text>";
+                                    $subjectLosses[$subject['id']] += 1;
+                                } else {
+                                    $gradeFinalHtml = $gradeFinal ?? '-';
+                                }
+                            @endphp
+
+                            <td class="text-center" style="width: 20px">
+                                {!! $gradeFinalHtml !!}
+                            </td>
+                        @endforeach
+                        @php
+                            $studentGradeArea[$student->id]['areaTotal'] = $GradeController::numberFormat($ST, $studentAreaTotal);
+
+                            if ($studentAreaTotal <= $ST->low_performance && !is_null($studentGradeArea[$student->id]['areaTotal'])) {
+                                $areaLosses += 1;
+                            }
+                            if ($studentGradeArea[$student->id]['areaTotal'] <= $ST->low_performance && !is_null($studentGradeArea[$student->id]['areaTotal'])) {
+                                $studentGradeAreaHtml = "<text class='table-title low_performance'>{$studentGradeArea[$student->id]['areaTotal']}</text>";
                             } else {
-                                $gradeFinalHtml = $gradeFinal ?? '-';
+                                $studentGradeAreaHtml = $studentGradeArea[$student->id]['areaTotal'] ?? '-';
                             }
                         @endphp
-
-                        <td class="text-center" style="width: 20px">
-                            {!! $gradeFinalHtml !!}
+                        <td align="center" class="bold">
+                            {!! $studentGradeAreaHtml !!}
                         </td>
-                    @endforeach
-                    @php
-                        $studentGradeArea[$student->id]['areaTotal'] = $GradeController::numberFormat($ST, $studentAreaTotal);
+                    </tr>
 
-                        if ($studentAreaTotal <= $ST->low_performance && !is_null($studentGradeArea[$student->id]['areaTotal'])) {
-                            $areaLosses += 1;
-                        }
-                        if ($studentGradeArea[$student->id]['areaTotal'] <= $ST->low_performance && !is_null($studentGradeArea[$student->id]['areaTotal'])) {
-                            $studentGradeAreaHtml = "<text class='table-title low_performance'>{$studentGradeArea[$student->id]['areaTotal']}</text>";
-                        } else {
-                            $studentGradeAreaHtml = $studentGradeArea[$student->id]['areaTotal'] ?? '-';
-                        }
-                    @endphp
-                    <td align="center" class="bold">
-                        {!! $studentGradeAreaHtml !!}
-                    </td>
-                </tr>
             @endforeach
             <tr class="separator-top">
                 <td colspan="{{ 3 + count($area['subjects']) }}">&nbsp;</td>

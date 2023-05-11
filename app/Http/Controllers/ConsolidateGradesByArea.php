@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ConsolidateGeneralGradesGroup;
+use App\Http\Controllers\support\Notify;
 use App\Models\Group;
+use App\Models\GroupStudent;
 use App\Models\Period;
 use App\Models\ResourceArea;
 use App\Models\Student;
@@ -25,14 +27,18 @@ class ConsolidateGradesByArea extends Controller
     private $period;
 
 
-    public function make(Request $request)
+    public function make(Request $request, Group $group)
     {
         $request->validate([
-            'groupConsolidateGrades' => ['required', Rule::exists('groups', 'id')],
             'periodConsolidateGrades' => ['required', Rule::exists('periods', 'id')]
         ]);
-        $group = Group::find($request->groupConsolidateGrades);
         $this->period = Period::find($request->periodConsolidateGrades);
+
+        if ($group->specialty) {
+            Notify::fail(__('Not allowed'));
+            return back();
+        }
+
 
         /* Dirección para guardar los reportes generados */
         $pathUuid = Str::uuid();
@@ -50,18 +56,40 @@ class ConsolidateGradesByArea extends Controller
         $this->SY = $group->studyYear;
         $this->ST = $group->studyTime;
 
+        $groupsSpecialty = Group::where('school_year_id', $this->Y->id)
+            ->where('specialty', TRUE)
+            ->where('school_year_id', $group->school_year_id)
+            ->where('headquarters_id', $group->headquarters_id)
+            ->where('study_time_id', $group->study_time_id)
+            ->where('study_year_id', $group->study_year_id)
+            ->get();
+        $groupsIDS = [$group->id, ...$groupsSpecialty->pluck('id')->toArray()];
+
+
         $students = Student::singleData()->whereHas('groupYear', fn ($gr) => $gr->where('group_id', $group->id))->get();
         $studentsIDS = $students->pluck('id')->toArray();
 
+        $students->map(function ($studentMap) use ($group) {
+                $groupSpecialty = Group::where('school_year_id', $this->Y->id)
+                    ->where('specialty', TRUE)
+                    ->where('school_year_id', $group->school_year_id)
+                    ->where('headquarters_id', $group->headquarters_id)
+                    ->where('study_time_id', $group->study_time_id)
+                    ->where('study_year_id', $group->study_year_id)
+                    ->whereHas(
+                        'groupStudents',
+                        fn ($query) => $query->where('student_id', $studentMap->id)
+                    )->where('specialty', TRUE)
+                    ->first();
+
+                return $studentMap->setAttribute('specialty', $groupSpecialty->specialty_area_id ?? null);
+            });
+
+
         $areas = ResourceArea::query()
-            ->when($group->specialty, function ($when) use ($group) {
-                $when->where('id', $group->specialty_area_id);
-            }, function ($when) {
-                $when->whereNull('specialty');
-            })
             ->withWhereHas(
                 'subjects',
-                function ($query) use ($studentsIDS) {
+                function ($query) use ($studentsIDS, $groupsIDS) {
                     $query->where('school_year_id', $this->Y->id)->with('resourceSubject')
                         ->withWhereHas(
                             'academicWorkload',
@@ -69,8 +97,9 @@ class ConsolidateGradesByArea extends Controller
                                 $query->where('school_year_id', $this->Y->id)->where('study_year_id', $this->SY->id)->select('id', 'course_load', 'subject_id');
                             }
                         )->with([
-                            'teacherSubject' => function ($query) use ($studentsIDS) {
-                                $query->where('school_year_id', $this->Y->id)->where('group_id', $this->G->id)->with([
+                            'teacherSubject' => function ($query) use ($studentsIDS, $groupsIDS) {
+                                $query->where('school_year_id', $this->Y->id)->whereIn('group_id', $groupsIDS)
+                                ->with([
                                     'grades' => function ($query) use ($studentsIDS) {
                                         $query->whereIn('student_id', $studentsIDS)->where('period_id', $this->period->id);
                                     }
@@ -80,11 +109,13 @@ class ConsolidateGradesByArea extends Controller
                 }
             )
             ->orderBy('last')
+            ->orderBy('specialty')
             ->orderBy('name')->get()
             ->map(function ($areaMap) {
                 return [
                     'id' => $areaMap->id,
                     'name' => $areaMap->name,
+                    'isSpecialty' => $areaMap->specialty,
                     'subjects' => $areaMap->subjects->map(function ($subjectMap) {
                         $subjectGrade = $subjectMap?->teacherSubject?->grades;
                         $academic_porcentage = (float)($subjectMap->academicWorkload->course_load / 100);
@@ -115,6 +146,7 @@ class ConsolidateGradesByArea extends Controller
     private function generatePDF($areas, $students)
     {
         /* Informe general */
+        // return Excel::download(new ConsolidateGeneralGradesGroup($this->G, $this->ST, $this->period, $areas, $students), 'Consolidado general - Group ' . $this->G->name . '.xlsx');
         Excel::store(new ConsolidateGeneralGradesGroup($this->G, $this->ST, $this->period, $areas, $students), $this->path .'Consolidado general - Group ' . $this->G->name . '.xlsx', 'public');
 
         /* Informe por area */

@@ -134,7 +134,7 @@
                                             <i data-acorn-icon="download" class="me-1"></i>
                                             <span>{{ __('Information general from student list') }}</span>
                                         </a>
-                                        @hasanyrole('SUPPORT|COORDINATOR|SECRETARY|TEACHER|TEACHER')
+                                        @hasanyrole('SUPPORT|COORDINATOR|SECRETARY|TEACHER')
                                             @if (!$group->specialty && !$periods->isEmpty())
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
@@ -144,10 +144,7 @@
                                                     <span>{{ __('Grade report') }}</span>
                                                 </a>
                                             @endif
-                                            @if ($group->studyYear->useGrades() && !$periods->isEmpty())
-                                                @if ($group->specialty)
-                                                <div class="dropdown-divider"></div>
-                                                @endif
+                                            @if ($group->studyYear->useGrades() && !$group->specialty)
                                                 <a class="dropdown-item btn-sm btn-icon btn-icon-start" href="#"
                                                     id="openModelConsolidateGradeReport" data-bs-toggle="modal"
                                                     data-bs-target="#consolidateGradeReport">
@@ -804,7 +801,7 @@
             </div>
             <!-- Modal Grades Report End -->
         @endif
-        @if ($group->studyYear->useGrades() && !$periods->isEmpty())
+        @if ($group->studyYear->useGrades() && !$group->specialty)
             <!-- Modal Consolidate Report Start -->
             <div class="modal fade" id="consolidateGradeReport" aria-labelledby="modalConsolidateGradeReport"
                 data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -815,33 +812,16 @@
                                 {{ __('Consolidation grades') }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form action="{{ route('group.consolidate-grades') }}" method="POST">
+                        <form action="{{ route('group.consolidate-grades', $group) }}" method="POST">
                             @csrf
 
                             <div class="modal-body">
 
-                                @if (count($groupsSpecialty) && !$group->specialty)
-                                <div class="form-group mb-2">
-                                    <x-label>{{ __('select a group') }}</x-label>
-                                    <select logro='select2' name="groupConsolidateGrades">
-                                        <option value="{{ $group->id }}">{{ $group->name }}</option>
-                                        @foreach ($groupsSpecialty as $groupSpecialty)
-                                            <option value="{{ $groupSpecialty->id }}">
-                                                {{ $groupSpecialty->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @else
-                                <input type="hidden" name="groupConsolidateGrades" value="{{ $group->id }}">
-                                @endif
-
                                 <div class="form-group">
                                     <x-label>{{ __('select period') }}</x-label>
                                     <select logro='select2' name="periodConsolidateGrades">
-                                        <option label="&nbsp;"></option>
                                         @foreach ($periods as $period)
-                                            <option value="{{ $period->id }}">
+                                            <option value="{{ $period->id }}" @selected($loop->first)>
                                                 {{ $period->name }}
                                             </option>
                                         @endforeach
