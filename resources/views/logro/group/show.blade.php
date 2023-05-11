@@ -813,10 +813,26 @@
                                 {{ __('Consolidation grades') }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form action="{{ route('group.consolidate-grades', $group) }}" method="POST">
+                        <form action="{{ route('group.consolidate-grades') }}" method="POST">
                             @csrf
 
                             <div class="modal-body">
+
+                                @if ($groupsSpecialty && !$group->specialty)
+                                <div class="form-group mb-2">
+                                    <x-label>{{ __('select a group') }}</x-label>
+                                    <select logro='select2' name="groupConsolidateGrades">
+                                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                        @foreach ($groupsSpecialty as $groupSpecialty)
+                                            <option value="{{ $groupSpecialty->id }}">
+                                                {{ $groupSpecialty->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @else
+                                <input type="hidden" name="groupConsolidateGrades" value="{{ $group->id }}">
+                                @endif
 
                                 <div class="form-group">
                                     <x-label>{{ __('select period') }}</x-label>

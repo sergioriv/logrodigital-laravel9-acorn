@@ -254,6 +254,13 @@ class GroupController extends Controller
             })->where('start_grades', '<=', today()->format('Y-m-d'))
             ->orderBy('ordering')->get();
 
+        $groupsSpecialty = Group::where('school_year_id', $Y->id)
+            ->where('specialty', TRUE)
+            ->where('school_year_id', $group->school_year_id)
+            ->where('headquarters_id', $group->headquarters_id)
+            ->where('study_time_id', $group->study_time_id)
+            ->where('study_year_id', $group->study_year_id)
+            ->get();
 
         return view('logro.group.show')->with([
             'Y' => $Y,
@@ -265,7 +272,8 @@ class GroupController extends Controller
             'countPeriods' => $countPeriods,
             'periods' => $periods,
             'avgGrade' => $avgGrade,
-            'absences' => $absences
+            'absences' => $absences,
+            'groupsSpecialty' => $groupsSpecialty
         ]);
     }
 

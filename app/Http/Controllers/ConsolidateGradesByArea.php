@@ -25,11 +25,13 @@ class ConsolidateGradesByArea extends Controller
     private $period;
 
 
-    public function make(Request $request, Group $group)
+    public function make(Request $request)
     {
         $request->validate([
+            'groupConsolidateGrades' => ['required', Rule::exists('groups', 'id')],
             'periodConsolidateGrades' => ['required', Rule::exists('periods', 'id')]
         ]);
+        $group = Group::find($request->groupConsolidateGrades);
         $this->period = Period::find($request->periodConsolidateGrades);
 
         /* Dirección para guardar los reportes generados */
