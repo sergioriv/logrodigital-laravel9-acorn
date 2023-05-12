@@ -23,6 +23,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
     private $spaceCellVoid = "  ";
     private $colAreas = [];
     private $colAreasSpecialty = [];
+    private $lowGrades = [];
 
     public function __construct($group, $ST, $period, $areas, $students)
     {
@@ -130,6 +131,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             $countSubjects = 0;
             $subjectsLosses = 0;
             $areasLosses = 0;
+            $colGrade = 'B';
 
             $row = [
                 ++$key,
@@ -140,6 +142,8 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             foreach ($this->areas as $area) {
                 $sumArea = 0;
                 foreach ($area['subjects'] as $keySubject => $subject) {
+                    $colGrade++;
+
                     $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
                         ->filter(function ($grade) use ($student) {
                             return $student->id === $grade['student_id'] && $grade['period_id'] === $this->period->id;
@@ -158,16 +162,22 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
 
                     if ($gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
                         $subjectsLosses++;
+                        $this->lowGrades[] = $colGrade.$key+5;
                     }
 
                     /* total area */
                     if (++$keySubject === count($area['subjects'])) {
+                        $colGrade++;
+
                         $row[] = $this->gradeController::numberFormat($this->ST, $sumArea) ?? '-';
                         $row[] = $this->spaceCellVoid;
 
                         if ($sumArea <= $this->ST->low_performance && !is_null($sumArea) && $sumArea > 0) {
                             $areasLosses++;
+                            $this->lowGrades[] = $colGrade.$key+5;
                         }
+
+                        $colGrade++;
                     }
                 }
             }
@@ -247,12 +257,25 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
 
         foreach ($this->colAreasSpecialty as $col) {
             $styles["{$col}{$start}:{$col}{$end}"] = [
-                'font' => ['bold' => true,],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                     'startColor' => [
                         'rgb' => '1EA8E7'
                     ],
+                ]
+            ];
+        }
+
+        foreach ($this->lowGrades as $col) {
+            $styles[$col] = [
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => [
+                        'rgb' => 'f0adb4'
+                    ],
+                ],
+                'font' => [
+                    'color' => ['argb' => \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED],
                 ]
             ];
         }
