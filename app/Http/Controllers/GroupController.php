@@ -426,6 +426,9 @@ class GroupController extends Controller
                     'student_id' => $student
                 ]);
 
+                /* Si tiene algun registro como estudiante retirado, estos serán eliminados */
+                \App\Models\GroupStudentRetired::where('student_id', $student)->delete();
+
                 /* si el grupo es de especialidad, ya debe estar matriculado en otro grupo
                  * y le será asignado un grupo de especialidad */
                 if ($group->specialty) {

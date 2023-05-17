@@ -651,9 +651,15 @@ class GradeController extends Controller
     {
         if (UserController::role_auth() == 'STUDENT') return ['periods' => NULL, 'areasGrade' => NULL];
 
-        $groups = GroupStudent::where('student_id', $student->id)
-        ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id) )
-        ->get();
+        if (!$student->isRetired() && $student->enrolled) {
+            $groups = GroupStudent::where('student_id', $student->id)
+            ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id) )
+            ->get();
+        } else {
+            $groups = \App\Models\GroupStudentRetired::where('student_id', $student->id)
+            ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id) )
+            ->get();
+        }
 
         if (!count($groups)) return ['periods' => NULL, 'areasGrade' => NULL];
 

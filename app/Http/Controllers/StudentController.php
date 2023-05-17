@@ -631,6 +631,9 @@ class StudentController extends Controller
                         'enrolled' => TRUE
                     ]);
 
+                    /* Si tiene algun registro como estudiante retirado, estos serán eliminados */
+                    \App\Models\GroupStudentRetired::where('student_id', $student->id)->delete();
+
                     /* Send message WhatsApp */
                     // self::send_msg($student, $group);
 
@@ -1668,6 +1671,18 @@ class StudentController extends Controller
             if (!is_null($student->enrolled)) {
                 $student->groupYear()->whereHas('group', fn($group) => $group->where('school_year_id', $Y->id))->delete();
                 $student->groupOfSpecialty()?->whereHas('group', fn($group) => $group->where('school_year_id', $Y->id))->delete();
+
+                \App\Models\GroupStudentRetired::create([
+                    'student_id' => $student->id,
+                    'group_id' => $student->group_id
+                ]);
+
+                if ( !is_null($student->group_specialty_id) ) {
+                    \App\Models\GroupStudentRetired::create([
+                        'student_id' => $student->id,
+                        'group_id' => $student->group_specialty_id
+                    ]);
+                }
             }
 
             $student->forceFill([
