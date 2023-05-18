@@ -429,6 +429,35 @@
     </section>
     @endif
 
+    <section style="margin-top: 40px">
+        <table class="table w-100" border="0">
+            <tr>
+                <td style="width: 10%;"></td>
+                <td class="h-60p w-70p text-center align-sub" style="width: 30%;"></td>
+                <td style="width: 20%;"></td>
+                <td class="h-60p w-70p text-center align-sub" style="width: 30%;">
+                    @if ($SCHOOL->signature_rector)
+                        <img class="badge" src="{{ config('app.url') . '/' . $SCHOOL->signature_rector }}" alt="badge">
+                    @endif
+                </td>
+                <td style="width: 10%;"></td>
+            </tr>
+            <tr>
+                <td style="width: 10%;"></td>
+                <td align="center" style="border-top: 0.6px solid #333">
+                    {!! $group->teacher ? $group->teacher->getFullName() .'<br>' : '' !!}
+                    DIRECTOR DE GRUPO
+                </td>
+                <td style="width: 20%;"></td>
+                <td align="center"  style="border-top: 0.6px solid #333">
+                    {!! $SCHOOL->rector_name ? $SCHOOL->rector_name .'<br>' : '' !!}
+                    RECTOR/A
+                </td>
+                <td style="width: 10%;"></td>
+            </tr>
+        </table>
+    </section>
+
     <!-- Descriptors Section Start -->
     @if ('FINAL' !== $currentPeriod)
 
