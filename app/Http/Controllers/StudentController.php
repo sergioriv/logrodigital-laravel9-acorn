@@ -1636,6 +1636,11 @@ class StudentController extends Controller
             ->where('end', '<=', today()->format('Y-m-d'))
             ->orderBy('ordering')->latest()->first();
 
+        if (!$period) {
+            Notify::fail('Sin notas para mostrar');
+            return back();
+        }
+
         return (new GradeController)->reportForGroupByPeriod($period, $student->group, $student);
     }
 

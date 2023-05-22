@@ -706,6 +706,7 @@ class GradeController extends Controller
         }
 
         if (is_null($periods)) $periods = Period::where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
+        if (!count($periods)) return ['periods' => NULL, 'areasGrade' => NULL];
 
         $areas = ResourceArea::query()
             ->withWhereHas(
@@ -757,6 +758,9 @@ class GradeController extends Controller
 
                 return $areaMap;
             });
+
+
+        if (!count($areas)) return ['periods' => NULL, 'areasGrade' => NULL];
 
         $periods->map(function ($period) use ($studyTime, $areas) {
             return $period->setAttribute('gradeAVG', GradeController::periodAVG($studyTime, $period, $areas));
