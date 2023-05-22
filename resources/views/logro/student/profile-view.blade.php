@@ -96,6 +96,11 @@
                                 <i data-acorn-icon="download"></i>
                                 <span>{{ __('Download observer') }}</span>
                             </x-dropdown-item>
+                            <div class="dropdown-divider"></div>
+                            <x-dropdown-item type="button" :link="route('students.pdf.report_grades', $student)">
+                                <i data-acorn-icon="download"></i>
+                                <span>{{ __('Grade report') }}</span>
+                            </x-dropdown-item>
 
                         </div>
                     </div>
