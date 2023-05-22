@@ -375,7 +375,7 @@
                                     </a>
                                 @endif --}}
                             @endcan
-                            @hasanyrole('SUPPORT|SECRETARY|ORIENTATION')
+                            @hasanyrole('SUPPORT|SECRETARY|ORIENTATION|STUDENT')
                                 <a class="nav-link @if (session('tab') === 'grades') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                     data-bs-toggle="tab" href="#gradesTab" role="tab">
                                     <span class="align-middle">{{ __('Grades') }}</span>
@@ -2647,7 +2647,7 @@
                     <!-- PIAR Tab End -->
                 @endcan
 
-                @hasanyrole('SUPPORT|SECRETARY|ORIENTATION')
+                @hasanyrole('SUPPORT|SECRETARY|ORIENTATION|STUDENT')
                 <!-- Grades Tab Start -->
                 <div class="tab-pane fade @if (session('tab') === 'grades') active show @endif" id="gradesTab"
                     role="tabpanel">

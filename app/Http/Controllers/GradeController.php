@@ -649,7 +649,7 @@ class GradeController extends Controller
      *  */
     public static function studentGrades($Y, $student, $currentGroup = null, $periods = null)
     {
-        if (UserController::role_auth() == 'STUDENT') return ['periods' => NULL, 'areasGrade' => NULL];
+        // if (UserController::role_auth() == 'STUDENT') return ['periods' => NULL, 'areasGrade' => NULL];
 
         if (!$student->isRetired() && $student->enrolled) {
             $groups = GroupStudent::where('student_id', $student->id)
