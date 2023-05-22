@@ -1639,33 +1639,6 @@ class StudentController extends Controller
         return (new GradeController)->reportForGroupByPeriod($period, $student->group, $student);
     }
 
-    // private function pdfGradeReportGenerate($student)
-    // {
-    //     $SCHOOL = SchoolController::myschool()->getData();
-    //     $Y = SchoolYearController::current_year();
-
-    //     $group = $student->group;
-
-    //     $periods = Period::where('school_year_id', $Y->id)
-    //         ->where('study_time_id', $group->study_time_id)
-    //         ->where('end', '<=', today()->format('Y-m-d'))
-    //         ->orderBy('ordering')->get();
-
-    //     $gradesAndPeriods = GradeController::studentGrades($Y, $student, null, $periods);
-
-    //     $pdf = Pdf::loadView('logro.pdf.student-grade-report', [
-    //         'SCHOOL' => $SCHOOL,
-    //         'student' => $student,
-    //         'group' => $group,
-    //         'periods' => $gradesAndPeriods['periods'],
-    //         'areasWithGrades' => $gradesAndPeriods['areasGrade']
-    //     ])->setPaper('letter', 'portrait')->setOption('dpi', 72);
-
-
-    //     return $pdf->stream('Carnet - '. $student->getFullName() .'.pdf');
-    // }
-
-
     public function send_delete_code(Student $student, Request $request)
     {
         if (is_null(SchoolController::myschool()->securityEmail()))
