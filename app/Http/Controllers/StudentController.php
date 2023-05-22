@@ -31,6 +31,7 @@ use App\Models\IcbfProtectionMeasure;
 use App\Models\Kinship;
 use App\Models\LinkageProcess;
 use App\Models\Orientation;
+use App\Models\Period;
 use App\Models\PersonCharge;
 use App\Models\Piar;
 use App\Models\Religion;
@@ -1527,6 +1528,20 @@ class StudentController extends Controller
         return $this->pdfCarnetGenerate($student);
     }
 
+    public function pdf_report_grades(Student $student = null)
+    {
+        if ('STUDENT' == UserController::role_auth())
+        {
+            $student = Student::find(Auth::id());
+        }
+
+        if (is_null($student->enrolled)) {
+            Notify::fail(__('El estudiante no ha sido matriculado'));
+            return back();
+        }
+
+        return $this->pdfGradeReportGenerate($student);
+    }
 
 
     private function pdfMatriculateGenerate($student)
@@ -1612,6 +1627,43 @@ class StudentController extends Controller
 
         return $pdf->download('Carnet - '. $student->getFullName() .'.pdf');
     }
+
+    private function pdfGradeReportGenerate($student)
+    {
+        $Y = SchoolYearController::current_year();
+        $period = Period::where('school_year_id', $Y->id)
+            ->where('study_time_id', $student->group->study_time_id)
+            ->where('end', '<=', today()->format('Y-m-d'))
+            ->orderBy('ordering')->latest()->first();
+
+        return (new GradeController)->reportForGroupByPeriod($period, $student->group, $student);
+    }
+
+    // private function pdfGradeReportGenerate($student)
+    // {
+    //     $SCHOOL = SchoolController::myschool()->getData();
+    //     $Y = SchoolYearController::current_year();
+
+    //     $group = $student->group;
+
+    //     $periods = Period::where('school_year_id', $Y->id)
+    //         ->where('study_time_id', $group->study_time_id)
+    //         ->where('end', '<=', today()->format('Y-m-d'))
+    //         ->orderBy('ordering')->get();
+
+    //     $gradesAndPeriods = GradeController::studentGrades($Y, $student, null, $periods);
+
+    //     $pdf = Pdf::loadView('logro.pdf.student-grade-report', [
+    //         'SCHOOL' => $SCHOOL,
+    //         'student' => $student,
+    //         'group' => $group,
+    //         'periods' => $gradesAndPeriods['periods'],
+    //         'areasWithGrades' => $gradesAndPeriods['areasGrade']
+    //     ])->setPaper('letter', 'portrait')->setOption('dpi', 72);
+
+
+    //     return $pdf->stream('Carnet - '. $student->getFullName() .'.pdf');
+    // }
 
 
     public function send_delete_code(Student $student, Request $request)

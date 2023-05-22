@@ -335,6 +335,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::get('students/download/certificate/{student?}', 'pdf_certificate')->name('students.pdf.certificate');
         Route::get('students/download/observations/{student?}', 'pdf_observations')->name('students.pdf.observations');
         Route::get('students/download/carnet/{student?}', 'pdf_carnet')->name('students.pdf.carnet');
+        Route::get('students/download/report-grades/{student?}', 'pdf_report_grades')->name('students.pdf.report_grades');
 
         Route::get('enrolled-export', 'export_enrolled_view')->name('students.export.enrolled');
         Route::post('enrolled-export', 'export_enrolled_generate')->name('students.export.enrolled.generate');

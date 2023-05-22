@@ -205,6 +205,11 @@
                                     <div class="dropdown-menu dropdown-menu-end">
 
                                             @if ($student->enrolled)
+                                                <x-dropdown-item type="button" :link="route('students.pdf.report_grades', $student)">
+                                                    <i data-acorn-icon="download"></i>
+                                                    <span>{{ __('Grade report') }}</span>
+                                                </x-dropdown-item>
+                                                <div class="dropdown-divider"></div>
                                                 <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student)">
                                                     <i data-acorn-icon="download"></i>
                                                     <span>{{ __('Download certificate study') }}</span>
@@ -281,18 +286,23 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 @if ($student->enrolled)
-                                    <x-dropdown-item type="button" :link="route('students.pdf.certificate')">
-                                        <i data-acorn-icon="download"></i>
-                                        <span>{{ __('Download certificate study') }}</span>
-                                    </x-dropdown-item>
-                                    <x-dropdown-item type="button" :link="route('students.pdf.observations')">
-                                        <i data-acorn-icon="download"></i>
-                                        <span>{{ __('Download observer') }}</span>
-                                    </x-dropdown-item>
-                                    <x-dropdown-item type="button" :link="route('students.pdf.carnet')">
-                                        <i data-acorn-icon="download"></i>
-                                        <span>{{ __('Download identification card') }}</span>
-                                    </x-dropdown-item>
+                                <x-dropdown-item type="button" :link="route('students.pdf.report_grades')">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>{{ __('Grade report') }}</span>
+                                </x-dropdown-item>
+                                <div class="dropdown-divider"></div>
+                                <x-dropdown-item type="button" :link="route('students.pdf.certificate')">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>{{ __('Download certificate study') }}</span>
+                                </x-dropdown-item>
+                                <x-dropdown-item type="button" :link="route('students.pdf.observations')">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>{{ __('Download observer') }}</span>
+                                </x-dropdown-item>
+                                <x-dropdown-item type="button" :link="route('students.pdf.carnet')">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>{{ __('Download identification card') }}</span>
+                                </x-dropdown-item>
                                 @endif
                                 <x-dropdown-item type="button" :link="route('student.pdf.matriculate')">
                                     <i data-acorn-icon="download"></i>
@@ -375,7 +385,7 @@
                                     </a>
                                 @endif --}}
                             @endcan
-                            @hasanyrole('SUPPORT|SECRETARY|ORIENTATION|STUDENT')
+                            @hasanyrole('SUPPORT|SECRETARY|ORIENTATION')
                                 <a class="nav-link @if (session('tab') === 'grades') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                     data-bs-toggle="tab" href="#gradesTab" role="tab">
                                     <span class="align-middle">{{ __('Grades') }}</span>
@@ -2647,7 +2657,7 @@
                     <!-- PIAR Tab End -->
                 @endcan
 
-                @hasanyrole('SUPPORT|SECRETARY|ORIENTATION|STUDENT')
+                @hasanyrole('SUPPORT|SECRETARY|ORIENTATION')
                 <!-- Grades Tab Start -->
                 <div class="tab-pane fade @if (session('tab') === 'grades') active show @endif" id="gradesTab"
                     role="tabpanel">

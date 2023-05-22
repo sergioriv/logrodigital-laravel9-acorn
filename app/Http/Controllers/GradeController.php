@@ -365,11 +365,14 @@ class GradeController extends Controller
      *
      *
      * */
+    public function reportForGroupByPeriod(Period $period, Group $group, Student $student)
+    {
+        return $this->reportForGroupPDF($period, $group, $student);
+    }
+
     public function reportForGroup(Request $request, Group $group)
     {
         $Y = SchoolYearController::current_year();
-
-        $SCHOOL = SchoolController::myschool()->getData();
 
         if ($request->has('periodGradeReport') && $request->periodGradeReport !== 'FINAL') {
             $request->validate([
@@ -381,6 +384,14 @@ class GradeController extends Controller
             $currentPeriod = 'FINAL';
         }
 
+        return $this->reportForGroupPDF($currentPeriod, $group);
+    }
+
+    public function reportForGroupPDF($currentPeriod, Group $group, Student $student = null)
+    {
+        $Y = SchoolYearController::current_year();
+
+        $SCHOOL = SchoolController::myschool()->getData();
 
         /* Obtiene las areas y asignaturas del grupo que corresponde */
         $areasWithSubjects = GradeController::teacher_subject($Y, $group);
@@ -417,22 +428,43 @@ class GradeController extends Controller
             $periods = $currentPeriod;
         }
 
-        $groupStudents = GroupStudent::where('group_id', $group->id)
-                ->with('student:id,first_name,second_name,first_last_name,second_last_name')
-                ->get();
+
+        if (!$student) {
+
+            /* Dirección para guardar los reportes generados */
+            $pathUuid = Str::uuid();
+            $pathReport = "app/reports/". $pathUuid ."/";
+
+            if (!File::isDirectory(public_path($pathReport))) {
+                File::makeDirectory(public_path($pathReport), 0755, true, true);
+            }
 
 
+            $groupStudents = GroupStudent::where('group_id', $group->id)
+                    ->with('student:id,first_name,second_name,first_last_name,second_last_name')
+                    ->get();
 
-        /* Dirección para guardar los reportes generados */
-        $pathUuid = Str::uuid();
-        $pathReport = "app/reports/". $pathUuid ."/";
+            foreach ($groupStudents as $GS) {
+                $this->reportForStudentPeriod(
+                    $Y,
+                    $SCHOOL,
+                    $group,
+                    $studyYear,
+                    $studyTime,
+                    $currentPeriod,
+                    $periods,
+                    $areasWithSubjects,
+                    $teacherSubjects,
+                    $GS->student,
+                    $pathReport
+                );
+            }
 
-        if (!File::isDirectory(public_path($pathReport))) {
-            File::makeDirectory(public_path($pathReport), 0755, true, true);
-        }
+            /* Generate Zip and Download */
+            return (new ZipController($pathUuid))->downloadGradesGroup($group->name);
+        } else {
 
-        foreach ($groupStudents as $GS) {
-            $this->reportForStudentPeriod(
+            return $this->reportForStudentPeriod(
                 $Y,
                 $SCHOOL,
                 $group,
@@ -442,16 +474,14 @@ class GradeController extends Controller
                 $periods,
                 $areasWithSubjects,
                 $teacherSubjects,
-                $GS->student,
-                $pathReport
+                $student,
+                null,
+                FALSE
             );
         }
-
-        /* Generate Zip and Download */
-        return (new ZipController($pathUuid))->downloadGradesGroup($group->name);
     }
 
-    private function reportForStudentPeriod($Y, $SCHOOL, $group, $studyYear, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $teacherSubjects, $student, $pathReport)
+    private function reportForStudentPeriod($Y, $SCHOOL, $group, $studyYear, $studyTime, $currentPeriod, $periods, $areasWithSubjects, $teacherSubjects, $student, $pathReport, $save = TRUE)
     {
 
         /* Nombre para el reporte de notas, en caso de ser el reporte final, dirá Final */
@@ -559,7 +589,10 @@ class GradeController extends Controller
 
         $pdf->setPaper([0.0, 0.0, 612, 1008]);
         $pdf->setOption('dpi', 72);
-        $pdf->save($pathReport . "Reporte de notas - ". $student->getCompleteNames() . '.pdf');
+
+
+        if ($save) $pdf->save($pathReport . "Reporte de notas - ". $student->getCompleteNames() . '.pdf');
+        else return $pdf->download($pathReport . "Reporte de notas - ". $student->getCompleteNames() . '.pdf');
     }
 
     public static function teacher_subject($Y, $group)
