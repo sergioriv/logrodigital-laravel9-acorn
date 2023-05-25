@@ -97,6 +97,12 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
                 array_push($row, $student->sisben?->name);
             if ($this->attributes['health_manager'])
                 array_push($row, $student->healthManager?->name);
+            if ($this->attributes['tutor']) {
+                array_push($row, $student->myTutorIs?->name);
+                array_push($row, $student->myTutorIs?->telephone ?: $student->myTutorIs?->cellphone);
+                array_push($row, $student->myTutorIs?->email);
+
+            }
 
 
             array_push($array, $row);
@@ -159,6 +165,11 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
             array_push($titles, "Sisben");
         if ($this->attributes['health_manager'])
             array_push($titles, "Administradora de salud");
+        if ($this->attributes['tutor']) {
+            array_push($titles, "Nombre del acudiente");
+            array_push($titles, "Teléfono del acudiente");
+            array_push($titles, "Correo del acudiente");
+        }
 
 
         return $titles;

@@ -271,6 +271,17 @@
                                 </label>
                             </div>
                         </div>
+
+                        <!-- Tutor -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[tutor]"
+                                        value="1">
+                                    {{ __('Tutor Information') }}
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
