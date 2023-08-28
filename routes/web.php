@@ -234,6 +234,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::get('group/{group}/export-student-list', [GroupController::class, 'exportStudentList'])->name('group.export.student-list');
     Route::get('group/export-student-list-guide/{subject}', [GroupController::class, 'exportStudentListGuide'])->name('group.export.student-list-guide');
     Route::get('group/{group}/export-information-student-list', [GroupController::class, 'exportStudentsWithFiles'])->name('group.export.information-student-list');
+    Route::get('group/{group}/export-attendance-control', [GroupController::class, 'exportAttendanceControlGuide'])->name('group.export.attendance-control');
     Route::get('group/{group}/report-notes', [GradeController::class, 'reportForPeriod']);
     Route::delete('groups/{group}', [GroupController::class, 'delete'])->name('groups.delete');
     Route::get('groups/{group}/transfer-students', [TransferController::class, 'groupStudents'])->name('group.transfer-students');

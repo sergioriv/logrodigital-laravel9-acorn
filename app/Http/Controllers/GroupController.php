@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\GroupStudentList;
 use App\Exports\GroupStudentListGradesInstructive;
 use App\Exports\GroupStudentListGuide;
+use App\Exports\GroupStudentsAttendanceControl;
 use App\Exports\StudentsWithFiles;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
@@ -621,6 +622,10 @@ class GroupController extends Controller
     public function exportStudentList(Group $group)
     {
         return Excel::download(new GroupStudentList($group), __('student list :GROUP', ['GROUP' => $group->name]) . '.xlsx');
+    }
+    public function exportAttendanceControlGuide(Group $group)
+    {
+        return Excel::download(new GroupStudentsAttendanceControl($group), "control de asistencia_{$group->name}.xlsx");
     }
 
     public function exportGradesInstructive(TeacherSubjectGroup $subject)

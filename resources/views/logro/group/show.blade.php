@@ -134,6 +134,12 @@
                                             <i data-acorn-icon="download" class="me-1"></i>
                                             <span>{{ __('Information general from student list') }}</span>
                                         </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item btn-sm btn-icon btn-icon-start"
+                                            href="{{ route('group.export.attendance-control', $group) }}">
+                                            <i data-acorn-icon="download" class="me-1"></i>
+                                            <span>{{ __('Planilla auxiliar control de asistencia') }}</span>
+                                        </a>
                                         @hasanyrole('SUPPORT|COORDINATOR|SECRETARY|TEACHER')
                                             @if (!$group->specialty && !$periods->isEmpty())
                                                 <div class="dropdown-divider"></div>
