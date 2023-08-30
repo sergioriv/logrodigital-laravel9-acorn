@@ -595,6 +595,65 @@ class GradeController extends Controller
         else return $pdf->download($pathReport . "Reporte de notas - ". $student->getCompleteNames() . '.pdf');
     }
 
+    public static function reportGradesStudentRetired(Student $student)
+    {
+        $Y = SchoolYearController::current_year();
+        $SCHOOL = SchoolController::myschool()->getData();
+
+        $studentGradesxGroup = GradeController::studentGrades($Y, $student);
+
+        $groupsIDS = \App\Models\GroupStudentRetired::where('student_id', $student->id)
+            ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id) )
+            ->pluck('group_id')->toArray();
+        $teacherSubjects = \App\Models\TeacherSubjectGroup::whereIn('group_id', $groupsIDS)->pluck('id')->toArray();
+        $groupRetired = \App\Models\GroupStudentRetired::where('student_id', $student->id)
+            ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id)->whereNull('specialty') )->first();
+
+        $group = $groupRetired->group;
+        $studyTime = $group->studyTime;
+        $studyYear = $group->studyYear;
+
+        $absencesTSG = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
+            ->withCount(['attendances' => function ($query) use ($student) {
+                $query->whereHas('student', function ($queryAttend) use ($student) {
+                    $queryAttend->where('student_id', $student->id)->whereIn('attend', ['N', 'L']);
+                });
+            }])->get();
+
+        $remarks = Remark::where('group_id', $group->id)->where('student_id', $student->id)->get();
+
+        if ( $studyYear->useGrades() ) {
+            $descriptors = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
+                ->withWhereHas('descriptorsStudent',
+                    fn ($descriptor) => $descriptor->where('student_id', $student->id)->with('descriptor')
+                )->with(['subject' => fn ($sj) => $sj->with('resourceSubject')])
+                ->get();
+        } else {
+            $descriptors = StudentDescriptor::whereIn('teacher_subject_group_id', $teacherSubjects)
+                ->where('student_id', $student->id)
+                ->with('descriptor')
+                ->get();
+        }
+
+        $pdf = Pdf::loadView('logro.pdf.report-notes-student-retired', [
+            'SCHOOL' => $SCHOOL,
+            'date' => now()->format('d/m/Y'),
+            'student' => $student,
+            'periods' => $studentGradesxGroup['periods'],
+            'areasWithGrades' => $studentGradesxGroup['areasGrade'],
+            'absencesTSG' => $absencesTSG,
+            'group' => $group,
+            'studyTime' => $studyTime,
+            'remarks' => $remarks,
+            'descriptors' => $descriptors
+        ]);
+
+        $pdf->setPaper([0.0, 0.0, 612, 1008]);
+        $pdf->setOption('dpi', 72);
+
+        return $pdf->download("Reporte de calificaciones - ". $student->getCompleteNames() . '.pdf');
+    }
+
     public static function teacher_subject($Y, $group)
     {
         $fn_sy = fn ($sy) =>
@@ -621,6 +680,7 @@ class GradeController extends Controller
 
     public static function areaNoteStudent($area, $periods, $grades, $studyTime)
     {
+        if (is_array($area)) $area = \App\Models\ResourceArea::find($area['id']);
 
         $areaNotes = [];
         $subjectNotes = [];
@@ -741,6 +801,7 @@ class GradeController extends Controller
                             'academic_workload' => $subjectMap->academicWorkload->course_load,
                             'academic_wordload_porcentage' => (float)($subjectMap->academicWorkload->course_load / 100),
                             'teacher_subject_group' => $subjectMap?->teacherSubject?->id,
+                            'teacher_name' => $subjectMap?->teacherSubject?->teacher?->getFullName(),
                             'grades' => $subjectGrade ? $subjectGrade->map(function ($gradeMap) use ($studyTime) {
                                 return [
                                     'id' => $gradeMap->id,

@@ -2664,6 +2664,14 @@
 
                     <h2 class="small-title">{{ __('Grades') }}</h2>
                     <div class="card">
+                        @if ($areasWithGrades)
+                        <div class="card-header text-end">
+                            <a class="btn btn-sm btn-icon btn-background-alternate" href="{{ route('students.pdf.report_grades', $student) }}">
+                                <i data-acorn-icon="download" class="me-1"></i>
+                                Descargar reporte de calificaciones
+                            </a>
+                        </div>
+                        @endif
                         <div class="card-body">
                             @if ($areasWithGrades)
                                 @include('logro.student.grades.report-tab')

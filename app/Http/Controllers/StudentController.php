@@ -1560,6 +1560,8 @@ class StudentController extends Controller
             $student = Student::find(Auth::id());
         }
 
+        if ($student->isRetired()) return \App\Http\Controllers\GradeController::reportGradesStudentRetired($student);
+
         if (is_null($student->enrolled)) {
             Notify::fail(__('El estudiante no ha sido matriculado'));
             return back();
