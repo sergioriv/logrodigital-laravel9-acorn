@@ -774,6 +774,11 @@ class StudentController extends Controller
     /* Tienen acceso Coordinacion y Docentes */
     private function view($student)
     {
+        if ($student->isRetired()) {
+            Notify::fail("El estudiante esta retirado");
+            return redirect()->back();
+        }
+
         $Y = SchoolYearController::current_year();
         $existOrientation = false;
 
