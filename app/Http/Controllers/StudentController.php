@@ -644,6 +644,30 @@ class StudentController extends Controller
                     Notify::success(__('Student matriculate!'));
                     return redirect()->route('students.show', $student);
                 } else {
+
+                    /* Inicio Migracion de calificaciones */
+                    $Y = SchoolYearController::current_year();
+                    $oldGroup = $groupStudentExist->group_id;
+                    $tsg_oldGroup = \App\Models\TeacherSubjectGroup::where('group_id', $oldGroup)->get();
+                    foreach ($tsg_oldGroup as $tsgOld) {
+                        $tsgNew = \App\Models\TeacherSubjectGroup::where('subject_id', $tsgOld->subject_id)->where('group_id', $group->id)->first();
+                        if (!$tsgNew)
+                            $tsgNew = \App\Models\TeacherSubjectGroup::updateOrCreate(
+                                [
+                                    'school_year_id' => $Y->id,
+                                    'group_id' => $group->id,
+                                    'subject_id' => $tsgOld->subject_id
+                                ],
+                                []
+                            );
+
+                        \App\Models\Grade::where('student_id', $student->id)->where('teacher_subject_group_id', $tsgOld->id)->first()?->update([
+                            'teacher_subject_group_id' => $tsgNew->id
+                        ]);
+                    }
+                    /* Final Migracion de calificaciones */
+
+
                     $groupStudentExist->update([
                         'group_id' => $request->group
                     ]);
