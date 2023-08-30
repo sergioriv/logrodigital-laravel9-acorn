@@ -1561,7 +1561,7 @@ class StudentController extends Controller
     public function pdf_report_grades(Student $student = null)
     {
         if ('PARENT' == UserController::role_auth()) {
-            Notify::fail(__('Not allowed'));
+            Notify::fail("Para descargar el reporte de notas, por favor acceda con los datos del estudiante.");
             return back();
         }
         if ('STUDENT' == UserController::role_auth())
