@@ -774,8 +774,8 @@ class StudentController extends Controller
     /* Tienen acceso Coordinacion y Docentes */
     private function view($student)
     {
-        if ($student->isRetired()) {
-            Notify::fail("El estudiante esta retirado");
+        if ($student->isRetired() || is_null($student->enrolled)) {
+            Notify::fail("El estudiante no se encuentra matriculado");
             return redirect()->back();
         }
 
@@ -1560,6 +1560,10 @@ class StudentController extends Controller
 
     public function pdf_report_grades(Student $student = null)
     {
+        if ('PARENT' == UserController::role_auth()) {
+            Notify::fail(__('Not allowed'));
+            return back();
+        }
         if ('STUDENT' == UserController::role_auth())
         {
             $student = Student::find(Auth::id());
