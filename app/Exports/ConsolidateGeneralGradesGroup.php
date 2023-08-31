@@ -6,7 +6,6 @@ use App\Http\Controllers\GradeController;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
@@ -16,6 +15,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
     private $group;
     private $ST;
     private $period;
+    private $periods;
     private $areas;
     private $students;
 
@@ -29,9 +29,12 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
     {
         $this->group = $group;
         $this->ST = $ST;
-        $this->period = $period;
         $this->areas = $areas;
         $this->students = $students;
+
+        $periods = \App\Models\Period::where('school_year_id', $period->school_year_id)->where('study_time_id', $period->study_time_id)->where('ordering', '<=', $period->ordering)->get();
+        $this->period = $period;
+        $this->periods = $periods;
 
         $this->gradeController = GradeController::class;
     }
@@ -44,7 +47,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             'B' => 60,
         ];
         $l = 'C';
-        for ($i=1; $i < 50; $i++) {
+        for ($i=1; $i < 300; $i++) {
             $widths[$l++] = 6;
         }
         foreach ($this->colAreas as $col) {
@@ -64,12 +67,14 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
 
         foreach ($this->areas as $area) {
             foreach ($area['subjects'] as $key => $subject) {
-                $colAreas++;
-                $headers[] = $subject['resource_name'] . ' - ' . $subject['academic_workload'] . '%';
+                foreach ($this->periods as $period) {
+                    $colAreas++;
+                    $headers[] = ' P'. $period->ordering .' - '. $subject['resource_name'] . ' - ' . $subject['academic_workload'] . '%';
+                }
                 if (++$key === count($area['subjects'])) {
                     $colAreas++;
 
-                    $headers[] = "ÁREA: " . $area['name'];
+                    $headers[] = " ACUM: " . $area['name'];
                     $headers[] = $this->spaceCellVoid;
                     $this->colAreas[] = $colAreas;
                     if ($area['isSpecialty']) $this->colAreasSpecialty[] = $colAreas;
@@ -84,11 +89,17 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
         $headers[] = 'PROMEDIO';
         $headers[] = 'PUESTO';
 
+        $infoPeriods = '';
+        foreach ($this->periods as $key => $period) {
+            if ($key) $infoPeriods .= " | ";
+            $infoPeriods .= "P{$period->ordering}: {$period->workload}%";
+        }
+
         $array = [
             [__('Group') . ': ' . $this->group->name],
             [__('Period') . ': ' . $this->period->name],
             [__('export.headquarters') . ': ' . $this->group->headquarters->name . ' | ' . __('export.study_time') . ': ' . $this->group->studyTime->name . ' | ' . __('export.study_year') . ': ' . $this->group->studyYear->name],
-            [null],
+            [$infoPeriods],
             $headers
         ];
 
@@ -98,15 +109,17 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             $countSubjects = 0;
             foreach ($this->areas as $area) {
                 foreach ($area['subjects'] as $subject) {
+                    $totalSubject = 0;
+                    foreach ($this->periods as $period) {
+                        $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
+                            ->filter(function ($grade) use ($student, $period) {
+                                return $student->id === $grade['student_id'] && $grade['period_id'] === $period->id;
+                            })
+                            ->first();
 
-                    $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
-                        ->filter(function ($grade) use ($student) {
-                            return $student->id === $grade['student_id'] && $grade['period_id'] === $this->period->id;
-                        })
-                        ->first();
-
-                    $gradeSubject = $gradeByStudentByPeriod['final'] ?? null;
-
+                        $gradeSubject = $gradeByStudentByPeriod['final'] ?? null;
+                        $totalSubject += $gradeByStudentByPeriod['final_workload'] ?? 0;
+                    }
                     $average += $gradeSubject;
                     if (!$area['isSpecialty']) {
                         $countSubjects++;
@@ -142,27 +155,35 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             foreach ($this->areas as $area) {
                 $sumArea = 0;
                 foreach ($area['subjects'] as $keySubject => $subject) {
-                    $colGrade++;
+                    $totalSubject = 0;
+                    foreach ($this->periods as $period) {
+                        $colGrade++;
 
-                    $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
-                        ->filter(function ($grade) use ($student) {
-                            return $student->id === $grade['student_id'] && $grade['period_id'] === $this->period->id;
-                        })
-                        ->first();
+                        $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
+                            ->filter(function ($grade) use ($student, $period) {
+                                return $student->id === $grade['student_id'] && $grade['period_id'] === $period->id;
+                            })
+                            ->first();
 
-                    $gradeSubject = $gradeByStudentByPeriod['final'] ?? null;
-                    $row[] = $this->gradeController::numberFormat($this->ST, $gradeSubject) ?? '-';
+                        $gradeSubject = $gradeByStudentByPeriod['final'] ?? null;
+                        $row[] = $this->gradeController::numberFormat($this->ST, $gradeSubject) ?? '-';
 
-                    $sumArea += $gradeByStudentByPeriod['final_workload'] ?? null;
+                        /* carga de asignatura * carga de periodo */
+                        $sumArea += ($gradeByStudentByPeriod['final_workload'] ?? 0) * ($period->workload / 100) ?? null;
+                        $totalSubject += $gradeByStudentByPeriod['final_workload'] ?? 0;
 
-                    $average += $gradeSubject;
+                        if ($gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
+                            $this->lowGrades[] = $colGrade.$key+5;
+                        }
+                    }
+
+                    $average += $totalSubject;
                     if (!$area['isSpecialty']) {
                         $countSubjects++;
                     }
 
-                    if ($gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
+                    if ($totalSubject <= $this->ST->low_performance && !is_null($totalSubject)) {
                         $subjectsLosses++;
-                        $this->lowGrades[] = $colGrade.$key+5;
                     }
 
                     /* total area */
@@ -222,6 +243,10 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                 'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
             ],
             3 => [
+                'font' => ['size' => 9],
+                'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+            ],
+            4 => [
                 'font' => ['size' => 9],
                 'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
             ],
@@ -295,6 +320,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                 $event->sheet->mergeCells('A1:B1');
                 $event->sheet->mergeCells('A2:B2');
                 $event->sheet->mergeCells('A3:B3');
+                $event->sheet->mergeCells('A4:B4');
             }
         ];
     }

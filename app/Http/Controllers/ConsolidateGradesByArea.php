@@ -108,11 +108,17 @@ class ConsolidateGradesByArea extends Controller
             ->get()->pluck('id')->toArray();
         $areasIDS = array_merge($areasInitial, $groupsSpecialty->pluck('specialty_area_id')->toArray());
 
+        $periodIDS = \App\Models\Period::query()
+            ->where('school_year_id', $this->period->school_year_id)
+            ->where('study_time_id', $this->period->study_time_id)
+            ->where('ordering', '<=', $this->period->ordering)
+            ->pluck('id')->toArray();
+
         $areas = ResourceArea::query()
             ->whereIn('id', $areasIDS)
             ->withWhereHas(
                 'subjects',
-                function ($query) use ($studentsIDS, $groupsIDS) {
+                function ($query) use ($studentsIDS, $groupsIDS, $periodIDS) {
                     $query->where('school_year_id', $this->Y->id)->with('resourceSubject')
                         ->withWhereHas(
                             'academicWorkload',
@@ -120,11 +126,11 @@ class ConsolidateGradesByArea extends Controller
                                 $query->where('school_year_id', $this->Y->id)->where('study_year_id', $this->SY->id)->select('id', 'course_load', 'subject_id');
                             }
                         )->with([
-                            'teacherSubject' => function ($query) use ($studentsIDS, $groupsIDS) {
+                            'teacherSubject' => function ($query) use ($studentsIDS, $groupsIDS, $periodIDS) {
                                 $query->where('school_year_id', $this->Y->id)->whereIn('group_id', $groupsIDS)
                                 ->with([
-                                    'grades' => function ($query) use ($studentsIDS) {
-                                        $query->whereIn('student_id', $studentsIDS)->where('period_id', $this->period->id);
+                                    'grades' => function ($query) use ($studentsIDS, $periodIDS) {
+                                        $query->whereIn('student_id', $studentsIDS)->whereIn('period_id', $periodIDS);
                                     }
                                 ]);
                             }
