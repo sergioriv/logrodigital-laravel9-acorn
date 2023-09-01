@@ -301,10 +301,10 @@
         </div>
 
         <div class="mt-10">
-            @if ($tracking->type_advice === 'Family')
+            @if ($tracking->type_advice === 'Family' && $tracking->advice_family)
             Por medio de la presente, notifico a quien corresponda, que:
             <br /><br />
-            {{ $tracking->advice_family }}
+            {{ nl2br($tracking->advice_family) }}
             <br /><br />
             El día <b>{{ $tracking->date }}</b> a las <b>{{ $tracking->time }}</b> horas,
             con el área de Orientación Escolar del <b>{{ $SCHOOL->name }}</b>.
