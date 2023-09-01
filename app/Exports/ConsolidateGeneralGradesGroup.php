@@ -84,7 +84,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             }
         }
         $headers[] = 'ASIGNATURAS PERIDIDAS';
-        $headers[] = 'ÁREAS PERDIDAS';
+        // $headers[] = 'ÁREAS PERDIDAS';
         $headers[] = 'ASIGNATURAS EVALUADAS';
         $headers[] = 'PROMEDIO';
         $headers[] = 'PUESTO';
@@ -143,7 +143,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             $average = 0;
             $countSubjects = 0;
             $subjectsLosses = 0;
-            $areasLosses = 0;
+            // $areasLosses = 0;
             $colGrade = 'B';
 
             $row = [
@@ -197,10 +197,10 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                         $row[] = $this->gradeController::numberFormat($this->ST, ($sumArea / count($this->periods))) ?? '-';
                         $row[] = $this->spaceCellVoid;
 
-                        if ($sumArea <= $this->ST->low_performance && !is_null($sumArea) && $sumArea > 0) {
-                            $areasLosses++;
-                            $this->lowGrades[] = $colGrade.$key+5;
-                        }
+                        // if ($sumArea <= $this->ST->low_performance && !is_null($sumArea) && $sumArea > 0) {
+                        //     $areasLosses++;
+                        //     $this->lowGrades[] = $colGrade.$key+5;
+                        // }
 
                         $colGrade++;
                     }
@@ -211,7 +211,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             $row[] = $subjectsLosses ?: '0';
 
             /* AREAS PERDIDAS */
-            $row[] = $areasLosses ?: '0';
+            // $row[] = $areasLosses ?: '0';
 
             /* ASIGNATURAS EVALUADAS */
             $myAreaSpecialty = collect($this->areas)->filter(function ($filter) use ($student) {
