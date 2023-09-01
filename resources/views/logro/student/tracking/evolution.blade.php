@@ -61,20 +61,7 @@ $title = $student->getFullName();
                                     </div>
                                 </div>
 
-                                <div class="row mb-3 position-relative">
-                                    <label class="col-sm-3 col-form-label">
-                                        {{ __('Type advice') }} <x-required />
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <x-select name="type_advice" logro="select2">
-                                            @foreach ($advice->enumTypeAdvice() as $typeAdvice)
-                                                <option value="{{ $typeAdvice }}" @selected(old('type_advice') == $typeAdvice)>
-                                                    {{ __($typeAdvice) }}
-                                                </option>
-                                            @endforeach
-                                        </x-select>
-                                    </div>
-                                </div>
+
                                 <div class="row mb-5 position-relative">
                                     <label class="col-sm-3 col-form-label">
                                         {{ __('Evolución') }} <x-required />

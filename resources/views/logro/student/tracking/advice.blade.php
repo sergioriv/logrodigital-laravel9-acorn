@@ -4,6 +4,27 @@
     <div class="modal-body">
 
         <div class="row g-3">
+
+            <div class="col-12">
+                <div class="position-relative form-group">
+                    <x-label>{{ __('Type advice') }}</x-label>
+                    <x-select name="type_advice" id="type_advice" logro="select2">
+                        @foreach (\App\Models\StudentTrackingAdvice::enumTypeAdvice() as $typeAdvice)
+                        <option value="{{ $typeAdvice }}" @selected(old('type_advice')==$typeAdvice)>
+                            {{ __($typeAdvice) }}
+                        </option>
+                        @endforeach
+                    </x-select>
+                </div>
+            </div>
+
+            <div class="col-12 d-none" id="advice_family">
+                <div class="form-group position-relative">
+                    <x-label>Por medio de la presente, notifico a quien corresponda, que:</x-label>
+                    <textarea name="advice_family" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+
             <div class="col-md-6">
                 <div class="position-relative form-group">
                     <x-label>{{ __('date') }}</x-label>
@@ -29,4 +50,5 @@
             {{ __('Save') }}</button>
     </div>
 </form>
+
 

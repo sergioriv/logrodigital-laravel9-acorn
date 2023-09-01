@@ -335,11 +335,11 @@
                     <td class="t-center w-50">
                         <div class="signature"></div>
                         <div class="signature_name bold">
-                            {{ $tracking->creator->getFullName() }}
+                            {{ $tracking->creator?->getFullName() }}
                         </div>
                         <div class="fz-8">DOCENTE ORIENTADORA</div>
                         <div class="fz-8">Psicóloga R P - 114277</div>
-                        <div class="fz-8">{{ $tracking->creator->institutional_email }}</div>
+                        <div class="fz-8">{{ $tracking->creator?->institutional_email }}</div>
                     </td>
                 </tr>
             </table>

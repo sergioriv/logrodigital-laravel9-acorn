@@ -22,6 +22,7 @@ class StudentTrackingAdvice extends Model
         'time',
         'attendance',
         'type_advice',
+        'advice_family',
         'evolution',
     ];
 
@@ -68,7 +69,7 @@ class StudentTrackingAdvice extends Model
     {
         return ['Done', 'Not done', 'Scheduled'];
     }
-    public function enumTypeAdvice() //enum
+    public static function enumTypeAdvice() //enum
     {
         return ['Individual', 'Group', 'Family'];
     }

@@ -145,6 +145,13 @@
         });
     </script>
     @endhasanyrole
+
+    <script>
+        jQuery("#type_advice").on("change", function (e) {
+            if (e.target.value === 'Family') $("#advice_family").removeClass("d-none");
+            else $("#advice_family").addClass("d-none");
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -2517,7 +2524,7 @@
                                                     <td>
                                                         @if ($studentTracking->type_tracking === 'advice')
                                                             <div class="logro-label">
-                                                                {{ __('advice') }}
+                                                                {{ __('advice') .' '. __($studentTracking->type_advice) }}
                                                                 <div class="d-inline-block ms-2">
                                                                     <a href="{{ route('student.tracking.download', $studentTracking) }}">
                                                                         <i data-acorn-icon="download" data-acorn-size="16"></i>

@@ -31,6 +31,8 @@ class StudentTrackingController extends Controller
     public function advice_store(Request $request, Student $student)
     {
         $request->validate([
+            'type_advice' => ["required"],
+            'advice_family' => ['nullable', 'required_if:type_advice,Family', 'string', 'min:10', 'max:5000'],
             'date' => ['required', 'date', 'date_format:Y-m-d'],
             'time' => ['required']
         ]);
@@ -42,6 +44,8 @@ class StudentTrackingController extends Controller
             'student_id' => $student->id,
             'type_tracking' => 'ADVICE',
             'attendance' => 'SCHEDULED',
+            'type_advice' => $request->type_advice,
+            'advice_family' => $request->advice_family,
             'date' => $request->date,
             'time' => $timeAdvice
         ]);
@@ -200,13 +204,11 @@ class StudentTrackingController extends Controller
 
         $request->validate([
             'attendance' => ["required"],
-            'type_advice' => ["required_if:attendance,done"],
             'evolution' => ["required", 'string', 'min:10', 'max:5000']
         ]);
 
         $advice->update([
             'attendance' => $request->attendance,
-            'type_advice' => $request->type_advice,
             'evolution' => $request->evolution,
         ]);
 
@@ -341,6 +343,7 @@ class StudentTrackingController extends Controller
 
             }
         } catch (\Throwable $e) {
+            info($e->getMessage());
             Notify::fail(__('An error has occurred'));
             $this->tab();
             return back();

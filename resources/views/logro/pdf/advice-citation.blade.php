@@ -301,11 +301,20 @@
         </div>
 
         <div class="mt-10">
+            @if ($tracking->type_advice === 'Family')
+            Por medio de la presente, notifico a quien corresponda, que:
+            <br /><br />
+            {{ $tracking->advice_family }}
+            <br /><br />
+            El día <b>{{ $tracking->date }}</b> a las <b>{{ $tracking->time }}</b> horas,
+            con el área de Orientación Escolar del <b>{{ $SCHOOL->name }}</b>.
+            @else
             Por medio de la presente, notifico a usted, que el Estudiante
             <b>{{ $tracking->student->getCompleteNames() }}</b>, identificado con documento de identidad
             <b>{{ $tracking->student->documentTypeCode->name }} {{ $tracking->student->document }}</b>,
             deberá asistir a una asesoría el día <b>{{ $tracking->date }}</b> a las <b>{{ $tracking->time }}</b> horas,
             con el área de Orientación Escolar del <b>{{ $SCHOOL->name }}</b>.
+            @endif
         </div>
         <div class="mt-6">
             Atentamente,
@@ -317,11 +326,11 @@
                     <td class="t-center w-50">
                         <div class="signature"></div>
                         <div class="signature_name bold">
-                            {{ $tracking->creator->getFullName() }}
+                            {{ $tracking->creator?->getFullName() ?? '' }}
                         </div>
                         <div class="fz-8">DOCENTE ORIENTADORA</div>
                         <div class="fz-8">Psicóloga R P - 114277</div>
-                        <div class="fz-8">{{ $tracking->creator->email }}</div>
+                        <div class="fz-8">{{ $tracking->creator?->email }}</div>
                     </td>
                 </tr>
             </table>
