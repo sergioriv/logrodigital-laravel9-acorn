@@ -618,18 +618,36 @@ class StudentController extends Controller
 
             if ($student->group_id != $request->group) {
 
-                $groupStudentExist = GroupStudent::where('group_id', $student->group_id)->where('student_id', $student->id)->first();
+                $oldGroupStudentExist = GroupStudent::where('group_id', $student->group_id)->where('student_id', $student->id)->first();
 
-                if (NULL === $groupStudentExist) {
+                $Y = SchoolYearController::current_year();
+                if ($oldGroupStudentExist) {
+                    /* Inicio Migracion de calificaciones */
+                    $grades_oldGroup = \App\Models\Grade::where('student_id', $student->id)->withWhereHas('teacherSubjectGroup', fn ($tsgOldGroup) => $tsgOldGroup->where('group_id', $oldGroupStudentExist->group_id)->with('subject'))->get();
+                    foreach ($grades_oldGroup as $grade_oldGroup) {
+                        $tsgNew = \App\Models\TeacherSubjectGroup::updateOrCreate(
+                            [
+                                'school_year_id' => $Y->id,
+                                'group_id' => $group->id,
+                                'subject_id' => $grade_oldGroup->teacherSubjectGroup->subject_id
+                            ],
+                            []
+                        );
+
+                        $newPeriod = \App\Models\Period::where('ordering', $grade_oldGroup->period->ordering)->where('study_time_id', $group->study_time_id)->first();
+                        $newPeriod && $grade_oldGroup->update([
+                            'teacher_subject_group_id' => $tsgNew->id,
+                            'period_id' => $newPeriod->id
+                        ]);
+                    }
+                    /* Final Migracion de calificaciones */
+                }
+
+
+                if (NULL === $oldGroupStudentExist) {
                     GroupStudent::create([
                         'group_id' => $request->group,
                         'student_id' => $student->id
-                    ]);
-
-                    $student->update([
-                        'group_id' => $group->id,
-                        'enrolled_date' => now(),
-                        'enrolled' => TRUE
                     ]);
 
                     /* Si tiene algun registro como estudiante retirado, estos serán eliminados */
@@ -642,47 +660,20 @@ class StudentController extends Controller
                     SmtpMail::init()->sendEmailEnrollmentNotification($student, $group);
 
                     Notify::success(__('Student matriculate!'));
-                    return redirect()->route('students.show', $student);
                 } else {
-
-                    /* Inicio Migracion de calificaciones */
-                    $Y = SchoolYearController::current_year();
-                    $oldGroup = $groupStudentExist->group_id;
-                    $tsg_oldGroup = \App\Models\TeacherSubjectGroup::where('group_id', $oldGroup)->get();
-                    foreach ($tsg_oldGroup as $tsgOld) {
-                        $tsgNew = \App\Models\TeacherSubjectGroup::where('subject_id', $tsgOld->subject_id)->where('group_id', $group->id)->first();
-                        if (!$tsgNew)
-                            $tsgNew = \App\Models\TeacherSubjectGroup::updateOrCreate(
-                                [
-                                    'school_year_id' => $Y->id,
-                                    'group_id' => $group->id,
-                                    'subject_id' => $tsgOld->subject_id
-                                ],
-                                []
-                            );
-
-                        \App\Models\Grade::where('student_id', $student->id)->where('teacher_subject_group_id', $tsgOld->id)->first()?->update([
-                            'teacher_subject_group_id' => $tsgNew->id
-                        ]);
-                    }
-                    /* Final Migracion de calificaciones */
-
-
-                    $groupStudentExist->update([
+                    $oldGroupStudentExist->update([
                         'group_id' => $request->group
                     ]);
-
-                    $student->update([
-                        'group_id' => $group->id,
-                        'enrolled_date' => now(),
-                        'enrolled' => TRUE
-                    ]);
-
                     Notify::success(__('Changed group!'));
-                    return redirect()->route('students.show', $student);
                 }
 
-                return redirect()->route('students.enrolled');
+                $student->update([
+                    'group_id' => $group->id,
+                    'enrolled_date' => now(),
+                    'enrolled' => TRUE
+                ]);
+
+                return redirect()->route('students.show', $student);
             } else {
 
                 Notify::info(__('Unchanged!'));
@@ -1244,20 +1235,10 @@ class StudentController extends Controller
             return redirect()->route('students.show', $student);
         }
 
-        if (NULL !== $student->group_id) {
-
-            GroupStudent::where('student_id', $student->id)
-                ->where('group_id', $student->group_id)
-                ->first()
-                ->delete();
-        }
-
         $student->update([
             'headquarters_id' => $request->headquarters,
             'study_time_id' => $request->studyTime,
             'study_year_id' => $request->studyYear,
-            'group_id' => NULL,
-            'group_specialty_id' => NULL,
             'enrolled' => NULL,
             'enrolled_date' => NULL
         ]);

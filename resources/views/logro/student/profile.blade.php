@@ -188,11 +188,11 @@
                             @if (!$student->isRetired())
                                 <!-- Matriculate Button Start -->
                                 <a class="btn btn-outline-info" href="{{ route('students.matriculate', $student) }}">
-                                @if (null === $student->group_id)
+                                @if (!$student->enrolled)
                                 {{ __('Matriculate') }}
                                 @else
-                                    {{ __('Change group') }}
-                                    @endif
+                                {{ __('Change group') }}
+                                @endif
                                 </a>
                                 <!-- Matriculate Button End -->
 
@@ -336,7 +336,13 @@
                                     <span class="mb-2 text-muted">{{ $student->age() . ' ' . __('years') }}</span>
                                 @endif
 
-                                @if (null !== $student->group_id)
+                                @if (!$student->enrolled && !is_null($student->group_id))
+                                    <div class="mt-2 text-center">
+                                        <h5 class="text-danger font-weight-bold mb-2">En transferencia</h5>
+                                        <text class="text-medium">Grupo actual</text>
+                                        <h5 class="text-primary font-weight-bold mb-0">{{ $student->group->name }}</h5>
+                                    </div>
+                                @elseif ($student->enrolled)
                                     <div class="mt-2 text-center">
                                         <h5 class="text-primary font-weight-bold mb-0">{{ $student->group->name }}</h5>
                                         <text class="text-primary text-small">{{ $student->enrolled_date }}</text>
@@ -2664,7 +2670,7 @@
 
                     <h2 class="small-title">{{ __('Grades') }}</h2>
                     <div class="card">
-                        @if ($areasWithGrades)
+                        @if ($areasWithGrades && $student->isRetired())
                         <div class="card-header text-end">
                             <a class="btn btn-sm btn-icon btn-background-alternate" href="{{ route('students.pdf.report_grades', $student) }}">
                                 <i data-acorn-icon="download" class="me-1"></i>
