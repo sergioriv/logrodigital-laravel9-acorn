@@ -141,7 +141,13 @@
                                                 href="{{ route('group.export.grades-instructive', $subject) }}"
                                             >
                                                 <i data-acorn-icon="download"></i>
-                                                <span>Descargar plantilla de notas</span>
+                                                <span>Descargar plantilla para cargue de notas</span>
+                                            </a>
+                                            <a class="dropdown-item btn-icon btn-icon-start"
+                                                href="{{ route('group.export.student-list-guide', $subject->id) }}"
+                                            >
+                                                <i data-acorn-icon="download"></i>
+                                                <span>{{ __('Download auxiliary template') }}</span>
                                             </a>
                                             <div class="dropdown-divider"></div>
                                         @endif
