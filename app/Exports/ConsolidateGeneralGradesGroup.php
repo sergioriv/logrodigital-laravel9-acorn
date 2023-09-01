@@ -74,7 +74,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                 if (++$key === count($area['subjects'])) {
                     $colAreas++;
 
-                    $headers[] = " ACUM: " . $area['name'];
+                    $headers[] = " PROM: " . $area['name'];
                     $headers[] = $this->spaceCellVoid;
                     $this->colAreas[] = $colAreas;
                     if ($area['isSpecialty']) $this->colAreasSpecialty[] = $colAreas;
@@ -168,8 +168,12 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                         $gradeSubject = $gradeByStudentByPeriod['final'] ?? null;
                         $row[] = $this->gradeController::numberFormat($this->ST, $gradeSubject) ?? '-';
 
-                        /* carga de asignatura * carga de periodo */
-                        $sumArea += ($gradeByStudentByPeriod['final_workload'] ?? 0) * ($period->workload / 100) ?? null;
+                        // promedio area
+                        $sumArea += $gradeByStudentByPeriod['final_workload'] ?? null;
+
+                        // acumulado area
+                        // $sumArea += ($gradeByStudentByPeriod['final_workload'] ?? 0) * ($period->workload / 100) ?? null;
+
                         $totalSubject += $gradeByStudentByPeriod['final_workload'] ?? 0;
 
                         if ($gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
@@ -190,7 +194,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                     if (++$keySubject === count($area['subjects'])) {
                         $colGrade++;
 
-                        $row[] = $this->gradeController::numberFormat($this->ST, $sumArea) ?? '-';
+                        $row[] = $this->gradeController::numberFormat($this->ST, ($sumArea / count($this->periods))) ?? '-';
                         $row[] = $this->spaceCellVoid;
 
                         if ($sumArea <= $this->ST->low_performance && !is_null($sumArea) && $sumArea > 0) {
