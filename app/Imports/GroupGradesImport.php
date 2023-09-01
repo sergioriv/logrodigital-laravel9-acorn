@@ -54,7 +54,13 @@ class GroupGradesImport implements ToCollection, WithHeadingRow
             if ( empty( $code ) || is_null( $code ) ) throw ValidationException::withMessages(['data' => 'hay un codigo vacio']);
 
 
-            $student = Student::select('id')->whereCode($code)->whereGroupId($this->tsg->group_id)->first();
+            $student = Student::select('id')->whereCode($code)
+                ->when(!$this->tsg->group->specialty, function ($whenSpecialty) {
+                    $whenSpecialty->where('group_id', $this->tsg->group_id);
+                }, function ($whenNotSpecialty) {
+                    $whenNotSpecialty->where('group_specialty_id', $this->tsg->group_id);
+                })
+                ->first();
 
             if ( is_null( $student ) ) throw ValidationException::withMessages(['data' => 'el estudiante con codigo ' . $code . ' no pertenece a este grupo']);
 
