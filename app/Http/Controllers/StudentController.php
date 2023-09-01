@@ -1485,7 +1485,10 @@ class StudentController extends Controller
     /* PDF */
     public function pdf_matriculate(Student $student = null)
     {
-
+        if ('PARENT' == UserController::role_auth()) {
+            Notify::fail("Para descargar información de un estudiante, por favor acceda con los datos del estudiante.");
+            return back();
+        }
         if ('STUDENT' == UserController::role_auth())
         {
             return self::pdfMatriculateGenerate(Auth::id());
@@ -1496,6 +1499,10 @@ class StudentController extends Controller
 
     public function pdf_certificate(Student $student = null)
     {
+        if ('PARENT' == UserController::role_auth()) {
+            Notify::fail("Para descargar información de un estudiante, por favor acceda con los datos del estudiante.");
+            return back();
+        }
         if ('STUDENT' == UserController::role_auth())
         {
             $student = Student::find(Auth::id());
@@ -1511,6 +1518,10 @@ class StudentController extends Controller
 
     public function pdf_observations(Student $student = null)
     {
+        if ('PARENT' == UserController::role_auth()) {
+            Notify::fail("Para descargar información de un estudiante, por favor acceda con los datos del estudiante.");
+            return back();
+        }
         if ('STUDENT' == UserController::role_auth())
         {
             $student = Student::find(Auth::id());
@@ -1526,6 +1537,10 @@ class StudentController extends Controller
 
     public function pdf_carnet(Student $student = null)
     {
+        if ('PARENT' == UserController::role_auth()) {
+            Notify::fail("Para descargar información de un estudiante, por favor acceda con los datos del estudiante.");
+            return back();
+        }
         if ('STUDENT' == UserController::role_auth())
         {
             $student = Student::find(Auth::id());
@@ -1542,7 +1557,7 @@ class StudentController extends Controller
     public function pdf_report_grades(Student $student = null)
     {
         if ('PARENT' == UserController::role_auth()) {
-            Notify::fail("Para descargar el reporte de notas, por favor acceda con los datos del estudiante.");
+            Notify::fail("Para descargar información de un estudiante, por favor acceda con los datos del estudiante.");
             return back();
         }
         if ('STUDENT' == UserController::role_auth())
