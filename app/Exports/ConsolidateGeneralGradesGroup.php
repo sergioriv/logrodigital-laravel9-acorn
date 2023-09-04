@@ -83,7 +83,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                 }
             }
         }
-        $headers[] = 'ASIGNATURAS PERIDIDAS';
+        $headers[] = 'ASIGNATURAS PERIDIDAS P' . $this->period->ordering;
         // $headers[] = 'ÁREAS PERDIDAS';
         $headers[] = 'ASIGNATURAS EVALUADAS';
         $headers[] = 'PROMEDIO';
@@ -179,6 +179,10 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                         if ($gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
                             $this->lowGrades[] = $colGrade.$key+5;
                         }
+
+                        if (@$gradeByStudentByPeriod['period_id'] === $this->period->id && $gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
+                            $subjectsLosses++;
+                        }
                     }
 
                     $average += $totalSubject;
@@ -186,9 +190,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                         $countSubjects++;
                     }
 
-                    if ($totalSubject <= $this->ST->low_performance && !is_null($totalSubject)) {
-                        $subjectsLosses++;
-                    }
+
 
                     /* total area */
                     if (++$keySubject === count($area['subjects'])) {
