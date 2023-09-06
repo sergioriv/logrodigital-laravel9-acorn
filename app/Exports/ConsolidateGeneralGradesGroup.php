@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Http\Controllers\GradeController;
+use App\Models\Period;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -24,6 +25,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
     private $colAreas = [];
     private $colAreasSpecialty = [];
     private $lowGrades = [];
+    private $colPeriodsAfter = [];
 
     public function __construct($group, $ST, $period, $areas, $students)
     {
@@ -65,12 +67,23 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
         $headers = ['#', __('Full name')];
         $colAreas = 'B';
 
+        $periodsAfter = Period::where('school_year_id', $this->period->school_year_id)->where('study_time_id', $this->period->study_time_id)->where('ordering', '>', $this->period->ordering)->get();
+        $minimalGrade = ($this->group->studyTime->low_performance + $this->group->studyTime->step);
+        $missingPorcentage = 100 - $this->periods->sum('workload');
+
         foreach ($this->areas as $area) {
             foreach ($area['subjects'] as $key => $subject) {
                 foreach ($this->periods as $period) {
                     $colAreas++;
                     $headers[] = ' P'. $period->ordering .' - '. $subject['resource_name'] . ' - ' . $subject['academic_workload'] . '%';
                 }
+
+                foreach ($periodsAfter as $periodAfter) {
+                    $colAreas++;
+                    $this->colPeriodsAfter[] = $colAreas;
+                    $headers[] = ' P'. $periodAfter->ordering .' - Mínimo requerido';
+                }
+
                 if (++$key === count($area['subjects'])) {
                     $colAreas++;
 
@@ -154,6 +167,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             /* notas */
             foreach ($this->areas as $area) {
                 $sumArea = 0;
+                $accumArea = 0;
                 foreach ($area['subjects'] as $keySubject => $subject) {
                     $totalSubject = 0;
                     foreach ($this->periods as $period) {
@@ -172,7 +186,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                         $sumArea += $gradeByStudentByPeriod['final_workload'] ?? null;
 
                         // acumulado area
-                        // $sumArea += ($gradeByStudentByPeriod['final_workload'] ?? 0) * ($period->workload / 100) ?? null;
+                        $accumArea += ($gradeByStudentByPeriod['final'] ?? 0) * ($period->workload / 100) ?? null;
 
                         $totalSubject += $gradeByStudentByPeriod['final_workload'] ?? 0;
 
@@ -190,7 +204,12 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                         $countSubjects++;
                     }
 
+                    /* nota faltante */
+                    foreach ($periodsAfter as $periodAfter) {
+                        $colGrade++;
 
+                        $row[] = ($minimalGrade - $accumArea) * 100 / $missingPorcentage ;
+                    }
 
                     /* total area */
                     if (++$keySubject === count($area['subjects'])) {
@@ -286,12 +305,25 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             ];
         }
 
+        /* color a las areas de especialidad */
         foreach ($this->colAreasSpecialty as $col) {
             $styles["{$col}{$start}:{$col}{$end}"] = [
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                     'startColor' => [
                         'rgb' => '1EA8E7'
+                    ],
+                ]
+            ];
+        }
+
+        /* color a los periodos despues del actual */
+        foreach ($this->colPeriodsAfter as $col) {
+            $styles["{$col}{$start}:{$col}{$end}"] = [
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => [
+                        'rgb' => 'FFE699'
                     ],
                 ]
             ];
