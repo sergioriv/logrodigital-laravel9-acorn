@@ -167,8 +167,8 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
             /* notas */
             foreach ($this->areas as $area) {
                 $sumArea = 0;
-                $accumArea = 0;
                 foreach ($area['subjects'] as $keySubject => $subject) {
+                    $accumSubject = 0;
                     $totalSubject = 0;
                     foreach ($this->periods as $period) {
                         $colGrade++;
@@ -186,7 +186,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                         $sumArea += $gradeByStudentByPeriod['final_workload'] ?? null;
 
                         // acumulado area
-                        $accumArea += ($gradeByStudentByPeriod['final'] ?? 0) * ($period->workload / 100) ?? null;
+                        $accumSubject += ($gradeByStudentByPeriod['final'] ?? 0) * ($period->workload / 100) ?? null;
 
                         $totalSubject += $gradeByStudentByPeriod['final_workload'] ?? 0;
 
@@ -208,7 +208,7 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                     foreach ($periodsAfter as $periodAfter) {
                         $colGrade++;
 
-                        $row[] = ($minimalGrade - $accumArea) * 100 / $missingPorcentage ;
+                        $row[] = abs($minimalGrade - $accumSubject) * 100 / $missingPorcentage ;
                     }
 
                     /* total area */
