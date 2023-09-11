@@ -1666,7 +1666,7 @@ class StudentController extends Controller
         $period = Period::where('school_year_id', $Y->id)
             ->where('study_time_id', $student->group->study_time_id)
             ->where('end', '<=', today()->format('Y-m-d'))
-            ->orderBy('ordering')->latest()->first();
+            ->orderByDesc('ordering')->first();
 
         if (!$period) {
             Notify::fail('Sin notas para mostrar');
