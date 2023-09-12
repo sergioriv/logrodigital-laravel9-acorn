@@ -356,6 +356,15 @@
                                     </div>
                                 @endif
 
+                                @hasrole('SUPPORT')
+                                @if ($student->fallas->count())
+                                    <div class="mt-2">
+                                        <a href="{{ route('attendances.student.download', $student) }}">{{ $student->fallas->count() }}
+                                            Fallas</a>
+                                    </div>
+                                @endif
+                                @endhasrole
+
                             </div>
                         </div>
 
