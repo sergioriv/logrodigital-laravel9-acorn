@@ -19,7 +19,10 @@
 @section('js_page')
     <script src="/js/forms/select2.js"></script>
     <script src="/js/pages/dashboard.coordination.js"></script>
-    @if ($alertsStudents->getAlerts()->count())
+    @if ($alertsStudents->getAlerts()->count()
+        || count($teacherPermits->getPermits())
+        || count($coordinationPermits->getPermits())
+        || count($orientationPermits->getPermits()))
         <script>
             $(document).ready(function() {
                 $("#modalFullScreen").modal('show');
