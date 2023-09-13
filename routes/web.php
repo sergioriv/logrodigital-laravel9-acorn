@@ -189,6 +189,8 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::get('teacher/{teacher}/guide-groups', [TeacherController::class, 'download_guide_group'])->name('teacher.guide-groups');
     Route::get('teacher/{teacher}/permit-tab', [TeacherController::class, 'permitTab'])->name('teacher.show.permit-tab');
 
+    Route::get('alert-permit/{permit}/read', [TeacherPermitController::class, 'deleteAlertPermit'])->name('alert-permit.delete');
+
     Route::post('add-permit', [PermitController::class, 'store'])->name('add-permit');
 
 

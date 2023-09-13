@@ -39,8 +39,10 @@ class DashboardController extends Controller
 
     private function dashTeacher()
     {
+        $alertPermits = \App\Models\AlertPermit::where('to_user_id', auth()->id())->get();
         return view('dashboard.teacher', [
             'alertsStudents' => UserAlertController::myAlerts(),
+            'alertPermits' => $alertPermits,
             'typePermit' => TypePermitsTeacher::all()
         ]);
     }
@@ -58,8 +60,11 @@ class DashboardController extends Controller
         ->whereHas('groupYear', fn($gr) => $gr->whereHas('group', fn($g) => $g->where('school_year_id', $Y->id)))
         ->count();
 
+        $alertPermits = \App\Models\AlertPermit::where('to_user_id', auth()->id())->get();
+
         return view('dashboard.orientation', [
             'alertsStudents' => UserAlertController::myAlerts(),
+            'alertPermits' => $alertPermits,
             'pendingStudents' => $pendingStudents,
             'typePermit' => TypePermitsTeacher::all()
         ]);
@@ -77,11 +82,14 @@ class DashboardController extends Controller
                 return $alert->student_id;
             });
 
+        $alertPermits = \App\Models\AlertPermit::where('to_user_id', auth()->id())->get();
+
         return view('dashboard.coordination', [
             'teacherPermits' => TeacherPermitController::pendingPermits(),
             'coordinationPermits' => CoordinationPermitController::pendingPermits(),
             'orientationPermits' => OrientationPermitController::pendingPermits(),
             'alertsStudents' => UserAlertController::myAlerts(),
+            'alertPermits' => $alertPermits,
             'remitPending' => $remitPending,
             'typePermit' => TypePermitsTeacher::all()
         ]);

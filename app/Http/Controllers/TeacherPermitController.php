@@ -111,6 +111,12 @@ class TeacherPermitController extends Controller
                 'accept_deny_id' => auth()->id()
             ]);
 
+            \App\Models\AlertPermit::create([
+                'to_user_id' => $teacher->id,
+                'type' => $status,
+                'date' => $permit->created_at
+            ]);
+
             if ( $status === 1 ) {
                 Notify::success(__('Permit accepted!'));
             } else if ( $status === 2 ) {
@@ -158,5 +164,17 @@ class TeacherPermitController extends Controller
         return $this->teacherPermits->groupBy(function ($permit) {
             return $permit->teacher_id;
         });
+    }
+
+    public function deleteAlertPermit(\App\Models\AlertPermit $permit)
+    {
+        if ($permit->to_user_id == auth()->id()) {
+
+            $permit->delete();
+            Notify::success(__('Read alert!'));
+
+        }
+
+        return back();
     }
 }

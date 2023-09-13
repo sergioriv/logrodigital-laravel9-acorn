@@ -206,6 +206,33 @@
         </section>
         <!-- Alerts Section End -->
 
+        <!-- Alert Permits Section Start -->
+        @if ($alertPermits->count())
+        <section class="scroll-section">
+            <h2 class="small-title">Alertas de permisos</h2>
+            <div class="card">
+                <div class="card-body">
+
+                    <table class="table">
+                        @foreach ($alertPermits as $alertPermit)
+                        <tr class="align-baseline">
+                            <td>
+                                <span class="text">{!! $alertPermit->message() !!}</span>
+                                <span class="text">
+                                    <a type="button" href="{{ route('alert-permit.delete', $alertPermit->id) }}" class="ms-2 text-info">{{
+                                        __('mark as read') }}</a>
+                                </span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+
+                </div>
+            </div>
+        </section>
+        @endif
+        <!-- Alert Permits Section End -->
+
         <!-- Add Annotation Observer Modal Start -->
         <section>
             <x-dash.modal.multiple-annotation-observer />
