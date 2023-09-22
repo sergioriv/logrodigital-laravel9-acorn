@@ -121,7 +121,7 @@ class StudentController extends Controller
             'activate',
             'signature_delete');
 
-        $this->middleware('hasroles:SUPPORT,ORIENTATION,SECRETARY')->only('withdrawn');
+        $this->middleware('hasroles:SUPPORT,ORIENTATION,SECRETARY,COORDINATOR')->only('withdrawn');
 
         $this->middleware(YearCurrentMiddleware::class)->only(
             'create',
@@ -765,15 +765,18 @@ class StudentController extends Controller
     /* Tienen acceso Coordinacion y Docentes */
     private function view($student)
     {
-        if ($student->isRetired() || is_null($student->enrolled)) {
-            Notify::fail("El estudiante no se encuentra matriculado");
-            return redirect()->back();
+        $myRole = UserController::role_auth();
+
+        if ($myRole === RoleUser::TEACHER_ROL) {
+            if ($student->isRetired() || is_null($student->enrolled)) {
+                Notify::fail("El estudiante no se encuentra matriculado");
+                return redirect()->back();
+            }
         }
 
         $Y = SchoolYearController::current_year();
         $existOrientation = false;
 
-        $myRole = UserController::role_auth();
         if ($myRole === RoleUser::TEACHER_ROL
             || $myRole === RoleUser::COORDINATION_ROL) {
             $existOrientation = (bool)Orientation::count();
@@ -784,9 +787,19 @@ class StudentController extends Controller
             $coordinators = Coordination::all();
         }
 
+        if (!$student->isRetired() && $student->enrolled) {
+            $groupStudent = GroupStudent::where('student_id', $student->id)
+            ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id)->whereNull('specialty') )
+            ->first();
+        } else {
+            $groupStudent = \App\Models\GroupStudentRetired::where('student_id', $student->id)
+            ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id)->whereNull('specialty') )
+            ->first();
+        }
+
         $absences = null;
         $studentGradesxGroup = ['periods' => null, 'areasGrade' => null];
-        if (auth()->id() === $student->group->teacher_id) {
+        if (auth()->id() === $groupStudent->group->teacher_id) {
             $absences = Attendance::withWhereHas(
                     'student',
                     fn ($s) => $s->where('student_id', $student->id)->whereIn('attend', ['N', 'L', 'J'])
@@ -794,7 +807,7 @@ class StudentController extends Controller
                 ->orderByDesc('date')
                 ->get();
         }
-        if (auth()->id() === $student->group->teacher_id || RoleUser::COORDINATION_ROL === UserController::role_auth()) {
+        if (auth()->id() === $groupStudent->teacher_id || RoleUser::COORDINATION_ROL === UserController::role_auth()) {
             $studentGradesxGroup = GradeController::studentGrades($Y, $student);
         }
 

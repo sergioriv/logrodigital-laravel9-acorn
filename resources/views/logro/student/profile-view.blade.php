@@ -73,7 +73,7 @@
                 <!-- Top Buttons Start -->
                 <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
                     @hasrole('TEACHER|COORDINATOR')
-                        @if ($existOrientation)
+                        @if ($existOrientation && $student->enrolled)
                             <!-- Remit to Orientation Button -->
                             <x-button type="button" class="btn-outline-primary" data-bs-toggle="modal"
                                 data-bs-target="#addRemitToOrientation">{{ __('Remit to Orientation') }}</x-button>
@@ -88,6 +88,7 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
 
+                            @if ($student->enrolled)
                             <x-dropdown-item type="button" :link="route('students.pdf.matriculate', $student)">
                                 <i data-acorn-icon="download"></i>
                                 <span>{{ __('Download enrollment sheet') }}</span>
@@ -97,6 +98,7 @@
                                 <span>{{ __('Download observer') }}</span>
                             </x-dropdown-item>
                             <div class="dropdown-divider"></div>
+                            @endif
                             <x-dropdown-item type="button" :link="route('students.pdf.report_grades', $student)">
                                 <i data-acorn-icon="download"></i>
                                 <span>{{ __('Grade report') }}</span>
@@ -692,7 +694,7 @@
 
 
     @hasrole('TEACHER|COORDINATOR')
-        @if ($existOrientation)
+        @if ($existOrientation && $student->enrolled)
             <!-- Modal Remit to Orientation -->
             <div class="modal fade modal-close-out" id="addRemitToOrientation" aria-labelledby="modalAddRemitToOrientation"
                 data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">

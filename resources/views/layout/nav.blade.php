@@ -97,7 +97,7 @@
                             <span class="label text-capitalize">{{ __("enrolled") }}</span>
                         </a>
                     </li>
-                    @hasanyrole('SUPPORT|ORIENTATION|SECRETARY')
+                    @hasanyrole('SUPPORT|ORIENTATION|SECRETARY|COORDINATOR')
                     <li>
                         <a href="{{ route("students.withdraw") }}">
                             <span class="label text-capitalize">{{ __("withdrawn") }}</span>
