@@ -22,7 +22,7 @@ class AlertPermit extends Model
     public function typeName()
     {
         return match($this->type) {
-            1 => 'aprovado',
+            1 => 'aprobado',
             2 => 'rechazado',
             default => ''
         };
