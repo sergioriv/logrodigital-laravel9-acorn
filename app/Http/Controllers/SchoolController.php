@@ -55,11 +55,11 @@ class SchoolController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:191'],
             'nit' => ['required', 'string', 'max:20'],
-            'dane' => ['required', 'string', 'max:191'],
+            'dane' => ['nullable', 'string', 'max:191'],
             'contact_email' => ['required', 'email', 'max:100'],
             'contact_telephone' => ['required', 'string', 'max:20'],
             'institutional_email' => ['nullable', 'string', 'max:191'],
-            'handbook_coexistence' => ['required', 'url'],
+            'handbook_coexistence' => ['nullable', 'url'],
             'badge' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048']
         ]);
 

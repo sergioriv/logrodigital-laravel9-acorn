@@ -171,12 +171,9 @@ $title = $school->name;
                                     </div>
                                 </div>
                                 <div class="row mb-3 position-relative">
-                                    <label for="inputDane" class="col-sm-3 col-form-label">Dane
-                                        <x-required />
-                                    </label>
+                                    <label for="inputDane" class="col-sm-3 col-form-label">Dane</label>
                                     <div class="col-sm-9">
-                                        <x-input :value="$school->dane" name="dane" id="inputDane" :hasError="true"
-                                            required />
+                                        <x-input :value="$school->dane" name="dane" id="inputDane" :hasError="true" />
                                     </div>
                                 </div>
                                 <div class="row mb-3 position-relative">
@@ -210,11 +207,10 @@ $title = $school->name;
                                 <div class="row mb-3 position-relative">
                                     <label for="inputHandbook" class="col-sm-3 col-form-label">
                                         URL: {{ __('Handbook of coexistence') }}
-                                        <x-required />
                                     </label>
                                     <div class="col-sm-9">
                                         <x-input :value="$school->handbook_coexistence" placeholder="https://" name="handbook_coexistence"
-                                            id="inputHandbook" :hasError="true" required />
+                                            id="inputHandbook" :hasError="true" />
                                     </div>
                                 </div>
                             </div>

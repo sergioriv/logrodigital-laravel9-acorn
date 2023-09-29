@@ -38,6 +38,10 @@ class MyInstitutionForm {
                     required: true,
                     maxlength: 20,
                 },
+                dane: {
+                    required: false,
+                    maxlength: 191,
+                },
                 contact_email: {
                     required: true,
                     maxlength: 100,
@@ -51,7 +55,7 @@ class MyInstitutionForm {
                     maxlength: 191,
                 },
                 handbook_coexistence: {
-                    required: true,
+                    required: false,
                     url: true,
                 },
             },
