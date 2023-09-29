@@ -649,9 +649,7 @@ $title = $school->name;
                         <h2 class="small-title">{{ __('Security Email') }}</h2>
                         <section class="card mb-5">
                             <div class="card-body">
-                                <p>
-                                    Texto de información
-                                </p>
+                                <div class="alert alert-light">Este correo será utilizado cuando se desee eliminar un estudiante.</div>
                                 <div class="row">
                                     <label for="inputSecurityEmail" class="col-sm-3 col-form-label logro-label">
                                         {{ __('security email') }} <x-required />

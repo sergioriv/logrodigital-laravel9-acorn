@@ -72,14 +72,14 @@
                     @endhasanyrole
                 </a>
             </li>
-            @hasrole('SUPPORT')
+            {{-- @hasrole('SUPPORT')
             <li>
                 <a href="{{ route('calendar.index') }}" data-href="/calendar">
                     <i class="icon icon-18 bi-calendar3"></i>
                     <span class="label">{{ __('Calendar') }}</span>
                 </a>
             </li>
-            @endhasrole
+            @endhasrole --}}
             @can('students.index')
             <li>
                 <a href="#students" data-href="/students">
@@ -170,14 +170,14 @@
                 </a>
             </li>
             @endcan
-            @hasanyrole('SUPPORT') {{-- COORDINATOR --}}
+            {{-- @hasanyrole('SUPPORT') {{-- COORDINATOR
             <li>
                 <a href="{{ route('mails-sent.index') }}" data-href="/mails_sent">
                     <i data-acorn-icon="inbox" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Mails sent') }}</span>
                 </a>
             </li>
-            @endhasanyrole
+            @endhasanyrole --}}
 
             @hasanyrole('SUPPORT|SECRETARY')
             <li>
