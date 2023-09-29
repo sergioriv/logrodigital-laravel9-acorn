@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class AddAdminUser extends Seeder
 {
@@ -22,6 +23,8 @@ class AddAdminUser extends Seeder
             'active' => TRUE,
         ]);
 
-        $user->assignRole(1);
+        $SUPPORT = Role::where('name', 'SUPPORT')->first();
+
+        $user->assignRole($SUPPORT->id);
     }
 }
