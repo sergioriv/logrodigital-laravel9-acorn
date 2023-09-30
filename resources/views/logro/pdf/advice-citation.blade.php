@@ -283,9 +283,7 @@
                     {{ $SCHOOL->name ?? null }}
                 </p>
                 <p class="fz-8">
-                    Creado mediante acuerdo No. 033 de Octubre de 1996 Resolución de Reconocimiento No.
-                    4657 de Noviembre de 2003, Resolución No. 006319 de Noviembre 17 de 2006, Resolución No. 0011778 de
-                    Diciembre de 2007 Resolución No. 005850 del 10 de Julio de 2009.
+                    {!! \App\Models\HeadersAndFooters::first()->headerDocsHtml() !!}
                     @if (!is_null($SCHOOL->dane))
                         <br />
                         DANE {{ $SCHOOL->dane }}

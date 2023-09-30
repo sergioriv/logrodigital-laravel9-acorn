@@ -260,6 +260,11 @@
     "Enrollment Notification": "Notificación de matrícula",
     "The student, :student, has been enrolled in the group :studyyear :groupname.": "El estudiante, :student, ha sido matriculado en el grupo :studyyear :groupname.",
 
+    "Additional info": "Información adicional",
+    "document header": "cabecera de documentos",
+    "footer study certificate": "pie de página certificado de estudio",
+    "Additional info updated!": "Información adicional actualizada!",
+
     "Password is gone?": "¿Ha olvidado la contraseña?",
     "Please enter your email to receive a link to reset your password.": "Ingrese su correo electrónico para recibir un enlace para restablecer su contraseña.",
     "Your account has already been verified": "Tu cuenta ya ha sido verificada",

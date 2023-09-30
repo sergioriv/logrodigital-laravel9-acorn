@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Mail\SmtpMail;
 use App\Http\Controllers\support\Notify;
 use App\Models\Coordination;
+use App\Models\HeadersAndFooters;
 use App\Models\Orientation;
 use App\Models\School;
 use App\Models\Secretariat;
@@ -40,7 +41,8 @@ class SchoolController extends Controller
             'teachers' => Teacher::all(),
             'secretariats' => Secretariat::all(),
             'coordinations' => Coordination::all(),
-            'orientations' => Orientation::all()
+            'orientations' => Orientation::all(),
+            'headers_footers' => HeadersAndFooters::first()
         ]);
     }
 
@@ -291,5 +293,23 @@ class SchoolController extends Controller
             $path = $request->file($file)->store('school/', 'public');
             return config('filesystems.disks.public.url') . '/' . $path;
         } else return null;
+    }
+
+    public function additional(Request $request)
+    {
+        $request->validate([
+            'docs_header' => ['required', 'string', 'max:1000'],
+            'footer_school_certificate' => ['nullable', 'string', 'max:2000']
+        ]);
+
+
+        \App\Models\HeadersAndFooters::first()->update([
+            'header_docs' => $request->docs_header,
+            'footer_school_certificate' => $request->footer_school_certificate
+        ]);
+
+        session()->flash('tab', 'additional');
+        Notify::success(__("Additional info updated!"));
+        return back();
     }
 }

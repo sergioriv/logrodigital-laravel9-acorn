@@ -89,6 +89,10 @@ $title = $school->name;
                                 data-bs-toggle="tab" href="#signaureTab" role="tab">
                                 <span class="align-middle">{{ __('Info Rector') }}</span>
                             </a>
+                            <a class="nav-link @if(session('tab') === 'additional') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#additionalTab" role="tab">
+                                <span class="align-middle">{{ __('Additional info') }}</span>
+                            </a>
                         </div>
 
                     </div>
@@ -746,6 +750,49 @@ $title = $school->name;
                                     <x-input :value="$school->rector_name" name="rector_name" id="rectorName" :hasError="true"
                                         required />
                                 </div>
+                            </div>
+                        </section>
+
+                        <div class="border-0 pt-0 d-flex justify-content-end align-items-center">
+                            <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
+                        </div>
+
+                    </form>
+                </div>
+                <!-- Info Rector Tab End -->
+
+                <!-- Info Rector Tab Start -->
+                <div class="tab-pane fade @if(session('tab') === 'additional') active show @endif" id="additionalTab">
+                    <form method="POST" action="{{ route('myinstitution.additional.store') }}" class="tooltip-end-bottom"
+                        id="mySignatureForm" enctype="multipart/form-data" novalidate>
+                        @csrf
+                        @method('PATCH')
+
+                        <!-- Security Email Start -->
+                        <h2 class="small-title">{{ __('Info Rector') }}</h2>
+                        <section class="card mb-5">
+                            <div class="card-body">
+
+                                <div class="row g-3">
+
+                                    <div class="row mb-3 position-relative">
+                                        <x-label required class="col-sm-3">{{ __('document header') }}</x-label>
+                                        <div class="col-sm-9">
+                                            <textarea name="docs_header" class="form-control" rows="3">{{ $headers_footers->header_docs }}</textarea>
+                                            <div class="form-text">Será utilizado para los siguientes documentos: Certificado de estudio, reporte de notas, remisiones, certificado de matrícula</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3 position-relative">
+                                        <x-label class="col-sm-3">{{ __('footer study certificate') }}</x-label>
+                                        <div class="col-sm-9">
+                                            <textarea name="footer_school_certificate" class="form-control" rows="5">{{ $headers_footers->footer_school_certificate }}</textarea>
+                                            <div class="form-text">Será utilizado únicamente para el certificado de matrícula</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
                             </div>
                         </section>
 
