@@ -59,10 +59,12 @@
                         {{ __('Log in') }}
                     </x-button>
 
+                    @if (config('services.azure.client_id'))
                     <a class="btn btn-icon btn-icon-start btn-outline-secondary" href="/microsoft">
                         <x-social microsoft />
                         Microsoft
                     </a>
+                    @endif
                 </form>
             </div>
         </div>
