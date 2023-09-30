@@ -64,7 +64,10 @@ class StudyYearController extends Controller
 
         $studyYear = StudyYear::create([
             'name' => $request->name,
-            'resource_study_year_id' => $resource->id
+            'resource_study_year_id' => $resource->id,
+            'use_grades' => TRUE,
+            'use_components' => FALSE,
+            'use_descriptors' => FALSE,
         ]);
 
         return redirect()->route('studyYear.subject.show', $studyYear);
