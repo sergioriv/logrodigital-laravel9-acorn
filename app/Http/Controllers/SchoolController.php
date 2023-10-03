@@ -60,6 +60,7 @@ class SchoolController extends Controller
             'dane' => ['nullable', 'string', 'max:191'],
             'contact_email' => ['required', 'email', 'max:100'],
             'contact_telephone' => ['required', 'string', 'max:20'],
+            'address' => ['nullable', 'string', 'max:191'],
             'institutional_email' => ['nullable', 'string', 'max:191'],
             'handbook_coexistence' => ['nullable', 'url'],
             'badge' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048']
@@ -71,6 +72,7 @@ class SchoolController extends Controller
             'dane' => $request->dane,
             'contact_email' => $request->contact_email,
             'contact_telephone' => $request->contact_telephone,
+            'address' => $request->address,
             'institutional_email' => $request->institutional_email,
             'handbook_coexistence' => $request->handbook_coexistence,
         ]);
@@ -145,6 +147,10 @@ class SchoolController extends Controller
     public function email()
     {
         return $this->school->institutional_email ?? null;
+    }
+    public function address()
+    {
+        return $this->school->address ?? null;
     }
     public function handbook()
     {

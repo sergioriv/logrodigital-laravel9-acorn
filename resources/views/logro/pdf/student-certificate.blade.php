@@ -342,11 +342,11 @@
     </section>
 
     <section class="footer f-size-8">
-        Carrera 22 No. 4 - 44 Sur Barrio El Sociego - Madrid - Cundinamarca
+        {{ $SCHOOL->address }}
         <br />
-        Tel. 6018282027
+        Tel. {{ $SCHOOL->contact_telephone }}
         <br />
-        www.ietecnologico-madrid-cundinamarca.edu.co - admintecnologico@ietecnologico-madrid.edu.co
+        {{ $SCHOOL->contact_email }}
     </section>
 
 </body>

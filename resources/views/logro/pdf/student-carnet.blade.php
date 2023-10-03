@@ -195,7 +195,7 @@
                         <div class="mt-2 f-size-5">
                             Tel. {{ $SCHOOL->contact_telephone }}
                             <br />
-                            Carrera 22 No. 4 - 44 Sur Barrio El Sociego - Madrid - Cundinamarca
+                            {{ $SCHOOL->address }}
                         </div>
 
                     </div>

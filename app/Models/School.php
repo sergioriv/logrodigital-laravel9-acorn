@@ -21,6 +21,7 @@ class School extends Model
         'dane',
         'contact_email',
         'contact_telephone',
+        'address',
         'city',
         'badge',
         'institutional_email',
