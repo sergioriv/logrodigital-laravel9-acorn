@@ -282,7 +282,7 @@
                     @endif
                 @endcan
 
-                @hasrole('STUDENT')
+                @hasanyrole('STUDENT|PARENT')
                     <!-- Top Buttons Start -->
                     <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
                         <!-- Dropdown Button Start -->
@@ -293,32 +293,32 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 @if ($student->enrolled)
-                                <x-dropdown-item type="button" :link="route('students.pdf.report_grades')">
+                                <x-dropdown-item type="button" :link="route('students.pdf.report_grades', $student->id)">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __('Grade report') }}</span>
                                 </x-dropdown-item>
                                 <div class="dropdown-divider"></div>
-                                <x-dropdown-item type="button" :link="route('students.pdf.certificate')">
+                                <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student->id)">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __('Download certificate study') }}</span>
                                 </x-dropdown-item>
-                                <x-dropdown-item type="button" :link="route('students.pdf.observations')">
+                                <x-dropdown-item type="button" :link="route('students.pdf.observations', $student->id)">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __('Download observer') }}</span>
                                 </x-dropdown-item>
-                                <x-dropdown-item type="button" :link="route('students.pdf.carnet')">
+                                <x-dropdown-item type="button" :link="route('students.pdf.carnet', $student->id)">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __('Download identification card') }}</span>
                                 </x-dropdown-item>
                                 @endif
-                                <x-dropdown-item type="button" :link="route('student.pdf.matriculate')">
+                                <x-dropdown-item type="button" :link="route('student.pdf.matriculate', $student->id)">
                                     <i data-acorn-icon="download"></i>
-                                    <span>{{ __('Download enrollment sheet') }}</span>
+                                    <span>@if ($student->enrolled){{ __('Download enrollment sheet') }}@else{{ __('Download registration sheet') }}@endif</span>
                                 </x-dropdown-item>
                             </div>
                         </div>
                     </div>
-                @endhasrole
+                @endhasanyrole
 
             </div>
         </section>
@@ -1044,7 +1044,7 @@
                             </section>
                             <!-- Additional Information Section End -->
 
-                            @unlessrole('STUDENT')
+                            @hasanyrole('SECRETARY|ORIENTATION')
                                 @if (1 !== $student->data_treatment)
                                     <section class="card mb-5">
                                         <div class="card-body">
@@ -1108,6 +1108,7 @@
                                 </section>
                                 <!-- Signatures View End -->
 
+                                @hasrole('SECRETARY')
                                 <div class="mb-5">
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" @checked($student->isRepeat()) type="checkbox"
@@ -1116,7 +1117,8 @@
                                             for="isRepeat">{{ __('Is the student repeating?') }}</label>
                                     </div>
                                 </div>
-                            @endunlessrole
+                                @endhasrole
+                            @endhasanyrole
 
                             @hasrole('STUDENT')
                                 <!-- Data Treatment Policy Section Start -->

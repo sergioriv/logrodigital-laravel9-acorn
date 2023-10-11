@@ -15,4 +15,5 @@ class RoleUser
     public const COORDINATION_ROL   = 'COORDINATOR';
     public const ORIENTATION_ROL    = 'ORIENTATION';
     public const TEACHER_ROL        = 'TEACHER';
+    public const PARENT_ROL         = 'PARENT';
 }

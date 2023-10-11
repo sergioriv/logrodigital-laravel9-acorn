@@ -128,7 +128,6 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::put('profile/person_charge', [StudentController::class, 'wizard_person_charge_request'])->name('student.wizard.person-charge');
     Route::put('profile/personal_info', [StudentController::class, 'wizard_personal_info_request'])->name('student.wizard.personal-info');
     Route::put('profile/edit', [StudentController::class, 'wizard_complete_request'])->name('student.wizard.complete');
-    Route::get('profile/download/matriculate', [StudentController::class, 'pdf_matriculate'])->name('student.pdf.matriculate');
     Route::get('profile/avatar/edit', [ProfileController::class, 'auth_avatar_edit'])->name('profile.auth.avatar.edit');
     Route::put('profile/avatar/edit', [ProfileController::class, 'auth_avatar_edit_update'])->name('profile.auth.avatar.update');
 
@@ -340,6 +339,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
         Route::get('students/download/observations/{student?}', 'pdf_observations')->name('students.pdf.observations');
         Route::get('students/download/carnet/{student?}', 'pdf_carnet')->name('students.pdf.carnet');
         Route::get('students/download/report-grades/{student?}', 'pdf_report_grades')->name('students.pdf.report_grades');
+        Route::get('students/download/matriculate/{student?}', 'pdf_matriculate')->name('student.pdf.matriculate');
 
         Route::get('enrolled-export', 'export_enrolled_view')->name('students.export.enrolled');
         Route::post('enrolled-export', 'export_enrolled_generate')->name('students.export.enrolled.generate');

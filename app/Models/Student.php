@@ -306,6 +306,7 @@ class Student extends Model
     {
         return $this->hasOne(PersonCharge::class, 'student_id')->where('kinship_id', '>', 2);
     }
+    public function personsCharge() { return $this->hasMany(PersonCharge::class, 'student_id', 'id'); }
     public function myTutorIs()
     {
         /* switch ($this->person_charge) {

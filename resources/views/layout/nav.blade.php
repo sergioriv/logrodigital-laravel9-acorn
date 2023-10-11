@@ -20,12 +20,14 @@
                 </div>
                 <div class="ps-1 pe-1">
                     <ul class="list-unstyled">
+                        @hasanyrole('STUDENT|TEACHER|SECRETARY|COORDINATOR|ORIENTATION')
                         <li>
                             <a href="{{ route('user.profile.edit') }}">
                                 <i data-acorn-icon="user" class="me-2" data-acorn-size="17"></i>
                                 <span class="align-middle">{{ __('Profile') }}</span>
                             </a>
                         </li>
+                        @endhasanyrole
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -65,8 +67,14 @@
 
             <li>
                 <a href="/dashboard" data-href="/dashboards">
+                    @unlessrole('PARENT')
                     <i data-acorn-icon="home" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Dashboard') }}</span>
+                    @else
+                    <i class="icon icon-18 bi-people"></i>
+                    <span class="label">{{ __('My students') }}</span>
+                    @endunlessrole
+
                     @hasanyrole('TEACHER|COORDINATOR|ORIENTATION')
                     <sup class="font-weight-bold" id="user-alerts-count"></sup>
                     @endhasanyrole
@@ -226,12 +234,14 @@
 
 
             <!-- User Nav Start -->
+            @hasanyrole('STUDENT|TEACHER|SECRETARY|COORDINATOR|ORIENTATION')
             <li>
                 <a href="{{ route('user.profile.edit') }}" data-href="/profile">
                     <i data-acorn-icon="user" class="icon" data-acorn-size="18"></i>
                     <span class="label">{{ __('Profile') }}</span>
                 </a>
             </li>
+            @endhasanyrole
             <li>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

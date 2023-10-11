@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Http\Controllers\support\Notify;
 use ErrorException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -56,6 +57,11 @@ class Handler extends ExceptionHandler
 
 
     public function handleException(Throwable $e){
+
+        if ($e instanceof NotFoundHttpException) {
+            \App\Http\Controllers\support\Notify::fail(__('Not Found'));
+            return back();
+        }
 
         if ($e->getPrevious() instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect()->route('login');

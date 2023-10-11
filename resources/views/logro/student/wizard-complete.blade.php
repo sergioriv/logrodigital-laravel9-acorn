@@ -76,7 +76,7 @@ $title = __('Register completed');
                                             <p>
                                                 <a class="btn btn-link btn-icon btn-icon-start" href="{{ route('student.pdf.matriculate') }}">
                                                     <i data-acorn-icon="download"></i>
-                                                    <span>{{ __("Download enrollment sheet") }}</span>
+                                                    <span>{{ __("Download registration sheet") }}</span>
                                                 </a>
                                             </p>
                                             <button class="btn btn-icon btn-icon-end btn-primary btn-reset"

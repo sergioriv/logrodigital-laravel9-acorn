@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\support\UserController;
-use App\Models\CoordinationPermit;
 use App\Models\Data\RoleUser;
-use App\Models\OrientationPermit;
 use App\Models\Student;
-use App\Models\TeacherPermit;
 use App\Models\TypePermitsTeacher;
 use App\Models\UserAlert;
 
@@ -29,6 +26,10 @@ class DashboardController extends Controller
 
             case RoleUser::ORIENTATION_ROL:
                 return $this->dashOrientation();
+                break;
+
+            case RoleUser::PARENT_ROL:
+                return $this->dashParent();
                 break;
 
             default:
@@ -92,6 +93,21 @@ class DashboardController extends Controller
             'alertPermits' => $alertPermits,
             'remitPending' => $remitPending,
             'typePermit' => TypePermitsTeacher::all()
+        ]);
+    }
+
+    private function dashParent()
+    {
+        $myStudents = \App\Models\Student::whereHas('personsCharge', fn($query) => $query->where('email', auth()->user()->email))
+        ->select('id','first_name','second_name','first_last_name','second_last_name','group_id','enrolled')
+        ->with(
+            'group.headquarters:id,name',
+            'group.studyTime:id,name',
+            'group.studyYear:id,name')
+        ->get();
+
+        return view('dashboard.parent', [
+            'myStudents' => $myStudents
         ]);
     }
 }

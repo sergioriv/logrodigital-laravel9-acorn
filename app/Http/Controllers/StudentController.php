@@ -81,7 +81,8 @@ class StudentController extends Controller
         $this->middleware('can:students.index')->only(
             'export_noenrolled',
             'inclusive_students',
-            'no_enrolled'
+            'no_enrolled',
+            'enrolled'
         );
 
         $this->middleware('hasroles:SECRETARY,COORDINATOR,TEACHER,SUPPORT')->only(
@@ -144,6 +145,16 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
+        if ('PARENT' == UserController::role_auth() && $student) {
+
+            $parentCheck = \App\Models\PersonCharge::where('email', auth()->user()->email)->where('student_id', $student->id)->count();
+            if (!$parentCheck) {
+                Notify::fail("No permitido");
+                return back();
+            }
+
+        }
+
         $user = Auth::user();
         if ( $user->hasPermissionTo('students.view') ) {
 
@@ -415,7 +426,7 @@ class StudentController extends Controller
     public function wizard_person_charge(Student $student)
     {
         if ('STUDENT' === UserController::role_auth()) {
-            // $student = Student::find(Auth::id());
+
             $cities = City::all();
             $kinships = Kinship::all();
 
@@ -1498,10 +1509,16 @@ class StudentController extends Controller
     /* PDF */
     public function pdf_matriculate(Student $student = null)
     {
-        if ('PARENT' == UserController::role_auth()) {
-            Notify::fail("Para descargar información de un estudiante, por favor acceda con los datos del estudiante.");
-            return back();
+        if ('PARENT' == UserController::role_auth() && $student) {
+
+            $parentCheck = \App\Models\PersonCharge::where('email', auth()->user()->email)->where('student_id', $student->id)->count();
+            if (!$parentCheck) {
+                Notify::fail("No permitido");
+                return back();
+            }
+
         }
+
         if ('STUDENT' == UserController::role_auth())
         {
             return self::pdfMatriculateGenerate(Auth::id());
@@ -1512,10 +1529,16 @@ class StudentController extends Controller
 
     public function pdf_certificate(Student $student = null)
     {
-        if ('PARENT' == UserController::role_auth()) {
-            Notify::fail("Para descargar información de un estudiante, por favor acceda con los datos del estudiante.");
-            return back();
+        if ('PARENT' == UserController::role_auth() && $student) {
+
+            $parentCheck = \App\Models\PersonCharge::where('email', auth()->user()->email)->where('student_id', $student->id)->count();
+            if (!$parentCheck) {
+                Notify::fail("No permitido");
+                return back();
+            }
+
         }
+
         if ('STUDENT' == UserController::role_auth())
         {
             $student = Student::find(Auth::id());
@@ -1531,10 +1554,16 @@ class StudentController extends Controller
 
     public function pdf_observations(Student $student = null)
     {
-        if ('PARENT' == UserController::role_auth()) {
-            Notify::fail("Para descargar información de un estudiante, por favor acceda con los datos del estudiante.");
-            return back();
+        if ('PARENT' == UserController::role_auth() && $student) {
+
+            $parentCheck = \App\Models\PersonCharge::where('email', auth()->user()->email)->where('student_id', $student->id)->count();
+            if (!$parentCheck) {
+                Notify::fail("No permitido");
+                return back();
+            }
+
         }
+
         if ('STUDENT' == UserController::role_auth())
         {
             $student = Student::find(Auth::id());
@@ -1550,10 +1579,16 @@ class StudentController extends Controller
 
     public function pdf_carnet(Student $student = null)
     {
-        if ('PARENT' == UserController::role_auth()) {
-            Notify::fail("Para descargar información de un estudiante, por favor acceda con los datos del estudiante.");
-            return back();
+        if ('PARENT' == UserController::role_auth() && $student) {
+
+            $parentCheck = \App\Models\PersonCharge::where('email', auth()->user()->email)->where('student_id', $student->id)->count();
+            if (!$parentCheck) {
+                Notify::fail("No permitido");
+                return back();
+            }
+
         }
+
         if ('STUDENT' == UserController::role_auth())
         {
             $student = Student::find(Auth::id());
@@ -1569,10 +1604,16 @@ class StudentController extends Controller
 
     public function pdf_report_grades(Student $student = null)
     {
-        if ('PARENT' == UserController::role_auth()) {
-            Notify::fail("Para descargar información de un estudiante, por favor acceda con los datos del estudiante.");
-            return back();
+        if ('PARENT' == UserController::role_auth() && $student) {
+
+            $parentCheck = \App\Models\PersonCharge::where('email', auth()->user()->email)->where('student_id', $student->id)->count();
+            if (!$parentCheck) {
+                Notify::fail("No permitido");
+                return back();
+            }
+
         }
+
         if ('STUDENT' == UserController::role_auth())
         {
             $student = Student::find(Auth::id());

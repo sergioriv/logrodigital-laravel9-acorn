@@ -35,6 +35,7 @@ class PersonCharge extends Model
     {
         return $this->belongsTo(User::class, 'id');
     }
+    public function student() { return $this->belongsTo(Student::class); }
 
 
      /*
