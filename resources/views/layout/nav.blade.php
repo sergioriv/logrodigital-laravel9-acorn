@@ -88,6 +88,7 @@
                 </a>
             </li>
             @endhasrole --}}
+            @unlessrole('TEACHER')
             @can('students.index')
             <li>
                 <a href="#students" data-href="/students">
@@ -122,6 +123,8 @@
                 </ul>
             </li>
             @endcan
+            @endunlessrole
+
             @can('headquarters.index')
             <li>
                 <a href="{{ route('headquarters.index') }}" data-href="/headquarters">
