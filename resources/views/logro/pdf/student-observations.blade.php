@@ -315,7 +315,7 @@
         <tr>
             <td class="h-60p w-70p text-center align-sub">
                 @if ($SCHOOL->badge)
-                    <img class="badge" src="{{ config('app.url') . '/' . $SCHOOL->badge }}" alt="badge">
+                    <img class="badge" src="{{ asset($SCHOOL->badge) }}" alt="badge">
                 @endif
             </td>
             <td class="t-center p-se-1">

@@ -274,7 +274,7 @@
             <tr>
                 <td class="text-center align-sub">
                     <div class="h-70p">
-                        <img class="badge" src="{{ config('app.url') . '/' . $SCHOOL->badge }}" alt="badge">
+                        <img class="badge" src="{{ asset($SCHOOL->badge) }}" alt="badge">
                     </div>
                 </td>
             </tr>
@@ -328,7 +328,7 @@
                     <td class="t-center w-50">
                         <div class="signature">
                             @if ($SCHOOL->signature_rector !== null)
-                                <img src="{{ asset($SCHOOL->signature_rector) }}">
+                                <img src="{{ asset($SCHOOL->signature_rector) }}" alt="signature">
                             @endif
                         </div>
                         <div class="signature_name bold">

@@ -132,14 +132,14 @@
                                 <td class="left-content">
                                     <div class="photo-student">
                                         @if (!is_null($student->user->avatar))
-                                            <img src="{{ config('app.url') . '/' . $student->user->avatar }}">
+                                            <img src="{{ asset($student->user->avatar) }}">
                                         @endif
                                     </div>
                                 </td>
                                 <td class="right-content t-center">
                                     <div class="badge w-100">
                                         @if ($SCHOOL->badge)
-                                            <img src="{{ config('app.url') . '/' . $SCHOOL->badge }}">
+                                            <img src="{{ asset($SCHOOL->badge) }}">
                                         @endif
                                     </div>
                                     <div class="bold text-uppercase f-size-5">{{ $SCHOOL->name }}</div>

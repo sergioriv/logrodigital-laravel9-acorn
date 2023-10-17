@@ -296,7 +296,7 @@ class SchoolController extends Controller
                 File::delete(public_path($S->$file));
             }
 
-            $path = $request->file($file)->store('school/', 'public');
+            $path = $request->file($file)->store('school', 'public');
             return config('filesystems.disks.public.url') . '/' . $path;
         } else return null;
     }
