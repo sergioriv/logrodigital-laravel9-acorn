@@ -1655,8 +1655,24 @@ class StudentController extends Controller
         $SCHOOL = SchoolController::myschool()->getData();
         $date = Carbon::now();
 
+        $opciones_ssl = array(
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ),
+        );
+
+        $extencion = pathinfo($SCHOOL->badge, PATHINFO_EXTENSION);
+        $data = file_get_contents($SCHOOL->badge, false, stream_context_create($opciones_ssl));
+        $img_base_64 = base64_encode($data);
+        $badge = [
+            'base64' => $img_base_64,
+            'extencion' => $extencion
+        ];
+
         $pdf = Pdf::loadView('logro.pdf.student-certificate', [
             'SCHOOL' => $SCHOOL,
+            'badge' => $badge,
             'date' => $date,
             'student' => $student
         ]);

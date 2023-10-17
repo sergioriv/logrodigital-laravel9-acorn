@@ -274,7 +274,7 @@
             <tr>
                 <td class="text-center align-sub">
                     <div class="h-70p">
-                        <img class="badge" src="{{ asset($SCHOOL->badge) }}" alt="badge">
+                        <img class="badge" src="data:image/{{$badge['extencion']}};base64,{{$badge['base64']}}" alt="badge">
                     </div>
                 </td>
             </tr>
