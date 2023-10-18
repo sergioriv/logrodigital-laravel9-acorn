@@ -290,7 +290,7 @@
         <tr>
             <td class="h-60p w-70p text-center align-sub">
                 @if ($SCHOOL->badge)
-                    <img class="badge" src="{{ asset($SCHOOL->badge) }}" alt="badge">
+                    <img class="badge" src="{{ imgBase64($SCHOOL->badge) }}" alt="badge">
                 @endif
             </td>
             <td class="t-center p-se-1">
@@ -513,7 +513,7 @@
                 <td style="width: 20%;"></td>
                 <td class="h-60p w-70p text-center align-sub" style="width: 30%;">
                     @if ($SCHOOL->signature_rector)
-                        <img class="badge" src="{{ asset($SCHOOL->signature_rector) }}" alt="badge">
+                        <img class="badge" src="{{ imgBase64($SCHOOL->signature_rector) }}" alt="badge">
                     @endif
                 </td>
                 <td style="width: 10%;"></td>

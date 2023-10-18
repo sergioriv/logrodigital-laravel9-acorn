@@ -206,7 +206,7 @@
         <tr>
             <td class="h-70p w-70p text-center align-sub">
                 @if ($SCHOOL->badge)
-                    <img class="badge" src="{{ asset($SCHOOL->badge) }}" alt="badge">
+                    <img class="badge" src="{{ imgBase64($SCHOOL->badge) }}" alt="badge">
                 @endif
             </td>
             <td class="t-center p-se-1">
@@ -562,7 +562,7 @@
                 <td class="t-center w-50">
                     <div class="signature">
                         @if ($student->signature_tutor !== null)
-                            <img src="{{ asset($student->signature_tutor) }}">
+                            <img src="{{ imgBase64($student->signature_tutor) }}">
                         @endif
                     </div>
                     <div class="signature_name">
@@ -573,7 +573,7 @@
                 <td class="t-center w-50">
                     <div class="signature">
                         @if ($student->signature_student !== null)
-                            <img src="{{ asset($student->signature_student) }}">
+                            <img src="{{ imgBase64($student->signature_student) }}">
                         @endif
                     </div>
                     <div class="signature_name">

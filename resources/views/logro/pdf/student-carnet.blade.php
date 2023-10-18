@@ -132,14 +132,14 @@
                                 <td class="left-content">
                                     <div class="photo-student">
                                         @if (!is_null($student->user->avatar))
-                                            <img src="{{ asset($student->user->avatar) }}">
+                                            <img src="{{ imgBase64($student->user->avatar) }}">
                                         @endif
                                     </div>
                                 </td>
                                 <td class="right-content t-center">
                                     <div class="badge w-100">
                                         @if ($SCHOOL->badge)
-                                            <img src="{{ asset($SCHOOL->badge) }}">
+                                            <img src="{{ imgBase64($SCHOOL->badge) }}">
                                         @endif
                                     </div>
                                     <div class="bold text-uppercase f-size-5">{{ $SCHOOL->name }}</div>
@@ -185,7 +185,7 @@
                         <div class="text-center">
                             <div class="signature">
                                 @if ($SCHOOL->signature_rector !== null)
-                                    <img src="{{ asset($SCHOOL->signature_rector) }}">
+                                    <img src="{{ imgBase64($SCHOOL->signature_rector) }}">
                                 @endif
                             </div>
                         </div>
