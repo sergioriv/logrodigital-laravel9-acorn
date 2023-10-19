@@ -1801,6 +1801,10 @@ class StudentController extends Controller
                 }
             }
 
+            \App\Models\RetiredStudent::create([
+                'student_id' => $student->id
+            ]);
+
             $student->forceFill([
                 'group_id' => null,
                 'group_specialty_id' => null,
@@ -1825,7 +1829,7 @@ class StudentController extends Controller
             ])->save();
 
         } catch (\Throwable $th) {
-
+            info($th->getMessage());
             DB::rollBack();
             Notify::fail(__('An error has occurred'));
             return back();
@@ -1907,6 +1911,8 @@ class StudentController extends Controller
             'email_verified_at' => now(),
             'active' => 1
         ])->save();
+
+        \App\Models\RetiredStudent::where('student_id', $student->id)->delete();
 
         Notify::success(__('Student activated!'));
         return back();

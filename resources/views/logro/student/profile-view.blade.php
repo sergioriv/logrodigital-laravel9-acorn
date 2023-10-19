@@ -184,6 +184,15 @@
                             @endif
                         </div>
 
+                        @if ($student->isRetired())
+                        @if ($student->retiredStudent())
+                        <div class="d-flex flex-column mb-3">
+                            <text class="text-muted text-small">Retirado por: {{ $student->retiredStudent()->creatorName() }}</text>
+                            <text class="text-muted text-small">{{ $student->retiredStudent()->created_at }}</text>
+                        </div>
+                        @endif
+                        @endif
+
                         <div class="d-flex flex-column">
                             <text class="text-muted text-small">{{ __('created at') }}:</text>
                             <text class="text-muted text-small">{{ $student->created_at }}</text>

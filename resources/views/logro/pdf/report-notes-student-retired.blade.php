@@ -420,13 +420,13 @@
                     <tr>
                         <td colspan="5" class="h-5p"></td>
                     </tr>
-                    <tr>
-                        <td colspan="4" class="text-uppercase">{{ __('average') }}</td>
-                        @foreach ($periods as $period)
-                        <td class="f-size-6 text-center">{{  $period->gradeAVG ?? '-'  }}</td>
-                        @endforeach
-                    </tr>
                 @endforeach
+                <tr>
+                    <td colspan="4" class="text-uppercase">{{ __('average') }}</td>
+                    @foreach ($periods as $period)
+                    <td class="f-size-6 text-center">{{ $period->gradeAVG ?? '-' }}</td>
+                    @endforeach
+                </tr>
             </tbody>
         </table>
     </section>
