@@ -208,6 +208,7 @@ class UserController extends Controller
             'TEACHER' => 'App\Models\Teacher',
             'COORDINATOR' => 'App\Models\Coordination',
             'ORIENTATION' => 'App\Models\Orientation',
+            'SECRETARY' => 'App\Models\Secretariat'
         };
     }
 
