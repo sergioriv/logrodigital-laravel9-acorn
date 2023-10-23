@@ -609,6 +609,11 @@ class GradeController extends Controller
         $groupRetired = \App\Models\GroupStudentRetired::where('student_id', $student->id)
             ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id)->whereNull('specialty') )->first();
 
+        if (!$groupRetired) {
+            Notify::fail('El estudiante no cuenta con grupo.');
+            return back();
+        }
+
         $group = $groupRetired->group;
         $studyTime = $group->studyTime;
         $studyYear = $group->studyYear;

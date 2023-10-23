@@ -810,15 +810,15 @@ class StudentController extends Controller
 
         $absences = null;
         $studentGradesxGroup = ['periods' => null, 'areasGrade' => null];
-        if (auth()->id() === $groupStudent->group->teacher_id) {
-            $absences = Attendance::withWhereHas(
-                    'student',
-                    fn ($s) => $s->where('student_id', $student->id)->whereIn('attend', ['N', 'L', 'J'])
-                )->with('teacherSubjectGroup.subject', 'teacherSubjectGroup.teacher')
-                ->orderByDesc('date')
-                ->get();
-        }
-        if (auth()->id() === $groupStudent->teacher_id || RoleUser::COORDINATION_ROL === UserController::role_auth()) {
+
+        $absences = Attendance::withWhereHas(
+                'student',
+                fn ($s) => $s->where('student_id', $student->id)->whereIn('attend', ['N', 'L', 'J'])
+            )->with('teacherSubjectGroup.subject', 'teacherSubjectGroup.teacher')
+            ->orderByDesc('date')
+            ->get();
+
+        if (auth()->id() === $groupStudent?->teacher_id || RoleUser::COORDINATION_ROL === UserController::role_auth()) {
             $studentGradesxGroup = GradeController::studentGrades($Y, $student);
         }
 
