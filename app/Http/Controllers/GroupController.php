@@ -258,7 +258,7 @@ class GroupController extends Controller
             ->when(RoleUser::TEACHER_ROL === $roleAuth, function ($query){
                 // para el director de grupo
                 return $query->with('remarks');
-            })->where('start_grades', '<=', today()->format('Y-m-d'))
+            })->where('start', '<=', today()->format('Y-m-d'))
             ->orderBy('ordering')->get();
 
         $groupsSpecialty = Group::where('school_year_id', $Y->id)

@@ -788,9 +788,9 @@
                                         @endforeach
 
                                         {{-- Para generar el reporte final --}}
-                                        @if ($periods->count() === $countPeriods)
+                                        {{-- @if ($periods->count() === $countPeriods)
                                             <option value="FINAL">FINAL</option>
-                                        @endif
+                                        @endif --}}
                                     </select>
                                 </div>
 
@@ -833,9 +833,9 @@
                                         @endforeach
 
                                         {{-- Para generar el reporte final --}}
-                                        @if ($periods->count() === $countPeriods)
+                                        {{-- @if ($periods->count() === $countPeriods)
                                             <option value="FINAL">FINAL</option>
-                                        @endif
+                                        @endif --}}
                                     </select>
                                 </div>
 
