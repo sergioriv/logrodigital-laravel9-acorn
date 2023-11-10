@@ -179,9 +179,9 @@ class GradeController extends Controller
     */
     public static function calculateGradeWithEvaluationComponents($grades, $ST)
     {
+        $def = 0;
         if (count($grades) || ! is_null($grades) ) {
 
-            $def = 0;
             foreach ($grades as $g) {
                 $wl = ($g->period->workload / 100);
                 $def += $g->final * $wl;
@@ -190,8 +190,6 @@ class GradeController extends Controller
             /* Verifica decimales y PHP_ROUND_HALF_UP | PHP_ROUND_HALF_DOWN  */
             $def = number_format(round($def, $ST->decimal, $ST->round ? PHP_ROUND_HALF_UP : PHP_ROUND_HALF_DOWN), $ST->decimal);
 
-        } else {
-            $def = null;
         }
 
         return ['definitive' => (float)$def, 'performance' => static::performanceHtml($ST, $def)];

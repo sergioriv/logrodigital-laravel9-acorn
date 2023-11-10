@@ -213,9 +213,9 @@
                                                                         {{ 'P' . $period->ordering }}
                                                                     </th>
                                                                 @endforeach
-                                                                {{-- <th
+                                                                <th
                                                                     class="text-center text-muted text-small text-uppercase p-0 pb-2">
-                                                                    {{ __('Definitive') }}</th> --}}
+                                                                    {{ __('Definitive') }}</th>
                                                                 {{-- <th
                                                                     class="text-center text-muted text-small text-uppercase p-0 pb-2">
                                                                     {{ __('Performance') }}</th> --}}
@@ -253,9 +253,9 @@
                                                                         </td>
                                                                     @endforeach
                                                                     <!-- Definitive Grade -->
-                                                                    {{-- <td class="text-center text-small">
+                                                                    <td class="text-center text-small">
                                                                         {{ $studentG?->finalGrade['definitive'] ?: null }}
-                                                                    </td> --}}
+                                                                    </td>
 
                                                                     <!-- Performance Definitive Grade -->
                                                                     {{-- <td class="text-center text-small text-capitalize">
