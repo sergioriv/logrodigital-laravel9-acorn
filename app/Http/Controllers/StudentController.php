@@ -1722,6 +1722,14 @@ class StudentController extends Controller
             ->where('end', '<=', today()->format('Y-m-d'))
             ->orderByDesc('ordering')->first();
 
+        $periodsCount = Period::where('school_year_id', $Y->id)
+            ->where('study_time_id', $student->group->study_time_id)
+            ->where('end', '<=', today()->format('Y-m-d'))
+            ->orderBy('ordering')->count();
+
+        $totalPeriods = Period::where('school_year_id', $Y->id)->where('study_time_id', $student->group->study_time_id)->count();
+        if ($periodsCount == $totalPeriods) { $period = 'FINAL'; }
+
         if (!$period) {
             Notify::fail('Sin notas para mostrar');
             return back();

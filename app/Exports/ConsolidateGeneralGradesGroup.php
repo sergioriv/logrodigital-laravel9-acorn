@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, WithStyles, WithEvents
 {
     private $group;
+    private $schoolYear;
     private $ST;
     private $period;
     private $periods;
@@ -27,14 +28,15 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
     private $lowGrades = [];
     private $colPeriodsAfter = [];
 
-    public function __construct($group, $ST, $period, $areas, $students)
+    public function __construct($group, $schoolYear, $ST, $period, $areas, $students)
     {
         $this->group = $group;
+        $this->schoolYear = $schoolYear;
         $this->ST = $ST;
         $this->areas = $areas;
         $this->students = $students;
 
-        $periods = \App\Models\Period::where('school_year_id', $period->school_year_id)->where('study_time_id', $period->study_time_id)->where('ordering', '<=', $period->ordering)->orderBy('ordering')->get();
+        $periods = \App\Models\Period::where('school_year_id', $schoolYear->id)->where('study_time_id', $ST->id)->when($period !== 'FINAL', fn($whenNoFinal) => $whenNoFinal->where('ordering', '<=', $period->ordering))->orderBy('ordering')->get();
         $this->period = $period;
         $this->periods = $periods;
 
@@ -67,12 +69,15 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
         $headers = ['#', __('Full name')];
         $colAreas = 'B';
 
-        $periodsAfter = Period::where('school_year_id', $this->period->school_year_id)->where('study_time_id', $this->period->study_time_id)->where('ordering', '>', $this->period->ordering)->get();
+        if ($this->period === 'FINAL') { $periodsAfter = []; }
+        else {
+            $periodsAfter = Period::where('school_year_id', $this->schoolYear->id)->where('study_time_id', $this->ST->id)->where('ordering', '>', $this->period->ordering)->get();
+        }
         $minimalGrade = ($this->group->studyTime->low_performance + $this->group->studyTime->step);
         $missingPorcentage = 100 - $this->periods->sum('workload');
 
         foreach ($this->areas as $area) {
-            foreach ($area['subjects'] as $key => $subject) {
+            if ($this->period !== 'FINAL') foreach ($area['subjects'] as $key => $subject) {
                 foreach ($this->periods as $period) {
                     $colAreas++;
                     $headers[] = ' P'. $period->ordering .' - '. $subject['resource_name'] . ' - ' . $subject['academic_workload'] . '%';
@@ -83,34 +88,35 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                     $this->colPeriodsAfter[] = $colAreas;
                     $headers[] = ' P'. $periodAfter->ordering .' - Mínimo requerido';
                 }
-
-                if (++$key === count($area['subjects'])) {
-                    $colAreas++;
-
-                    $headers[] = " ACUM: " . $area['name'];
-                    $headers[] = $this->spaceCellVoid;
-                    $this->colAreas[] = $colAreas;
-                    if ($area['isSpecialty']) $this->colAreasSpecialty[] = $colAreas;
-
-                    $colAreas++;
-                }
             }
+
+            $colAreas++;
+
+            $headers[] = " ACUM: " . $area['name'];
+            $headers[] = $this->spaceCellVoid;
+            $this->colAreas[] = $colAreas;
+            if ($area['isSpecialty']) $this->colAreasSpecialty[] = $colAreas;
+
+            $colAreas++;
+
         }
-        $headers[] = 'ASIGNATURAS PERIDIDAS P' . $this->period->ordering;
+        if ($this->period !== 'FINAL') $headers[] = 'ASIGNATURAS PERIDIDAS P' . $this->period->ordering;
         $headers[] = 'ÁREAS PERDIDAS';
-        $headers[] = 'ASIGNATURAS EVALUADAS';
+        if ($this->period !== 'FINAL') $headers[] = 'ASIGNATURAS EVALUADAS';
         $headers[] = 'PROMEDIO';
         $headers[] = 'PUESTO';
 
         $infoPeriods = '';
-        foreach ($this->periods as $key => $period) {
-            if ($key) $infoPeriods .= " | ";
-            $infoPeriods .= "P{$period->ordering}: {$period->workload}%";
+        if ($this->period !== 'FINAL') {
+            foreach ($this->periods as $key => $period) {
+                if ($key) $infoPeriods .= " | ";
+                $infoPeriods .= "P{$period->ordering}: {$period->workload}%";
+            }
         }
 
         $array = [
             [__('Group') . ': ' . $this->group->name],
-            [__('Period') . ': ' . $this->period->name],
+            [__('Period') . ': ' . ($this->period === 'FINAL' ? 'FINAL' : $this->period->name)],
             [__('export.headquarters') . ': ' . $this->group->headquarters->name . ' | ' . __('export.study_time') . ': ' . $this->group->studyTime->name . ' | ' . __('export.study_year') . ': ' . $this->group->studyYear->name],
             [$infoPeriods],
             $headers
@@ -119,8 +125,8 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
         $position = [];
         foreach ($this->students as $student) {
             $average = 0;
-            $countSubjects = 0;
             foreach ($this->areas as $area) {
+                $totalArea = 0;
                 foreach ($area['subjects'] as $subject) {
                     $totalSubject = 0;
                     foreach ($this->periods as $period) {
@@ -130,22 +136,21 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                             })
                             ->first();
 
-                        $gradeSubject = $gradeByStudentByPeriod['final'] ?? null;
-                        $totalSubject += $gradeByStudentByPeriod['final_workload'] ?? 0;
+                        $totalSubject += ($gradeByStudentByPeriod['final_workload'] ?? 0) * ($period->workload / 100) ?? null;
                     }
-                    $average += $gradeSubject;
-                    if (!$area['isSpecialty']) {
-                        $countSubjects++;
-                    }
+                    $totalArea += $totalSubject;
                 }
+                $average += $totalArea;
             }
 
             $myAreaSpecialty = collect($this->areas)->filter(function ($filter) use ($student) {
                 return $filter['id'] === $student->specialty;
-            })->first() ?? ['subjects' => []];
+            })->count();
+            $areasGenerales = collect($this->areas)->filter(function ($filter) {
+                return !$filter['isSpecialty'];
+            })->count();
 
-            $totalSubjects = $countSubjects + count($myAreaSpecialty['subjects']) ?? 0;
-            $average = ($average / $totalSubjects) ?? 0;
+            $average = ($average / ($areasGenerales + $myAreaSpecialty)) ?? 0;
             $position[$student->id] = $average;
         }
 
@@ -172,7 +177,6 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                     $accumSubject = 0;
                     $totalSubject = 0;
                     foreach ($this->periods as $period) {
-                        $colGrade++;
 
                         $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
                             ->filter(function ($grade) use ($student, $period) {
@@ -181,7 +185,12 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                             ->first();
 
                         $gradeSubject = $gradeByStudentByPeriod['final'] ?? null;
-                        $row[] = $this->gradeController::numberFormat($this->ST, $gradeSubject) ?? '-';
+
+                        if ($this->period !== 'FINAL') {
+                            // print grade
+                            $colGrade++;
+                            $row[] = $this->gradeController::numberFormat($this->ST, $gradeSubject) ?? '-';
+                        }
 
                         // promedio area
                         $sumArea += $gradeByStudentByPeriod['final_workload'] ?? null;
@@ -194,12 +203,14 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
 
                         $totalSubject += $gradeByStudentByPeriod['final_workload'] ?? 0;
 
-                        if ($gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
-                            $this->lowGrades[] = $colGrade.$key+5;
-                        }
+                        if ($this->period !== 'FINAL') {
+                            if ($gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
+                                $this->lowGrades[] = $colGrade.$key+5;
+                            }
 
-                        if (@$gradeByStudentByPeriod['period_id'] === $this->period->id && $gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
-                            $subjectsLosses++;
+                            if (@$gradeByStudentByPeriod['period_id'] === $this->period->id && $gradeSubject <= $this->ST->low_performance && !is_null($gradeSubject)) {
+                                $subjectsLosses++;
+                            }
                         }
                     }
 
@@ -238,20 +249,24 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                 }
             }
 
-            /* ASIGNATURAS PERDIDAS */
-            $row[] = $subjectsLosses ?: '0';
+            if ($this->period !== 'FINAL') {
+                /* ASIGNATURAS PERDIDAS */
+                $row[] = $subjectsLosses ?: '0';
+            }
 
             /* AREAS PERDIDAS */
             $row[] = $areasLosses ?: '0';
 
-            /* ASIGNATURAS EVALUADAS */
-            $myAreaSpecialty = collect($this->areas)->filter(function ($filter) use ($student) {
-                return $filter['id'] === $student->specialty;
-            })->first() ?? ['subjects' => []];
-            $totalSubjects = $countSubjects + count($myAreaSpecialty['subjects']) ?? 0;
-            $average = ($average / $totalSubjects) ?? 0;
-            $row[] = $totalSubjects;
-            /* ASIGNATURAS EVALUADAS END */
+            if ($this->period !== 'FINAL') {
+                /* ASIGNATURAS EVALUADAS */
+                $myAreaSpecialty = collect($this->areas)->filter(function ($filter) use ($student) {
+                    return $filter['id'] === $student->specialty;
+                })->first() ?? ['subjects' => []];
+                $totalSubjects = $countSubjects + count($myAreaSpecialty['subjects']) ?? 0;
+                $average = ($average / $totalSubjects) ?? 0;
+                $row[] = $totalSubjects;
+                /* ASIGNATURAS EVALUADAS END */
+            }
 
             /* PROMEDIO */
             $row[] = $this->gradeController::numberFormat($this->ST, $position[$student->id]) ?: '0';

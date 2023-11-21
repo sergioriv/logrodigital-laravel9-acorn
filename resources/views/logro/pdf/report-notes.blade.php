@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Reporte - {{ __('Period') }} {{ $currentPeriod->ordering }}</title>
+    <title>Reporte - {{ $currentPeriod !== 'FINAL' ? __('Period').$currentPeriod->ordering : 'FINAL' }}</title>
     <style>
         * {
             font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -379,7 +379,7 @@
                     <td class="h-5p"></td>
                 </tr>
 
-                @php $overallAvg = 0 @endphp
+                @php $overallAvg = 0; $lossesArea = 0; @endphp
 
                 @foreach ($areas as $area)
                     @php
@@ -405,7 +405,11 @@
                         @endif
                         <td class="text-center text-capitalize">
                             @if ($lastAreaGrade)
-                                {{ \App\Http\Controllers\GradeController::performanceString($studyTime, $lastAreaGrade) }}
+                            @php
+                            $performanceArea = \App\Http\Controllers\GradeController::performanceString($studyTime, $lastAreaGrade);
+                            if ($performanceArea === __('low')) { $lossesArea++; }
+                            @endphp
+                                {{ $performanceArea }}
                             @endif
                         </td>
                     </tr>
@@ -480,6 +484,10 @@
         <div class="text-center bold table-title">
             PROMEDIO GENERAL:
             {{ \App\Http\Controllers\GradeController::numberFormat($studyTime, $overallAvg / count($areas)) }}
+            @if ($currentPeriod === 'FINAL')
+            <br><br>
+            {{ \App\Http\Controllers\GradeController::verifiedPassOrFail($studyTime, $lossesArea) }}
+            @endif
         </div>
     </section>
 

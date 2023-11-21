@@ -20,6 +20,7 @@ class ConsolidateGradesByArea extends Controller
 {
     private $Y;
     private $G;
+    private $schoolYear;
     private $ST;
     private $SY;
 
@@ -29,10 +30,14 @@ class ConsolidateGradesByArea extends Controller
 
     public function make(Request $request, Group $group)
     {
-        $request->validate([
-            'periodConsolidateGrades' => ['required', Rule::exists('periods', 'id')]
-        ]);
-        $this->period = Period::find($request->periodConsolidateGrades);
+        if ($request->has('periodConsolidateGrades') && $request->periodConsolidateGrades !== 'FINAL') {
+            $request->validate([
+                'periodConsolidateGrades' => ['required', Rule::exists('periods', 'id')]
+            ]);
+            $this->period = Period::find($request->periodConsolidateGrades);
+        } else {
+            $this->period = 'FINAL';
+        }
 
         if ($group->specialty) {
             Notify::fail(__('Not allowed'));
@@ -53,6 +58,7 @@ class ConsolidateGradesByArea extends Controller
 
         $this->Y = SchoolYearController::current_year();
         $this->G = $group;
+        $this->schoolYear = $group->schoolYear;
         $this->SY = $group->studyYear;
         $this->ST = $group->studyTime;
 
@@ -109,10 +115,12 @@ class ConsolidateGradesByArea extends Controller
         $areasIDS = array_merge($areasInitial, $groupsSpecialty->pluck('specialty_area_id')->toArray());
 
         $periodIDS = \App\Models\Period::query()
-            ->where('school_year_id', $this->period->school_year_id)
-            ->where('study_time_id', $this->period->study_time_id)
-            ->where('ordering', '<=', $this->period->ordering)
-            ->pluck('id')->toArray();
+            ->when($this->period !== 'FINAL', function ($whenNoFinal) {
+                $whenNoFinal->where('ordering', '<=', $this->period->ordering);
+            })
+            ->where('school_year_id', $this->Y->id)
+            ->where('study_time_id', $this->ST->id)
+            ->get()->pluck('id')->toArray();
 
         $areas = ResourceArea::query()
             ->whereIn('id', $areasIDS)
@@ -175,7 +183,8 @@ class ConsolidateGradesByArea extends Controller
     private function generatePDF($areas, $students)
     {
         /* Informe general */
-        Excel::store(new ConsolidateGeneralGradesGroup($this->G, $this->ST, $this->period, $areas, $students), $this->path .'Consolidado general - Group ' . $this->G->name . '.xlsx', 'public');
+        if ($this->period === 'FINAL') return Excel::download(new ConsolidateGeneralGradesGroup($this->G, $this->schoolYear, $this->ST, $this->period, $areas, $students), 'Consolidado final - Group ' . $this->G->name . '.xlsx');
+        else Excel::store(new ConsolidateGeneralGradesGroup($this->G, $this->schoolYear, $this->ST, $this->period, $areas, $students), $this->path .'Consolidado general - Group ' . $this->G->name . '.xlsx', 'public');
 
         /* Informe por area */
         foreach ($areas as $area) {

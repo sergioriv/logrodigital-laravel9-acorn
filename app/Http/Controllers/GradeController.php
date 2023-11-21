@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
-use App\Http\Controllers\support\UserController;
 use App\Http\Middleware\OnlyTeachersMiddleware;
 use App\Imports\GroupGradesImport;
 use App\Models\Data\RoleUser;
@@ -218,6 +217,13 @@ class GradeController extends Controller
         return $value > $studyTime->high_performance ? __('superior') : ($value > $studyTime->basic_performance ? __('high') : ($value > $studyTime->low_performance ? __('basic') :
                     __('low')));
     }
+    public static function verifiedPassOrFail($studyTime, $lossesArea)
+    {
+        return !is_null($studyTime->missing_areas) &&
+                $studyTime->missing_areas <= $lossesArea
+                    ? 'REPROBADO'
+                    : 'APROBADO';
+    }
 
 
     /*
@@ -363,7 +369,7 @@ class GradeController extends Controller
      *
      *
      * */
-    public function reportForGroupByPeriod(Period $period, Group $group, Student $student)
+    public function reportForGroupByPeriod($period, Group $group, Student $student)
     {
         return $this->reportForGroupPDF($period, $group, $student);
     }
@@ -548,8 +554,10 @@ class GradeController extends Controller
 
         $absencesTSG = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
             ->withCount(['attendances' => function ($query) use ($student, $currentPeriod) {
-                $query->whereBetween('date', [$currentPeriod->start, $currentPeriod->end]) ->whereHas('student', function ($queryAttend) use ($student) {
+                $query->whereHas('student', function ($queryAttend) use ($student) {
                     $queryAttend->where('student_id', $student->id)->whereIn('attend', ['N', 'L']);
+                })->when($currentPeriod !== 'FINAL', function ($whenNoFinal) use ($currentPeriod) {
+                    $whenNoFinal->whereBetween('date', [$currentPeriod->start, $currentPeriod->end]);
                 });
             }])->get();
 
