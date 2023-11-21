@@ -481,14 +481,13 @@
             </tbody>
         </table>
 
-        <div class="text-center bold table-title">
-            PROMEDIO GENERAL:
-            {{ \App\Http\Controllers\GradeController::numberFormat($studyTime, $overallAvg / count($areas)) }}
-            @if ($currentPeriod === 'FINAL')
-            <br><br>
+        @if ($currentPeriod === 'FINAL')
+        <div class="text-center bold table-title" style="padding: 5px 0;">
+            {{-- PROMEDIO GENERAL: --}}
+            {{-- {{ \App\Http\Controllers\GradeController::numberFormat($studyTime, $overallAvg / count($areas)) }} --}}
             {{ \App\Http\Controllers\GradeController::verifiedPassOrFail($studyTime, $lossesArea) }}
-            @endif
         </div>
+        @endif
     </section>
 
     @if ('FINAL' !== $currentPeriod)
