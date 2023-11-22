@@ -356,6 +356,9 @@
                     @endforeach
                     @if ('FINAL' === $currentPeriod)
                         <th>
+                            <div class="table-title">NIV</div>
+                        </th>
+                        <th>
                             <div class="table-title">FINAL</div>
                         </th>
                     @endif
@@ -373,6 +376,7 @@
                     @endforeach
                     @if ('FINAL' === $currentPeriod)
                         <td class="f-size-5">&nbsp;</td>
+                        <td class="f-size-5">&nbsp;</td>
                     @endif
                 </tr>
                 <tr>
@@ -383,7 +387,7 @@
 
                 @foreach ($areas as $area)
                     @php
-                        $areaNotes = \App\Http\Controllers\GradeController::areaNoteStudent($area, $periods, $grades, $studyTime);
+                        $areaNotes = \App\Http\Controllers\GradeController::areaNoteStudent($student->id, $area, $periods, $grades, $studyTime);
                         $overallAvg += $areaNotes['overallAvg'];
 
                         $lastAreaGrade = null;
@@ -401,6 +405,7 @@
                         @endforeach
                         @if ('FINAL' === $currentPeriod)
                             @php $lastAreaGrade = $areaNotes['total'] @endphp
+                            <td class="text-center">{{ '-' }}</td>
                             <td class="text-center">{{ $areaNotes['total'] ?? '-' }}</td>
                         @endif
                         <td class="text-center text-capitalize">
@@ -461,8 +466,12 @@
                             @endforeach
 
                             @if ('FINAL' === $currentPeriod)
-                            @php $lastPeriodGrade = $areaNotes['totalSubject'][$subject->id] @endphp
-                                <td class="f-size-6 text-center">{{ $areaNotes['totalSubject'][$subject->id] ?? '-' }}</td>
+                            @php
+                                $lastPeriodGrade = $areaNotes['totalSubject'][$subject->id];
+                                $gradeOrLeveling = \App\Http\Controllers\LeveledStudentController::leveledStudentForReport($student->id, $subject->teacherSubject?->id, $studyTime, $areaNotes['totalSubject'][$subject->id])
+                            @endphp
+                                <td class="f-size-6 text-center">{{ $gradeOrLeveling['showLeveling'] ? $gradeOrLeveling['grade'] : '-' }}</td>
+                                <td class="f-size-6 text-center">{{  $gradeOrLeveling['grade'] ?? '-' }}</td>
                             @endif
 
                             <td class="f-size-6 text-center text-capitalize">

@@ -366,6 +366,10 @@ class Student extends Model
     {
         return $this->hasOne(VotingStudent::class, 'student_id', 'id');
     }
+    public function leveledStudent()
+    {
+        return $this->hasMany(LeveledStudent::class);
+    }
 
 
 

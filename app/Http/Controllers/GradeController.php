@@ -689,7 +689,7 @@ class GradeController extends Controller
         )->withWhereHas('subjects', $fn_sb)->orderBy('last')->orderBy('name')->get();
     }
 
-    public static function areaNoteStudent($area, $periods, $grades, $studyTime)
+    public static function areaNoteStudent($studentID, $area, $periods, $grades, $studyTime)
     {
         if (is_array($area)) $area = \App\Models\ResourceArea::find($area['id']);
 
@@ -708,6 +708,10 @@ class GradeController extends Controller
             //final
             $totalSubject[$subject->id] = 0;
 
+            $existStudentLeveling = !is_null($subject->teacherSubject)
+                ? \App\Models\LeveledStudent::where('teacher_subject_group_id', $subject->teacherSubject->id)->where('student_id', $studentID)->count()
+                : 0;
+
             foreach ($periods as $period) {
 
                 $note = $grades->filter(function ($g) use ($subject, $period) {
@@ -720,7 +724,10 @@ class GradeController extends Controller
                 $subjectNotes[$i][$j] = $notePeriod;
 
                 // final
-                $total += $notePeriod * ($period->workload / 100);
+                $totalAux = $existStudentLeveling == 0
+                    ? $notePeriod
+                    : \App\Http\Controllers\GradeController::numberFormat($studyTime, ($studyTime->low_performance + $studyTime->step));
+                $total += $totalAux * ($period->workload / 100);
                 $totalSubject[$subject->id] += $note * ($period->workload / 100);
 
                 $j++;
@@ -745,7 +752,7 @@ class GradeController extends Controller
         //final
         $total = static::numberFormat($studyTime, $total);
 
-        return ['overallAvg' => $overallAvg, 'area' => $areaNotes, 'total' => $total, 'totalSubject' => $totalSubject];
+        return ['overallAvg' => $overallAvg, 'area' => $areaNotes, 'total' => $total, 'totalSubject' => $totalSubject, 'showLeveled' => (bool)$existStudentLeveling];
     }
 
     /**

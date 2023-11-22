@@ -367,7 +367,9 @@ class TeacherController extends Controller
                         'attendance', fn ($att) => $att->where('teacher_subject_group_id', $subject->id)
                     )
             ])->with([
-                'studentDescriptors' => fn ($des) => $des->where('teacher_subject_group_id', $subject->id)->with('descriptor')
+                'studentDescriptors' => fn ($des) => $des->where('teacher_subject_group_id', $subject->id)->with('descriptor'),
+            ])->withCount([
+                'leveledStudent' => fn($lvl) => $lvl->where('teacher_subject_group_id', $subject->id)
             ])->get();
 
         if ( $studyYear->useGrades() ) {
@@ -382,6 +384,13 @@ class TeacherController extends Controller
             ->withCount(['permits as permit' => fn ($p) => $p->where('teacher_subject_group_id', $subject->id)])
             ->orderBy('ordering')->get();
 
+        $periodsActiveCount = Period::where('school_year_id', $Y->id)
+            ->where('study_time_id', $subject->group->study_time_id)
+            ->where('start', '<=', today()->format('Y-m-d'))
+            ->orderBy('ordering')->count();
+
+        $totalPeriods = Period::where('school_year_id', $Y->id)->where('study_time_id', $subject->group->study_time_id)->count();
+        $activateLeveling = ($periodsActiveCount == $totalPeriods) ? TRUE : FALSE;
 
         $attendances = Attendance::where('teacher_subject_group_id', $subject->id)
             ->withCount('absences')
@@ -417,6 +426,7 @@ class TeacherController extends Controller
             'subject' => $subject,
             'studentsGroup' => $studentsGroup,
             'periods' => $periods,
+            'activateLeveling' => $activateLeveling,
             'attendances' => $attendances,
             'descriptors' => $descriptors,
             'descriptorsInclusive' => $descriptorsInclusive

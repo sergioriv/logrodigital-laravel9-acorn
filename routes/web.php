@@ -17,6 +17,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupDirectorController;
 use App\Http\Controllers\HeadersRemissionController;
 use App\Http\Controllers\HeadquartersController;
+use App\Http\Controllers\LeveledStudentController;
 use App\Http\Controllers\OrientationController;
 use App\Http\Controllers\OrientationDegreeController;
 use App\Http\Controllers\OrientationEmploymentHistoryController;
@@ -291,6 +292,7 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
     Route::get('mysubjects', [TeacherController::class, 'mysubjects'])->name('teacher.my.subjects');
     Route::get('mysubjects/{subject}', [TeacherController::class, 'mysubjects_show'])->name('teacher.my.subjects.show');
     Route::get('mysubjects/{subject}/attendance-limit-week', [TeacherController::class, 'attendanceLimitWeek']);
+    Route::post('mysubjects/{subject}/leveling', [LeveledStudentController::class, 'leveling'])->name('subject.leveling');
 
     Route::post('attendance/{subject}', [AttendanceStudentController::class, 'subject'])->name('attendance.subject');
     Route::get('attendance/absences', [AttendanceStudentController::class, 'absences_view']);

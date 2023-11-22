@@ -213,9 +213,14 @@
                                                                         {{ 'P' . $period->ordering }}
                                                                     </th>
                                                                 @endforeach
+                                                                @if ($activateLeveling)
+                                                                <th
+                                                                    class="text-center text-muted text-small text-uppercase p-0 pb-2">
+                                                                    Nivelación</th>
                                                                 <th
                                                                     class="text-center text-muted text-small text-uppercase p-0 pb-2">
                                                                     {{ __('Definitive') }}</th>
+                                                                @endif
                                                                 {{-- <th
                                                                     class="text-center text-muted text-small text-uppercase p-0 pb-2">
                                                                     {{ __('Performance') }}</th> --}}
@@ -252,10 +257,22 @@
                                                                             {{ $studentGradePeriod->final ?? null }}
                                                                         </td>
                                                                     @endforeach
+
+                                                                    @if ($activateLeveling)
+                                                                    <!-- Leveled Student -->
+                                                                    <td class="text-center text-small">
+                                                                        {{ $studentG->leveled_student_count == 0
+                                                                                ? null
+                                                                                : \App\Http\Controllers\GradeController::numberFormat($subject->group->studyTime, ($subject->group->studyTime->low_performance + $subject->group->studyTime->step)) }}
+                                                                    </td>
+
                                                                     <!-- Definitive Grade -->
                                                                     <td class="text-center text-small">
-                                                                        {{ $studentG?->finalGrade['definitive'] ?: null }}
+                                                                        {{ $studentG->leveled_student_count == 0
+                                                                                ? \App\Http\Controllers\GradeController::numberFormat($subject->group->studyTime, ($studentG?->finalGrade['definitive'] ?: null))
+                                                                                : \App\Http\Controllers\GradeController::numberFormat($subject->group->studyTime, ($subject->group->studyTime->low_performance + $subject->group->studyTime->step)) }}
                                                                     </td>
+                                                                    @endif
 
                                                                     <!-- Performance Definitive Grade -->
                                                                     {{-- <td class="text-center text-small text-capitalize">
@@ -676,6 +693,12 @@
                                             </div>
                                         @endforeach
 
+                                        @if ($activateLeveling)
+                                            <div class="mt-3">
+                                                <button type="button" class="btn btn-lg btn-primary"  data-bs-toggle="modal" data-bs-target="#modalLeveling">Aplicar nivelación</button>
+                                            </div>
+                                        @endif
+
                                     </section>
 
                                 </div>
@@ -779,7 +802,7 @@
     <!-- Modal Add Attendance -->
     <div class="modal fade" id="addAttendance" aria-labelledby="modalAddAttendance" data-bs-backdrop="static"
         data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalAddAttendance">
@@ -870,6 +893,64 @@
             </div>
         </div>
     </div>
+
+    @if ($activateLeveling)
+    <!-- Modal Activate Leveling -->
+    <div class="modal fade" id="modalLeveling" aria-labelledby="modalLevelingLabel" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLevelingLabel">
+                        {{ 'Aplicar nivelación: ' . $subject->group->name . ' | ' . $title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('subject.leveling', $subject) }}" method="POST">
+                    @csrf
+
+                    <div class="modal-body">
+
+                        <div class="alert alert-info">
+                            <i data-acorn-icon="info-circle" data-acorn-size="18" class="font-weight-bold"></i>
+                            Los estudiantes seleccionados a continuación, serán aquellos que <strong>APROBARON</strong> la <strong>NIVELACIÓN.</strong> Es decir, la nota final en su boletín será de
+                            <strong>{{ \App\Http\Controllers\GradeController::numberFormat($subject->group->studyTime, ($subject->group->studyTime->low_performance + $subject->group->studyTime->step)) }}</strong>
+                        </div>
+
+                        <table class="table table-striped mb-0 mt-5">
+                            <tbody>
+                                @foreach ($studentsGroup as $studentG)
+                                    <tr>
+                                        <td>
+                                            <label class="form-check">
+                                                <input type="checkbox" class="form-check-input"
+                                                    name="studentsLeveling[{{ $studentG->code }}]" value="1" {{ $studentG->leveled_student_count > 0 ? 'checked' : null }}>
+                                                <span class="form-check-label">
+                                                    <span class="content">
+                                                        <span class="heading mb-1 d-block lh-1-25">
+                                                            {{ $studentG->getCompleteNames() }}
+                                                            <x-tag-student :student="$studentG" />
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
 
     <!-- Modal View Absences -->
     <div class="modal fade" id="viewAbsences" aria-labelledby="modalViewAbsences" data-bs-backdrop="static"
