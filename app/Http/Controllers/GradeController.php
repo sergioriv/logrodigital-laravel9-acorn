@@ -725,9 +725,9 @@ class GradeController extends Controller
 
                 // final
                 $totalAux = $existStudentLeveling == 0
-                    ? $notePeriod
-                    : \App\Http\Controllers\GradeController::numberFormat($studyTime, ($studyTime->low_performance + $studyTime->step));
-                $total += $totalAux * ($period->workload / 100);
+                    ? $note
+                    : ($studyTime->low_performance + $studyTime->step);
+                $total += ($totalAux * ($subject->academicWorkload->course_load / 100)) * ($period->workload / 100);
                 $totalSubject[$subject->id] += $note * ($period->workload / 100);
 
                 $j++;
