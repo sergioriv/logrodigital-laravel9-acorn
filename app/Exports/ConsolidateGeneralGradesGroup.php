@@ -129,6 +129,11 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                 $totalArea = 0;
                 foreach ($area['subjects'] as $subject) {
                     $totalSubject = 0;
+
+                    $existStudentLeveling = !is_null($subject['teacher_subject_group'])
+                        ? \App\Models\LeveledStudent::where('teacher_subject_group_id', $subject['teacher_subject_group'])->where('student_id', $student->id)->count()
+                        : 0;
+
                     foreach ($this->periods as $period) {
                         $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
                             ->filter(function ($grade) use ($student, $period) {
@@ -136,7 +141,10 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                             })
                             ->first();
 
-                        $totalSubject += ($gradeByStudentByPeriod['final_workload'] ?? 0) * ($period->workload / 100) ?? null;
+                        $totalSubjectAux = $existStudentLeveling == 0
+                            ? ($gradeByStudentByPeriod['final'] ?? 0)
+                            : $minimalGrade;
+                        $totalSubject += ($totalSubjectAux * $subject['academic_wordload_porcentage']) * ($period->workload / 100);
                     }
                     $totalArea += $totalSubject;
                 }
@@ -176,6 +184,11 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                 foreach ($area['subjects'] as $keySubject => $subject) {
                     $accumSubject = 0;
                     $totalSubject = 0;
+
+                    $existStudentLeveling = !is_null($subject['teacher_subject_group'])
+                        ? \App\Models\LeveledStudent::where('teacher_subject_group_id', $subject['teacher_subject_group'])->where('student_id', $student->id)->count()
+                        : 0;
+
                     foreach ($this->periods as $period) {
 
                         $gradeByStudentByPeriod = collect($subject['gradesByStudent'])
@@ -199,7 +212,10 @@ class ConsolidateGeneralGradesGroup implements FromArray, WithColumnWidths, With
                         $accumSubject += ($gradeByStudentByPeriod['final'] ?? 0) * ($period->workload / 100) ?? null;
 
                         // acumulado area
-                        $accumArea += ($gradeByStudentByPeriod['final_workload'] ?? 0) * ($period->workload / 100) ?? null;
+                        $accumAreaAux = $existStudentLeveling == 0
+                            ? ($gradeByStudentByPeriod['final'] ?? 0)
+                            : $minimalGrade;
+                        $accumArea += ($accumAreaAux * $subject['academic_wordload_porcentage']) * ($period->workload / 100);
 
                         $totalSubject += $gradeByStudentByPeriod['final_workload'] ?? 0;
 
