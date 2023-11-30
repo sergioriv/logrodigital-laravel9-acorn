@@ -416,6 +416,11 @@
                 @endforeach
             </tbody>
         </table>
+
+        @if ($currentPeriod === 'FINAL')
+        <div class="text-center bold table-title" style="padding: 5px 0;">APROBADO</div>
+        @endif
+
     </section>
 
     @if ('FINAL' !== $currentPeriod)
