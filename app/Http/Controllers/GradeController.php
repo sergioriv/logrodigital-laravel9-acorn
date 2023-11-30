@@ -549,7 +549,7 @@ class GradeController extends Controller
         }
         else {
             $remark = NULL;
-            $descriptors = NULL;
+            $descriptors = collect();
         }
 
         $absencesTSG = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
