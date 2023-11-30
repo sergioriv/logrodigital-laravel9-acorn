@@ -145,7 +145,8 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
-        if ('PARENT' == UserController::role_auth() && $student) {
+        info(UserController::role_auth());
+        if ('PARENT' === UserController::role_auth()) {
 
             $parentCheck = \App\Models\PersonCharge::where('email', auth()->user()->email)->where('student_id', $student->id)->count();
             if (!$parentCheck) {
