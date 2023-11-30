@@ -146,8 +146,8 @@ class StudentController extends Controller
     public function show(Student $student)
     {
         info(UserController::role_auth() .' ID:'. auth()->id() .' EMAIL:'. auth()->user()->email);
-        if ('PARENT' === UserController::role_auth()) {
-
+        if (auth()->user()->hasRole('PARENT')) {
+            info('SOY UN PADRE | ID:' . auth()->id());
             $parentCheck = \App\Models\PersonCharge::where('email', auth()->user()->email)->where('student_id', $student->id)->count();
             if (!$parentCheck) {
                 Notify::fail("No permitido");
@@ -155,6 +155,7 @@ class StudentController extends Controller
             }
 
         }
+        info('NO SOY UN PADRE | role:' . UserController::role_auth());
 
         $user = Auth::user();
         if ( $user->hasPermissionTo('students.view') ) {
