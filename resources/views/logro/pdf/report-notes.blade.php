@@ -467,8 +467,8 @@
 
                             @if ('FINAL' === $currentPeriod)
                             @php
-                                $lastPeriodGrade = $areaNotes['totalSubject'][$subject->id];
-                                $gradeOrLeveling = \App\Http\Controllers\LeveledStudentController::leveledStudentForReport($student->id, $subject->teacherSubject?->id, $studyTime, $areaNotes['totalSubject'][$subject->id])
+                                $gradeOrLeveling = \App\Http\Controllers\LeveledStudentController::leveledStudentForReport($student->id, $subject->teacherSubject?->id, $studyTime, $areaNotes['totalSubject'][$subject->id]);
+                                $lastPeriodGrade = $gradeOrLeveling['showLeveling'] ? $gradeOrLeveling['grade'] : $areaNotes['totalSubject'][$subject->id];
                             @endphp
                                 <td class="f-size-6 text-center">{{ $gradeOrLeveling['showLeveling'] ? $gradeOrLeveling['grade'] : '-' }}</td>
                                 <td class="f-size-6 text-center">{{  $gradeOrLeveling['grade'] ?? '-' }}</td>
