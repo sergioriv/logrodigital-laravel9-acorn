@@ -167,6 +167,16 @@
                                             <span>Enviar correo a acudientes</span>
                                         </a>
                                         @endhasanyrole
+                                        @if ($finishStudyTime)
+                                        @hasanyrole('SUPPORT|COORDINATOR|SECRETARY')
+                                        <div class="dropdown-divider"></div>
+                                        <a href="{{ route('group.finish', $group->id) }}"
+                                        class="dropdown-item btn-sm btn-icon btn-icon-start">
+                                            <i data-acorn-icon="flag" class="me-1"></i>
+                                            <span>Cerrar grupo</span>
+                                        </a>
+                                        @endhasanyrole
+                                        @endif
                                     </div>
                                 </div>
                                 <!-- Dropdown Button End -->

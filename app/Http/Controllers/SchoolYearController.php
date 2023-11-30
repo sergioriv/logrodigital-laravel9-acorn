@@ -111,4 +111,9 @@ class SchoolYearController extends Controller
         else
             return SchoolYear::select('id','name','available')->where('id',$y)->first();
     }
+
+    public static function next_year()
+    {
+        return SchoolYear::where('available', '0')->first();
+    }
 }

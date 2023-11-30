@@ -139,6 +139,9 @@ $title = __('Groups');
                     <section class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6" id="groupsList">
                         @foreach ($groups as $group)
                         <x-group.card :group="$group">
+                            @if ($group->finish)
+                            <span class="badge text-primary icon-12 ms-2 position-absolute s-n2 t-2 z-index-1"><i class="icon text-success" data-acorn-icon="lock-on"></i></span>
+                            @endif
                             @if ($group->specialty)
                             <span class="badge text-primary icon-12 me-2 position-absolute e-n2 t-2 z-index-1"><i class="icon bi-star-fill"></i></span>
                             @endif

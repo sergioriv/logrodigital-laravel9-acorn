@@ -762,7 +762,7 @@ class GradeController extends Controller
     {
         // if (UserController::role_auth() == 'STUDENT') return ['periods' => NULL, 'areasGrade' => NULL];
 
-        if (!$student->isRetired() && $student->enrolled) {
+        if (!$student->isRetired()) {
             $groups = GroupStudent::where('student_id', $student->id)
             ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id) )
             ->get();
@@ -783,7 +783,7 @@ class GradeController extends Controller
             $studyTime = $groups->first()->group->studyTime;
         }
 
-        if (is_null($periods)) $periods = Period::where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
+        if (is_null($periods)) $periods = Period::where('school_year_id', $Y->id)->where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
         if (!count($periods)) return ['periods' => NULL, 'areasGrade' => NULL];
 
         $areas = ResourceArea::query()

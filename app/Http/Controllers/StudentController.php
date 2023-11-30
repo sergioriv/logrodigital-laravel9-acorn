@@ -392,15 +392,17 @@ class StudentController extends Controller
     {
         if ('STUDENT' === UserController::role_auth()) {
             /* Años de estudio igual e inferior al año de estudio actual del estudiante */
-            $resourceStudyYears = ResourceStudyYear::where('id', '<=', $student->studyYear->resource_study_year_id)
-                ->with([
-                    'studentReportBook' => fn ($reportBooks) => $reportBooks->where('student_id', $student->id)
-                ]);
+            if ($student->studyYear)
+                $resourceStudyYears = ResourceStudyYear::where('id', '<=', $student->studyYear->resource_study_year_id)
+                    ->with([
+                        'studentReportBook' => fn ($reportBooks) => $reportBooks->where('student_id', $student->id)
+                    ])->get();
+            else $resourceStudyYears = [];
 
 
             return view('logro.student.wizard-report-books')->with([
                 'student' => $student,
-                'resourceStudyYears' => $resourceStudyYears->get()
+                'resourceStudyYears' => $resourceStudyYears
             ]);
         }
 
@@ -629,9 +631,9 @@ class StudentController extends Controller
 
             if ($student->group_id != $request->group) {
 
-                $oldGroupStudentExist = GroupStudent::where('group_id', $student->group_id)->where('student_id', $student->id)->first();
-
                 $Y = SchoolYearController::current_year();
+                $oldGroupStudentExist = GroupStudent::whereHas('group', fn($g) => $g->where('school_year_id', $Y->id)->where('specialty', NULL))->where('student_id', $student->id)->first();
+
                 if ($oldGroupStudentExist) {
                     /* Inicio Migracion de calificaciones */
                     $grades_oldGroup = \App\Models\Grade::where('student_id', $student->id)->withWhereHas('teacherSubjectGroup', fn ($tsgOldGroup) => $tsgOldGroup->where('group_id', $oldGroupStudentExist->group_id)->with('subject'))->get();
@@ -652,10 +654,13 @@ class StudentController extends Controller
                         ]);
                     }
                     /* Final Migracion de calificaciones */
-                }
 
+                    $oldGroupStudentExist->update([
+                        'group_id' => $request->group
+                    ]);
+                    Notify::success(__('Changed group!'));
+                } else {
 
-                if (NULL === $oldGroupStudentExist) {
                     GroupStudent::create([
                         'group_id' => $request->group,
                         'student_id' => $student->id
@@ -671,11 +676,6 @@ class StudentController extends Controller
                     SmtpMail::init()->sendEmailEnrollmentNotification($student, $group);
 
                     Notify::success(__('Student matriculate!'));
-                } else {
-                    $oldGroupStudentExist->update([
-                        'group_id' => $request->group
-                    ]);
-                    Notify::success(__('Changed group!'));
                 }
 
                 $student->update([
@@ -715,10 +715,12 @@ class StudentController extends Controller
         }
 
         /* Años de estudio igual e inferior al año de estudio actual del estudiante */
-        $resourceStudyYears = ResourceStudyYear::where('id', '<=', $student->studyYear->resource_study_year_id)
-            ->with([
-                'studentReportBook' => fn ($reportBooks) => $reportBooks->where('student_id', $student->id)
-            ]);
+        if ($student->studyYear)
+            $resourceStudyYears = ResourceStudyYear::where('id', '<=', $student->studyYear->resource_study_year_id)
+                ->with([
+                    'studentReportBook' => fn ($reportBooks) => $reportBooks->where('student_id', $student->id)
+                ])->get();
+        else $resourceStudyYears = [];
 
 
         /* opciones de orientacion */
@@ -736,10 +738,21 @@ class StudentController extends Controller
 
         $studentGradesxGroup = GradeController::studentGrades($Y, $student);
 
+        if (!$student->isRetired()) {
+            $countGroupsYear = GroupStudent::where('student_id', $student->id)
+            ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id)->where('specialty', NULL) )
+            ->count();
+        } else {
+            $countGroupsYear = \App\Models\GroupStudentRetired::where('student_id', $student->id)
+            ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id) )
+            ->count();
+        }
+
         return view('logro.student.profile')->with([
             'Y' => $Y,
             'YAvailable' => $YAvailable->id,
             'SCHOOL' => SchoolController::myschool(),
+            'countGroupsYear' => $countGroupsYear,
             'student' => $student,
             'documentType' => DocumentType::orderBy('foreigner')->get(),
             'cities' => City::with('department')->get(),
@@ -759,7 +772,7 @@ class StudentController extends Controller
             'economicDependences' => EconomicDependence::all(),
             'kinships'      => Kinship::all(),
             'studentFileTypes' => $studentFileTypes->get(),
-            'resourceStudyYears' => $resourceStudyYears->get(),
+            'resourceStudyYears' => $resourceStudyYears,
             'groupsStudent' => [],
             'nationalCountry' => NationalCountry::country(),
             'coordinators' => $orientationOptions['coordinators'],
@@ -1577,6 +1590,31 @@ class StudentController extends Controller
         return $this->pdfObservationsGenerate($student);
     }
 
+    public function pdf_with_observations(Student $student = null)
+    {
+        if ('PARENT' == UserController::role_auth() && $student) {
+
+            $parentCheck = \App\Models\PersonCharge::where('email', auth()->user()->email)->where('student_id', $student->id)->count();
+            if (!$parentCheck) {
+                Notify::fail("No permitido");
+                return back();
+            }
+
+        }
+
+        if ('STUDENT' == UserController::role_auth())
+        {
+            $student = Student::find(Auth::id());
+        }
+
+        if (is_null($student->enrolled)) {
+            Notify::fail(__('El estudiante no ha sido matriculado'));
+            return back();
+        }
+
+        return $this->pdfWithObservationsGenerate($student);
+    }
+
     public function pdf_carnet(Student $student = null)
     {
         if ('PARENT' == UserController::role_auth() && $student) {
@@ -1621,7 +1659,12 @@ class StudentController extends Controller
 
         if ($student->isRetired()) return \App\Http\Controllers\GradeController::reportGradesStudentRetired($student);
 
-        if (is_null($student->enrolled)) {
+        $Y = SchoolYearController::current_year();
+        $countGroupsYear = GroupStudent::where('student_id', $student->id)
+            ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id)->where('specialty', NULL) )
+            ->count();
+
+        if (!$countGroupsYear) {
             Notify::fail(__('El estudiante no ha sido matriculado'));
             return back();
         }
@@ -1701,6 +1744,21 @@ class StudentController extends Controller
 
     }
 
+    private function pdfWithObservationsGenerate($student)
+    {
+        $SCHOOL = SchoolController::myschool()->getData();
+
+        $observations = StudentObserver::where('student_id', $student->id)->orderBy('date')->get();
+        return Pdf::loadView('logro.pdf.student-with-observations', [
+            'SCHOOL' => $SCHOOL,
+            'date' => now()->format('d/m/Y'),
+            'student' => $student,
+            'observations' => $observations
+        ])->setPaper('letter', 'landscape')->setOption('dpi', 72)
+        ->download('Observador - '. $student->getCompleteNames() . '.pdf');
+
+    }
+
     private function pdfCarnetGenerate($student)
     {
         $SCHOOL = SchoolController::myschool()->getData();
@@ -1717,17 +1775,19 @@ class StudentController extends Controller
     private function pdfGradeReportGenerate($student)
     {
         $Y = SchoolYearController::current_year();
+        $group = Group::whereHas('groupStudents', fn($gs) => $gs->where('student_id', $student->id))->where('school_year_id', $Y->id)->where('specialty', NULL)->first();
+
         $period = Period::where('school_year_id', $Y->id)
-            ->where('study_time_id', $student->group->study_time_id)
+            ->where('study_time_id', $group->study_time_id)
             ->where('end', '<=', today()->format('Y-m-d'))
             ->orderByDesc('ordering')->first();
 
         $periodsCount = Period::where('school_year_id', $Y->id)
-            ->where('study_time_id', $student->group->study_time_id)
+            ->where('study_time_id', $group->study_time_id)
             ->where('end', '<=', today()->format('Y-m-d'))
             ->orderBy('ordering')->count();
 
-        $totalPeriods = Period::where('school_year_id', $Y->id)->where('study_time_id', $student->group->study_time_id)->count();
+        $totalPeriods = Period::where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)->count();
         if ($periodsCount == $totalPeriods) { $period = 'FINAL'; }
 
         if (!$period) {
@@ -1735,7 +1795,7 @@ class StudentController extends Controller
             return back();
         }
 
-        return (new GradeController)->reportForGroupByPeriod($period, $student->group, $student);
+        return (new GradeController)->reportForGroupByPeriod($period, $group, $student);
     }
 
     public function send_delete_code(Student $student, Request $request)

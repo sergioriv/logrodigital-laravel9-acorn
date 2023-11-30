@@ -120,6 +120,13 @@ class StudentReportBookController extends Controller
         $book->delete();
     }
 
+    public static function fileDelete($book)
+    {
+        File::delete(public_path($book->url_absolute));
+
+        $book->delete();
+    }
+
     private static function tab()
     {
         session()->flash('tab', 'reportBook');

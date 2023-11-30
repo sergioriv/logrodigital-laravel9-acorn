@@ -216,6 +216,8 @@ class GroupController extends Controller
             return redirect()->route('teacher.my.subjects')->withErrors(__('Unauthorized!'));
         }
 
+        if ($group->finish) return $this->view($group);
+
 
         $Y = SchoolYearController::current_year();
         $roleAuth = UserController::role_auth();
@@ -269,6 +271,8 @@ class GroupController extends Controller
             ->where('study_year_id', $group->study_year_id)
             ->get();
 
+        $finishedPeriodsDate = \App\Models\Period::where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)->orderBy('ordering', 'desc')->first()->end;
+
         return view('logro.group.show')->with([
             'Y' => $Y,
             'group' => $group,
@@ -280,12 +284,18 @@ class GroupController extends Controller
             'periods' => $periods,
             'avgGrade' => $avgGrade,
             'absences' => $absences,
-            'groupsSpecialty' => $groupsSpecialty
+            'groupsSpecialty' => $groupsSpecialty,
+            'finishStudyTime' => (bool)$finishedPeriodsDate <= now()
         ]);
     }
 
     public function edit(Group $group)
     {
+        if ($group->finish) {
+            Notify::fail('El grupo se encuentra cerrado');
+            return back();
+        }
+
         $headquarters = Headquarters::where('available', TRUE)->get();
         $studyTime = StudyTime::all();
         $studyYear = StudyYear::all();
@@ -303,8 +313,60 @@ class GroupController extends Controller
         ]);
     }
 
+    private function view(Group $group)
+    {
+        $Y = SchoolYearController::current_year();
+
+        $studentsGroup = Student::singleData()->whereHas(
+                'groupYear', fn($gr) => $gr->where('group_id', $group->id)
+            )
+            ->when(
+                $group->specialty,
+                    function ($when) { $when->with('groupOfPrimary'); },
+                    function ($when) { $when->with('groupOfSpecialty'); }
+            )
+            ->get();
+
+        $areas = $this->subjects_teacher($Y, $group);
+
+
+        /* Para obtener el promedio de las notas generales del grupo */
+        $teacherSubject = [];
+        foreach ($areas as $area) {
+            foreach ($area->subjects as $subject) {
+                if (!is_null($subject->teacherSubject))
+                    array_push($teacherSubject, $subject->teacherSubject->id);
+            }
+        }
+        $avgGrade = Grade::whereIn('teacher_subject_group_id', $teacherSubject)->avg('final');
+
+        $absences = AttendanceStudent::whereIn('attend', ['N', 'J', 'L'])
+        ->withWhereHas(
+            'attendance',
+            fn ($attend) => $attend->whereIn('teacher_subject_group_id', $teacherSubject)
+                ->with('teacherSubjectGroup.subject')->orderBy('date')
+        )->with('student')
+        ->get();
+
+        return view('logro.group.view')->with([
+            'Y' => $Y,
+            'group' => $group,
+            'count_studentsNoEnrolled' => $this->countStudentsNoEnrolled($Y, $group),
+            'count_studentsMatriculateInStudyYear' => $this->countStudentMatriculateInStudyYear($Y, $group),
+            'studentsGroup' => $studentsGroup,
+            'areas' => $areas,
+            'avgGrade' => $avgGrade,
+            'absences' => $absences,
+        ]);
+    }
+
     public function update(Group $group, Request $request)
     {
+        if ($group->finish) {
+            Notify::fail('El grupo se encuentra cerrado');
+            return back();
+        }
+
         $request->validate([
             'headquarters' => ['required', Rule::exists('headquarters', 'id')],
             'study_time' => ['required', Rule::exists('study_times', 'id')],
@@ -329,6 +391,11 @@ class GroupController extends Controller
 
     public function matriculate(Group $group)
     {
+        if ($group->finish) {
+            Notify::fail('El grupo se encuentra cerrado');
+            return back();
+        }
+
         $Y = SchoolYearController::current_year();
 
         if (is_null($group->specialty)) {
@@ -394,6 +461,11 @@ class GroupController extends Controller
 
     public function matriculate_update(Group $group, Request $request)
     {
+        if ($group->finish) {
+            Notify::fail('El grupo se encuentra cerrado');
+            return back();
+        }
+
         $request->validate([
             'students' => ['required', 'array']
         ]);
@@ -464,6 +536,11 @@ class GroupController extends Controller
 
     public function teacher_edit(Group $group)
     {
+        if ($group->finish) {
+            Notify::fail('El grupo se encuentra cerrado');
+            return back();
+        }
+
         $Y = SchoolYearController::current_year();
 
         $teachers = Teacher::where('active', TRUE)
@@ -481,6 +558,11 @@ class GroupController extends Controller
 
     public function teacher_update(Group $group, Request $request)
     {
+        if ($group->finish) {
+            Notify::fail('El grupo se encuentra cerrado');
+            return back();
+        }
+
         $Y = SchoolYearController::current_year();
 
         foreach ($request->teachers as $teacher_subject) {

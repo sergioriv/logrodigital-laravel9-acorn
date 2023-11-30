@@ -18,10 +18,11 @@ class Group extends Model
         'study_year_id',
         'teacher_id',
         'name',
-        'specialty'
+        'specialty',
+        'finish'
     ];
 
-    protected $casts = ['specialty' => 'boolean'];
+    protected $casts = ['specialty' => 'boolean', 'finish' => 'boolean'];
 
     /*
     * PARENTS

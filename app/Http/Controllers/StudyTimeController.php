@@ -128,7 +128,7 @@ class StudyTimeController extends Controller
         $Y = SchoolYearController::current_year();
 
         // $periods = Period::where('school_year_id', $Y->id)->where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
-        $periods = Period::where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
+        $periods = Period::where('school_year_id', $Y->id)->where('study_time_id', $studyTime->id)->orderBy('ordering')->get();
         // $studyYears = StudyYear::where('study_time_id', $studyTime->id)->get();
         return view('logro.studytime.show')->with([
             'Y' => $Y,

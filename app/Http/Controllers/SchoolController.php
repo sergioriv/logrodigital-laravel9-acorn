@@ -34,8 +34,9 @@ class SchoolController extends Controller
     {
         $S = static::myschool();
 
+        $studentsCount = Student::where('enrolled', TRUE)->count();
         return view('logro.school.show', [
-            'studentsCount' => Student::available()->count(),
+            'studentsCount' => $studentsCount,
             'school' => $S->getData(),
             'daysToUpdate' => $S->daysToUpdate(),
             'teachers' => Teacher::all(),

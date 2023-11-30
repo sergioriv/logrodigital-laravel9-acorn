@@ -180,7 +180,7 @@
                             <span class="breadcrumb-item text-muted">
                                 <div class="text-muted d-inline-block">
                                     <i data-acorn-icon="calendar" class="me-1" data-acorn-size="12"></i>
-                                    <span class="align-middle">{{ $student->studyYear->name }}</span>
+                                    <span class="align-middle">{{ $student->studyYear->name ?? 'EGRESADO' }}</span>
                                 </div>
                             </span>
                         </div>
@@ -211,26 +211,32 @@
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
 
-                                            @if ($student->enrolled)
+                                            @if ($countGroupsYear)
                                                 <x-dropdown-item type="button" :link="route('students.pdf.report_grades', $student)">
                                                     <i data-acorn-icon="download"></i>
                                                     <span>{{ __('Grade report') }}</span>
                                                 </x-dropdown-item>
+                                            @endif
+                                            @if ($student->enrolled)
                                                 <div class="dropdown-divider"></div>
                                                 <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student)">
                                                     <i data-acorn-icon="download"></i>
                                                     <span>{{ __('Download certificate study') }}</span>
                                                 </x-dropdown-item>
-                                            @endif
-                                            <x-dropdown-item type="button" :link="route('students.pdf.matriculate', $student)">
-                                                <i data-acorn-icon="download"></i>
-                                                <span>{{ __('Download enrollment sheet') }}</span>
-                                            </x-dropdown-item>
-                                            @if ($student->enrolled)
+                                                <x-dropdown-item type="button" :link="route('students.pdf.matriculate', $student)">
+                                                    <i data-acorn-icon="download"></i>
+                                                    <span>{{ __('Download enrollment sheet') }}</span>
+                                                </x-dropdown-item>
+                                                <div class="dropdown-divider"></div>
                                                 <x-dropdown-item type="button" :link="route('students.pdf.observations', $student)">
                                                     <i data-acorn-icon="download"></i>
                                                     <span>{{ __('Download observer') }}</span>
                                                 </x-dropdown-item>
+                                                <x-dropdown-item type="button" :link="route('students.pdf.template-observations', $student)">
+                                                    <i data-acorn-icon="download"></i>
+                                                    <span>{{ __('Download observer template') }}</span>
+                                                </x-dropdown-item>
+                                                <div class="dropdown-divider"></div>
                                                 <x-dropdown-item type="button" :link="route('students.pdf.carnet', $student)">
                                                     <i data-acorn-icon="download"></i>
                                                     <span>{{ __('Download identification card') }}</span>
@@ -292,20 +298,28 @@
                                 <i data-acorn-icon="more-horizontal"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
-                                @if ($student->enrolled)
+                                @if ($countGroupsYear)
                                 <x-dropdown-item type="button" :link="route('students.pdf.report_grades', $student->id)">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __('Grade report') }}</span>
                                 </x-dropdown-item>
+                                @endif
+                                @if ($student->enrolled)
                                 <div class="dropdown-divider"></div>
                                 <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student->id)">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __('Download certificate study') }}</span>
                                 </x-dropdown-item>
+                                <div class="dropdown-divider"></div>
                                 <x-dropdown-item type="button" :link="route('students.pdf.observations', $student->id)">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __('Download observer') }}</span>
                                 </x-dropdown-item>
+                                <x-dropdown-item type="button" :link="route('students.pdf.template-observations', $student->id)">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>{{ __('Download observer template') }}</span>
+                                </x-dropdown-item>
+                                <div class="dropdown-divider"></div>
                                 <x-dropdown-item type="button" :link="route('students.pdf.carnet', $student->id)">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __('Download identification card') }}</span>

@@ -15,6 +15,7 @@ use App\Http\Controllers\DescriptorController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupDirectorController;
+use App\Http\Controllers\GroupFinishController;
 use App\Http\Controllers\HeadersRemissionController;
 use App\Http\Controllers\HeadquartersController;
 use App\Http\Controllers\LeveledStudentController;
@@ -248,6 +249,9 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
     Route::post('groups/{group}/consolidate/grades', [ConsolidateGradesByArea::class, 'make'])->name('group.consolidate-grades');
 
+    Route::get('groups/{group}/finish', [GroupFinishController::class, 'show'])->name('group.finish');
+    Route::post('groups/{group}/finish', [GroupFinishController::class, 'store'])->name('group.finish.store');
+
 
     /* Route Group Directors */
     Route::resource('group-directors', GroupDirectorController::class)->only('index', 'edit', 'update')->names('group-directors');
@@ -338,7 +342,8 @@ Route::middleware(['auth', 'changedYourPassword', 'active'])->group(function () 
 
         Route::get('students/{student}/download/matriculate', 'pdf_matriculate')->name('students.pdf.matriculate');
         Route::get('students/download/certificate/{student?}', 'pdf_certificate')->name('students.pdf.certificate');
-        Route::get('students/download/observations/{student?}', 'pdf_observations')->name('students.pdf.observations');
+        Route::get('students/download/template-observations/{student?}', 'pdf_observations')->name('students.pdf.template-observations');
+        Route::get('students/download/observations/{student?}', 'pdf_with_observations')->name('students.pdf.observations');
         Route::get('students/download/carnet/{student?}', 'pdf_carnet')->name('students.pdf.carnet');
         Route::get('students/download/report-grades/{student?}', 'pdf_report_grades')->name('students.pdf.report_grades');
         Route::get('students/download/matriculate/{student?}', 'pdf_matriculate')->name('student.pdf.matriculate');

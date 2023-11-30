@@ -369,9 +369,9 @@
                 <tr>
                     <th rowspan="2" class="p-1 f-size-6">FECHA</th>
                     <th rowspan="2" class="p-1 f-size-6">TIPO DE ANOTACIÓN</th>
-                    <th rowspan="2" class="p-1 f-size-6 w-20">DESCRIPCIÓN DE LA SITUACIÓN ACADÉMICA Y/O DE CONVIVENCIA</th>
-                    <th rowspan="2" class="p-1 f-size-6 w-20">VERSIÓN LIBRE Y/O DESCARGOS</th>
-                    <th rowspan="2" class="p-1 f-size-6 w-20">ACUERDOS, COMPROMISOS Y/O ACCIONES CORRECTIVAS</th>
+                    <th rowspan="2" class="p-1 f-size-6">DESCRIPCIÓN DE LA SITUACIÓN ACADÉMICA Y/O DE CONVIVENCIA</th>
+                    <th rowspan="2" class="p-1 f-size-6">VERSIÓN LIBRE Y/O DESCARGOS</th>
+                    <th rowspan="2" class="p-1 f-size-6">ACUERDOS, COMPROMISOS Y/O ACCIONES CORRECTIVAS</th>
                     <th colspan="3" class="p-1 f-size-6">FIRMAS</th>
                 </tr>
                 <tr>
@@ -381,136 +381,22 @@
                 </tr>
             </thead>
             <tbody>
+                @forelse ($observations as $observation)
                 <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td class="h-30p">{{ $observation->date }}</td>
+                    <td>{{ $observation->annotation_type->getLabelText() }}</td>
+                    <td>{{ $observation->situation_description }}</td>
+                    <td>{{ $observation->free_version }}</td>
+                    <td>{{ $observation->agreements }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
+                @empty
                 <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td colspan="8" class="h-30p text-center bold">No tiene observaciones</td>
                 </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="h-30p">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                @endforelse
             </tbody>
         </table>
     </section>

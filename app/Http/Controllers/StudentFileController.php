@@ -171,6 +171,13 @@ class StudentFileController extends Controller
         $file->delete();
     }
 
+    public static function fileDelete($file)
+    {
+        File::delete(public_path($file->url_absolute));
+
+        $file->delete();
+    }
+
     public function __checked(Request $request, Student $student)
     {
         if (!empty($request->student_files)) {
