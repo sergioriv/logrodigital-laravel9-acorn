@@ -271,7 +271,7 @@ class GroupController extends Controller
             ->where('study_year_id', $group->study_year_id)
             ->get();
 
-        $finishedPeriodsDate = \App\Models\Period::where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)->orderBy('ordering', 'desc')->first()->end;
+        $finishedPeriodsDate = \App\Models\Period::where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)->orderBy('ordering', 'desc')->first()?->end;
 
         return view('logro.group.show')->with([
             'Y' => $Y,

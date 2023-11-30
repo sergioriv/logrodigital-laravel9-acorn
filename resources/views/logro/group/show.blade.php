@@ -167,7 +167,7 @@
                                             <span>Enviar correo a acudientes</span>
                                         </a>
                                         @endhasanyrole
-                                        @if ($finishStudyTime)
+                                        @if ($finishStudyTime && $periods->count())
                                         @hasanyrole('SUPPORT|COORDINATOR|SECRETARY')
                                         <div class="dropdown-divider"></div>
                                         <a href="{{ route('group.finish', $group->id) }}"
@@ -175,8 +175,8 @@
                                             <i data-acorn-icon="flag" class="me-1"></i>
                                             <span>Cerrar grupo</span>
                                         </a>
-                                        @endhasanyrole
                                         @endif
+                                        @endhasanyrole
                                     </div>
                                 </div>
                                 <!-- Dropdown Button End -->
