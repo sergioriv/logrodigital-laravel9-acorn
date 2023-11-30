@@ -429,7 +429,11 @@
         <table class="table w-100" border="0">
             <tr>
                 <td style="width: 10%;"></td>
-                <td class="h-60p w-70p text-center align-sub" style="width: 30%;"></td>
+                <td class="h-60p w-70p text-center align-sub" style="width: 30%;">
+                    @if ($group->teacher && $group?->teacher->signature)
+                        <img class="badge" src="{{ imgBase64($group->teacher->signature) }}" alt="badge">
+                    @endif
+                </td>
                 <td style="width: 20%;"></td>
                 <td class="h-60p w-70p text-center align-sub" style="width: 30%;">
                     @if ($SCHOOL->signature_rector)
