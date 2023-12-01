@@ -401,7 +401,7 @@
                             @foreach ($descriptorsSubject as $studentDescriptor)
                             <tr>
                                 <td colspan="3">
-                                    <div class="ms-3">&raquo;<span class="ms-1">{{ $studentDescriptor->descriptor->content }}</span></div>
+                                    <div class="ms-3">&raquo;<span class="ms-1">{{ $studentDescriptor->content }}</span></div>
                                 </td>
                             </tr>
                             @endforeach

@@ -543,13 +543,20 @@ class GradeController extends Controller
                 $descriptors = StudentDescriptor::whereIn('teacher_subject_group_id', $teacherSubjects)
                     ->where('period_id', $currentPeriod->id)
                     ->where('student_id', $student->id)
-                    ->with('descriptor')
+                    ->join('descriptors', 'descriptors.id', '=', 'student_descriptors.descriptor_id')
                     ->get();
             }
         }
         else {
             $remark = NULL;
-            $descriptors = collect();
+            if ( $studyYear->useGrades() ) { $descriptors = collect(); }
+            else {
+                $descriptors = StudentDescriptor::whereIn('teacher_subject_group_id', $teacherSubjects)
+                ->where('student_id', $student->id)
+                ->join('descriptors', 'descriptors.id', '=', 'student_descriptors.descriptor_id')
+                ->orderBy('descriptors.period')
+                ->get();
+            }
         }
 
         $absencesTSG = TeacherSubjectGroup::whereIn('id', $teacherSubjects)
