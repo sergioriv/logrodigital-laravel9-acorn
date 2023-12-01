@@ -190,6 +190,7 @@ class GroupFinishController extends Controller
                 'wizard_personal_info' => NULL,
                 'wizard_complete' => NULL,
             ])->save();
+            $student->user->update(['avatar' => null]);
 
             $reportBook = StudentReportBook::where('student_id', $student->id)->where('resource_study_year_id', $group->studyYear->resource_study_year_id)->first();
             if ($reportBook) {
