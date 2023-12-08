@@ -219,4 +219,9 @@ return [
         'Socialize' => 'Laravel\Socialite\Facades\Socialite',
     ])->toArray(),
 
+
+
+
+    'active_plataform' => env('ACTIVE_PLATAFORM', TRUE),
+
 ];

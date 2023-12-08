@@ -72,6 +72,9 @@ class Kernel extends HttpKernel
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
 
         // CHECK STUDENTS NUMBER
-        'countStudents' => \App\Http\Middleware\CheckStudentCountMiddleware::class
+        'countStudents' => \App\Http\Middleware\CheckStudentCountMiddleware::class,
+
+        // ACTIVE PLATAFORM
+        'active_plataform' => \App\Http\Middleware\ActivePlataformMiddleware::class
     ];
 }

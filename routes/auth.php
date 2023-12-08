@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmEmailController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Auth\IdlePlataformController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RestoreYourPasswordController;
@@ -35,6 +36,9 @@ Route::middleware('guest')->group(function () {
 
     Route::get('inactive', [UserInactiveController::class, '__invoke'])
                 ->name('inactive.notice');
+
+    Route::get('idle_plataform', [IdlePlataformController::class, '__invoke'])
+                ->name('inactive.plataform');
 });
 
 Route::middleware('auth')->group(function () {
