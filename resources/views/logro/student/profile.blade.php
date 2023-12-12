@@ -218,15 +218,15 @@
                                                 </x-dropdown-item>
                                             @endif
                                             <div class="dropdown-divider"></div>
-                                            <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student)">
-                                                <i data-acorn-icon="download"></i>
-                                                <span>{{ __('Download certificate study') }}</span>
-                                            </x-dropdown-item>
                                             <x-dropdown-item type="button" :link="route('students.pdf.matriculate', $student)">
                                                 <i data-acorn-icon="download"></i>
                                                 <span>{{ __('Download enrollment sheet') }}</span>
                                             </x-dropdown-item>
                                             @if ($student->enrolled)
+                                                <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student)">
+                                                    <i data-acorn-icon="download"></i>
+                                                    <span>{{ __('Download certificate study') }}</span>
+                                                </x-dropdown-item>
                                                 <div class="dropdown-divider"></div>
                                                 <x-dropdown-item type="button" :link="route('students.pdf.observations', $student)">
                                                     <i data-acorn-icon="download"></i>
@@ -304,8 +304,12 @@
                                     <span>{{ __('Grade report') }}</span>
                                 </x-dropdown-item>
                                 @endif
-                                @if ($student->enrolled)
                                 <div class="dropdown-divider"></div>
+                                <x-dropdown-item type="button" :link="route('student.pdf.matriculate', $student->id)">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>@if ($student->enrolled){{ __('Download enrollment sheet') }}@else{{ __('Download registration sheet') }}@endif</span>
+                                </x-dropdown-item>
+                                @if ($student->enrolled)
                                 <x-dropdown-item type="button" :link="route('students.pdf.certificate', $student->id)">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __('Download certificate study') }}</span>
@@ -325,10 +329,6 @@
                                     <span>{{ __('Download identification card') }}</span>
                                 </x-dropdown-item>
                                 @endif
-                                <x-dropdown-item type="button" :link="route('student.pdf.matriculate', $student->id)">
-                                    <i data-acorn-icon="download"></i>
-                                    <span>@if ($student->enrolled){{ __('Download enrollment sheet') }}@else{{ __('Download registration sheet') }}@endif</span>
-                                </x-dropdown-item>
                             </div>
                         </div>
                     </div>

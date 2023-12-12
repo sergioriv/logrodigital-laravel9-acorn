@@ -1659,13 +1659,9 @@ class StudentController extends Controller
             $student = Student::find(Auth::id());
         }
 
-        // if (is_null($student->enrolled)) {
-        //     Notify::fail(__('El estudiante no ha sido matriculado'));
-        //     return back();
-        // }
-
         $Y = SchoolYearController::current_year();
-        $group = Group::whereHas('groupStudents', fn($gs) => $gs->where('student_id', $student->id))->where('school_year_id', $Y->id)->where('specialty', NULL)->first();
+        if ($student->enrolled) $group = $student->group;
+        else $group = Group::whereHas('groupStudents', fn($gs) => $gs->where('student_id', $student->id))->where('school_year_id', $Y->id)->where('specialty', NULL)->first();
 
         if ($group) return $this->pdfCertificateGenerate($student, $Y, $group);
         else {
