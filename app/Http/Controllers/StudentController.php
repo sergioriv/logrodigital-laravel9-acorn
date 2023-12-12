@@ -1663,7 +1663,7 @@ class StudentController extends Controller
         if ($student->enrolled) $group = $student->group;
         else $group = Group::whereHas('groupStudents', fn($gs) => $gs->where('student_id', $student->id))->where('school_year_id', $Y->id)->where('specialty', NULL)->first();
 
-        if ($group) return $this->pdfCertificateGenerate($student, $Y, $group);
+        if ($group) return $this->pdfCertificateGenerate($student, $group);
         else {
             Notify::fail(__('El estudiante no ha sido matriculado en el año lectivo'));
             return back();
@@ -1798,14 +1798,13 @@ class StudentController extends Controller
         return $pdf->download($student->getFullName() .'.pdf');
     }
 
-    private function pdfCertificateGenerate($student, $Y, $group)
+    private function pdfCertificateGenerate($student, $group)
     {
         $SCHOOL = SchoolController::myschool()->getData();
         $date = Carbon::now();
 
         $pdf = Pdf::loadView('logro.pdf.student-certificate', [
             'SCHOOL' => $SCHOOL,
-            'Y' => $Y,
             'date' => $date,
             'student' => $student,
             'group' => $group

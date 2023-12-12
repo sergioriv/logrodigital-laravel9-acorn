@@ -310,7 +310,7 @@
             {{ $student->document ?? '_______________________' }}
             se encuentra matriculado(a) en esta Institución,
             cursando {{ __($student->studyYear->resource->name) }}
-            durante el presente año lectivo {{ $Y->name }},
+            durante el presente año lectivo {{ $group->schoolYear->name }},
             en la sede {{ $student->headquarters->name }} jornada {{ $student->studyTime->name }} grupo
             {{ $group->name }}.
         </div>
