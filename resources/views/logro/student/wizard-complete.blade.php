@@ -65,6 +65,7 @@ $title = __('Register completed');
                                     <form method="POST" action="{{ route('student.complete.wizard', $student) }}">
                                         @csrf
                                         @method('PUT')
+
                                         <div class="text-center mt-5">
                                             <h5 class="card-title">{{ __("Thank You!") }}</h5>
                                             <p class="card-text text-alternate mb-1">

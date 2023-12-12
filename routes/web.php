@@ -385,9 +385,6 @@ Route::middleware('active_plataform')->group(function () {
 
         Route::put('students/{student}/complete', [StudentController::class, 'wizard_complete_request'])->name('student.complete.wizard');
 
-        Route::patch('students/{student}/complete', [StudentController::class, 'wizard_complete_request'])->name('student.complete.wizard');
-
-
         /*
         *
         * Change Email Address Administrative
