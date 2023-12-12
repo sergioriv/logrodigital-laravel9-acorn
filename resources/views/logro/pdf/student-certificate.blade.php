@@ -310,9 +310,9 @@
             {{ $student->document ?? '_______________________' }}
             se encuentra matriculado(a) en esta Institución,
             cursando {{ __($student->studyYear->resource->name) }}
-            durante el presente año lectivo {{ $date->format('Y') }},
+            durante el presente año lectivo {{ $Y->name }},
             en la sede {{ $student->headquarters->name }} jornada {{ $student->studyTime->name }} grupo
-            {{ $student->group->name }}.
+            {{ $group->name }}.
         </div>
         <div class="mt-2">
             Se expide la presente certificación a los {{ $date->format('d') }} días del mes {{ $date->format('m') }}

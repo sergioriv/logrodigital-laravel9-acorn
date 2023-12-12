@@ -62,7 +62,7 @@ $title = __('Register completed');
                         <div class="card-body">
                             <div class="tab-content">
                                 <div class="tab-pane fade active show" role="tabpanel">
-                                    <form method="POST" action="{{ route('student.wizard.complete') }}">
+                                    <form method="POST" action="{{ route('student.complete.wizard', $student) }}">
                                         @csrf
                                         @method('PUT')
                                         <div class="text-center mt-5">
@@ -74,7 +74,7 @@ $title = __('Register completed');
                                                 {{ __("The information will be checked and validated by the educational institution.") }}
                                             </p>
                                             <p>
-                                                <a class="btn btn-link btn-icon btn-icon-start" href="{{ route('student.pdf.matriculate') }}">
+                                                <a class="btn btn-link btn-icon btn-icon-start" href="{{ route('student.pdf.matriculate', $student) }}">
                                                     <i data-acorn-icon="download"></i>
                                                     <span>{{ __("Download registration sheet") }}</span>
                                                 </a>

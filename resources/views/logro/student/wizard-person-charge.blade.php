@@ -71,7 +71,7 @@ $title = __('Persons in Charge');
                                 </li>
                             </ul>
                         </div>
-                        <form method="POST" action="{{ route('student.wizard.person-charge') }}"
+                        <form method="POST" action="{{ route('students.person-charge.wizard', $student) }}"
                             id="studentPersonChargeForm">
                             @csrf
                             @method('PUT')

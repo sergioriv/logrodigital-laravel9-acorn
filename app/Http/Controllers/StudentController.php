@@ -151,6 +151,28 @@ class StudentController extends Controller
             if (!$parentCheck) {
                 Notify::fail("No permitido");
                 return back();
+            } else {
+
+                if ($student->wizard_documents === NULL) {
+                    return self::wizard_documents($student);
+                }
+
+                if ($student->wizard_report_books === NULL) {
+                    return self::wizard_reportBooks($student);
+                }
+
+                if ($student->wizard_person_charge === NULL) {
+                    return self::wizard_person_charge($student);
+                }
+
+                if ($student->wizard_personal_info === NULL) {
+                    return self::wizard_personal_info($student);
+                }
+
+                if ($student->wizard_complete === NULL) {
+                    return self::wizard_complete($student);
+                }
+
             }
 
         }
@@ -352,7 +374,15 @@ class StudentController extends Controller
      */
     public function wizard_documents(Student $student)
     {
-        if ('STUDENT' === UserController::role_auth()) {
+        if ( Auth::user()->hasAnyRole(['STUDENT', 'PARENT']) ) {
+
+            if ( Auth::user()->hasRole('PARENT') ) {
+                $parentCheck = \App\Models\PersonCharge::where('email', Auth::user()->email)->where('student_id', $student->id)->count();
+                if (!$parentCheck) {
+                    Notify::fail("No permitido");
+                    return back();
+                }
+            }
 
             $studentFileTypes = StudentFileType::with([
                 'studentFile' => fn ($files) => $files->where('student_id', $student->id)
@@ -369,11 +399,18 @@ class StudentController extends Controller
         Notify::fail(__('Unauthorized!'));
         return redirect()->route('dashboard');
     }
-    public function wizard_documents_request(Request $request)
+    public function wizard_documents_request(Student $student, Request $request)
     {
-        if ('STUDENT' === UserController::role_auth()) {
+        if ( Auth::user()->hasAnyRole(['STUDENT', 'PARENT']) ) {
 
-            $student = Student::findOrFail(Auth::id());
+            if ( Auth::user()->hasRole('PARENT') ) {
+                $parentCheck = \App\Models\PersonCharge::where('email', Auth::user()->email)->where('student_id', $student->id)->count();
+                if (!$parentCheck) {
+                    Notify::fail("No permitido");
+                    return back();
+                }
+            }
+
             if ($request->docsFails > 0) {
                 return redirect()->back()->withErrors(["custom" => __("documents are missing to upload")]);
             }
@@ -390,7 +427,16 @@ class StudentController extends Controller
     }
     public function wizard_reportBooks(Student $student)
     {
-        if ('STUDENT' === UserController::role_auth()) {
+        if ( Auth::user()->hasAnyRole(['STUDENT', 'PARENT']) ) {
+
+            if ( Auth::user()->hasRole('PARENT') ) {
+                $parentCheck = \App\Models\PersonCharge::where('email', Auth::user()->email)->where('student_id', $student->id)->count();
+                if (!$parentCheck) {
+                    Notify::fail("No permitido");
+                    return back();
+                }
+            }
+
             /* Años de estudio igual e inferior al año de estudio actual del estudiante */
             if ($student->studyYear)
                 $resourceStudyYears = ResourceStudyYear::where('id', '<=', $student->studyYear->resource_study_year_id)
@@ -409,11 +455,18 @@ class StudentController extends Controller
         Notify::fail(__('Unauthorized!'));
         return redirect()->route('dashboard');
     }
-    public function wizard_report_books_request(Request $request)
+    public function wizard_report_books_request(Student $student, Request $request)
     {
-        if ('STUDENT' === UserController::role_auth()) {
+        if ( Auth::user()->hasAnyRole(['STUDENT', 'PARENT']) ) {
 
-            $student = Student::findOrFail(Auth::id());
+            if ( Auth::user()->hasRole('PARENT') ) {
+                $parentCheck = \App\Models\PersonCharge::where('email', Auth::user()->email)->where('student_id', $student->id)->count();
+                if (!$parentCheck) {
+                    Notify::fail("No permitido");
+                    return back();
+                }
+            }
+
 
             $student->forceFill([
                 'wizard_report_books' => TRUE
@@ -427,7 +480,15 @@ class StudentController extends Controller
     }
     public function wizard_person_charge(Student $student)
     {
-        if ('STUDENT' === UserController::role_auth()) {
+        if ( Auth::user()->hasAnyRole(['STUDENT', 'PARENT']) ) {
+
+            if ( Auth::user()->hasRole('PARENT') ) {
+                $parentCheck = \App\Models\PersonCharge::where('email', Auth::user()->email)->where('student_id', $student->id)->count();
+                if (!$parentCheck) {
+                    Notify::fail("No permitido");
+                    return back();
+                }
+            }
 
             $cities = City::all();
             $kinships = Kinship::all();
@@ -442,11 +503,17 @@ class StudentController extends Controller
         Notify::fail(__('Unauthorized!'));
         return redirect()->route('dashboard');
     }
-    public function wizard_person_charge_request(Request $request)
+    public function wizard_person_charge_request(Student $student, Request $request)
     {
-        if ('STUDENT' === UserController::role_auth()) {
+        if ( Auth::user()->hasAnyRole(['STUDENT', 'PARENT']) ) {
 
-            $student = Student::findOrFail(Auth::id());
+            if ( Auth::user()->hasRole('PARENT') ) {
+                $parentCheck = \App\Models\PersonCharge::where('email', Auth::user()->email)->where('student_id', $student->id)->count();
+                if (!$parentCheck) {
+                    Notify::fail("No permitido");
+                    return back();
+                }
+            }
 
             $person_charge = new PersonChargeController;
             return $person_charge->update($student, $request, TRUE);
@@ -457,7 +524,15 @@ class StudentController extends Controller
     }
     public function wizard_personal_info(Student $student)
     {
-        if ('STUDENT' === UserController::role_auth()) {
+        if ( Auth::user()->hasAnyRole(['STUDENT', 'PARENT']) ) {
+
+            if ( Auth::user()->hasRole('PARENT') ) {
+                $parentCheck = \App\Models\PersonCharge::where('email', Auth::user()->email)->where('student_id', $student->id)->count();
+                if (!$parentCheck) {
+                    Notify::fail("No permitido");
+                    return back();
+                }
+            }
 
             return view('logro.student.wizard-personal-info')->with([
                 'student'       => $student,
@@ -485,11 +560,17 @@ class StudentController extends Controller
         Notify::fail(__('Unauthorized!'));
         return redirect()->route('dashboard');
     }
-    public function wizard_personal_info_request(Request $request)
+    public function wizard_personal_info_request(Student $student, Request $request)
     {
-        if ('STUDENT' === UserController::role_auth()) {
+        if ( Auth::user()->hasAnyRole(['STUDENT', 'PARENT']) ) {
 
-            $student = Student::findOrFail(Auth::id());
+            if ( Auth::user()->hasRole('PARENT') ) {
+                $parentCheck = \App\Models\PersonCharge::where('email', Auth::user()->email)->where('student_id', $student->id)->count();
+                if (!$parentCheck) {
+                    Notify::fail("No permitido");
+                    return back();
+                }
+            }
 
             return self::update($request, $student, TRUE);
         }
@@ -497,21 +578,42 @@ class StudentController extends Controller
         Notify::fail(__('Unauthorized!'));
         return redirect()->route('dashboard');
     }
-    public function wizard_complete()
+    public function wizard_complete(Student $student)
     {
-        return view('logro.student.wizard-complete');
-    }
-    public function wizard_complete_request()
-    {
-        if ('STUDENT' === UserController::role_auth()) {
+        if ( Auth::user()->hasAnyRole(['STUDENT', 'PARENT']) ) {
 
-            $student = Student::findOrFail(Auth::id());
+            if ( Auth::user()->hasRole('PARENT') ) {
+                $parentCheck = \App\Models\PersonCharge::where('email', Auth::user()->email)->where('student_id', $student->id)->count();
+                if (!$parentCheck) {
+                    Notify::fail("No permitido");
+                    return back();
+                }
+            }
+
+            return view('logro.student.wizard-complete', ['student' => $student]);
+
+        }
+
+        Notify::fail(__('Unauthorized!'));
+        return redirect()->route('dashboard');
+    }
+    public function wizard_complete_request(Student $student)
+    {
+        if ( Auth::user()->hasAnyRole(['STUDENT', 'PARENT']) ) {
+
+            if ( Auth::user()->hasRole('PARENT') ) {
+                $parentCheck = \App\Models\PersonCharge::where('email', Auth::user()->email)->where('student_id', $student->id)->count();
+                if (!$parentCheck) {
+                    Notify::fail("No permitido");
+                    return back();
+                }
+            }
 
             $student->forceFill([
                 'wizard_complete' => TRUE
             ])->save();
 
-            return self::show($student);
+            return redirect()->route('students.show', $student);
         }
 
         Notify::fail(__('Unauthorized!'));
@@ -1557,12 +1659,19 @@ class StudentController extends Controller
             $student = Student::find(Auth::id());
         }
 
-        if (is_null($student->enrolled)) {
-            Notify::fail(__('El estudiante no ha sido matriculado'));
+        // if (is_null($student->enrolled)) {
+        //     Notify::fail(__('El estudiante no ha sido matriculado'));
+        //     return back();
+        // }
+
+        $Y = SchoolYearController::current_year();
+        $group = Group::whereHas('groupStudents', fn($gs) => $gs->where('student_id', $student->id))->where('school_year_id', $Y->id)->where('specialty', NULL)->first();
+
+        if ($group) return $this->pdfCertificateGenerate($student, $Y, $group);
+        else {
+            Notify::fail(__('El estudiante no ha sido matriculado en el año lectivo'));
             return back();
         }
-
-        return $this->pdfCertificateGenerate($student);
     }
 
     public function pdf_observations(Student $student = null)
@@ -1693,15 +1802,17 @@ class StudentController extends Controller
         return $pdf->download($student->getFullName() .'.pdf');
     }
 
-    private function pdfCertificateGenerate($student)
+    private function pdfCertificateGenerate($student, $Y, $group)
     {
         $SCHOOL = SchoolController::myschool()->getData();
         $date = Carbon::now();
 
         $pdf = Pdf::loadView('logro.pdf.student-certificate', [
             'SCHOOL' => $SCHOOL,
+            'Y' => $Y,
             'date' => $date,
-            'student' => $student
+            'student' => $student,
+            'group' => $group
         ]);
         $pdf->setPaper('letter', 'portrait');
         $pdf->setOption('dpi', 72);

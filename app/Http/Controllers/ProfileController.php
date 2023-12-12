@@ -64,7 +64,7 @@ class ProfileController extends Controller
                     return $student->wizard_personal_info($student_find);
                     break;
                 } elseif ($student_find->wizard_complete === NULL) {
-                    return $student->wizard_complete();
+                    return $student->wizard_complete($student_find);
                     break;
                 }
 

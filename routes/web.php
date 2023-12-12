@@ -368,15 +368,24 @@ Route::middleware('active_plataform')->group(function () {
         Route::put('persons-charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');
 
 
-        Route::put('student/{student}/files/', [StudentFileController::class, 'update'])->name('students.file');
+        Route::put('student/{student}/files', [StudentFileController::class, 'update'])->name('students.file');
+        Route::patch('student/{student}/files', [StudentController::class, 'wizard_documents_request'])->name('students.file.wizard.next');
         Route::put('student/{student}/files/checked', [StudentFileController::class, 'checked'])->name('students.file.checked');
         Route::delete('student/{student}/files', [StudentFileController::class, 'delete'])->name('students.file.delete');
 
 
         Route::put('students/{student}/report-book', [StudentReportBookController::class, 'update'])->name('students.reportBook');
+        Route::patch('students/{student}/report-book', [StudentController::class, 'wizard_report_books_request'])->name('students.reportBook.wizard.next');
         Route::put('students/{student}/report-book/checked', [StudentReportBookController::class, 'checked'])->name('students.reportBooks.checked');
         Route::delete('student/{student}/report-book', [StudentReportBookController::class, 'delete'])->name('students.reportBook.delete');
 
+        Route::put('students/{student}/person-charge', [StudentController::class, 'wizard_person_charge_request'])->name('students.person-charge.wizard');
+        // Route::patch('students/{student}/person-charge', [StudentController::class, 'wizard_person_charge_request'])->name('students.person-charge.wizard.next');
+        Route::put('students/{student}/personal_info', [StudentController::class, 'wizard_personal_info_request'])->name('student.personal-info.wizard');
+
+        Route::put('students/{student}/complete', [StudentController::class, 'wizard_complete_request'])->name('student.complete.wizard');
+
+        Route::patch('students/{student}/complete', [StudentController::class, 'wizard_complete_request'])->name('student.complete.wizard');
 
 
         /*

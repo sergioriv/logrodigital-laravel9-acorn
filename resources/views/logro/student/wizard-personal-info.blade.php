@@ -84,7 +84,7 @@ $title = __('Personal Information');
                                 </li>
                             </ul>
                         </div>
-                        <form method="POST" action="{{ route('student.wizard.personal-info') }}"
+                        <form method="POST" action="{{ route('student.personal-info.wizard', $student) }}"
                             id="studentProfileInfoForm" class="tooltip-label-end" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
@@ -137,6 +137,7 @@ $title = __('Personal Information');
                                                         <span class="form-control text-muted">
                                                             {{ $student->institutional_email }}
                                                         </span>
+                                                        <input type="hidden" value="{{ $student->institutional_email }}" name="institutional_email">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">

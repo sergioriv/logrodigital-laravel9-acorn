@@ -176,9 +176,9 @@
                             </div>
                         </div>
                         <div class="card-footer text-center">
-                            <form action="{{ route('student.wizard.reportBooks') }}" method="POST">
+                            <form action="{{ route('students.reportBook.wizard.next', $student) }}" method="POST">
                                 @csrf
-                                @method('PUT')
+                                @method('PATCH')
 
                                 <button class="btn btn-icon btn-icon-end btn-outline-primary btn-next" type="submit">
                                     <span>{{ __('Continue') }}</span>
