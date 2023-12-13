@@ -390,7 +390,13 @@ class StudentController extends Controller
             if (NULL === $student->disability_id || 1 === $student->disability_id)
                 $studentFileTypes->where('inclusive', 0);
 
+            $Y = SchoolYearController::current_year();
+            $countGroupsYear = GroupStudent::where('student_id', $student->id)
+                ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id)->where('specialty', NULL) )
+                ->count();
+
             return view('logro.student.wizard-documents')->with([
+                'countGroupsYear' => $countGroupsYear,
                 'student' => $student,
                 'studentFileTypes' => $studentFileTypes->get()
             ]);

@@ -39,7 +39,23 @@
                 <!-- Title Start -->
                 <section class="scroll-section" id="title">
                     <div class="page-title-container">
-                        <h1 class="mb-1 pb-0 display-4">{{ $title }}</h1>
+                        <div class="row">
+                            <!-- Title Start -->
+                            <div class="col-12 col-md-8 mb-2 mb-md-0">
+                                <h1 class="mb-1 pb-0 display-4">{{ $title }}</h1>
+                            </div>
+                            <!-- Title End -->
+                            <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
+
+                                @if ($countGroupsYear)
+                                <a href="{{ route('students.pdf.report_grades', $student) }}" class="btn btn-outline-info btn-icon">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>Informe de notas 2023</span>
+                                </a>
+                                @endif
+
+                            </div>
+                        </div>
                     </div>
                 </section>
                 <!-- Title End -->
