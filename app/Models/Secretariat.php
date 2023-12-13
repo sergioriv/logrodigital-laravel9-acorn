@@ -31,4 +31,9 @@ class Secretariat extends Model
     {
         return $this->belongsTo(User::class, 'id');
     }
+
+    public function getFullName()
+    {
+        return "{$this->name} {$this->last_names}";
+    }
 }
