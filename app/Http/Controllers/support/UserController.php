@@ -136,7 +136,7 @@ class UserController extends Controller
 
     public static function _update($user_id, $name, $email = NULL, $avatar = NULL)
     {
-        $user = User::findOrFail($user_id);
+        $user = User::find($user_id);
 
 
         if ($email != null) {

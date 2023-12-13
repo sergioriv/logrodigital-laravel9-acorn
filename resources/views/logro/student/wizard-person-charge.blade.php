@@ -123,15 +123,14 @@ $title = __('Persons in Charge');
                                                             class="mb-3 w-100 tooltip-label-end position-relative form-group">
                                                             <x-label>{{ __('email') }}
                                                             </x-label>
-                                                            @if (null === $student->mother)
-                                                                <x-input-error
-                                                                    value="{{ old('mother_email', $student->mother->email ?? null) }}"
-                                                                    name="mother_email" :hasError="'mother_email'" />
+                                                            @unlessrole('PARENT')
+                                                            <x-input-error
+                                                                value="{{ old('mother_email', $student->mother->email ?? null) }}"
+                                                                name="mother_email" :hasError="'mother_email'" />
                                                             @else
-                                                                <span class="form-control text-muted">
-                                                                    {{ $student->mother->email }}
-                                                                </span>
-                                                            @endif
+                                                            <span class="form-control text-muted">{{ $student->mother->email ?? null }}</span>
+                                                            <input type="hidden" name="mother_email" value="{{ $student->mother->email ?? null }}">
+                                                            @endunless
                                                         </div>
                                                     </div>
                                                 </div>
@@ -252,15 +251,14 @@ $title = __('Persons in Charge');
                                                             class="mb-3 w-100 tooltip-label-end position-relative form-group">
                                                             <x-label>{{ __('email') }}
                                                             </x-label>
-                                                            @if (null === $student->father)
-                                                                <x-input-error
-                                                                    value="{{ old('father_email', $student->father->email ?? null) }}"
-                                                                    name="father_email" :hasError="'father_email'" />
+                                                            @unlessrole('PARENT')
+                                                            <x-input-error
+                                                                value="{{ old('father_email', $student->father->email ?? null) }}"
+                                                                name="father_email" :hasError="'father_email'" />
                                                             @else
-                                                                <span class="form-control text-muted">
-                                                                    {{ $student->father->email }}
-                                                                </span>
-                                                            @endif
+                                                            <span class="form-control text-muted">{{ $student->father->email ?? null }}</span>
+                                                            <input type="hidden" name="father_email" value="{{ $student->father->email ?? null }}">
+                                                            @endunless
                                                         </div>
                                                     </div>
                                                 </div>
@@ -386,15 +384,14 @@ $title = __('Persons in Charge');
                                                                 class="mb-3 w-100 tooltip-label-end position-relative form-group">
                                                                 <x-label>{{ __('email') }}
                                                                 </x-label>
-                                                                @if (null === $student->tutor)
-                                                                    <x-input-error
-                                                                        value="{{ old('tutor_email', $student->tutor->email ?? null) }}"
-                                                                        name="tutor_email" :hasError="'tutor_email'" />
+                                                                @unlessrole('PARENT')
+                                                                <x-input-error
+                                                                    value="{{ old('tutor_email', $student->tutor->email ?? null) }}"
+                                                                    name="tutor_email" :hasError="'tutor_email'" />
                                                                 @else
-                                                                    <span class="form-control text-muted">
-                                                                        {{ $student->tutor->email }}
-                                                                    </span>
-                                                                @endif
+                                                                <span class="form-control text-muted">{{ $student->tutor->email ?? null }}</span>
+                                                                <input type="hidden" name="tutor_email" value="{{ $student->tutor->email ?? null }}">
+                                                                @endunless
                                                             </div>
                                                         </div>
                                                     </div>

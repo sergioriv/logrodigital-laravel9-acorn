@@ -157,9 +157,10 @@ class PersonChargeController extends Controller
 
                 try {
 
-                    UserController::_update($mother->id, $request->mother_name);
+                    UserController::_update($mother->id, $request->mother_name, $request->mother_email);
                     $mother->update([
                         'name' => $request->mother_name,
+                        'email' => $request->mother_email,
                         'document' => $request->mother_document,
                         'expedition_city_id' => $request->mother_expedition_city,
                         'residence_city_id' => $request->mother_residence_city,
@@ -243,9 +244,10 @@ class PersonChargeController extends Controller
 
                 try {
 
-                    UserController::_update($father->id, $request->father_name);
+                    UserController::_update($father->id, $request->father_name, $request->father_email);
                     $father->update([
                         'name' => $request->father_name,
+                        'email' => $request->father_email,
                         'document' => $request->father_document,
                         'expedition_city_id' => $request->father_expedition_city,
                         'residence_city_id' => $request->father_residence_city,
@@ -332,9 +334,10 @@ class PersonChargeController extends Controller
 
                     try {
 
-                        UserController::_update($tutor->id, $request->tutor_name);
+                        UserController::_update($tutor->id, $request->tutor_name, $request->tutor_name);
                         $tutor->update([
                             'name' => $request->tutor_name,
+                            'email' => $request->tutor_email,
                             'document' => $request->tutor_document,
                             'expedition_city_id' => $request->tutor_expedition_city,
                             'residence_city_id' => $request->tutor_residence_city,
