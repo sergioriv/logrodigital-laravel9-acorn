@@ -26,7 +26,7 @@ class StudentReportBookController extends Controller
     {
         $request->validate([
             'reportbook' => ['required', Rule::exists('resource_study_years', 'id')],
-            self::FILE => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048']
+            self::FILE => ['required', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:2048']
         ]);
 
 

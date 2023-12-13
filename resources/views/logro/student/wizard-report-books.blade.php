@@ -114,7 +114,7 @@
                                                 <div class="col-md-4">
                                                     <div class="position-relative form-group">
                                                         <x-input type="file" name="file_reportbook"
-                                                            accept="image/jpg, image/jpeg, image/png, image/webp"
+                                                            accept="image/jpg, image/jpeg, image/png, image/webp, application/pdf"
                                                             class="d-block" />
                                                     </div>
                                                 </div>
@@ -150,13 +150,24 @@
                                                         <div class="text-center d-flex flex-column">
                                                             <div>
                                                                 @if ($resourceSYview->studentReportBook ?? null !== null)
+                                                                    @php
+                                                                    $infoReportBook = new SplFileInfo($resourceSYview->studentReportBook->url);
+                                                                    @endphp
+                                                                    @if (strtolower($infoReportBook->getExtension()) === 'pdf')
+                                                                    <a href="{{ $resourceSYview->studentReportBook->url }}" target="_blank">
+                                                                        <i class="icon icon-70 cursor-pointer
+                                                                            @if ($resourceSYview->studentReportBook->checked == 1) bi-file-earmark-check-fill text-muted
+                                                                            @else bi-file-earmark-fill text-info @endif"></i>
+                                                                    </a>
+                                                                    @else
                                                                     <i class="icon icon-70 cursor-pointer
-                                                                @if ($resourceSYview->studentReportBook->checked == 1) bi-file-earmark-check-fill text-muted
-                                                                @else bi-file-earmark-fill text-info @endif"
+                                                                            @if ($resourceSYview->studentReportBook->checked == 1) bi-file-earmark-check-fill text-muted
+                                                                            @else bi-file-earmark-fill text-info @endif"
                                                                         logro="studentDocument"
                                                                         data-image="{{ $resourceSYview->studentReportBook->url ?? null }}"
                                                                         data-bs-toggle="modal"
                                                                         data-bs-target="#modalStudentDocuments"></i>
+                                                                    @endif
                                                                 @else
                                                                     <i class="icon bi-file-earmark icon-70 text-muted"></i>
                                                                 @endif
