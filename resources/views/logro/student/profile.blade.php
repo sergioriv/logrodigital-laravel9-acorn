@@ -909,7 +909,7 @@
                                             <div class="mt-3 position-relative form-group">
                                                 <x-label>{{ __('Disability certificate') }}</x-label>
                                                 <x-input type="file" class="d-block" name="disability_certificate"
-                                                    accept="image/jpg, image/jpeg, image/png, image/webp" />
+                                                    accept="image/jpg, image/jpeg, image/png, image/webp, application/pdf" />
                                             </div>
                                         </div>
                                     </div>
@@ -1876,7 +1876,7 @@
                                             <div class="col-md-4">
                                                 <div class="position-relative form-group">
                                                     <x-input type="file" name="file_upload"
-                                                        accept="image/jpg, image/jpeg, image/png, image/webp" class="d-block" />
+                                                        accept="image/jpg, image/jpeg, image/png, image/webp, application/pdf" class="d-block" />
                                                 </div>
                                             </div>
                                             <div
@@ -2004,7 +2004,7 @@
                                             <div class="col-md-4">
                                                 <div class="position-relative form-group">
                                                     <x-input type="file" name="file_reportbook"
-                                                        accept="image/jpg, image/jpeg, image/png, image/webp" class="d-block" />
+                                                        accept="image/jpg, image/jpeg, image/png, image/webp, application/pdf" class="d-block" />
                                                 </div>
                                             </div>
                                             <div
