@@ -31,6 +31,12 @@ class StudentFileController extends Controller
             self::FILE => ['required', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:2048']
         ]);
 
+        if ($request->file_type == 9) {
+            $request->validate([
+                self::FILE => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048']
+            ]);
+        }
+
 
         $studentFile = StudentFile::where('student_id', $student->id)
             ->where('student_file_type_id', $request->file_type)
