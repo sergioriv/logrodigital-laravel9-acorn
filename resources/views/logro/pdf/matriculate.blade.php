@@ -220,7 +220,7 @@
             </td>
             <td class="h-70p w-70p align-sub text-center">
                 @if ($student->user->avatar)
-                    <img class="badge" src="{{ $student->user->avatar }}" alt="badge">
+                    <img class="badge" src="{{ imgBase64($student->user->avatar) }}" alt="badge">
                 @endif
             </td>
         </tr>
