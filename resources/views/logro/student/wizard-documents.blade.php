@@ -142,7 +142,7 @@
                                                 <div class="col-md-4">
                                                     <div class="position-relative form-group">
                                                         <x-input type="file" name="file_upload"
-                                                            accept="image/jpg, image/jpeg, image/png, image/webp"
+                                                            accept="image/jpg, image/jpeg, image/png, image/webp, application/pdf"
                                                             class="d-block" />
                                                     </div>
                                                 </div>

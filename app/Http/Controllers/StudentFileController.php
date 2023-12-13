@@ -28,7 +28,7 @@ class StudentFileController extends Controller
 
         $request->validate([
             'file_type' => ['required', Rule::exists('student_file_types', 'id')],
-            self::FILE => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048']
+            self::FILE => ['required', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:2048']
         ]);
 
 
