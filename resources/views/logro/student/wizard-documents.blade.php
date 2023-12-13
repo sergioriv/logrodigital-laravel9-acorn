@@ -166,6 +166,16 @@
                                                         <div class="text-center d-flex flex-column">
                                                             <div>
                                                                 @if ($studentFile->studentFile ?? null !== null)
+                                                                    @php
+                                                                    $infoFile = new SplFileInfo($studentFile->studentFile->url);
+                                                                    @endphp
+                                                                    @if (strtolower($infoFile->getExtension()) === 'pdf')
+                                                                    <a href="{{ $studentFile->studentFile->url }}" target="_blank">
+                                                                        <i class="icon icon-70 cursor-pointer
+                                                                            @if ($studentFile->studentFile->checked == 1) bi-file-earmark-check-fill text-muted
+                                                                            @else bi-file-earmark-fill text-info @endif"></i>
+                                                                    </a>
+                                                                    @else
                                                                     <i class="icon icon-70 cursor-pointer
                                                                             @if ($studentFile->studentFile->checked == 1) bi-file-earmark-check-fill text-muted
                                                                             @else bi-file-earmark-fill text-info @endif"
@@ -173,6 +183,7 @@
                                                                         data-image="{{ $studentFile->studentFile->url }}"
                                                                         data-bs-toggle="modal"
                                                                         data-bs-target="#modalStudentDocuments"></i>
+                                                                    @endif
                                                                 @else
                                                                     <i class="icon bi-file-earmark icon-70 text-muted"></i>
                                                                 @endif
