@@ -132,7 +132,7 @@ class GroupFinishController extends Controller
 
             foreach ($areasWithSubjects as $area) {
                 $totalArea = \App\Http\Controllers\GradeController::areaNoteStudent($groupStudentMap->student_id, $area, $periods, $grades, $group->studyTime);
-                if ($totalArea['total'] < $minimalGrade ) { $lossesArea++; }
+                if ($totalArea['total'] < $minimalGrade && !$area->last ) { $lossesArea++; }
             }
 
             $this->restartStudentForNextYear($group, $groupStudentMap->student, $Y, $nextStudyYear, $lossesArea >= 1 ? FALSE : TRUE);
