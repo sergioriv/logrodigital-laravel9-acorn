@@ -412,7 +412,7 @@
                             @if ($lastAreaGrade)
                             @php
                             $performanceArea = \App\Http\Controllers\GradeController::performanceString($studyTime, $lastAreaGrade);
-                            if ($performanceArea === __('low')) { $lossesArea++; }
+                            if ($performanceArea === __('low') && !$area->last) { $lossesArea++; }
                             @endphp
                                 {{ $performanceArea }}
                             @endif
