@@ -110,7 +110,7 @@
                                         <td class="d-none">{{ $student->institutional_email }}</td>
                                         <td>{{ $student->headquarters->name }}</td>
                                         <td>{{ $student->studyTime->name }}</td>
-                                        <td>{{ $student->studyYear->name }}</td>
+                                        <td>{{ $student->studyYear?->name }}</td>
                                         <td class="text-small">{{ $student->created_at }}</td>
                                     </tr>
                                 @endforeach
