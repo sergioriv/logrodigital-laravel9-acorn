@@ -189,7 +189,6 @@
                 <!-- Title End -->
 
                 @can('students.matriculate')
-                    @if (null !== $Y->available)
                         <!-- Top Buttons Start -->
                         <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
                             @if (!$student->isRetired())
@@ -210,7 +209,6 @@
                                         <i data-acorn-icon="more-horizontal"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
-
                                             @if ($countGroupsYear)
                                                 <x-dropdown-item type="button" :link="route('students.pdf.report_grades', $student)">
                                                     <i data-acorn-icon="download"></i>
@@ -285,7 +283,6 @@
                             @endif
                         </div>
                         <!-- Top Buttons End -->
-                    @endif
                 @endcan
 
                 @hasanyrole('STUDENT|PARENT')
