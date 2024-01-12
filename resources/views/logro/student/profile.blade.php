@@ -189,6 +189,7 @@
                 <!-- Title End -->
 
                 @can('students.matriculate')
+                    @if (null !== $Y->available)
                         <!-- Top Buttons Start -->
                         <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
                             @if (!$student->isRetired())
@@ -208,13 +209,11 @@
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
                                         <i data-acorn-icon="more-horizontal"></i>
                                     </button>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                            @if ($countGroupsYear)
-                                                <x-dropdown-item type="button" :link="route('students.pdf.report_grades', $student)">
-                                                    <i data-acorn-icon="download"></i>
-                                                    <span>{{ __('Grade report') }}</span>
-                                                </x-dropdown-item>
-                                            @endif
+                                <div class="dropdown-menu dropdown-menu-end">
+                                            <x-dropdown-item type="button" :link="route('students.report_grades', ['student' => $student->id])">
+                                                <i data-acorn-icon="download"></i>
+                                                <span>{{ __('Grade report') }}</span>
+                                            </x-dropdown-item>
                                             <div class="dropdown-divider"></div>
                                             <x-dropdown-item type="button" :link="route('students.pdf.matriculate', $student)">
                                                 <i data-acorn-icon="download"></i>
@@ -278,11 +277,43 @@
                                         <x-button type="submit" class="btn-success">{{ __('Activate') }}</x-button>
                                     </form>
                                     <!-- Activate Button End -->
+                                    <!-- Dropdown Button Start -->
+                                    <div class="ms-1">
+                                        <button type="button" class="btn btn-outline-info btn-icon btn-icon-only" data-bs-offset="0,3"
+                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
+                                            <i data-acorn-icon="more-horizontal"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <x-dropdown-item type="button" :link="route('students.report_grades', ['student' => $student->id])">
+                                                <i data-acorn-icon="download"></i>
+                                                <span>{{ __('Grade report') }}</span>
+                                            </x-dropdown-item>
+                                        </div>
+                                    </div>
+                                    <!-- Dropdown Button End -->
                                 @endcan
 
                             @endif
                         </div>
                         <!-- Top Buttons End -->
+                    @else
+                    <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
+                        <!-- Dropdown Button Start -->
+                        <div class="ms-1">
+                            <button type="button" class="btn btn-outline-info btn-icon btn-icon-only" data-bs-offset="0,3"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
+                                <i data-acorn-icon="more-horizontal"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <x-dropdown-item type="button" :link="route('students.report_grades', ['student' => $student->id])">
+                                    <i data-acorn-icon="download"></i>
+                                    <span>{{ __('Grade report') }}</span>
+                                </x-dropdown-item>
+                            </div>
+                        </div>
+                        <!-- Dropdown Button End -->
+                    </div>
+                    @endif
                 @endcan
 
                 @hasanyrole('STUDENT|PARENT')
@@ -295,12 +326,10 @@
                                 <i data-acorn-icon="more-horizontal"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
-                                @if ($countGroupsYear)
-                                <x-dropdown-item type="button" :link="route('students.pdf.report_grades', $student->id)">
+                                <x-dropdown-item type="button" :link="route('students.report_grades', ['student' => $student->id])">
                                     <i data-acorn-icon="download"></i>
                                     <span>{{ __('Grade report') }}</span>
                                 </x-dropdown-item>
-                                @endif
                                 <div class="dropdown-divider"></div>
                                 <x-dropdown-item type="button" :link="route('student.pdf.matriculate', $student->id)">
                                     <i data-acorn-icon="download"></i>
@@ -2729,7 +2758,7 @@
                     <div class="card">
                         @if ($areasWithGrades && $student->isRetired())
                         <div class="card-header text-end">
-                            <a class="btn btn-sm btn-icon btn-background-alternate" href="{{ route('students.pdf.report_grades', $student) }}">
+                            <a class="btn btn-sm btn-icon btn-background-alternate" href="{{ route('students.report_grades', ['student' => $student->id]) }}">
                                 <i data-acorn-icon="download" class="me-1"></i>
                                 Descargar reporte de calificaciones
                             </a>

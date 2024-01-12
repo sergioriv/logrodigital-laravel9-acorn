@@ -48,9 +48,9 @@
                             <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
 
                                 @if ($countGroupsYear)
-                                <a href="{{ route('students.pdf.report_grades', $student) }}" class="btn btn-outline-info btn-icon">
+                                <a href="{{ route('students.report_grades', ['student' => $student->id]) }}" target="_blank" class="btn btn-outline-info btn-icon">
                                     <i data-acorn-icon="download"></i>
-                                    <span>Informe de notas 2023</span>
+                                    <span>Informe de notas</span>
                                 </a>
                                 @endif
 

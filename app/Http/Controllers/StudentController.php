@@ -38,6 +38,7 @@ use App\Models\Religion;
 use App\Models\Reservation;
 use App\Models\ResourceStudyYear;
 use App\Models\Rh;
+use App\Models\SchoolYear;
 use App\Models\Sisben;
 use App\Models\Student;
 use App\Models\StudentFileType;
@@ -1751,8 +1752,34 @@ class StudentController extends Controller
         return $this->pdfCarnetGenerate($student);
     }
 
-    public function pdf_report_grades(Student $student = null)
+    public function report_grades()
     {
+        if ('STUDENT' == UserController::role_auth())
+        {
+            $student = Student::find(Auth::id());
+        } else {
+            $student = Student::find(request('student'));
+        }
+
+        $groupsStudent = \App\Models\Group::whereHas('groupStudents', fn($query) => $query->where('student_id', $student->id))->whereNull('specialty')->orderByDesc('created_at')->get();
+        $groupsRetired = \App\Models\Group::whereHas('groupStudentsRetired', fn($query) => $query->where('student_id', $student->id))->whereNull('specialty')->orderByDesc('created_at')->get();
+        $groups = $groupsRetired ? $groupsStudent->merge($groupsRetired) : $groupsStudent;
+        $resultSchoolYears = \App\Models\ResultSchoolYear::where('student_id', $student->id)->get();
+        $YAvailable = \App\Http\Controllers\SchoolYearController::available_year();
+
+        return view('logro.student.report_grades', [
+            'student' => $student,
+            'groups' => $groups,
+            'YAvailable' => $YAvailable,
+            'resultSchoolYears' => $resultSchoolYears
+        ]);
+    }
+
+    public function pdf_report_grades()
+    {
+        $student = request('student') ? Student::find(request('student')) : null;
+        $Y = request('Y') ? SchoolYear::find(request('Y')) : SchoolYearController::current_year();
+
         if ('PARENT' == UserController::role_auth() && $student) {
 
             $parentCheck = \App\Models\PersonCharge::where('email', auth()->user()->email)->where('student_id', $student->id)->count();
@@ -1768,19 +1795,18 @@ class StudentController extends Controller
             $student = Student::find(Auth::id());
         }
 
-        if ($student->isRetired()) return \App\Http\Controllers\GradeController::reportGradesStudentRetired($student);
-
-        $Y = SchoolYearController::current_year();
         $countGroupsYear = GroupStudent::where('student_id', $student->id)
             ->whereHas('group', fn ($group) => $group->where('school_year_id', $Y->id)->where('specialty', NULL) )
             ->count();
+
+        if ( !$countGroupsYear && $student->isRetired()) return \App\Http\Controllers\GradeController::reportGradesStudentRetired($student, $Y);
 
         if (!$countGroupsYear) {
             Notify::fail(__('El estudiante no ha sido matriculado'));
             return back();
         }
 
-        return $this->pdfGradeReportGenerate($student);
+        return $this->pdfGradeReportGenerate($student, $Y);
     }
 
 
@@ -1884,9 +1910,8 @@ class StudentController extends Controller
         return $pdf->download('Carnet - '. $student->getFullName() .'.pdf');
     }
 
-    private function pdfGradeReportGenerate($student)
+    private function pdfGradeReportGenerate($student, $Y)
     {
-        $Y = SchoolYearController::current_year();
         $group = Group::whereHas('groupStudents', fn($gs) => $gs->where('student_id', $student->id))->where('school_year_id', $Y->id)->where('specialty', NULL)->first();
 
         $period = Period::where('school_year_id', $Y->id)
@@ -1907,7 +1932,7 @@ class StudentController extends Controller
             return back();
         }
 
-        return (new GradeController)->reportForGroupByPeriod($period, $group, $student);
+        return (new GradeController)->reportForGroupByPeriod($period, $group, $student, $Y);
     }
 
     public function send_delete_code(Student $student, Request $request)

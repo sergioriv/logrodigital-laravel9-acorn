@@ -104,7 +104,7 @@
                             </x-dropdown-item>
                             <div class="dropdown-divider"></div>
                             @endif
-                            <x-dropdown-item type="button" :link="route('students.pdf.report_grades', $student)">
+                            <x-dropdown-item type="button" :link="route('students.report_grades', ['student' => $student->id])">
                                 <i data-acorn-icon="download"></i>
                                 <span>{{ __('Grade report') }}</span>
                             </x-dropdown-item>

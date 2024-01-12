@@ -74,4 +74,9 @@ class Group extends Model
     {
         return $this->hasMany(GroupStudent::class);
     }
+
+    public function groupStudentsRetired()
+    {
+        return $this->hasMany(GroupStudentRetired::class);
+    }
 }

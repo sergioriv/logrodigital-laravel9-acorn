@@ -22,7 +22,7 @@ class ResultSchoolYear extends Model
     {
         return match($this->result) {
             true => 'aprobado',
-            false => 'rechazado'
+            false => 'reprobado'
         };
     }
 }

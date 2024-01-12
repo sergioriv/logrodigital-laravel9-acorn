@@ -13,6 +13,7 @@ use App\Models\Period;
 use App\Models\PeriodPermit;
 use App\Models\Remark;
 use App\Models\ResourceArea;
+use App\Models\SchoolYear;
 use App\Models\Student;
 use App\Models\StudentDescriptor;
 use App\Models\StudyTime;
@@ -369,9 +370,9 @@ class GradeController extends Controller
      *
      *
      * */
-    public function reportForGroupByPeriod($period, Group $group, Student $student)
+    public function reportForGroupByPeriod($period, Group $group, Student $student, SchoolYear $Y)
     {
-        return $this->reportForGroupPDF($period, $group, $student);
+        return $this->reportForGroupPDF($period, $group, $Y, $student);
     }
 
     public function reportForGroup(Request $request, Group $group)
@@ -388,13 +389,11 @@ class GradeController extends Controller
             $currentPeriod = 'FINAL';
         }
 
-        return $this->reportForGroupPDF($currentPeriod, $group);
+        return $this->reportForGroupPDF($currentPeriod, $group, $Y);
     }
 
-    public function reportForGroupPDF($currentPeriod, Group $group, Student $student = null)
+    public function reportForGroupPDF($currentPeriod, Group $group, SchoolYear $Y, Student $student = null)
     {
-        $Y = SchoolYearController::current_year();
-
         $SCHOOL = SchoolController::myschool()->getData();
 
         /* Obtiene las areas y asignaturas del grupo que corresponde */
@@ -608,9 +607,8 @@ class GradeController extends Controller
         else return $pdf->download($pathReport . "Reporte de notas - ". $student->getCompleteNames() . '.pdf');
     }
 
-    public static function reportGradesStudentRetired(Student $student)
+    public static function reportGradesStudentRetired(Student $student, SchoolYear $Y)
     {
-        $Y = SchoolYearController::current_year();
         $SCHOOL = SchoolController::myschool()->getData();
 
         $studentGradesxGroup = GradeController::studentGrades($Y, $student);

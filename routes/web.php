@@ -346,8 +346,10 @@ Route::middleware('active_plataform')->group(function () {
             Route::get('students/download/template-observations/{student?}', 'pdf_observations')->name('students.pdf.template-observations');
             Route::get('students/download/observations/{student?}', 'pdf_with_observations')->name('students.pdf.observations');
             Route::get('students/download/carnet/{student?}', 'pdf_carnet')->name('students.pdf.carnet');
-            Route::get('students/download/report-grades/{student?}', 'pdf_report_grades')->name('students.pdf.report_grades');
             Route::get('students/download/matriculate/{student?}', 'pdf_matriculate')->name('student.pdf.matriculate');
+
+            Route::get('report-grades', 'report_grades')->name('students.report_grades');
+            Route::get('download/report-grades', 'pdf_report_grades')->name('students.pdf.report_grades');
 
             Route::get('enrolled-export', 'export_enrolled_view')->name('students.export.enrolled');
             Route::post('enrolled-export', 'export_enrolled_generate')->name('students.export.enrolled.generate');
@@ -358,6 +360,8 @@ Route::middleware('active_plataform')->group(function () {
             Route::patch('students/{student}/activate', 'activate')->name('students.activate');
 
             Route::delete('students/{student}/delete-signature', 'signature_delete')->name('students.signature.delete');
+
+
         });
 
         Route::post('students/add-observation', [StudentObserverController::class, 'storeMultiple'])->name('students.observer.multiple');
