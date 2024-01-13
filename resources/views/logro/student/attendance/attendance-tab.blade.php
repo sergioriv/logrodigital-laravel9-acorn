@@ -14,7 +14,7 @@
             @foreach ($absences as $absenceStudent)
                 <tr>
                     <td>{{ $absenceStudent->dateLabel() }}</td>
-                    <td>{{ $absenceStudent->teacherSubjectGroup->subject->resourceSubject->name }}</td>
+                    <td>{{ $absenceStudent->teacherSubjectGroup?->subject->resourceSubject->name }}</td>
                     <td>{{ $absenceStudent->teacherSubjectGroup?->teacher?->getFullName() }}</td>
                     <td>{{ $absenceStudent->student->attend->getLabelText() }}</td>
                 </tr>
