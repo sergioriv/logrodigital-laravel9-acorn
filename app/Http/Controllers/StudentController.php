@@ -936,7 +936,8 @@ class StudentController extends Controller
         $absences = Attendance::withWhereHas(
                 'student',
                 fn ($s) => $s->where('student_id', $student->id)->whereIn('attend', ['N', 'L', 'J'])
-            )->with('teacherSubjectGroup.subject', 'teacherSubjectGroup.teacher')
+            )->whereHas('teacherSubjectGroup', fn($tsgQuery) => $tsgQuery->whereHas('group', fn($gQuery) => $gQuery->where('school_year_id', $Y->id)))
+            ->with('teacherSubjectGroup.subject', 'teacherSubjectGroup.teacher')
             ->orderByDesc('date')
             ->get();
 

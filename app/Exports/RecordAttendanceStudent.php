@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Http\Controllers\SchoolYearController;
 use App\Models\AttendanceStudent;
 use App\Models\Student;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -26,6 +27,8 @@ class RecordAttendanceStudent implements FromArray, ShouldAutoSize, WithStyles, 
      */
     public function array(): array
     {
+        $Y = SchoolYearController::current_year();
+
         $array = [
             [$this->student->getCompleteNames()],
             ['Grupo', $this->student->group->name],
@@ -34,9 +37,13 @@ class RecordAttendanceStudent implements FromArray, ShouldAutoSize, WithStyles, 
 
         $attendaces = AttendanceStudent::where('student_id', $this->student->id)
             ->whereIn('attend', ['N', 'J', 'L'])
-            ->with(['attendance' => fn($at) => $at->with([
-                'teacherSubjectGroup.subject'
-            ])])
+            ->withWhereHas('attendance',
+                fn($attendQuery) => $attendQuery->withWhereHas('teacherSubjectGroup',
+                    fn($tsgQuery) => $tsgQuery->whereHas('group',
+                        fn($gQuery) => $gQuery->where('school_year_id', $Y->id)
+                    )->with('subject')
+                )
+            )
             ->get();
 
         foreach ($attendaces as $i => $attend) {

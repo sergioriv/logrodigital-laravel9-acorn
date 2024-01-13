@@ -146,9 +146,9 @@
                                     </div>
                                 @endif
 
-                                @if ($student->fallas->count())
+                                @if ($absences->count())
                                     <div class="mt-2">
-                                        <a href="{{ route('attendances.student.download', $student) }}">{{ $student->fallas->count() }}
+                                        <a href="{{ route('attendances.student.download', $student) }}">{{ $absences->count() }}
                                             Fallas</a>
                                     </div>
                                 @endif
