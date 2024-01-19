@@ -214,6 +214,8 @@ class StudentController extends Controller
             'study_year_id',
             'created_at'
         )
+            ->whereHas('studyYear')
+            ->whereNull('enrolled')
             ->with('headquarters', 'studyTime', 'studyYear')
             ->withCount('filesRequired')
             ->where('school_year_create', '<=', $Y->id)
@@ -1438,9 +1440,18 @@ class StudentController extends Controller
         $Y = SchoolYearController::current_year();
 
         $students = Student::singleData()
+            ->whereHas('studyYear')
             ->with('headquarters', 'studyTime', 'studyYear', 'files')
             ->whereNull('enrolled')
             ->where('school_year_create', '<=', $Y->id)
+            ->where(function ($query) {
+                $query->whereIn('status', ['new', 'repeat'])->orWhereNull('status');
+            })
+            ->whereNot(
+                fn ($q) =>
+                $q->whereHas('groupYear', fn ($gs) =>
+                    $gs->whereHas('group', fn ($g) => $g->where('school_year_id', $Y->id)))
+            )
             ->get();
 
         return Excel::download(new StudentsWithFiles($students), __('no-enrolled') . '.xlsx');
