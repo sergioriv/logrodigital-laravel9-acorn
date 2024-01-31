@@ -248,6 +248,8 @@ Route::middleware('active_plataform')->group(function () {
         Route::post('groups/transfer-sel-group', [TransferController::class, 'selectionGroup'])->name('group.transfer-students.selGroup');
         Route::post('groups/{group}/grade-report', [GradeController::class, 'reportForGroup'])->name('group.reportGrade');
 
+        Route::put('attendance/upload-file', [AttendanceStudentController::class, 'upload_file'])->name('attendance.upload_file');
+
         Route::post('groups/{group}/consolidate/grades', [ConsolidateGradesByArea::class, 'make'])->name('group.consolidate-grades');
 
         Route::get('groups/{group}/finish', [GroupFinishController::class, 'show'])->name('group.finish');
