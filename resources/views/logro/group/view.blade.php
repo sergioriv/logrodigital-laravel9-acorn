@@ -32,6 +32,13 @@
             $('button#btn-consolidateGradeReport').prop('disabled', false);
         });
 
+        let attendanceFileModal = $('#addAttendanceFile');
+        function attendanceFile(attendanceId, studentId) {
+            $('#attendance-file-id').val(attendanceId);
+            $('#attendance-file-student').val(studentId);
+            attendanceFileModal.modal('show');
+        }
+
     </script>
 @endsection
 
@@ -317,6 +324,7 @@
                                                                 <th
                                                                     class="text-muted text-small text-uppercase p-0 pb-2">
                                                                     {{ __('type') }}</th>
+                                                                <th class="sw-5 empty">&nbsp;</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -334,6 +342,31 @@
                                                                         {!! $absence->student->tag() !!}
                                                                     </td>
                                                                     <td>{{ $absence->attend->getLabelText() }}</td>
+                                                                    <td class="text-end">
+                                                                        @if (in_array($absence->attend->value, ['J','L']))
+                                                                        <!-- Dropdown Button Start -->
+                                                                        <div class="">
+                                                                            <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                                aria-expanded="false" data-submenu>
+                                                                                <i data-acorn-icon="more-vertical"></i>
+                                                                            </button>
+                                                                            <div class="dropdown-menu dropdown-menu-end">
+                                                                                @if (is_null($absence->file_support))
+                                                                                <button class="dropdown-item btn-icon btn-icon-start" onclick="attendanceFile('{{ $absence->attendance_id }}','{{ $absence->student_id }}')">
+                                                                                    <i data-acorn-icon="upload"></i>
+                                                                                    <span>Cargar documento soporte</span>
+                                                                                </button>
+                                                                                @else
+                                                                                <a class="dropdown-item"
+                                                                                    href="{{ config('app.url') .'/'. $absence->file_support }}"
+                                                                                    target="_blank">Ver archivo soporte</a>
+                                                                                @endif
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Dropdown Button End -->
+                                                                        @endif
+                                                                    </td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
@@ -454,5 +487,43 @@
             <!-- Modal Consolidate Report End -->
         @endif
     @endhasanyrole
+
+    <!-- Modal Attendance File Start -->
+    <div class="modal fade" id="addAttendanceFile" aria-labelledby="modalAttendanceFile" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAttendanceFile">
+                        Cargar documento soporte
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('attendance.upload_file') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+
+                    <input type="hidden" id="attendance-file-id" name="attendance-file-id" value="">
+                    <input type="hidden" id="attendance-file-student" name="attendance-file-student" value="">
+
+                    <div class="modal-body">
+
+                        <div class="form-group position-relative">
+                            <x-label>{{ __('support document') }}<x-required /></x-label>
+                            <input type="file" required class="d-block form-control" name="file_attendance" accept="image/jpg, image/jpeg, image/png, image/webp, application/pdf">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Attendance File End -->
 
 @endsection

@@ -23,7 +23,8 @@ class StudentObserver extends Model
         'agreements',
         'accept',
         'created_user_id',
-        'created_rol'
+        'created_rol',
+        'file_support'
     ];
 
     protected $casts = [

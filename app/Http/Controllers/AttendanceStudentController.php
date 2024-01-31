@@ -174,4 +174,26 @@ class AttendanceStudentController extends Controller
     {
         return Excel::download(new RecordAttendanceStudent($student), 'Fallas - ' . $student->getCompleteNames() . '.xlsx');
     }
+
+
+    public function upload_file(Request $request)
+    {
+        $request->validate([
+            'attendance-file-id' => ['required'],
+            'attendance-file-student' => ['required'],
+            'file_attendance' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:2048']
+        ]);
+
+        if ($request->hasFile('file_attendance')) {
+            $pathAux = $request->file('file_attendance')->store('students/' . $request->get('attendance-file-student') . '/absences', 'public');
+            $path = $pathAux ? config('filesystems.disks.public.url') . '/' . $pathAux : null;
+        } else $path = null;
+
+        AttendanceStudent::where('attendance_id', $request->get('attendance-file-id'))->where('student_id', $request->get('attendance-file-student'))->update([
+            'file_support' => $path
+        ]);
+
+        Notify::success(__('File upload!'));
+        return back();
+    }
 }

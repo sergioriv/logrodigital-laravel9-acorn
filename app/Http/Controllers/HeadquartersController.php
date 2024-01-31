@@ -23,14 +23,12 @@ class HeadquartersController extends Controller
      */
     public function index()
     {
-        $hq = Headquarters::
-            withCount([
-                'students' =>
-                fn($students) => $students->where('enrolled', 1)
-            ])
+        $Y = SchoolYearController::current_year();
+        $hq = Headquarters::query()
             ->orderBy('name')->get();
 
         return view('logro.headquarters.index', [
+            'Y' => $Y,
             'headquarters' => $hq
         ]);
     }

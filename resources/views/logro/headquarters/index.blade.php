@@ -83,7 +83,8 @@ $title = __('Headquarters list');
                             @foreach ($headquarters as $hq)
                             <tr>
                                 <td>{{ $hq->name }}</td>
-                                <td class="text-center">{{ $hq->students_count }}</td>
+                                <td class="text-center">{{ $hq->students_count }}
+                                {{ \App\Models\GroupStudent::whereHas('group', fn($q) => $q->where('headquarters_id', $hq->id)->where('school_year_id', $Y->id))->count('id') }}</td>
                                 <td>
                                     <h4 class="text-small">{{ $hq->created_at }}</h4>
                                 </td>

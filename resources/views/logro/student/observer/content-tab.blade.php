@@ -92,32 +92,43 @@
                                         </div>
                                     @endif
 
+                                    @if (!is_null($observation->file_support))
+                                        <div class="mt-2">
+                                            <a class="btn btn-sm btn-outline-primary" target="_blank"
+                                                href="{{ config('app.url').'/'. $observation->file_support }}">
+                                                Ver archivo soporte
+                                            </a>
+                                        </div>
+                                    @endif
+
                                     <span class="position-absolute text-extra-small text-alternate opacity-75 b-2 e-2">
                                         {{ $observation->user_creator?->getFullName() }}
                                         | {{ $observation->date }}
                                     </span>
 
-                                    @if (auth()->id() === $observation->created_user_id)
-                                        @if (is_null($observation->free_version))
-                                            <div class="position-absolute text-alternate opacity-75 t-0 e-2">
+                                    @if ( (in_array('COORDINATOR', auth()->user()->getRoleNames()->toArray())
+                                        ||
+                                        auth()->id() === $observation->created_user_id)
+                                    &&
+                                    is_null($observation->free_version))
+                                        <div class="position-absolute text-alternate opacity-75 t-0 e-2">
 
-                                                <div class="ms-1 dropstart">
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-icon-only text-primary"
-                                                        data-bs-offset="0,3" data-bs-toggle="dropdown"
-                                                        aria-haspopup="true" aria-expanded="false" data-submenu>
-                                                        <i data-acorn-icon="more-horizontal"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <x-dropdown-item type="button"
-                                                            data-observer="{{ $observation->id }}">
-                                                            <span>{{ __('Add disclaimers') }}</span>
-                                                        </x-dropdown-item>
-                                                    </div>
+                                            <div class="ms-1 dropstart">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon-only text-primary"
+                                                    data-bs-offset="0,3" data-bs-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false" data-submenu>
+                                                    <i data-acorn-icon="more-horizontal"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <x-dropdown-item type="button"
+                                                        data-observer="{{ $observation->id }}">
+                                                        <span>{{ __('Add disclaimers') }}</span>
+                                                    </x-dropdown-item>
                                                 </div>
-
                                             </div>
-                                        @endif
+
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -139,7 +150,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <form action="{{ route('students.observer.disclaimers', $student) }}" id="addDisclaimersForm"
+                <form action="{{ route('students.observer.disclaimers', $student) }}" id="addDisclaimersForm" enctype="multipart/form-data"
                     method="POST">
                     @csrf
                     @method('PUT')
@@ -190,6 +201,13 @@
                                             </span>
                                         </span>
                                     </label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group position-relative">
+                                    <x-label>{{ __('support document') }}</x-label>
+                                    <input type="file" class="d-block form-control" name="file_observation" accept="image/jpg, image/jpeg, image/png, image/webp, application/pdf">
                                 </div>
                             </div>
 

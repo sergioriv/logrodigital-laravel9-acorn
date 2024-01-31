@@ -15,6 +15,7 @@ class AttendanceStudent extends Model
         'attendance_id',
         'student_id',
         'attend',
+        'file_support'
     ];
 
     protected $casts = [

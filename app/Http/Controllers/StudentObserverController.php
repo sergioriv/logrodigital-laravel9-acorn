@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
+use App\Models\Data\RoleUser;
 use App\Models\Student;
 use App\Models\StudentObserver;
 use Illuminate\Http\Request;
@@ -85,27 +86,43 @@ class StudentObserverController extends Controller
             'observer' => ['required', Rule::exists('student_observer', 'id')],
             'free_version_or_disclaimers' => ['required', 'string', 'max:5000'],
             'agreements_or_commitments' => ['nullable', 'string', 'max:5000'],
-            'accepts_or_rejects' => ['nullable']
+            'accepts_or_rejects' => ['nullable'],
+            'file_observation' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:2048']
         ]);
-
 
         $observer = StudentObserver::find($request->observer);
 
-        if ( auth()->id() !== $observer->created_user_id || ! is_null($observer->free_version) ) {
+        if ( (
+                RoleUser::COORDINATION_ROL !== UserController::role_auth()
+                && auth()->id() !== $observer->created_user_id
+            )
+            || ! is_null($observer->free_version)
+        ) {
             Notify::fail(__('Not allowed'));
             $this->tab();
             return back();
         }
 
+        $path_file = $this->upload_file($request, $observer->student_id);
+
         $observer->update([
             'free_version' => $request->free_version_or_disclaimers,
             'agreements' => $request->agreements_or_commitments,
-            'accept' => $this->requestAccept($request->accepts_or_rejects)
+            'accept' => $this->requestAccept($request->accepts_or_rejects),
+            'file_support' => $path_file
         ]);
 
         Notify::success(__('Updated observation!'));
         $this->tab();
         return back();
+    }
+
+    private static function upload_file($request, $student_id)
+    {
+        if ($request->hasFile('file_observation')) {
+            $path = $request->file('file_observation')->store('students/' . $student_id . '/observer', 'public');
+            return $path ? config('filesystems.disks.public.url') . '/' . $path : null;
+        } else return null;
     }
 
     private function requestAccept($request)
