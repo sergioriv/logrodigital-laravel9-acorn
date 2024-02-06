@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coordination;
 use App\Models\Orientation;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -21,6 +22,7 @@ class RestorePasswordController extends Controller
             'TEACHER' => $this->restoreTeacher($request),
             'STUDENT' => $this->restoreStudent($request),
             'ORIENTATOR' => $this->restoreOrientator($request),
+            'COORDINATOR' => $this->restoreCoordinator($request),
             default => false
         };
     }
@@ -83,6 +85,27 @@ class RestorePasswordController extends Controller
 
 
             return $this->returnContent($orientator->institutional_email, $newPassword);
+        }
+
+        return false;
+    }
+
+    private function restoreCoordinator($request)
+    {
+        $coordinator = Coordination::find($request->id);
+
+        if ( ! is_null($coordinator) ) {
+
+            $newPassword = $this->generatePassword();
+
+            $coordinator->user->forceFill([
+                'password' => Hash::make($newPassword),
+                'change_password' => 0,
+                'remember_token' => NULL
+            ])->save();
+
+
+            return $this->returnContent($coordinator->institutional_email, $newPassword);
         }
 
         return false;

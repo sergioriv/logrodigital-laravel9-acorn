@@ -37,6 +37,23 @@
             });
         </script>
     @endhasanyrole
+    @hasanyrole('SUPPORT|SECRETARY')
+    <script src="/js/forms/change-email-administrative.js"></script>
+    <script>
+        jQuery('[modal="restorePassword"]').click(function() {
+
+            let _restore = $(this);
+
+            $.get(HOST + "/user/restore-password", {
+                role: _restore.data('role'),
+                id: _restore.data('id')
+            }, function(data) {
+                $('#restorePassword .modal-body').html(data);
+                $('#restorePassword').modal('show');
+            });
+        });
+    </script>
+    @endhasanyrole
 @endsection
 
 @section('content')
@@ -46,10 +63,33 @@
         <section class="page-title-container">
             <div class="row">
                 <!-- Title Start -->
-                <div class="col-12">
+                <div class="col-12 col-md-8 mb-2 mb-md-0">
                     <h1 class="mb-1 pb-0 display-4" id="title">{{ $coordination->getFullName() }}</h1>
                 </div>
                 <!-- Title End -->
+
+                @hasanyrole('SUPPORT|SECRETARY')
+                    <!-- Top Buttons Start -->
+                    <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
+
+                        <!-- Dropdown Button Start -->
+                        <div class="ms-1">
+                            <button type="button" class="btn btn-sm btn-outline-info btn-icon btn-icon-only"
+                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                data-submenu>
+                                <i data-acorn-icon="more-horizontal"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <x-dropdown-item type="button" data-bs-toggle="modal" data-bs-target="#restorePassword">
+                                    <i data-acorn-icon="lock-off" class="me-1"></i>
+                                    <span>{{ __('Restore password') }}</span>
+                                </x-dropdown-item>
+                            </div>
+                        </div>
+                        <!-- Dropdown Button End -->
+
+                    </div>
+                @endhasanyrole
             </div>
         </section>
         <!-- Title End -->
@@ -591,6 +631,27 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Restore Password Start -->
+        <div class="modal fade" id="restorePassword" aria-labelledby="modalRestorePassword" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Restore password') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>
+                            {!! __("Are you sure to reset <b>:USER's</b> password?", ['USER' => $coordination->getFullName()]) !!}
+                        </p>
+                        <div class="btn btn-outline-primary" modal="restorePassword" data-role="COORDINATOR"
+                            data-id="{{ $coordination->uuid }}">{{ __('Restore') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Restore Password End -->
     @endhasanyrole
 
     @hasanyrole('SUPPORT|COORDINATOR')
