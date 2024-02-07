@@ -890,7 +890,7 @@ class StudentController extends Controller
             'myTeachers' => $orientationOptions['myTeachers'],
             'headers_remission' => HeadersRemission::all(),
             'handbook'      => SchoolController::myschool()->handbook(),
-            'observer' => StudentObserver::where('student_id', $student->id)->with('user_creator')->get(),
+            'observer' => StudentObserver::where('student_id', $student->id)->where('school_year_id', $Y->id)->with('user_creator')->get(),
             'periods' => $studentGradesxGroup['periods'],
             'areasWithGrades' => $studentGradesxGroup['areasGrade']
         ]);
@@ -951,7 +951,7 @@ class StudentController extends Controller
             'student' => $student,
             'periods' => $studentGradesxGroup['periods'],
             'areasWithGrades' => $studentGradesxGroup['areasGrade'],
-            'observer' => StudentObserver::where('student_id', $student->id)->with('user_creator')->get(),
+            'observer' => StudentObserver::where('student_id', $student->id)->where('school_year_id', $Y->id)->with('user_creator')->get(),
             'existOrientation' => $existOrientation,
             'absences' => $absences,
             'coordinators' => $coordinators
@@ -1896,9 +1896,10 @@ class StudentController extends Controller
 
     private function pdfWithObservationsGenerate($student)
     {
+        $Y = SchoolYearController::current_year();
         $SCHOOL = SchoolController::myschool()->getData();
 
-        $observations = StudentObserver::where('student_id', $student->id)->orderBy('date')->get();
+        $observations = StudentObserver::where('student_id', $student->id)->where('school_year_id', $Y->id)->orderBy('date')->get();
         return Pdf::loadView('logro.pdf.student-with-observations', [
             'SCHOOL' => $SCHOOL,
             'date' => now()->format('d/m/Y'),

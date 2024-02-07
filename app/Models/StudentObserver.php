@@ -16,6 +16,7 @@ class StudentObserver extends Model
 
     protected $fillable = [
         'student_id',
+        'school_year_id',
         'annotation_type',
         'date',
         'situation_description',
@@ -38,7 +39,7 @@ class StudentObserver extends Model
 
     public function user_creator()
     {
-        return $this->morphTo('user_creator', 'created_rol', 'created_user_id', 'id')->select('id', 'names', 'last_names');
+        return $this->morphTo('user_creator', 'created_rol', 'created_user_id', 'id');
     }
 
     /*

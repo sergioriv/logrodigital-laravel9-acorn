@@ -27,6 +27,7 @@ class StudentObserverController extends Controller
             'situation_description' => ['required', 'string', 'max:5000']
         ]);
 
+        $Y = SchoolYearController::current_year();
         $insert = [];
         foreach ($request->students_observer as $student) {
 
@@ -35,6 +36,7 @@ class StudentObserverController extends Controller
                 [
                     'id' => Str::uuid()->toString(),
                     'student_id' => $student,
+                    'school_year_id' => $Y->id,
                     'annotation_type' => $request->annotation_type,
                     'date' => $request->date_observation,
                     'situation_description' => $request->situation_description,
@@ -66,8 +68,11 @@ class StudentObserverController extends Controller
             'situation_description' => ['required', 'string', 'max:5000']
         ]);
 
+        $Y = SchoolYearController::current_year();
+
         StudentObserver::create([
             'student_id' => $student->id,
+            'school_year_id' => $Y->id,
             'annotation_type' => $request->annotation_type,
             'date' => $request->date_observation,
             'situation_description' => $request->situation_description,
