@@ -344,19 +344,19 @@
             <td class="w-33 ps-1 pe-1">
                 <div class="card p-1">
                     <b>Sede:</b>
-                    {{ $student->groupYear->group->headquarters->name }}
+                    {{ $student->headquarters?->name ?? '' }}
                     <br />
                     <b>Jornada:</b>
-                    {{ $student->groupYear->group->studyTime->name }}
+                    {{ $student->studyTime?->name ?? '' }}
                 </div>
             </td>
             <td class="w-33 ps-1">
                 <div class="card p-1">
                     <b>Grado:</b>
-                    {{ $student->groupYear->group->studyYear->name }}
+                    {{ $student->studyYear?->name ?? '' }}
                     <br />
                     <b>Jornada:</b>
-                    {{ $student->groupYear->group->name }}
+                    {{ $student->group?->name ?? '' }}
                 </div>
             </td>
         </tr>
