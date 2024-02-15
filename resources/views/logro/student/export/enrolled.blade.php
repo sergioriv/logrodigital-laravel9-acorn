@@ -284,6 +284,16 @@
                         </div>
                     </div>
 
+                    <hr>
+
+                    <div class="mt-3">
+                        <!-- Inclusive -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="inclusive" name="inclusive" value="1" />
+                            <label class="form-check-label" for="inclusive">Solo estudiantes inclusivos</label>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
