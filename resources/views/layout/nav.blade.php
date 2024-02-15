@@ -80,6 +80,19 @@
                     @endhasanyrole
                 </a>
             </li>
+            @hasanyrole('PARENT|STUDENT')
+            @php
+                $handbook = \App\Models\School::first()->handbook_coexistence
+            @endphp
+            @if ($handbook)
+            <li>
+                <a href="{{ $handbook }}" target="_blank" data-href="/handbook">
+                    <i data-acorn-icon="book" class="icon" data-acorn-size="18"></i>
+                    <span class="label">{{ __('Handbook of coexistence') }}</span>
+                </a>
+            </li>
+            @endif
+            @endhasanyrole
             {{-- @hasrole('SUPPORT')
             <li>
                 <a href="{{ route('calendar.index') }}" data-href="/calendar">
