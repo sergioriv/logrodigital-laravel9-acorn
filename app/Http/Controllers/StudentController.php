@@ -86,7 +86,7 @@ class StudentController extends Controller
             'enrolled'
         );
 
-        $this->middleware('hasroles:SECRETARY,COORDINATOR,TEACHER,SUPPORT')->only(
+        $this->middleware('hasroles:SECRETARY,COORDINATOR,TEACHER,ORIENTATION,SUPPORT')->only(
             'export_enrolled_generate',
             'export_enrolled_view'
         );

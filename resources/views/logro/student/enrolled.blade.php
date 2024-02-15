@@ -43,7 +43,7 @@ $title = __('Students') .' '. __('enrolled');
                         <!-- Add New Button End -->
                         @endcan
 
-                        @hasanyrole('SECRETARY|COORDINATOR|TEACHER|SUPPORT')
+                        @hasanyrole('SECRETARY|COORDINATOR|TEACHER|ORIENTATION|SUPPORT')
                         <!-- Dropdown Button Start -->
                         <div class="ms-1">
                             <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only"
