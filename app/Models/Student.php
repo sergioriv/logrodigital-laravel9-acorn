@@ -370,6 +370,10 @@ class Student extends Model
     {
         return $this->hasMany(LeveledStudent::class);
     }
+    public function resultSchoolYear()
+    {
+        return $this->hasOne(ResultSchoolYear::class);
+    }
 
 
 

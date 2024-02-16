@@ -25,7 +25,7 @@ class StudyYearController extends Controller
         $this->middleware('can:studyYear.create')->only('create', 'store', 'edit', 'update');
         $this->middleware('can:studyYear.subjects')->only('subjects', 'subjects_store', 'subjects_edit');
 
-        $this->middleware(YearCurrentMiddleware::class)->except('subjects_edit', 'subjects_store');
+        $this->middleware(YearCurrentMiddleware::class)->except('index', 'subjects_edit', 'subjects_store');
     }
     /**
      * Display a listing of the resource.
@@ -43,7 +43,7 @@ class StudyYearController extends Controller
             ->get();
 
         return view('logro.studyyear.index')->with([
-            'Y' => $Y->name,
+            'Y' => $Y,
             'studyYears' => $studyYears
         ]);
     }

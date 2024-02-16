@@ -4,14 +4,26 @@
 @extends('layout', ['title' => $title])
 
 @section('css')
+<link rel="stylesheet" href="/css/vendor/select2.min.css" />
+<link rel="stylesheet" href="/css/vendor/select2-bootstrap4.min.css" />
 @endsection
 
 @section('js_vendor')
-    <script src="/js/vendor/bootstrap-submenu.js"></script>
-    <script src="/js/vendor/mousetrap.min.js"></script>
+<script src="/js/vendor/bootstrap-submenu.js"></script>
+<script src="/js/vendor/mousetrap.min.js"></script>
+<script src="/js/vendor/select2.full.min.js"></script>
+<script src="/js/vendor/select2.full.min.es.js"></script>
 @endsection
 
 @section('js_page')
+<script src="/js/forms/select2.js"></script>
+<script>
+    let downloadConsolidateModal = $('#downloadConslidateModal');
+    function downloadConsolidate(studyYear) {
+        downloadConsolidateModal.find('#downloadConslidateId').val(studyYear);
+        downloadConsolidateModal.modal('show');
+    }
+</script>
 @endsection
 
 @section('content')
@@ -59,11 +71,17 @@
                                         <div class="text-small text-muted">{{ __($studyYear->resource->name) }}</div>
 
                                         <hr />
-                                        <a
-                                            href="{{ route('studyYear.subject.show', $studyYear) }}">{{ __('Subjects') . ' ' . $Y }}</a>
-                                        @if ($studyYear->groups_count)
-                                        <a
-                                        href="{{ route('studyYear.groups-guide', $studyYear) }}">Descargar planillas</a>
+
+                                        @if (is_null($Y->available))
+                                            <a onclick="downloadConsolidate('{{ $studyYear->id }}')"
+                                            href="#">Descargar consolidado</a>
+                                        @else
+                                            <a
+                                                href="{{ route('studyYear.subject.show', $studyYear) }}">{{ __('Subjects') . ' ' . $Y->name }}</a>
+                                            @if ($studyYear->groups_count)
+                                            <a
+                                            href="{{ route('studyYear.groups-guide', $studyYear) }}">Descargar planillas</a>
+                                            @endif
                                         @endif
                                     </div>
                                 </div>
@@ -74,5 +92,47 @@
                 <!-- Content End -->
             </div>
         </div>
+    </div>
+
+    <!-- Modal Accept or Deny Permit Start -->
+    <div class="modal fade" id="downloadConslidateModal" aria-labelledby="modaldownloadConslidate"
+    data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modaldownloadConslidate">{{ __('Consolidation grades') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('studyYear.consolidate-grades') }}" method="POST">
+                @csrf
+
+                <div class="modal-body">
+
+                    <input type="hidden" name="downloadConslidateId" id="downloadConslidateId" value="">
+
+                    <div class="mb-3 w-100 position-relative form-group">
+                        <x-label>{{ __('Study time') }}
+                            <x-required />
+                        </x-label>
+                        <select name="downloadConslidateStudyTime" id="downloadConslidateStudyTime" logro="select2">
+                            <option label="&nbsp;"></option>
+                            @foreach (\App\Models\StudyTime::all() as $studyTime)
+                                <option value="{{ $studyTime->id }}">
+                                    {{ $studyTime->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                    <button type="submit" class="btn btn-outline-primary">{{ __('Download') }}</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
     </div>
 @endsection

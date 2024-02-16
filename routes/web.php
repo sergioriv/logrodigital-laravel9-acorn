@@ -251,6 +251,7 @@ Route::middleware('active_plataform')->group(function () {
         Route::put('attendance/upload-file', [AttendanceStudentController::class, 'upload_file'])->name('attendance.upload_file');
 
         Route::post('groups/{group}/consolidate/grades', [ConsolidateGradesByArea::class, 'make'])->name('group.consolidate-grades');
+        Route::post('study-years/consolidate/grades', [ConsolidateGradesByArea::class, 'generateStudyYear'])->name('studyYear.consolidate-grades');
 
         Route::get('groups/{group}/finish', [GroupFinishController::class, 'show'])->name('group.finish');
         Route::post('groups/{group}/finish', [GroupFinishController::class, 'store'])->name('group.finish.store');
