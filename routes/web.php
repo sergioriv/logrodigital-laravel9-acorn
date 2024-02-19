@@ -247,6 +247,7 @@ Route::middleware('active_plataform')->group(function () {
         Route::post('groups/{group}/transfer-students', [TransferController::class, 'groupStudents_hss'])->name('group.transfer-students.hss');
         Route::post('groups/transfer-sel-group', [TransferController::class, 'selectionGroup'])->name('group.transfer-students.selGroup');
         Route::post('groups/{group}/grade-report', [GradeController::class, 'reportForGroup'])->name('group.reportGrade');
+        Route::get('groups/{group}/template-observations', [GroupController::class, 'pdf_group_observations'])->name('group.pdf.template-observations');
 
         Route::put('attendance/upload-file', [AttendanceStudentController::class, 'upload_file'])->name('attendance.upload_file');
 

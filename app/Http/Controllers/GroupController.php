@@ -26,10 +26,14 @@ use App\Models\StudyYear;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\TeacherSubjectGroup;
+use Barryvdh\DomPDF\Facade\Pdf;
+use iio\libmergepdf\Merger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class GroupController extends Controller
 {
@@ -721,5 +725,64 @@ class GroupController extends Controller
                 ->get();
 
         return Excel::download(new StudentsWithFiles($studentsGroup), __('Information From Students in Group :GROUP', ['GROUP' => $group->name]) . '.xlsx');
+    }
+
+
+
+
+    public function pdf_group_observations(Group $group)
+    {
+        $SCHOOL = SchoolController::myschool()->getData();
+
+        $pathUuid = Str::uuid();
+        $pathReport = "app/reports/". $pathUuid ."/";
+
+        if (!File::isDirectory(public_path($pathReport))) {
+            File::makeDirectory(public_path($pathReport), 0755, true, true);
+        }
+
+        $students = Student::singleData()->whereHas('groupYear', fn($g) => $g->where('group_id', $group->id))
+        ->with('headquarters', 'studyTime', 'studyYear', 'group')
+        ->orderBy('first_last_name')
+        ->orderBy('second_last_name')
+        ->orderBy('first_name')
+        ->orderBy('second_name')
+        ->get();
+
+        foreach ($students as $student) {
+
+            $this->studentObervationStore($SCHOOL, $student, $pathReport);
+
+        }
+
+        /* Generate Zip and Download */
+        return (new ZipController($pathUuid))->downloadObserversByGroup($group->name);
+    }
+
+    private function studentObervationStore(\App\Models\School $SCHOOL, \App\Models\Student $student, $pathReport)
+    {
+        $merge = new Merger();
+
+        $tutor = \App\Models\PersonCharge::select('id', 'name')->where('id', $student->person_charge)->first();
+
+        $matricula = Pdf::loadView('logro.pdf.matriculate', [
+            'SCHOOL' => $SCHOOL,
+            'date' => now()->format('d/m/Y'),
+            'student' => $student,
+            'tutor' => $tutor,
+            'nationalCountry' => NationalCountry::country()
+        ])->setPaper('letter', 'portrait')->setOption('dpi', 72)->output();
+        $merge->addRaw($matricula);
+
+        $observer = Pdf::loadView('logro.pdf.student-observations', [
+            'SCHOOL' => $SCHOOL,
+            'date' => now()->format('d/m/Y'),
+            'student' => $student
+        ])->setPaper('letter', 'landscape')->setOption('dpi', 72)->output();
+        $merge->addRaw($observer);
+
+        $nameFile = $pathReport . $student->getCompleteNames() . '.pdf';
+
+        file_put_contents($nameFile, $merge->merge());
     }
 }

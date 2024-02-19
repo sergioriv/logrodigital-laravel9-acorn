@@ -122,4 +122,39 @@ class ZipController extends Controller
         Notify::fail(__('An error has occurred'));
         return back();
     }
+
+    public function downloadObserversByGroup($groupName)
+    {
+        if ($this->path && $groupName) {
+
+            $zip = new ZipArchive;
+            $path = 'app/reports/' . $this->path;
+            $pathZip = public_path('app/reports/Observadores - Grupo '. $groupName .'.zip');
+
+            if ($zip->open($pathZip, ZipArchive::CREATE) === TRUE) {
+
+                $files = File::files(public_path($path));
+
+                if (count($files)) {
+
+                    foreach ($files as $file) {
+
+                        if (!$file->isDir())
+                        $zip->addFile($file, basename($file));
+                    }
+
+                    $zip->close();
+
+                }
+                File::deleteDirectory(public_path($path));
+
+                if (count($files))
+                    return response()->download($pathZip)->deleteFileAfterSend();
+
+            }
+        }
+
+        Notify::fail(__('An error has occurred'));
+        return back();
+    }
 }

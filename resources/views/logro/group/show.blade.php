@@ -134,6 +134,11 @@
                                             <i data-acorn-icon="download" class="me-1"></i>
                                             <span>{{ __('Information general from student list') }}</span>
                                         </a>
+                                        <a class="dropdown-item btn-sm btn-icon btn-icon-start"
+                                            href="{{ route('group.pdf.template-observations', $group) }}">
+                                            <i data-acorn-icon="download" class="me-1"></i>
+                                            <span>Plantilla de observadores</span>
+                                        </a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item btn-sm btn-icon btn-icon-start"
                                             href="{{ route('group.export.attendance-control', $group) }}">
