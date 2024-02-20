@@ -480,7 +480,7 @@ Route::middleware('active_plataform')->group(function () {
         * Add Role VOTING DIRECTOR
         *
         *  */
-        Route::middleware('hasroles:SUPPORT,SECRETARY')->controller(VotingSystemController::class)->group( function () {
+        Route::controller(VotingSystemController::class)->group( function () {
             Route::patch('add-user', 'addUser')->name('voting.add-user');
             Route::delete('remove-user', 'removeUser')->name('voting.remove-user');
         });

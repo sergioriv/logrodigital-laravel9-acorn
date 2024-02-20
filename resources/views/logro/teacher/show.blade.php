@@ -68,7 +68,7 @@
                 </div>
                 <!-- Title End -->
 
-                @hasanyrole('SUPPORT|SECRETARY')
+                @hasanyrole('SUPPORT|SECRETARY|COORDINATOR')
                     <!-- Top Buttons Start -->
                     <div class="col-12 col-md-4 d-flex align-items-start justify-content-end">
 
@@ -80,6 +80,8 @@
                                 <i data-acorn-icon="more-horizontal"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
+
+                                @hasanyrole('SUPPORT|SECRETARY')
                                 <x-dropdown-item type="button" data-bs-toggle="modal"
                                     data-bs-target="#changeEmailAddressModal">
                                     <i data-acorn-icon="email" class="me-1"></i>
@@ -92,6 +94,7 @@
                                 </x-dropdown-item>
 
                                 <div class="dropdown-divider"></div>
+                                @endhasanyrole
 
                                 @if (!in_array('VOTING_COORDINATOR', $teacher->user->getRoleNames()->toArray()))
                                     <form action="{{ route('voting.add-user') }}" method="POST">
