@@ -108,6 +108,13 @@
                                 <i data-acorn-icon="download"></i>
                                 <span>{{ __('Grade report') }}</span>
                             </x-dropdown-item>
+                            @if ($teacherIsDirector)
+                            <div class="dropdown-divider"></div>
+                            <x-dropdown-item type="button" :link="route('student.avatar.edit', ['student' => $student->id])">
+                                <i class="icon bi-person-badge"></i>
+                                <span>Actualizar foto</span>
+                            </x-dropdown-item>
+                            @endif
 
                         </div>
                     </div>

@@ -115,7 +115,7 @@ class StudentFileController extends Controller
         return true;
     }
 
-    private static function upload_file($request, $file, $student_id)
+    public static function upload_file($request, $file, $student_id)
     {
         if ($request->hasFile($file)) {
             $path = $request->file($file)->store('students/' . $student_id . '/files', 'public');

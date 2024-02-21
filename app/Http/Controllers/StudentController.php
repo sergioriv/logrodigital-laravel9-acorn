@@ -947,6 +947,8 @@ class StudentController extends Controller
             $studentGradesxGroup = GradeController::studentGrades($Y, $student);
         }
 
+        $teacherIsDirector = $student->group->teacher_id === Auth::id();
+
         return view('logro.student.profile-view', [
             'student' => $student,
             'periods' => $studentGradesxGroup['periods'],
@@ -954,7 +956,8 @@ class StudentController extends Controller
             'observer' => StudentObserver::where('student_id', $student->id)->where('school_year_id', $Y->id)->with('user_creator')->get(),
             'existOrientation' => $existOrientation,
             'absences' => $absences,
-            'coordinators' => $coordinators
+            'coordinators' => $coordinators,
+            'teacherIsDirector' => $teacherIsDirector
         ]);
     }
 

@@ -6,7 +6,6 @@ use App\Exports\ConsolidateGeneralGradesGroup;
 use App\Exports\ConsolidateGeneralGradesStudyYear;
 use App\Http\Controllers\support\Notify;
 use App\Models\Group;
-use App\Models\GroupStudent;
 use App\Models\Period;
 use App\Models\ResourceArea;
 use App\Models\Student;

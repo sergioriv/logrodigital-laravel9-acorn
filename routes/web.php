@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\UserAlertsController;
 use App\Http\Controllers\AttendanceStudentController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\CertificateFinalController;
 use App\Http\Controllers\ChangeEmailAddressAdmin;
 use App\Http\Controllers\ConsolidateGradesByArea;
 use App\Http\Controllers\CoordinationController;
@@ -98,6 +99,8 @@ Route::middleware('active_plataform')->group(function () {
                 }
             });
 
+            Route::get('libro', [CertificateFinalController::class, 'make']);
+
             /* Route Users */
             Route::resource('users', UserController::class)->except('destroy','create','store')->names('support.users');
             Route::get('users.json', [UserController::class, 'data']);
@@ -133,6 +136,9 @@ Route::middleware('active_plataform')->group(function () {
         Route::put('profile/edit', [StudentController::class, 'wizard_complete_request'])->name('student.wizard.complete');
         Route::get('profile/avatar/edit', [ProfileController::class, 'auth_avatar_edit'])->name('profile.auth.avatar.edit');
         Route::put('profile/avatar/edit', [ProfileController::class, 'auth_avatar_edit_update'])->name('profile.auth.avatar.update');
+
+        Route::get('student/{student}/avatar/edit', [ProfileController::class, 'student_avatar_edit'])->name('student.avatar.edit');
+        Route::put('student/{student}/avatar/edit', [ProfileController::class, 'student_avatar_edit_update'])->name('student.avatar.update');
 
         /* My Institution */
         Route::get('myinstitution', [SchoolController::class, 'show'])->name('myinstitution');

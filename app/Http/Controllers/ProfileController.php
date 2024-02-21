@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class ProfileController extends Controller
 {
@@ -145,6 +146,45 @@ class ProfileController extends Controller
 
         Notify::success( __('Avatar Updated!') );
         return redirect()->route('user.profile.edit');
+    }
+
+    // FOR ESTUDENT
+    public function student_avatar_edit(\App\Models\Student $student)
+    {
+        return view('profile.student-avatar-edit', ['student' => $student]);
+    }
+
+    public function student_avatar_edit_update(Request $request, \App\Models\Student $student)
+    {
+        $request->validate([
+            'file_upload' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048']
+        ]);
+
+        $user = $student->user;
+
+        $path_file = \App\Http\Controllers\StudentFileController::upload_file($request, 'file_upload', $student->id);
+        if (!$path_file) {
+            return redirect()->back()->withErrors(__('An error occurred while uploading the file, please try again.'));
+        }
+
+        $studentFile = \App\Models\StudentFile::where('student_id', $student->id)
+            ->where('student_file_type_id', 9)
+            ->first();
+
+        if ($request->hasFile('file_upload') && $studentFile->url_absolute !== NULL) {
+            File::delete(public_path($studentFile->url_absolute));
+        }
+
+        $studentFile->creation_user_id = Auth::id();
+        $studentFile->url = config('app.url') . '/' . $path_file;
+        $studentFile->url_absolute = $path_file;
+        $studentFile->save();
+
+        $user->avatar = $path_file;
+        $user->save();
+
+        Notify::success( __('Avatar Updated!') );
+        return redirect()->route('students.show', $student->id);
     }
 
 

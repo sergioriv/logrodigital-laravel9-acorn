@@ -74,7 +74,7 @@
                     <!-- Add New Button Start -->
                     <a href="{{ route('profile.auth.avatar.edit') }}"
                         class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable">
-                        <i data-acorn-icon="edit-square"></i>
+                        <i class="icon bi-person-badge"></i>
                         <span>{{ __('Edit avatar') }}</span>
                     </a>
                     <!-- Add New Button End -->
