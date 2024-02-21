@@ -66,7 +66,7 @@
                                         Descargar lista
                                     </a>
                                 </div>
-                                <div class="my-5 h5">
+                                <div class="my-5 h5 d-flex flex-column">
                                     @if ($vt->status->isCreated())
                                         <button type="button" class="btn btn-primary"
                                             data-started-voting="{{ $vt->id }}">
@@ -77,6 +77,9 @@
                                             class="btn btn-sm btn-outline-primary">
                                             Ver resultados
                                         </a>
+                                        @if ($vt->status->isFinished())
+                                            <span class="text-danger mt-3 font-weight-bold">FINALIZADA</span>
+                                        @endif
                                     @endif
                                 </div>
                                 <span class="position-absolute text-extra-small text-alternate opacity-75 b-2 e-2">

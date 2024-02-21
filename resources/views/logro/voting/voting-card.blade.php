@@ -1,5 +1,5 @@
 @php
-    $title = $document;
+    $title = $student->document;
 @endphp
 @extends('layout-empty', ['title' => $title])
 
@@ -23,6 +23,12 @@
         <!-- Title Start -->
         <div class="d-flex flex-column align-items-center justify-content-center">
             <div class="display-6">{{ $countVoting }}</div>
+            <div class="my-3 card">
+                <div class="card-body font-weight-bold d-flex flex-column text-center">
+                    <span>{{ $student->document }}</span>
+                    <span>{{ $student->getCompleteNames() }}</span>
+                </div>
+            </div>
             <div class="display-1 text-uppercase">{{ $voting->title }}</div>
         </div>
         <!-- Title End -->
@@ -34,7 +40,7 @@
                 @csrf
                 @method('PATCH')
 
-                <input type="hidden" name="document" value="{{ $document }}">
+                <input type="hidden" name="document" value="{{ $student->document }}">
                 <input type="hidden" name="voting" value="{{ $voting->id }}">
 
                 <div class="row g-4 row-cols-md-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4">
@@ -61,6 +67,13 @@
                                             <span class="mt-3 mb-0 badge bg-muted h6 text-uppercase">
                                                 {{ $candidate->student->group->name }}
                                             </span>
+                                            @if(!is_null($candidate->number))
+                                            <div class="mt-3">
+                                                <div class="align-items-center bg-light d-flex justify-content-center rounded-circle sh-10 sw-10 text-white" style="background-color: {{ $candidate->color }} !important">
+                                                    <span class="display-4">{{ $candidate->number }}</span>
+                                                </div>
+                                            </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

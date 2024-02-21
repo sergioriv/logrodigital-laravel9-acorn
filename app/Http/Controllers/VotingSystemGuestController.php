@@ -32,7 +32,7 @@ class VotingSystemGuestController extends Controller
 
         $Y = SchoolYearController::available_year();
 
-        $student = Student::select('id')->where('document', $request->document)->first();
+        $student = Student::select('id', 'document', 'first_name', 'second_name', 'first_last_name', 'second_last_name')->where('document', $request->document)->first();
         $myVotes = VotingStudent::whereHas(
             'voting',
             fn ($vt) => $vt->where('school_year_id', $Y->id)
@@ -84,7 +84,7 @@ class VotingSystemGuestController extends Controller
         // return $voting;
 
         return view('logro.voting.voting-card', [
-            'document' => $request->document,
+            'student' => $student,
             'countVoting' => $countVoting,
             'voting' => $voting
         ]);
