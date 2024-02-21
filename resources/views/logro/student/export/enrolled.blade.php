@@ -282,6 +282,17 @@
                                 </label>
                             </div>
                         </div>
+
+                        <!-- Tutor -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[enrolled_date]"
+                                        value="1">
+                                    Fecha de matrícula
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     <hr>

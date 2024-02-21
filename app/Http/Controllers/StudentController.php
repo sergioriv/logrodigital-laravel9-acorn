@@ -1503,7 +1503,8 @@ class StudentController extends Controller
             'neighborhood' => $request->has('columns.neighborhood'),
             'sisben' => $request->has('columns.sisben'),
             'health_manager' => $request->has('columns.health_manager'),
-            'tutor' => $request->has('columns.tutor')
+            'tutor' => $request->has('columns.tutor'),
+            'enrolled_date' => $request->has('columns.enrolled_date')
         ];
 
         return Excel::download(new StudentsEnrolledExport($attributes, $request), __('enrolled') . '.xlsx');

@@ -103,8 +103,9 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
                 array_push($row, $student->myTutorIs?->name);
                 array_push($row, $student->myTutorIs?->telephone ?: $student->myTutorIs?->cellphone);
                 array_push($row, $student->myTutorIs?->email);
-
             }
+            if ($this->attributes['enrolled_date'])
+                array_push($row, $student->enrolled_date);
 
 
             array_push($array, $row);
@@ -172,6 +173,8 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
             array_push($titles, "Teléfono del acudiente");
             array_push($titles, "Correo del acudiente");
         }
+        if ($this->attributes['enrolled_date'])
+            array_push($titles, "Fecha de matrícula");
 
 
         return $titles;
