@@ -19,6 +19,12 @@
                 $("#votingStarted").modal('show');
             }
         });
+
+        let showCandidateModal = $('#showCandidateModal');
+        function showCandidate(vt_id) {
+            showCandidateModal.find('voting-show-id').val(vt_id);
+            showCandidateModal.modal('show');
+        }
     </script>
 @endsection
 
@@ -46,7 +52,10 @@
                         <div class="card border border-light">
                             <div class="card-body text-center position-relative">
                                 <div class="display-5">{{ $vt->title }}</div>
-                                <div class="mt-2 h3 m-0">{{ $vt->candidates_count }}</div>
+                                <div class="mt-2 h3 m-0">
+                                    <span class="text-primary cursor-pointer" title="ver candidatos" data-bs-toggle="modal"
+                                        data-bs-target="#showCandidateModal-{{ $vt->id }}">{{ $vt->candidates_count }}</a>
+                                </div>
                                 <div>Candidatos</div>
                                 <div class="mt-3 h3 m-0">
 
@@ -88,6 +97,56 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal fade" id="showCandidateModal-{{ $vt->id }}" data-bs-backdrop="static"
+                    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ __('Candidates') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <form action="{{ route('voting.update-info-candidates', $vt->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+
+                                <div class="modal-body text-center">
+
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Candidato</th>
+                                                <th>Número</th>
+                                                <th>Color</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($vt->candidates as $candidate)
+                                            <tr class="">
+                                                <td class="align-middle text-start">{{ $candidate->student->getCompleteNames() }}</td>
+                                                <td>
+                                                    <input type="number" min="0" max="9999" class="form-control" name="candidates[{{$candidate->id}}][number]" value="{{ $candidate->number }}">
+                                                </td>
+                                                <td>
+                                                    <input type="color" class="form-control sh-0" name="candidates[{{$candidate->id}}][color]" value="{{ $candidate->color }}">
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger"
+                                        data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        {{ __('Save') }}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 @endforeach
 
             </div>

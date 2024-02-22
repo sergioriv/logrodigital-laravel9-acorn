@@ -514,6 +514,7 @@ Route::middleware('active_plataform')->group(function () {
             Route::get('voting/{voting}/report', 'report')->name('voting.report');
             Route::patch('voting/{voting}/report', 'finish')->name('voting.finish');
             Route::get('voting/{voting}/students', 'download_students')->name('voting.download.students');
+            Route::put('voting/{voting}', 'update_info_candidates')->name('voting.update-info-candidates');
         });
 
 

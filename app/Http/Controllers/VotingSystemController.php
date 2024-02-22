@@ -251,4 +251,23 @@ class VotingSystemController extends Controller
 
         return Excel::download(new VotingStudents($voting, $students), $voting->title . ' - estudiantes' . '.xlsx');
     }
+
+    public function update_info_candidates(Request $request, Voting $voting)
+    {
+        $request->validate([
+            'candidates' => 'required|array'
+        ]);
+
+        foreach($request->get('candidates') as $key => $candidate) {
+
+            \App\Models\VotingCandidate::where('voting_id', $voting->id)->where('id', $key)->update([
+                'number' => $candidate['number'],
+                'color' => $candidate['color']
+            ]);
+
+        }
+
+        Notify::success('Candidatos actualizados');
+        return redirect()->route('voting.index');
+    }
 }
