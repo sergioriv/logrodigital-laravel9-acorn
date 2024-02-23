@@ -26,8 +26,8 @@ class VotingSystemController extends Controller
 
     public function __construct()
     {
-        $this->middleware('hasroles:SUPPORT,TEACHER')->except('addUser','removeUser');
-        $this->middleware('hasroles:SUPPORT,TEACHER,COORDINATOR')->only('addUser','removeUser');
+        $this->middleware('hasroles:SUPPORT,SECRETARY')->except('addUser','removeUser');
+        $this->middleware('hasroles:SUPPORT,SECRETARY,COORDINATOR')->only('addUser','removeUser');
     }
 
     public function index()
