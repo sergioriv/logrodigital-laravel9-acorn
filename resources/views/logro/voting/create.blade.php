@@ -110,26 +110,39 @@
                         <div class="row g-3">
 
                             <!-- Headquarters -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="w-100 position-relative form-group">
                                     <x-label class="h5" required>{{ __('Headquarters') }}</x-label>
                                     <x-select multiple name="headquarters[]" logro="select2" :hasError="'headquarters'">
                                         <option label="&nbsp;"></option>
                                         @foreach ($headquarters as $hq)
-                                            <option value="{{ $hq->id }}">{{ $hq->name }}</option>
+                                            <option selected value="{{ $hq->id }}">{{ $hq->name }}</option>
+                                        @endforeach
+                                    </x-select>
+                                </div>
+                            </div>
+
+                            <!-- Study Times -->
+                            <div class="col-md-4">
+                                <div class="w-100 position-relative form-group">
+                                    <x-label class="h5" required>{{ __('Study times') }}</x-label>
+                                    <x-select multiple name="study_times[]" logro="select2" :hasError="'study_times'">
+                                        <option label="&nbsp;"></option>
+                                        @foreach ($studyTimes as $st)
+                                            <option selected value="{{ $st->id }}">{{ $st->name }}</option>
                                         @endforeach
                                     </x-select>
                                 </div>
                             </div>
 
                             <!-- Study Years -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="w-100 position-relative form-group">
                                     <x-label class="h5" required>{{ __('Study years') }}</x-label>
                                     <x-select multiple name="study_years[]" logro="select2" :hasError="'study_years'">
                                         <option label="&nbsp;"></option>
                                         @foreach ($studyYears as $sy)
-                                            <option value="{{ $sy->id }}">{{ $sy->name }}</option>
+                                            <option selected value="{{ $sy->id }}">{{ $sy->name }}</option>
                                         @endforeach
                                     </x-select>
                                 </div>

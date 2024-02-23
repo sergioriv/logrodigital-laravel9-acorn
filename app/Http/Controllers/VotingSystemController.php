@@ -8,6 +8,7 @@ use App\Http\Controllers\support\UserController;
 use App\Models\Group;
 use App\Models\Headquarters;
 use App\Models\Student;
+use App\Models\StudyTime;
 use App\Models\StudyYear;
 use App\Models\Teacher;
 use App\Models\Voting;
@@ -63,6 +64,7 @@ class VotingSystemController extends Controller
                 ->where('enrolled', 1)
                 ->get(),
             'headquarters' => Headquarters::all(),
+            'studyTimes' => StudyTime::all(),
             'studyYears' => StudyYear::all()
         ]);
     }
@@ -73,6 +75,7 @@ class VotingSystemController extends Controller
             'name' => ['required', 'string', 'max:191'],
             'candidates' => ['required', 'array'],
             'headquarters' => ['required', 'array'],
+            'study_times' => ['required', 'array'],
             'study_years' => ['required', 'array'],
         ]);
 
@@ -80,6 +83,7 @@ class VotingSystemController extends Controller
 
         $groups = Group::where('school_year_id', $Y->id)
             ->whereIn('headquarters_id', $request->headquarters)
+            ->whereIn('study_time_id', $request->study_times)
             ->whereIn('study_year_id', $request->study_years)
             ->whereHas('groupStudents')
             ->whereNull('specialty')
