@@ -947,7 +947,7 @@ class StudentController extends Controller
             $studentGradesxGroup = GradeController::studentGrades($Y, $student);
         }
 
-        $teacherIsDirector = $student->group->teacher_id === Auth::id();
+        $teacherIsDirector = $student->group->teacher_id === Auth::id() || Auth::user()->hasRole('VOTING_COORDINATOR');
 
         return view('logro.student.profile-view', [
             'student' => $student,
