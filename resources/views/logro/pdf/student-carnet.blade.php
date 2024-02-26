@@ -154,6 +154,9 @@
                                     </div>
                                     <div class="text-uppercase mt-2 f-size-11 bold">
                                         {{ $student->group->name }}
+                                        @if ($student->group_specialty_id)
+                                            <br>{{ $student->groupSpecialty->name }}
+                                        @endif
                                     </div>
                                     <div class="text-uppercase bold f-size-5">
                                         {{ $student->headquarters->name }}
