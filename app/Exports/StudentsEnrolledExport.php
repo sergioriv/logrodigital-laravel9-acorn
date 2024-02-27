@@ -41,6 +41,7 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
 
         $students = Student::withWhereHas('groupYear', $fn_gs)
         ->when($this->request->has('inclusive'), function ($inclusive) { $inclusive->where('inclusive', TRUE); })
+        ->when($this->request->has('repeats'), function ($repeats) { $repeats->where('status', 'repeat'); })
         ->get();
 
         $array = [];

@@ -283,7 +283,7 @@
                             </div>
                         </div>
 
-                        <!-- Tutor -->
+                        <!-- Enrolled Date -->
                         <div class="position-relative form-group">
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label logro-label">
@@ -297,7 +297,13 @@
 
                     <hr>
 
-                    <div class="mt-3">
+                    <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6">
+                        <!-- Repeats -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="repeats" name="repeats" value="1" />
+                            <label class="form-check-label" for="repeats">Solo estudiantes repitentes</label>
+                        </div>
+
                         <!-- Inclusive -->
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="inclusive" name="inclusive" value="1" />
