@@ -48,8 +48,8 @@
                         <i data-acorn-icon="lock-off"></i>
                         <x-input id="password" class="pe-7" type="password" name="password" :placeholder="__('Password')" required
                             autocomplete="current-password" />
-                        <a class="text-small position-absolute t-3 e-3"
-                            href="{{ route('password.request') }}">{{ __('Forgot') }}?</a>
+                        <a class="text-small badge bg-pink position-absolute t-3 e-3"
+                            href="{{ route('password.request') }}">{{ __('Forgot your password?') }}</a>
                     </div>
 
                     <!-- Remember Me -->

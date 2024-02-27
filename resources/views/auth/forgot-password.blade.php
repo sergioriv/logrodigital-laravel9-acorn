@@ -27,7 +27,7 @@ $description = 'Forgot Password Page'
             <h2 class="cta-1 text-primary">{{ __("Password is gone?") }}</h2>
         </div>
         <div class="mb-5">
-            <p class="h6">{{ __("Please enter your email to receive a link to reset your password.") }}</p>
+            <p class="h6">{{ __("Enter your registered email address to the platform to receive a link to reset your password.") }}</p>
             <p class="h6">
                 <a href="/">{{ __("Go Home") }}</a>
             </p>
