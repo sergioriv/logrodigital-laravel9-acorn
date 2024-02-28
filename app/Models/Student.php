@@ -165,7 +165,7 @@ class Student extends Model
         return ['Public', 'Private'];
     }
 
-    public function retiredStudent() { return $this->hasOne(RetiredStudent::class, 'student_id', 'id')->first(); }
+    public function retiredStudent() { return $this->hasOne(RetiredStudent::class, 'student_id', 'id'); }
 
     public function user()
     {

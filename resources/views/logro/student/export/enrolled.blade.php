@@ -309,6 +309,12 @@
                             <input class="form-check-input" type="checkbox" id="inclusive" name="inclusive" value="1" />
                             <label class="form-check-label" for="inclusive">Solo estudiantes inclusivos</label>
                         </div>
+
+                        <!-- Retired -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="retired" name="retired" value="1" />
+                            <label class="form-check-label" for="retired">Solo estudiantes retirados</label>
+                        </div>
                     </div>
 
                 </div>

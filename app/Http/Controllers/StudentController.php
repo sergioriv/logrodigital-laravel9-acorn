@@ -1510,7 +1510,8 @@ class StudentController extends Controller
             'enrolled_date' => $request->has('columns.enrolled_date')
         ];
 
-        return Excel::download(new StudentsEnrolledExport($attributes, $request), __('enrolled') . '.xlsx');
+        $fileName = !$request->has('retired') ? __('enrolled') : 'retirados';
+        return Excel::download(new StudentsEnrolledExport($attributes, $request), $fileName . '.xlsx');
     }
 
     public function import()

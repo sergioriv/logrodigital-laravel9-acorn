@@ -197,10 +197,10 @@
                         </div>
 
                         @if ($student->isRetired())
-                        @if ($student->retiredStudent())
+                        @if ($student->retiredStudent)
                         <div class="d-flex flex-column mb-3">
-                            <text class="text-muted text-small">Retirado por: {{ $student->retiredStudent()->creatorName() }}</text>
-                            <text class="text-muted text-small">{{ $student->retiredStudent()->created_at }}</text>
+                            <text class="text-muted text-small">Retirado por: {{ $student->retiredStudent->creatorName() }}</text>
+                            <text class="text-muted text-small">{{ $student->retiredStudent->created_at }}</text>
                         </div>
                         @endif
                         @endif

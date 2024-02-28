@@ -39,7 +39,16 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
                         ->whereIn('study_year_id', $this->request->study_year)
             );
 
-        $students = Student::withWhereHas('groupYear', $fn_gs)
+        $students = Student::when(
+            $this->request->has('retired'),
+                function ($retired) {
+                    $retired->whereHas('retiredStudent', fn($rs) => $rs->where('created_at', 'like', $this->Y->name.'%'))
+                        ->whereIn('headquarters_id', $this->request->headquarters)
+                        ->whereIn('study_time_id', $this->request->study_time)
+                        ->whereIn('study_year_id', $this->request->study_year);
+                }, function ($enrolled) use ($fn_gs) {
+                    $enrolled->withWhereHas('groupYear', $fn_gs);
+                })
         ->when($this->request->has('inclusive'), function ($inclusive) { $inclusive->where('inclusive', TRUE); })
         ->when($this->request->has('repeats'), function ($repeats) { $repeats->where('status', 'repeat'); })
         ->get();
@@ -51,12 +60,12 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
             $row = [];
 
             if ($this->attributes['headquarters'])
-                array_push($row, $student->groupYear->group->headquarters->name);
+                !$this->request->has('retired') ? array_push($row, $student->groupYear->group->headquarters->name) : array_push($row, $student->headquarters->name);
             if ($this->attributes['study_time'])
-                array_push($row, $student->groupYear->group->studyTime->name);
+                !$this->request->has('retired') ? array_push($row, $student->groupYear->group->studyTime->name) : array_push($row, $student->studyTime->name);
             if ($this->attributes['study_year'])
-                array_push($row, $student->groupYear->group->studyYear->name);
-            if ($this->attributes['group'])
+                !$this->request->has('retired') ? array_push($row, $student->groupYear->group->studyYear->name) : array_push($row, $student->studyYear->name);
+            if ($this->attributes['group'] && !$this->request->has('retired'))
                 array_push($row, $student->groupYear->group->name);
 
             array_push($row,
@@ -125,7 +134,7 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
             array_push($titles, "Jornada");
         if ($this->attributes['study_year'])
             array_push($titles, "Año de estudio");
-        if ($this->attributes['group'])
+        if ($this->attributes['group'] && !$this->request->has('retired'))
             array_push($titles, "Grupo");
 
         array_push($titles,
