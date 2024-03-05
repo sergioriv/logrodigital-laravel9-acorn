@@ -723,7 +723,11 @@ class GroupController extends Controller
 
     public function exportStudentsWithFiles(Group $group)
     {
-        $studentsGroup = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $group->id))
+        $Y = SchoolYearController::current_year();
+
+        $studentsGroup = Student::singleData()
+        ->when($Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
+        ->whereHas('groupYear', fn($gr) => $gr->where('group_id', $group->id))
                 ->get();
 
         return Excel::download(new StudentsWithFiles($studentsGroup), __('Information From Students in Group :GROUP', ['GROUP' => $group->name]) . '.xlsx');

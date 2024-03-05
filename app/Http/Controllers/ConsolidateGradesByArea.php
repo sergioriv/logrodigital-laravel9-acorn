@@ -64,7 +64,10 @@ class ConsolidateGradesByArea extends Controller
         $this->SY = $group->studyYear;
         $this->ST = $group->studyTime;
 
-        $students = Student::singleData()->whereHas('groupYear', fn ($gr) => $gr->where('group_id', $group->id))->get();
+        $students = Student::singleData()
+        ->when($this->Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
+        ->whereHas('groupYear', fn ($gr) => $gr->where('group_id', $group->id))
+        ->get();
         $studentsIDS = $students->pluck('id')->toArray();
 
         $groupsSpecialty = Group::where('school_year_id', $this->Y->id)
@@ -254,7 +257,9 @@ class ConsolidateGradesByArea extends Controller
                 ->where('study_time_id', $ST->id)
                 ->get()->pluck('id')->toArray();
 
-        $students = Student::singleData()->withWhereHas('groupYear', function ($gy) use ($studyYear, $ST) {
+        $students = Student::singleData()
+        ->when($this->Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
+        ->withWhereHas('groupYear', function ($gy) use ($studyYear, $ST) {
             $gy->whereHas('group', function ($g) use ($studyYear, $ST) {
                 $g->whereNull('specialty')->where('school_year_id', $this->Y->id)->where('study_year_id', $studyYear->id)->where('study_time_id', $ST->id);
             });

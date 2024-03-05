@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Http\Controllers\SchoolYearController;
 use App\Models\Student;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -23,11 +24,15 @@ class GroupStudentListGradesInstructive implements FromArray, ShouldAutoSize, Wi
      */
     public function array(): array
     {
+        $Y = SchoolYearController::current_year();
         $array = [
             ['codigo', 'nombres', 'nota']
         ];
 
-        $studentsGroup = Student::select('id', 'code', 'first_name', 'second_name', 'first_last_name', 'second_last_name')->whereHas('groupYear', fn($gr) => $gr->where('group_id', $this->group->id))->get();
+        $studentsGroup = Student::select('id', 'code', 'first_name', 'second_name', 'first_last_name', 'second_last_name')
+        ->when($Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
+        ->whereHas('groupYear', fn($gr) => $gr->where('group_id', $this->group->id))
+        ->get();
         foreach ($studentsGroup as $student) {
             array_push($array, [$student->code, $student->getCompleteNames()]);
         }
