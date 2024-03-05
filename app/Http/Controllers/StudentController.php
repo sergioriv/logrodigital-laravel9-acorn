@@ -657,6 +657,7 @@ class StudentController extends Controller
             'status',
             'inclusive'
         )
+        ->when($Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
             ->whereHas('groupYear', $fn_gs)
             ->with(['groupYear' => $fn_gs])
             ->get();

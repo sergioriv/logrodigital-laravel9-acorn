@@ -24,16 +24,19 @@ class GroupStudentListGuide implements WithColumnWidths, WithEvents
 
     public function __construct(TeacherSubjectGroup $tsg)
     {
+        $currentYear = SchoolYearController::current_year();
         $school = SchoolController::myschool();
 
         static::$GROUP = $tsg->group;
         static::$TSG = $tsg;
 
         static::$title = $school->name() .' - SEDE '. $tsg->group->headquarters->name .' - JORNADA '. $tsg->group->studyTime->name;
-        static::$subTitle = 'PLANILLA DE NOTAS ' . SchoolYearController::current_year()->name;
+        static::$subTitle = 'PLANILLA DE NOTAS ' . $currentYear->name;
 
-        static::$students = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $tsg->group->id))
-        ->get();
+        static::$students = Student::singleData()
+            ->when($currentYear->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
+            ->whereHas('groupYear', fn($gr) => $gr->where('group_id', $tsg->group->id))
+            ->get();
     }
 
     public function columnWidths(): array

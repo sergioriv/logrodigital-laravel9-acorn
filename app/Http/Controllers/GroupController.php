@@ -227,7 +227,9 @@ class GroupController extends Controller
         $roleAuth = UserController::role_auth();
 
 
-        $studentsGroup = Student::singleData()->whereHas(
+        $studentsGroup = Student::singleData()
+        ->when($Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
+        ->whereHas(
                 'groupYear', fn($gr) => $gr->where('group_id', $group->id)
             )
             ->when(

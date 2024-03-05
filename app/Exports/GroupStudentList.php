@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Http\Controllers\SchoolYearController;
 use App\Models\Student;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -33,6 +34,7 @@ class GroupStudentList implements FromArray, WithColumnWidths, WithStyles, WithE
      */
     public function array(): array
     {
+        $Y = SchoolYearController::current_year();
         $array = [
             [__('Group') .': '. $this->group->name],
             [__('export.headquarters') .': '. $this->group->headquarters->name .' | '. __('export.study_time') .': '. $this->group->studyTime->name .' | '. __('export.study_year') .': '. $this->group->studyYear->name ],
@@ -40,7 +42,10 @@ class GroupStudentList implements FromArray, WithColumnWidths, WithStyles, WithE
             ['#', __('Full name')]
         ];
 
-        $studentsGroup = Student::singleData()->whereHas('groupYear', fn($gr) => $gr->where('group_id', $this->group->id))->get();
+        $studentsGroup = Student::singleData()
+            ->when($Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
+            ->whereHas('groupYear', fn($gr) => $gr->where('group_id', $this->group->id))
+            ->get();
         foreach ($studentsGroup as $i => $student) {
             array_push($array, [++$i, $student->getCompleteNames()]);
         }

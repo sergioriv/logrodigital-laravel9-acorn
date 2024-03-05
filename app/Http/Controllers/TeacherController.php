@@ -354,6 +354,7 @@ class TeacherController extends Controller
         $studyTime = $subject->group->studyTime;
 
         $studentsGroup = Student::singleData()
+            ->when($Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
             ->whereHas(
                 'groupYear', fn ($gr) => $gr->where('group_id', $subject->group_id)
             )->when($studyYear->useGrades(), function ($query) use ($subject, $studyTime) {

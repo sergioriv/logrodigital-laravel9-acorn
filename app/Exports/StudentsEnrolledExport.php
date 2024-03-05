@@ -49,6 +49,7 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
                 }, function ($enrolled) use ($fn_gs) {
                     $enrolled->withWhereHas('groupYear', $fn_gs);
                 })
+        ->when($this->Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
         ->when($this->request->has('inclusive'), function ($inclusive) { $inclusive->where('inclusive', TRUE); })
         ->when($this->request->has('repeats'), function ($repeats) { $repeats->where('status', 'repeat'); })
         ->get();
