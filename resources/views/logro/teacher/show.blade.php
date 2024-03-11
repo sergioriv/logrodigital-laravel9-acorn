@@ -121,6 +121,14 @@
                                         </x-dropdown-item>
                                     </form>
                                 @endif
+
+                                @hasanyrole('SUPPORT|SECRETARY')
+                                <div class="dropdown-divider"></div>
+                                <x-dropdown-item type="button" data-bs-toggle="modal" data-bs-target="#mutateUser">
+                                    <i data-acorn-icon="login" class="me-1"></i>
+                                    <span>{{ __('Login') }}</span>
+                                </x-dropdown-item>
+                                @endhasanyrole
                             </div>
                         </div>
                     </div>
@@ -799,6 +807,34 @@
             </div>
         </div>
         <!-- Modal Restore Password End -->
+
+        <!-- Modal Mutate User Start -->
+        <div class="modal fade" id="mutateUser" aria-labelledby="modalMutateUser" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Login') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>
+                            ¿Está seguro de iniciar sesión como <strong>{{ $teacher->getFullName() }}</strong>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ route('teacher.mutate', $teacher) }}" method="POST">
+                            @csrf
+                            <button type="button" class="btn btn-danger"
+                                data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                            <button type="submit" class="btn btn-outline-primary">
+                                {{ __('Login') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Mutate User End -->
     @endhasanyrole
 
 @hasanyrole('SUPPORT|COORDINATOR')

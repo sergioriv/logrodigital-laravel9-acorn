@@ -46,6 +46,7 @@ class TeacherController extends Controller
         $this->middleware('can:teachers.index')->only('show');
         $this->middleware('can:teachers.import')->only('export', 'export_instructive', 'import', 'import_store');
         $this->middleware(OnlyTeachersMiddleware::class)->only('profile', 'profile_update', 'mysubjects', 'mysubjects_show', 'subjects', 'myDirectorGroup', 'attendanceLimitWeek');
+        $this->middleware('hasroles:SUPPORT,SECRETARY')->only('mutateUser');
     }
 
     public function index()
@@ -599,5 +600,13 @@ class TeacherController extends Controller
     {
         session()->flash('tab', 'permits');
         return redirect()->route('teacher.show', $teacher);
+    }
+
+
+    /* Has Roles: SUPPORT, SECRETARY */
+    public function mutateUser(Teacher $teacher)
+    {
+        Auth::login(\App\Models\User::find($teacher->id));
+        return redirect()->route('dashboard');
     }
 }

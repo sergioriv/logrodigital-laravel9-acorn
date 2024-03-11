@@ -187,6 +187,8 @@ Route::middleware('active_plataform')->group(function () {
         Route::controller(TeacherController::class)->group( function () {
             Route::get('teachers/export', 'export')->name('teacher.export');
             Route::get('teachers/instructive', 'export_instructive')->name('teachers.instructive');
+
+            Route::post('teachers/{teacher}/mutate', 'mutateUser')->name('teacher.mutate');
         });
         Route::resource('teachers', TeacherController::class)->except('destroy','edit','update')->names('teacher');
         // Route::post('teachers/{teacher}/permit', [TeacherPermitController::class, 'store'])->name('teachers.permits.store');
