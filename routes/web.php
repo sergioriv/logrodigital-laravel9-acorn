@@ -204,8 +204,6 @@ Route::middleware('active_plataform')->group(function () {
 
         Route::post('add-permit', [PermitController::class, 'store'])->name('add-permit');
 
-
-
         /* Route Secretariat */
         Route::resource('secretariat', SecretariatController::class)->only('index', 'create','store')->names('secreatariat');
 
@@ -470,6 +468,21 @@ Route::middleware('active_plataform')->group(function () {
             Route::get('other-options/type-permission', 'create');
             Route::post('other-options/type-permission', 'store')->name('type-permission.store');
             Route::put('other-options/type-permissions/{typePermission}', 'update')->name('type-permission.update');
+        });
+        Route::get('no-attendance', function () {
+            $query = \App\Models\TeacherSubjectGroup::withWhereHas('group', fn($groupQuery) => $groupQuery->select('id','school_year_id', 'name')->where('school_year_id', \App\Http\Controllers\SchoolYearController::current_year()->id))
+                ->whereDoesntHave('attendances')
+                ->with('teacher:id,names,last_names', 'subject:id,resource_subject_id', 'subject.resourceSubject:id,public_name')
+                ->cursor();
+
+            return $query->map(function ($tsg) {
+                return [
+                    'id' => $tsg->id,
+                    'group_name' => $tsg->group->name,
+                    'teacher_name' => $tsg->teacher->getFullName(),
+                    'subject_name' => $tsg->subject->resourceSubject->public_name
+                ];
+            });
         });
 
 
