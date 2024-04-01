@@ -44,7 +44,7 @@ class DashboardController extends Controller
         return view('dashboard.teacher', [
             'alertsStudents' => UserAlertController::myAlerts(),
             'alertPermits' => $alertPermits,
-            'typePermit' => TypePermitsTeacher::all()
+            'typePermit' => TypePermitsTeacher::orderBy('name')->get()
         ]);
     }
 
@@ -67,7 +67,7 @@ class DashboardController extends Controller
             'alertsStudents' => UserAlertController::myAlerts(),
             'alertPermits' => $alertPermits,
             'pendingStudents' => $pendingStudents,
-            'typePermit' => TypePermitsTeacher::all()
+            'typePermit' => TypePermitsTeacher::orderBy('name')->get()
         ]);
     }
 
@@ -92,7 +92,7 @@ class DashboardController extends Controller
             'alertsStudents' => UserAlertController::myAlerts(),
             'alertPermits' => $alertPermits,
             'remitPending' => $remitPending,
-            'typePermit' => TypePermitsTeacher::all()
+            'typePermit' => TypePermitsTeacher::orderBy('name')->get()
         ]);
     }
 
