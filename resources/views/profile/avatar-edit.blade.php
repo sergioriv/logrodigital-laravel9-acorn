@@ -39,8 +39,11 @@
                         <div class="card mb-5">
                             <div class="card-body text-center">
                                 <div class='position-relative d-inline-block' id="imageProfile">
-                                    <img src="@if (NULL !== $user->avatar) {{ config('app.url') .'/'. $user->avatar }}
-                                        @else {{ config('app.url') .'/img/other/profile-11.webp' }} @endif"
+                                    @php
+                                        if (!is_null($user->avatar) && file_exists($user->avatar)) $avatar = config('app.url') .'/'. $user->avatar;
+                                        else $avatar = config('app.url') .'/img/other/profile-11.webp';
+                                    @endphp
+                                    <img src="{{ $avatar }}"
                                         alt="alternate text" class="rounded-xl border border-separator-light border-4 sw-30 sh-30" />
                                     <button class="btn btn-sm btn-icon btn-icon-only btn-separator-light rounded-xl position-absolute e-0 b-0" type="button">
                                         <i data-acorn-icon="upload"></i>

@@ -1,6 +1,6 @@
 @props(['avatar','inclusive' => null])
 
-@if (NULL !== $avatar)
+@if (!is_null($avatar) && file_exists($avatar))
     @php
         $avatar = config('app.url') .'/'. $avatar;
     @endphp
