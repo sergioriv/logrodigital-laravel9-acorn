@@ -1874,7 +1874,7 @@ class StudentController extends Controller
         $pdf->setPaper('letter', 'portrait');
         $pdf->setOption('dpi', 72);
 
-        return $pdf->stream('Constancia - '. $student->getFullName() .'.pdf');
+        return $pdf->download('Constancia - '. $student->getFullName() .'.pdf');
     }
 
     private function pdfObservationsGenerate($student)
