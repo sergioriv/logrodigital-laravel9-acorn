@@ -263,7 +263,7 @@
 
     "Additional info": "Información adicional",
     "document header": "cabecera de documentos",
-    "footer study certificate": "pie de página certificado de estudio",
+    "footer study certificate": "pie de página constancia de estudio",
     "Additional info updated!": "Información adicional actualizada!",
 
     "Password is gone?": "¿Ha olvidado la contraseña?",
@@ -604,10 +604,9 @@
     "Hierarchy": "Escalafón",
     "Info Rector updated!": "Información del Rector actualizada!",
     "Signature Rector": "Firma del Rector",
-    "Download certificate study": "Descargar certificado de estudio",
+    "Download certificate study": "Descargar constancia de estudio",
     "Info Rector": "Información del Rector",
     "Rector name": "Nombre del Rector",
-    "Certificate": "Certificado",
     "Export students": "Exportar estudiantes",
     "Select the columns you want to generate": "Seleccione las columnas que desea generar",
     "age": "edad",
