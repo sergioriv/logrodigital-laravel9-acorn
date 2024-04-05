@@ -1688,11 +1688,12 @@ class StudentController extends Controller
         if ($student->enrolled) $group = $student->group;
         else $group = Group::whereHas('groupStudents', fn($gs) => $gs->where('student_id', $student->id))->where('school_year_id', $Y->id)->where('specialty', NULL)->first();
 
-        if ($group) return $this->pdfCertificateGenerate($student, $group);
-        else {
+        if (!$group) {
             Notify::fail(__('El estudiante no ha sido matriculado en el año lectivo'));
             return back();
         }
+
+        return $this->pdfCertificateGenerate($student, $group);
     }
 
     public function pdf_observations(Student $student = null)
@@ -1851,18 +1852,29 @@ class StudentController extends Controller
     private function pdfCertificateGenerate($student, $group)
     {
         $SCHOOL = SchoolController::myschool()->getData();
-        $date = Carbon::now();
+
+        $hourlyIntensity = \App\Models\AcademicWorkload::where('school_year_id', $group->school_year_id)->where('study_year_id', $group->study_year_id)
+        ->whereHas('subject', function ($subjectQuery) use ($student) {
+            $subjectQuery->when( !$student->group_specialty_id, function ($whenNotSpecialty) {
+                $whenNotSpecialty->whereHas('resourceSubject', fn($rs) => $rs->whereNull('specialty'));
+            }, function ($whenHaveSpecialty) use ($student) {
+                $whenHaveSpecialty
+                    ->whereHas('resourceSubject', fn($rs) => $rs->whereNull('specialty'))
+                    ->orWhere('resource_area_id', $student->groupSpecialty->specialty_area_id);
+            } );
+        })
+        ->sum('hours_week');
 
         $pdf = Pdf::loadView('logro.pdf.student-certificate', [
             'SCHOOL' => $SCHOOL,
-            'date' => $date,
             'student' => $student,
-            'group' => $group
+            'group' => $group,
+            'hourlyIntensity' => $hourlyIntensity
         ]);
         $pdf->setPaper('letter', 'portrait');
         $pdf->setOption('dpi', 72);
 
-        return $pdf->download(__('Certificate') .' - '. $student->getFullName() .'.pdf');
+        return $pdf->stream('Constancia - '. $student->getFullName() .'.pdf');
     }
 
     private function pdfObservationsGenerate($student)

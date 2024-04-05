@@ -16,3 +16,10 @@ if (! function_exists('imgBase64')) {
         return 'data:image/' . $extencion . ';base64,' . $img_base_64;
     }
 }
+
+if (! function_exists('dateInLetters')) {
+    function dateInLetters(\Datetime $date = null) {
+        if (is_null($date)) $date = Carbon\Carbon::now();
+        return $date->format('j') . ' dias del mes de ' . \App\Consts::mounthshortText($date->format('n')) . ' de ' . $date->format('Y');
+    }
+}

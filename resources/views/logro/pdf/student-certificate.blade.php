@@ -87,7 +87,7 @@
         }
 
         .t-title {
-            font-size: 8px;
+            font-size: 10px;
             text-transform: uppercase;
         }
 
@@ -270,53 +270,40 @@
 
 
     <table class="table header" border="0">
-        @if ($SCHOOL->badge)
-            <tr>
-                <td class="text-center align-sub">
-                    <div class="h-70p">
-                        <img class="badge" src="{{ imgBase64($SCHOOL->badge) }}" alt="badge">
-                    </div>
-                </td>
-            </tr>
-        @endif
         <tr>
+            @if ($SCHOOL->badge)
+            <td class="h-70p w-70p text-center align-sub">
+                <img class="badge" src="{{ imgBase64($SCHOOL->badge) }}" alt="badge">
+            </td>
+            @endif
             <td class="t-center p-se-1">
-                <p class="bold">
+                <p class="t-title bold">
                     {{ $SCHOOL->name ?? null }}
                 </p>
-                <p class="f-size-8">
-                    {!! \App\Models\HeadersAndFooters::first()->headerDocsHtml() !!}
-                    @if (!is_null($SCHOOL->dane))
-                    <br />
-                    DANE {{ $SCHOOL->dane }}
-                    @endif
-                </p>
+                <p class="f-size-8">{!! \App\Models\HeadersAndFooters::first()->headerDocsHtml() !!}</p>
             </td>
         </tr>
     </table>
 
     <section class="content pt-6">
-        <div class="text-center bold">
-            EL SUSCRITO RECTOR/A DE LA INSTITUCIÓN
+        <div class="text-center bold" style="text-transform: uppercase">
+            <span>EL SUSCRITO RECTOR/A DE LA INSTITUCIÓN</span>
             <br />
-            {{ $SCHOOL->name ?? null }}
+            <span>{{ $SCHOOL->name ?? null }}</span>
             <br />
-            <div class="mt-10">CERTIFICA QUE:</div>
+            <div class="mt-10">HACE CONSTAR</div>
         </div>
 
         <div class="mt-10 text-justify">
-            El (La) Estudiante {{ $student->getCompleteNames() }},
-            identificado(a) con {{ $student->document_type_code ?? '_______' }} No.
-            {{ $student->document ?? '_______________________' }}
-            se encuentra matriculado(a) en esta Institución,
-            cursando {{ __($student->studyYear->resource->name) }}
+            Que, el (La) Estudiante <strong>{{ $student->getCompleteNames() }}</strong>,
+            identificado(a) con <strong>{{ $student->document_type_code ?? '_______' }} No. {{ $student->document ?? '_______________________' }}</strong>
+            se encuentra matriculado(a) en esta Institución, en la sede <strong>{{ $group->headquarters->name }}</strong>
+            cursando <strong>{{ $group->name }} de {{ __($group->studyYear->resource->type) }}</strong>
             durante el presente año lectivo {{ $group->schoolYear->name }},
-            en la sede {{ $student->headquarters->name }} jornada {{ $student->studyTime->name }} grupo
-            {{ $group->name }}.
+            con una intensidad horaria de {{ $hourlyIntensity }} horas semanales.
         </div>
         <div class="mt-2">
-            Se expide la presente certificación a los {{ $date->format('d') }} días del mes {{ $date->format('m') }}
-            de {{ $date->format('Y') }}, para sus trámites pertinentes.
+            Se expide la presente certificación a los {{ dateInLetters() }}, para sus trámites pertinentes.
         </div>
         <div class="mt-2 bold">
             Este certificado únicamente es válido con sello de secretaría.
