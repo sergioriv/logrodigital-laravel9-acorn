@@ -109,8 +109,8 @@
                                     @if ( (in_array('COORDINATOR', auth()->user()->getRoleNames()->toArray())
                                         ||
                                         auth()->id() === $observation->created_user_id)
-                                    &&
-                                    is_null($observation->free_version))
+                                        &&
+                                        is_null($observation->free_version))
                                         <div class="position-absolute text-alternate opacity-75 t-0 e-2">
 
                                             <div class="ms-1 dropstart">
@@ -121,9 +121,12 @@
                                                     <i data-acorn-icon="more-horizontal"></i>
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
-                                                    <x-dropdown-item type="button"
-                                                        data-observer="{{ $observation->id }}">
+                                                    <x-dropdown-item type="button" data-observer="{{ $observation->id }}">
                                                         <span>{{ __('Add disclaimers') }}</span>
+                                                    </x-dropdown-item>
+                                                    <div class="dropdown-divider"></div>
+                                                    <x-dropdown-item type="button" data-observer-delete="{{ $observation->id }}">
+                                                        <span class="text-danger">{{ __('Delete') }}</span>
                                                     </x-dropdown-item>
                                                 </div>
                                             </div>
@@ -141,12 +144,12 @@
     <!-- Table End -->
 
     <!-- Modal Add Disclaimers Start -->
-    <div class="modal fade modal-close-out" id="addDisclaimers" aria-labelledby="modalAddDisclaimers" data-bs-backdrop="static"
+    <div class="modal fade modal-close-out" id="addDisclaimers" aria-labelledby="modalAddDisclaimersLabel" data-bs-backdrop="static"
         data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ __('Add disclaimers') }}</h5>
+                    <h5 class="modal-title" id="modalAddDisclaimersLabel">{{ __('Add disclaimers') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -226,6 +229,39 @@
         </div>
     </div>
     <!-- Modal Add Observation End -->
+
+
+    <!-- Modal Delete Observation Start -->
+    <div class="modal fade modal-close-out" id="modalDeleteObservation" aria-labelledby="modalDeleteObservationLabel" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDeleteObservationLabel">{{ __('Eliminar observación') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form action="{{ route('students.observer.delete', $student) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+
+                    <input type="hidden" name="observationForDelete" id="observationForDelete" value="">
+
+                    <div class="modal-body">
+                        <p>¿Esta seguro/a de eliminar esta observación?</p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-outline-primary">{{ __('Delete') }}</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal Delete Observation End -->
 
 @endif
 

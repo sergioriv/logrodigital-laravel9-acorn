@@ -377,6 +377,7 @@ Route::middleware('active_plataform')->group(function () {
         Route::post('students/add-observation', [StudentObserverController::class, 'storeMultiple'])->name('students.observer.multiple');
         Route::post('student/{student}/add-observation', [StudentObserverController::class, 'store'])->name('students.observer.create');
         Route::put('student/{student}/add-disclaimers', [StudentObserverController::class, 'disclaimers'])->name('students.observer.disclaimers');
+        Route::delete('student/{student}/observation/delete', [StudentObserverController::class, 'delete'])->name('students.observer.delete');
 
 
         Route::put('persons-charge/{student}', [PersonChargeController::class, 'update'])->name('personsCharge');

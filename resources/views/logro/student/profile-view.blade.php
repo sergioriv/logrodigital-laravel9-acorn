@@ -26,10 +26,16 @@
         <script>
             jQuery("[data-observer]").click(function() {
                 let _observer = $(this).data('observer');
-
                 if (_observer) {
                     $("#observerDisclaimers").val(_observer);
                     $("#addDisclaimers").modal('show');
+                }
+            });
+            jQuery("[data-observer-delete]").click(function() {
+                let _observer = $(this).data('observer-delete');
+                if (_observer) {
+                    $("#observationForDelete").val(_observer);
+                    $("#modalDeleteObservation").modal('show');
                 }
             });
         </script>

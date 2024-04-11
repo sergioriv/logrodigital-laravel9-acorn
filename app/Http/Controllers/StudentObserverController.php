@@ -139,6 +139,35 @@ class StudentObserverController extends Controller
         };
     }
 
+    public function delete(Request $request, Student $student)
+    {
+        if ( !$request->has('observationForDelete') ) return back();
+
+        $observation = StudentObserver::where('student_id', $student->id)->where('id', $request->get('observationForDelete'))->first();
+        if ( !$observation ) {
+            Notify::success(__('Not allowed'));
+            $this->tab();
+            return back();
+        }
+
+        if ( (
+            RoleUser::COORDINATION_ROL !== UserController::role_auth()
+            && auth()->id() !== $observation->created_user_id
+        )
+            || ! is_null($observation->free_version)
+        ) {
+            Notify::fail(__('Not allowed'));
+            $this->tab();
+            return back();
+        }
+
+        $observation->delete();
+
+        Notify::success(__('Deleted observation!'));
+        $this->tab();
+        return back();
+    }
+
     private function tab()
     {
         session()->flash('tab', 'observer');
