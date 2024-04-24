@@ -937,8 +937,8 @@ class StudentController extends Controller
         $studentGradesxGroup = ['periods' => null, 'areasGrade' => null];
 
         $absences = Attendance::withWhereHas(
-                'student',
-                fn ($s) => $s->where('student_id', $student->id)->whereIn('attend', ['N', 'L', 'J'])
+            'student',
+            fn ($s) => $s->where('student_id', $student->id)->whereIn('attend', ['N', 'L', 'J'])
             )->whereHas('teacherSubjectGroup', fn($tsgQuery) => $tsgQuery->whereHas('group', fn($gQuery) => $gQuery->where('school_year_id', $Y->id)))
             ->with('teacherSubjectGroup.subject', 'teacherSubjectGroup.teacher')
             ->orderByDesc('date')
@@ -1947,12 +1947,12 @@ class StudentController extends Controller
 
         $period = Period::where('school_year_id', $Y->id)
             ->where('study_time_id', $group->study_time_id)
-            ->where('end', '<=', today()->format('Y-m-d'))
+            ->where('end_grades', '<', today()->format('Y-m-d'))
             ->orderByDesc('ordering')->first();
 
         $periodsCount = Period::where('school_year_id', $Y->id)
             ->where('study_time_id', $group->study_time_id)
-            ->where('end', '<=', today()->format('Y-m-d'))
+            ->where('end_grades', '<', today()->format('Y-m-d'))
             ->orderBy('ordering')->count();
 
         $totalPeriods = Period::where('school_year_id', $Y->id)->where('study_time_id', $group->study_time_id)->count();
