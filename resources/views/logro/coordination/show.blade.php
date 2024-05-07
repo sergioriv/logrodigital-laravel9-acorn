@@ -84,11 +84,17 @@
                                     <i data-acorn-icon="lock-off" class="me-1"></i>
                                     <span>{{ __('Restore password') }}</span>
                                 </x-dropdown-item>
+                                <div class="dropdown-divider"></div>
+                                <x-dropdown-item type="button" data-bs-toggle="modal" data-bs-target="#mutateUser">
+                                    <i data-acorn-icon="login" class="me-1"></i>
+                                    <span>{{ __('Login') }}</span>
+                                </x-dropdown-item>
                             </div>
                         </div>
                         <!-- Dropdown Button End -->
 
                     </div>
+                    <!-- Top Buttons End -->
                 @endhasanyrole
             </div>
         </section>
@@ -348,18 +354,6 @@
                     <section class="card mb-5">
                         <div class="card-body">
 
-                            @hasanyrole('SUPPORT|SECRETARY')
-                                <!-- Permits Buttons Start -->
-                                {{-- <div class="col-12 mb-2 d-flex align-items-start justify-content-end">
-                                    <a type="button" data-bs-toggle="modal" data-bs-target="#addPermitTeacherModal"
-                                        class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
-                                        <i data-acorn-icon="plus"></i>
-                                        <span>{{ __('Add permit') }}</span>
-                                    </a>
-                                </div> --}}
-                                <!-- Permits Buttons End -->
-                            @endhasanyrole
-
                             <!-- Table Start -->
                             <div class="table-responsive-sm">
                                 <table logro='dataTableBoxed' data-order='[]'
@@ -618,19 +612,6 @@
 
 
     @hasanyrole('SUPPORT|SECRETARY')
-        <!-- Modal Add Advice -->
-        <div class="modal fade" id="addPermitTeacherModal" aria-labelledby="modalAddPermitTeacher" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalAddPermitTeacher">{{ __('Add permit') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    {{-- @include('logro.coordination.permit.create') --}}
-                </div>
-            </div>
-        </div>
 
         <!-- Modal Restore Password Start -->
         <div class="modal fade" id="restorePassword" aria-labelledby="modalRestorePassword" data-bs-backdrop="static"
@@ -652,6 +633,34 @@
             </div>
         </div>
         <!-- Modal Restore Password End -->
+
+        <!-- Modal Mutate User Start -->
+        <div class="modal fade" id="mutateUser" aria-labelledby="modalMutateUser" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Login') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>
+                            ¿Está seguro de iniciar sesión como <strong>{{ $coordination->getFullName() }}</strong>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ route('coordination.mutate', $coordination) }}" method="POST">
+                            @csrf
+                            <button type="button" class="btn btn-danger"
+                                data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                            <button type="submit" class="btn btn-outline-primary">
+                                {{ __('Login') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Mutate User End -->
     @endhasanyrole
 
     @hasanyrole('SUPPORT|COORDINATOR')

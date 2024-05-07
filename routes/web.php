@@ -218,7 +218,7 @@ Route::middleware('active_plataform')->group(function () {
         Route::post('coordination/degree', [CoordinationDegreeController::class, 'store'])->name('coordination.degree.store');
         Route::post('coordination/employment', [CoordinationEmploymentHistoryController::class, 'store'])->name('coordination.employment.store');
         Route::get('coordination/{coordination}/permit-tab', [CoordinationController::class, 'permitTab'])->name('coordination.show.permit-tab');
-
+        Route::post('coordination/{coordination}/mutate', [CoordinationController::class, 'mutateUser'])->name('coordination.mutate');
 
 
         /* Route Orientation */

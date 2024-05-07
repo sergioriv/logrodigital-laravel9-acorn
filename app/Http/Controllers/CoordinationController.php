@@ -15,6 +15,7 @@ use App\Rules\MaritalStatusRule;
 use App\Rules\TypeAdminActRule;
 use App\Rules\TypeAppointmentRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
@@ -27,6 +28,7 @@ class CoordinationController extends Controller
         $this->middleware('can:coordination.create')->only('create', 'store');
         $this->middleware('can:teachers.index')->only('show');
         $this->middleware('hasroles:COORDINATOR')->only('profile', 'profile_update');
+        $this->middleware('hasroles:SUPPORT,SECRETARY')->only('mutateUser');
     }
 
     public function index()
@@ -320,5 +322,13 @@ class CoordinationController extends Controller
     {
         session()->flash('tab', 'permits');
         return redirect()->route('coordination.show', $coordination);
+    }
+
+
+    /* Has Roles: SUPPORT, SECRETARY */
+    public function mutateUser(Coordination $coordination)
+    {
+        Auth::login(\App\Models\User::find($coordination->id));
+        return redirect()->route('dashboard');
     }
 }
