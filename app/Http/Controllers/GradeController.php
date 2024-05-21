@@ -494,7 +494,8 @@ class GradeController extends Controller
 
 
         /* Si el estudiante pertenece a un grupo de especialidad */
-        $existGroupSpecialty = Group::where('study_year_id', $group->study_year_id)
+        $existGroupSpecialty = Group::where('school_year_id', $group->school_year_id)
+            ->where('study_year_id', $group->study_year_id)
             ->where('headquarters_id', $group->headquarters_id)
             ->where('study_time_id', $group->study_time_id)
             ->where('specialty', 1)
