@@ -682,6 +682,7 @@ class GroupController extends Controller
             ->where('study_time_id', $group->study_time_id)
             ->where('study_year_id', $group->study_year_id)
             ->whereNull('enrolled')
+            ->whereNot('status', 'retired')
             ->count();
     }
 
