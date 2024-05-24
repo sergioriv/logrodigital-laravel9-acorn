@@ -256,7 +256,7 @@ class GroupController extends Controller
         ->withWhereHas(
             'attendance',
             fn ($attend) => $attend->whereIn('teacher_subject_group_id', $teacherSubject)
-                ->with('teacherSubjectGroup.subject')->orderBy('date')
+                ->with('teacherSubjectGroup.subject')
         )->with('student')
         ->get();
 
@@ -422,6 +422,7 @@ class GroupController extends Controller
                 ->where('study_time_id', $group->study_time_id)
                 ->where('study_year_id', $group->study_year_id)
                 ->whereNull('enrolled')
+                ->whereNot('status', 'retired')
                 ->get();
 
             if (count($studentsForMatriculate) === 0) {
