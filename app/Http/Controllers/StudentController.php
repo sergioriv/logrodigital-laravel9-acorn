@@ -2021,15 +2021,15 @@ class StudentController extends Controller
             $student->files()->delete();
 
             if (!is_null($student->enrolled)) {
-                $student->groupYear()->whereHas('group', fn($group) => $group->where('school_year_id', $Y->id))->delete();
-                $student->groupOfSpecialty()?->whereHas('group', fn($group) => $group->where('school_year_id', $Y->id))->delete();
 
+                \App\Models\GroupStudent::where('student_id', $student->id)->where('group_id', $student->group_id)->delete();
                 \App\Models\GroupStudentRetired::create([
                     'student_id' => $student->id,
                     'group_id' => $student->group_id
                 ]);
 
-                if ( !is_null($student->group_specialty_id) ) {
+                if ($student->group_specialty_id) {
+                    \App\Models\GroupStudent::where('student_id', $student->id)->where('group_id', $student->group_specialty_id)->delete();
                     \App\Models\GroupStudentRetired::create([
                         'student_id' => $student->id,
                         'group_id' => $student->group_specialty_id
