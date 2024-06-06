@@ -58,10 +58,6 @@ class AccessSupportController extends Controller
             case 'fix-student-code':
                 return self::fixStudentCode();
                 break;
-
-            case 'id-attendance-student':
-                return self::addIdAttendanceStudent();
-                break;
         }
     }
 
@@ -163,18 +159,5 @@ class AccessSupportController extends Controller
         }
 
         return $arr;
-    }
-
-    protected function addIdAttendanceStudent()
-    {
-        DB::beginTransaction();
-        foreach ( \App\Models\AttendanceStudent::cursor() as $key => $attend ) {
-            DB::update("UPDATE attendance_students SET id = ? WHERE attendance_id = ? AND student_id = ?", [
-                ($key+1),
-                $attend->attendance_id,
-                $attend->student_id,
-            ]);
-        }
-        DB::commit();
     }
 }
