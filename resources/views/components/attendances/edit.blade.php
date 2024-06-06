@@ -1,5 +1,9 @@
-<div class="modal-header">
-    <h5 class="modal-title">{{ __('Edit attendance') . ' - ' . $attendance->date }}</h5>
+<div class="modal-header py-3">
+    <h5 class="modal-title">
+        {{ __('Edit attendance') . ' - ' . $attendance->date }}
+        <br />
+        <span clasS="badge bg-primary font-standard font-weight-300 mt-1 text-medium">Horas: {{ $attendance->hours }}</span>
+    </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 

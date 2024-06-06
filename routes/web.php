@@ -256,6 +256,7 @@ Route::middleware('active_plataform')->group(function () {
         Route::get('groups/{group}/template-observations', [GroupController::class, 'pdf_group_observations'])->name('group.pdf.template-observations');
 
         Route::put('attendance/upload-file', [AttendanceStudentController::class, 'upload_file'])->name('attendance.upload_file');
+        Route::patch('attendance/student', [AttendanceStudentController::class, 'attendance_student_update'])->name('attendance.student.update');
 
         Route::post('groups/{group}/consolidate/grades', [ConsolidateGradesByArea::class, 'make'])->name('group.consolidate-grades');
         Route::post('study-years/consolidate/grades', [ConsolidateGradesByArea::class, 'generateStudyYear'])->name('studyYear.consolidate-grades');

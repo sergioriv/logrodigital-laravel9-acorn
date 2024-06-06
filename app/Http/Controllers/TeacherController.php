@@ -328,16 +328,35 @@ class TeacherController extends Controller
 
     public function mysubjects()
     {
-        $subjects = $this->subjects()
+        $Y = SchoolYearController::available_year();
+        $teacher_id = Auth::id();
+
+        $academiWorkload = \App\Models\AcademicWorkload::where('school_year_id', $Y->id)->get();
+
+        $filterTSG = function ($tsg) use ($academiWorkload) {
+            return $academiWorkload->filter(
+                fn($workload) =>
+                    $workload->study_year_id === $tsg->group->study_year_id
+                    &&
+                    $workload->subject_id === $tsg->subject_id
+            )->first()?->hours_week ?? 0;
+        };
+
+        $subjects = TeacherSubjectGroup::where('school_year_id', $Y->id)
+            ->where('teacher_id', $teacher_id)
             ->with([
                 'group' =>
                 fn ($g) => $g->withCount('groupStudents as student_quantity')
                     ->with('headquarters', 'studyTime', 'studyYear', 'teacher')
-            ]);
+            ])
+            ->get()->map(function ($subjectMap) use ($filterTSG) {
+                $subjectMap->setAttribute('hours_week', $filterTSG($subjectMap));
+                return $subjectMap;
+            });
 
         return view('logro.teacher.subjects.index', [
             'directGroup' => $this->myDirectorGroup()->get(),
-            'subjects' => $subjects->get()
+            'subjects' => $subjects
         ]);
     }
 
@@ -354,6 +373,8 @@ class TeacherController extends Controller
         $studyYear = $subject->group->studyYear;
         $studyTime = $subject->group->studyTime;
 
+        $totalHoursWeek = \App\Models\AcademicWorkload::where('school_year_id', $Y->id)->where('study_year_id', $studyYear->id)->where('subject_id', $subject->subject_id)->sum('hours_week');
+
         $studentsGroup = Student::singleData()
             ->when($Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
             ->whereHas(
@@ -362,13 +383,10 @@ class TeacherController extends Controller
                 $query->with([
                     'grades' => fn($grades) => $grades->where('teacher_subject_group_id', $subject->id)->whereIn('period_id', $studyTime->periods->pluck('id')->toArray())->with('period:id,workload')
                 ]);
-            })->withCount([
-                'attendanceStudent' =>
-                fn ($attS) => $attS->whereIn('attend', ['N', 'J', 'L'])
-                    ->whereHas(
-                        'attendance', fn ($att) => $att->where('teacher_subject_group_id', $subject->id)
-                    )
-            ])->with([
+            })->withSum([
+                'absences' => fn ($abs) => $abs->where('teacher_subject_group_id', $subject->id)
+            ], 'hours')
+            ->with([
                 'studentDescriptors' => fn ($des) => $des->where('teacher_subject_group_id', $subject->id)->with('descriptor'),
             ])->withCount([
                 'leveledStudent' => fn($lvl) => $lvl->where('teacher_subject_group_id', $subject->id)
@@ -426,6 +444,7 @@ class TeacherController extends Controller
             'Y' => $Y,
             'studyYear' => $studyYear,
             'subject' => $subject,
+            'totalHoursWeek' => $totalHoursWeek,
             'studentsGroup' => $studentsGroup,
             'periods' => $periods,
             'activateLeveling' => $activateLeveling,
@@ -433,23 +452,6 @@ class TeacherController extends Controller
             'descriptors' => $descriptors,
             'descriptorsInclusive' => $descriptorsInclusive
         ]);
-    }
-
-
-    /*
-     *
-     * Extrae las materias del User Teacher
-     *
-     *  */
-    public static function subjects()
-    {
-        $Y = SchoolYearController::available_year();
-        $teacher_id = Auth::id();
-
-        $subjects = TeacherSubjectGroup::where('school_year_id', $Y->id)
-            ->where('teacher_id', $teacher_id);
-
-        return $subjects;
     }
 
     public static function myDirectorGroup()

@@ -32,7 +32,7 @@ class RecordAttendanceStudent implements FromArray, ShouldAutoSize, WithStyles, 
         $array = [
             [$this->student->getCompleteNames()],
             ['Grupo', $this->student->group->name],
-            ['#', 'Inasistencia', 'Fecha', 'Asignatura']
+            ['#', 'Inasistencia', 'Fecha', 'Asignatura', 'Horas']
         ];
 
         $attendaces = AttendanceStudent::where('student_id', $this->student->id)
@@ -52,7 +52,8 @@ class RecordAttendanceStudent implements FromArray, ShouldAutoSize, WithStyles, 
                 ++$i,
                 $attend->attend->getLabelText(),
                 $attend->attendance->date,
-                $attend->attendance->teacherSubjectGroup->subject->resourceSubject->name
+                $attend->attendance->teacherSubjectGroup->subject->resourceSubject->name,
+                $attend->attendance->hours
             ]);
         }
 
@@ -77,7 +78,7 @@ class RecordAttendanceStudent implements FromArray, ShouldAutoSize, WithStyles, 
     {
         return [
             AfterSheet::class    => function (AfterSheet $event) {
-                $event->sheet->mergeCells('A1:D1');
+                $event->sheet->mergeCells('A1:E1');
             }
         ];
     }

@@ -19,60 +19,69 @@ class AttendanceStudentController extends Controller
     public function __construct()
     {
         $this->middleware('hasroles:SUPPORT,TEACHER')->only('subject','absences_view','absences_edit','absences_update');
+        $this->middleware('hasroles:SUPPORT,TEACHER,COORDINATOR')->only('subject','absences_view', 'attendance_student_update');
     }
 
     public function subject(TeacherSubjectGroup $subject, Request $request)
     {
+        $Y = SchoolYearController::current_year();
+        $totalHoursWeek = \App\Models\AcademicWorkload::where('school_year_id', $Y->id)->where('study_year_id', $subject->group->study_year_id)->where('subject_id', $subject->subject_id)->sum('hours_week');
+
         $request->validate([
             'date' => ['required', 'date', 'date_format:Y-m-d', 'before:tomorrow'],
+            'hours' => ['required', 'integer', 'min:1', 'max:'.$totalHoursWeek],
             'studentsAttendance' => ['nullable', 'array'],
             'studentsAttendance.*.type' => ['in:late-arrival,justified']
-        ]);
+        ], [], ['hours' => 'horas']);
 
-        // $limitWeek = (new TeacherController)->remainingAttendanceWeek($subject, $request->date);
-        // if ( ! $limitWeek ) {
-        //     Notify::fail(__('Not allowed'));
-        //     return back();
-        // } else {
-        //     if ( ! $limitWeek['active'] ) {
-        //         Notify::fail(__("No assistance is available for that week."));
-        //         return back();
-        //     }
-        // }
+        $studentsAttendance = $request->get('studentsAttendance');
+        $totalHours = $request->get('hours') ?? 1;
+
+        $students = \App\Models\Student::select('id', 'code')
+        ->whereHas('groupYear', fn($group) => $group->where('group_id', $subject->group_id))->orderBy('first_last_name')
+        ->orderBy('second_last_name')
+        ->orderBy('first_name')
+        ->orderBy('second_name')
+        ->get()->pluck('id', 'code')->toArray();
+
+        $dataAttendanceStudents = [];
+
+        foreach ($students as $code => $id) {
+
+            if ( !array_key_exists($code, $studentsAttendance) || in_array($studentsAttendance[$code], ['late-arrival', 'justified']) ) {
+
+                $attend = \App\Enums\AttendStudentEnum::NO;
+                if (array_key_exists($code, $studentsAttendance)) {
+                    $studentsAttendance[$code] === 'late-arrival' && $attend = \App\Enums\AttendStudentEnum::LATE_ARRIVAL;
+                    $studentsAttendance[$code] === 'justified' && $attend = \App\Enums\AttendStudentEnum::JUSTIFIED;
+                }
+
+            } else {
+
+                $attend = \App\Enums\AttendStudentEnum::YES;
+
+            }
+
+            array_push($dataAttendanceStudents,[
+                'student_id' => $id,
+                'attend' => $attend
+            ]);
+        }
 
         DB::beginTransaction();
 
         $attendance = Attendance::create([
             'teacher_subject_group_id' => $subject->id,
-            'date' => $request->date
+            'date' => $request->date,
+            'hours' => $totalHours
         ]);
 
-        $studentsGroup = $subject->group->groupStudents;
-        $studentsAttendace = [];
-
-        foreach ($studentsGroup->pluck('student.id', 'student.code')->toArray() as $code => $id) {
-
-            if (!$request->has('studentsAttendance') || !in_array($code, array_keys($request->studentsAttendance))) {
-                $attStudent = 'N';
-            } elseif (is_array($request->studentsAttendance[$code])) {
-                if ($request->studentsAttendance[$code]['type'] === 'late-arrival') {
-                    $attStudent = 'L';
-                } elseif ($request->studentsAttendance[$code]['type'] === 'justified') {
-                    $attStudent = 'J';
-                }
-            } else {
-                $attStudent = 'Y';
-            }
-
-            array_push($studentsAttendace, new AttendanceStudent([
-                'attendance_id' => $attendance->id,
-                'student_id' => $id,
-                'attend' => $attStudent
-            ]));
-
-        }
-
-        $attendance->students()->saveMany($studentsAttendace);
+        $attendance->students()->saveMany(
+            array_map(function ($attendanceStudent) use ($attendance) {
+                $attendanceStudent['attendance_id'] = $attendance->id;
+                return new AttendanceStudent($attendanceStudent);
+            }, $dataAttendanceStudents)
+        );
 
         DB::commit();
 
@@ -86,30 +95,71 @@ class AttendanceStudentController extends Controller
 
         $attendance = Attendance::find($request->attendance);
 
-        $attendanceStudents = Student::withWhereHas(
-                'oneAttendanceStudent',
-                fn ($att) => $att->where('attendance_id', $attendance->id)->whereIn('attend', ['N', 'J', 'L'])
-            )->get();
+        // TODO: listar por attendance student
+        $attendanceStudents = \App\Models\AttendanceStudent::where('attendance_id', $attendance->id)
+        ->with('student:id,first_name,second_name,first_last_name,second_last_name,inclusive,status')
+        ->whereIn('attend', ['N', 'J', 'L'])->get();
 
-        $title = __('Attendance') . ': ' . $attendance->date;
+        $title = __('Attendance') . ': ' . $attendance->date
+            .'<br /><span clasS="badge bg-primary font-standard font-weight-300 mt-1 text-medium">Horas: '
+            . $attendance->hours
+            .'</span>';
 
         $content = '<table class="table table-striped mb-0"><tbody>';
 
         foreach ($attendanceStudents as $attStudent) {
             $content .= '<tr><td scope="row">';
-            if ($attStudent->oneAttendanceStudent->attend->isJustified()) {
+            if ($attStudent->attend->isJustified()) {
                 $content .= '<span class="badge bg-outline-success me-1">' . __('Justified') . '</span>';
-            } elseif ($attStudent->oneAttendanceStudent->attend->isLateArrival()) {
+            } elseif ($attStudent->attend->isLateArrival()) {
                 $content .= '<span class="badge bg-outline-success me-1">' . __('Late arrival') . '</span>';
             }
-            $content .= $attStudent->getCompleteNames();
-            $content .= $attStudent->tag();
+            $content .= $attStudent->student->getCompleteNames();
+            $content .= $attStudent->student->tag();
             $content .= '</td></tr>';
         }
 
         $content .= '</tbody></table>';
 
         return ['title' => $title, 'content' => $content];
+    }
+
+    public function attendance_student_update(Request $request)
+    {
+        $request->validate([
+            'attendance-change-id' => ['required'],
+            'attendance-new-type' => ['required', 'in:yes,no,late-arrival,justified']
+        ]);
+
+        DB::beginTransaction();
+
+        $attendanceStudent = AttendanceStudent::find($request->get('attendance-change-id'));
+
+        if (!$attendanceStudent) return back();
+
+        try {
+            $newAttend = match($request->get('attendance-new-type')) {
+                'yes' => \App\Enums\AttendStudentEnum::YES,
+                'no' => \App\Enums\AttendStudentEnum::NO,
+                'late-arrival' => \App\Enums\AttendStudentEnum::LATE_ARRIVAL,
+                'justified' => \App\Enums\AttendStudentEnum::JUSTIFIED,
+                default => null
+            };
+
+            if (is_null($newAttend)) return back();
+
+            $attendanceStudent->update(['attend' => $newAttend]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Notify::fail(__('Something went wrong.'));
+            return back();
+        }
+
+        DB::commit();
+
+        Notify::success(__('Attendance saved!'));
+        return back();
     }
 
     public function absences_edit(Attendance $attendance)

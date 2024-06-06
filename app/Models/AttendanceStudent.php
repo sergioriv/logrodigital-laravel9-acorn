@@ -3,12 +3,10 @@
 namespace App\Models;
 
 use App\Enums\AttendStudentEnum;
-use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Model;
 
 class AttendanceStudent extends Model
 {
-    // use Uuid;
     public $timestamps = false;
 
     protected $fillable = [

@@ -13,8 +13,10 @@ class Attendance extends Model
 
     protected $fillable = [
         'teacher_subject_group_id',
-        'date'
+        'date',
+        'hours'
     ];
+    protected $casts = ['hours' => 'integer'];
 
 
     /*

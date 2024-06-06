@@ -52,6 +52,23 @@
                 $(modalStudentGradesString).modal('show');
             })
         });
+
+
+        let attendanceFileModal = $('#addAttendanceFile');
+        function attendanceFile(attendanceId, studentId) {
+            $('#attendance-file-id').val(attendanceId);
+            $('#attendance-file-student').val(studentId);
+            attendanceFileModal.modal('show');
+        }
+
+        let absenceChangeTypeModal = $('#absenceChangeTypeModal');
+        function absenceChangeType(attendanceId, currentType) {
+            $('#attendance-change-id').val(attendanceId);
+            currentType === 'N' && $('#abcenseNewType_no').prop('checked', true);
+            currentType === 'L' && $('#abcenseNewType_lateArrival').prop('checked', true);
+            currentType === 'J' && $('#abcenseNewType_justified').prop('checked', true);
+            absenceChangeTypeModal.modal('show');
+        }
     </script>
 @endsection
 
@@ -660,6 +677,9 @@
                                                                 <th
                                                                     class="text-muted text-small text-uppercase p-0 pb-2">
                                                                     {{ __('type') }}</th>
+                                                                @hasanyrole('SUPPORT|COORDINATOR|TEACHER')
+                                                                <th class="sw-5 empty">&nbsp;</th>
+                                                                @endhasanyrole
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -677,6 +697,40 @@
                                                                         {!! $absence->student->tag() !!}
                                                                     </td>
                                                                     <td>{{ $absence->attend->getLabelText() }}</td>
+                                                                    @hasanyrole('SUPPORT|COORDINATOR|TEACHER')
+                                                                    <td class="text-end">
+                                                                        @if (auth()->user()->hasRole('COORDINATOR')
+                                                                            || auth()->user()->hasRole('SUPPORT')
+                                                                            || (auth()->user()->hasRole('TEACHER') && $absence->attendance->teacherSubjectGroup->teacher_id === auth()->id())
+                                                                        )
+                                                                        <!-- Dropdown Button Start -->
+                                                                        <div class="">
+                                                                            <button type="button" class="btn btn-sm btn-outline-primary btn-icon btn-icon-only"
+                                                                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                                aria-expanded="false" data-submenu>
+                                                                                <i data-acorn-icon="more-vertical"></i>
+                                                                            </button>
+                                                                            <div class="dropdown-menu dropdown-menu-end">
+                                                                                @if (is_null($absence->file_support))
+                                                                                <button class="dropdown-item btn-icon btn-icon-start" onclick="attendanceFile('{{ $absence->attendance_id }}','{{ $absence->student_id }}')">
+                                                                                    <i data-acorn-icon="upload"></i>
+                                                                                    <span>Cargar documento soporte</span>
+                                                                                </button>
+                                                                                <button class="dropdown-item btn-icon btn-icon-start" type="button" onclick="absenceChangeType('{{$absence->id}}','{{$absence->attend->value}}')">
+                                                                                    <i data-acorn-icon="edit-square"></i>
+                                                                                    <span>Cambiar de tipo</span>
+                                                                                </button>
+                                                                                @else
+                                                                                <a class="dropdown-item"
+                                                                                    href="{{ config('app.url') .'/'. $absence->file_support }}"
+                                                                                    target="_blank">Ver archivo soporte</a>
+                                                                                @endif
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Dropdown Button End -->
+                                                                        @endif
+                                                                    </td>
+                                                                    @endhasanyrole
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
@@ -935,4 +989,95 @@
         <!-- Modal Send Email Tutors End -->
 
     @endhasrole
+
+    @hasanyrole('SUPPORT|COORDINATOR|TEACHER')
+    <!-- Modal Attendance File Start -->
+    <div class="modal fade" id="addAttendanceFile" aria-labelledby="modalAttendanceFile" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAttendanceFile">
+                        Cargar documento soporte
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('attendance.upload_file') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+
+                    <input type="hidden" id="attendance-file-id" name="attendance-file-id" value="">
+                    <input type="hidden" id="attendance-file-student" name="attendance-file-student" value="">
+
+                    <div class="modal-body">
+
+                        <div class="form-group position-relative">
+                            <x-label>{{ __('support document') }}<x-required /></x-label>
+                            <input type="file" required class="d-block form-control" name="file_attendance" accept="image/jpg, image/jpeg, image/png, image/webp, application/pdf">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Attendance File End -->
+
+    <!-- Modal Absence Change Type Start -->
+    <div class="modal fade" id="absenceChangeTypeModal" aria-labelledby="modalAbsenceChangeType" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAbsenceChangeType">
+                        Cambiar de tipo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('attendance.student.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PATCH')
+
+                    <input type="hidden" id="attendance-change-id" name="attendance-change-id" value="">
+
+                    <div class="modal-body">
+
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="attendance-new-type" id="abcenseNewType_yes" value="yes">
+                                <label class="form-check-label" for="abcenseNewType_yes">Asistió</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="attendance-new-type" id="abcenseNewType_no" value="no">
+                                <label class="form-check-label" for="abcenseNewType_no">No justificada</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="attendance-new-type" id="abcenseNewType_lateArrival" value="late-arrival">
+                                <label class="form-check-label" for="abcenseNewType_lateArrival">Llegada tarde</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="attendance-new-type" id="abcenseNewType_justified" value="justified">
+                                <label class="form-check-label" for="abcenseNewType_justified">Justificada</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Absence Change Type End -->
+    @endhasanyrole
 @endsection

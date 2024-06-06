@@ -40,6 +40,23 @@
             });
         </script>
     @endif
+    <script>
+        let attendanceFileModal = $('#addAttendanceFile');
+        function attendanceFile(attendanceId, studentId) {
+            $('#attendance-file-id').val(attendanceId);
+            $('#attendance-file-student').val(studentId);
+            attendanceFileModal.modal('show');
+        }
+
+        let absenceChangeTypeModal = $('#absenceChangeTypeModal');
+        function absenceChangeType(attendanceId, currentType) {
+            $('#attendance-change-id').val(attendanceId);
+            currentType === 'N' && $('#abcenseNewType_no').prop('checked', true);
+            currentType === 'L' && $('#abcenseNewType_lateArrival').prop('checked', true);
+            currentType === 'J' && $('#abcenseNewType_justified').prop('checked', true);
+            absenceChangeTypeModal.modal('show');
+        }
+    </script>
 @endsection
 
 @section('content')
@@ -159,9 +176,9 @@
                                     </div>
                                 @endif
 
-                                @if ($absences->count())
+                                @if (count($absences))
                                     <div class="mt-2">
-                                        <a href="{{ route('attendances.student.download', $student) }}">{{ $absences->count() }}
+                                        <a href="{{ route('attendances.student.download', $student) }}">{{ $absences->sum('hours') }}
                                             Fallas</a>
                                     </div>
                                 @endif
@@ -182,7 +199,7 @@
                                 data-bs-toggle="tab" href="#observerTab" role="tab">
                                 <span class="align-middle">{{ __('Observer') }}</span>
                             </a>
-                            @if ($absences)
+                            @if (count($absences))
                                 <a class="nav-link @if (session('tab') === 'attendance') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                     data-bs-toggle="tab" href="#attendanceTab" role="tab">
                                     <span class="align-middle">{{ __('Absences') }}</span>
@@ -639,7 +656,7 @@
                 </div>
                 <!-- Observer Tab End -->
 
-                @if ($absences)
+                @if (count($absences))
                     <!-- Attendances Tab Start -->
                     <div class="tab-pane fade @if (session('tab') === 'attendance') active show @endif" id="attendanceTab"
                         role="tabpanel">
@@ -737,4 +754,93 @@
             </div>
         @endif
     @endhasrole
+
+    <!-- Modal Attendance File Start -->
+    <div class="modal fade" id="addAttendanceFile" aria-labelledby="modalAttendanceFile" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAttendanceFile">
+                        Cargar documento soporte
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('attendance.upload_file') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+
+                    <input type="hidden" id="attendance-file-id" name="attendance-file-id" value="">
+                    <input type="hidden" id="attendance-file-student" name="attendance-file-student" value="">
+
+                    <div class="modal-body">
+
+                        <div class="form-group position-relative">
+                            <x-label>{{ __('support document') }}<x-required /></x-label>
+                            <input type="file" required class="d-block form-control" name="file_attendance" accept="image/jpg, image/jpeg, image/png, image/webp, application/pdf">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Attendance File End -->
+
+    <!-- Modal Absence Change Type Start -->
+    <div class="modal fade" id="absenceChangeTypeModal" aria-labelledby="modalAbsenceChangeType" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAbsenceChangeType">
+                        Cambiar de tipo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('attendance.student.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PATCH')
+
+                    <input type="hidden" id="attendance-change-id" name="attendance-change-id" value="">
+
+                    <div class="modal-body">
+
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="attendance-new-type" id="abcenseNewType_yes" value="yes">
+                                <label class="form-check-label" for="abcenseNewType_yes">Asistió</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="attendance-new-type" id="abcenseNewType_no" value="no">
+                                <label class="form-check-label" for="abcenseNewType_no">No justificada</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="attendance-new-type" id="abcenseNewType_lateArrival" value="late-arrival">
+                                <label class="form-check-label" for="abcenseNewType_lateArrival">Llegada tarde</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="attendance-new-type" id="abcenseNewType_justified" value="justified">
+                                <label class="form-check-label" for="abcenseNewType_justified">Justificada</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Absence Change Type End -->
 @endsection

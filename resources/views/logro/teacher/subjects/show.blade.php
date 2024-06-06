@@ -58,32 +58,6 @@
                 $('#dropdown' + studentCode).removeClass('d-none');
             }
         });
-
-        // jQuery("#attendance-date").on('change', function() {
-        //     $.get(HOST + '/mysubjects/{{ $subject->id }}/attendance-limit-week', {
-        //         date: $(this).val()
-        //     }, function(res) {
-        //         if ( ! res.data.active ) {
-        //             $("form#addAttendanceForm button[type='submit']").prop("disabled", true);
-        //         } else {
-        //             $("form#addAttendanceForm button[type='submit']").prop("disabled", false);
-        //         }
-        //         $("#alert-attendance").html(res.data.content);
-        //     })
-        // });
-
-        // $(document).ready(function () {
-        //     $.get(HOST + '/mysubjects/{{ $subject->id }}/attendance-limit-week', {
-        //         date: $(this).val()
-        //     }, function(res) {
-        //         if ( ! res.data.active ) {
-        //             $("form#addAttendanceForm button[type='submit']").prop("disabled", true);
-        //         } else {
-        //             $("form#addAttendanceForm button[type='submit']").prop("disabled", false);
-        //         }
-        //         $("#alert-attendance").html(res.data.content);
-        //     })
-        // });
     </script>
 @endsection
 
@@ -241,7 +215,7 @@
 
                                                                 <!-- Absences Student -->
                                                                 <td class="text-center text-small">
-                                                                    {{ $studentG->attendance_student_count ?: null }}
+                                                                    {{ $studentG->absences_sum_hours ?: null }}
                                                                 </td>
 
                                                                 @if ($studyYear->useGrades())
@@ -772,10 +746,10 @@
                                                                                             attendance-id="{{ $attendance->id }}">
                                                                                             {{ __('Edit') }}</span>
                                                                                         </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <!-- Dropdown Button End -->
                                                                             </div>
+                                                                            <!-- Dropdown Button End -->
+
+                                                                        </div>
 
                                                                     </td>
                                                                 </tr>
@@ -814,18 +788,24 @@
 
                     <div class="modal-body">
 
-                        {{-- <div id="alert-attendance"></div> --}}
+                        <div class="row g-3 mb-5">
 
-                        <div class="row mb-3 position-relative">
-                            <x-label for="date"
-                                class="col-sm-3 col-form-label text-sm-start text-center font-weight-bold text-danger"
-                                required>{{ __('Choose date') }}</x-label>
-                            <div class="col-sm-9">
-                                {{-- id="attendance-date" --}}
+                            <div class="col-md-6">
+                                <x-label for="date"
+                                    class="col-form-label text-sm-start text-center font-weight-bold text-danger"
+                                    required>{{ __('Choose date') }}</x-label>
                                 <x-input :value="old('date', now()->format('Y-m-d'))" logro="datePickerBefore" name="date"
                                     data-placeholder="yyyy-mm-dd" placeholder="yyyy-mm-dd" class="text-center"
                                     required />
                             </div>
+                            <div class="col-md-6">
+                                <x-label for="date"
+                                    class="col-form-label text-sm-start text-center font-weight-bold"
+                                    required>Horas semanales (max: {{ $totalHoursWeek }})</x-label>
+                                <x-input type="number" min="1" max="{{ $totalHoursWeek }}" :value="old('hours', 1)" name="hours"
+                                    required />
+                            </div>
+
                         </div>
 
                         <table class="table table-striped mb-0">
@@ -860,7 +840,7 @@
                                                     <div class="dropdown-item">
                                                         <label class="form-label cursor-pointer">
                                                             <input type="radio"
-                                                                name="studentsAttendance[{{ $studentG->code }}][type]"
+                                                                name="studentsAttendance[{{ $studentG->code }}]"
                                                                 value="late-arrival" />
                                                             {{ __('Late arrival') }}
                                                         </label>
@@ -868,7 +848,7 @@
                                                     <div class="dropdown-item">
                                                         <label class="form-label cursor-pointer">
                                                             <input type="radio"
-                                                                name="studentsAttendance[{{ $studentG->code }}][type]"
+                                                                name="studentsAttendance[{{ $studentG->code }}]"
                                                                 value="justified" />
                                                             {{ __('Justified') }}
                                                         </label>
@@ -957,7 +937,7 @@
         data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header py-3">
                     <h5 class="modal-title" id="modalViewAbsences"></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -973,7 +953,7 @@
     <!-- Modal Edit Attendance -->
     <div class="modal fade" id="editAttendance" aria-labelledby="modalEditAbsences" data-bs-backdrop="static"
         data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content"></div>
         </div>
     </div>

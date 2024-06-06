@@ -778,26 +778,22 @@ $title = $school->name;
                         @method('PATCH')
 
                         <!-- Security Email Start -->
-                        <h2 class="small-title">{{ __('Info Rector') }}</h2>
+                        <h2 class="small-title">{{ __('Additional info') }}</h2>
                         <section class="card mb-5">
                             <div class="card-body">
 
-                                <div class="row g-3">
+                                <div class="row g-5">
 
-                                    <div class="row mb-3 position-relative">
-                                        <x-label required class="col-sm-3">{{ __('document header') }}</x-label>
-                                        <div class="col-sm-9">
-                                            <textarea name="docs_header" class="form-control" rows="3">{{ $headers_footers->header_docs }}</textarea>
-                                            <div class="form-text">Será utilizado para los siguientes documentos: Certificado de estudio, reporte de notas, remisiones, certificado de matrícula</div>
-                                        </div>
+                                    <div class="position-relative">
+                                        <x-label required>{{ __('document header') }}</x-label>
+                                        <textarea name="docs_header" class="form-control" rows="5">{{ $headers_footers->header_docs }}</textarea>
+                                        <div class="form-text">Será utilizado para los siguientes documentos: Certificado de estudio, reporte de notas, remisiones, certificado de matrícula</div>
                                     </div>
 
-                                    <div class="row mb-3 position-relative">
-                                        <x-label class="col-sm-3">{{ __('footer study certificate') }}</x-label>
-                                        <div class="col-sm-9">
-                                            <textarea name="footer_school_certificate" class="form-control" rows="5">{{ $headers_footers->footer_school_certificate }}</textarea>
-                                            <div class="form-text">Será utilizado únicamente para el certificado de matrícula</div>
-                                        </div>
+                                    <div class="position-relative">
+                                        <x-label>{{ __('footer study certificate') }}</x-label>
+                                        <textarea name="footer_school_certificate" class="form-control" rows="5">{{ $headers_footers->footer_school_certificate }}</textarea>
+                                        <div class="form-text">Será utilizado únicamente para el certificado de matrícula</div>
                                     </div>
 
                                 </div>

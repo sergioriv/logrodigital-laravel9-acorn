@@ -42,8 +42,9 @@
                         @endforeach
                         @foreach ($subjects as $subject)
                             <x-group.subjects :subject="$subject">
-                                <small
-                                    class="mt-2 text-muted">{{ $subject->group->student_quantity . ' ' . __('students') }}</small>
+                                <span
+                                    class="text-small mt-2 text-muted">{{ $subject->group->student_quantity . ' ' . __('students') }}</span>
+                                <span class="text-small text-muted mt-1">IHS {{ $subject->hours_week }}</span>
                                 <span class="mt-3 text-black btn-icon-start">
                                     <i data-acorn-icon="notebook-1" class="icon"data-acorn-size="15"></i>
                                     {{ $subject->subject->resourceSubject->public_name }}

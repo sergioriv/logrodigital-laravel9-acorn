@@ -134,6 +134,8 @@ class Student extends Model
         'wizard_complete'
     ];
 
+    protected $casts = ['absences_sum_hours' => 'integer'];
+
     public static function singleData()
     {
         return self::select(
@@ -345,6 +347,10 @@ class Student extends Model
     public function attendanceStudent()
     {
         return $this->hasMany(AttendanceStudent::class, 'student_id', 'id');
+    }
+    public function absences()
+    {
+        return $this->hasManyThrough(Attendance::class, AttendanceStudent::class, 'student_id', 'id', 'id', 'attendance_id')->whereIn('attendance_students.attend', ['N', 'J', 'L']);
     }
     public function fallas()
     {
