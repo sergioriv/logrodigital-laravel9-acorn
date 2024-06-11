@@ -15,6 +15,7 @@ use App\Rules\MaritalStatusRule;
 use App\Rules\TypeAdminActRule;
 use App\Rules\TypeAppointmentRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
@@ -27,6 +28,7 @@ class OrientationController extends Controller
         $this->middleware('can:orientation.create')->only('create', 'store');
         $this->middleware('can:teachers.index')->only('show');
         $this->middleware('hasroles:ORIENTATION')->only('profile', 'profile_update');
+        $this->middleware('hasroles:SUPPORT,SECRETARY')->only('mutateUser');
     }
 
     public function index()
@@ -323,5 +325,13 @@ class OrientationController extends Controller
     {
         session()->flash('tab', 'permits');
         return redirect()->route('orientation.show', $orientation);
+    }
+
+
+    /* Has Roles: SUPPORT, SECRETARY */
+    public function mutateUser(Orientation $orientation)
+    {
+        Auth::login(\App\Models\User::find($orientation->id));
+        return redirect()->route('dashboard');
     }
 }

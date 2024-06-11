@@ -230,7 +230,7 @@ Route::middleware('active_plataform')->group(function () {
         Route::post('orientation/degree', [OrientationDegreeController::class, 'store'])->name('orientation.degree.store');
         Route::post('orientation/employment', [OrientationEmploymentHistoryController::class, 'store'])->name('orientation.employment.store');
         Route::get('orientation/{orientation}/permit-tab', [OrientationController::class, 'permitTab'])->name('orientation.show.permit-tab');
-
+        Route::post('orientation/{orientation}/mutate', [OrientationController::class, 'mutateUser'])->name('orientation.mutate');
 
 
         /* Route Groups */
