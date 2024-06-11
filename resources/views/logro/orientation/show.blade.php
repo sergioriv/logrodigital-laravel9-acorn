@@ -727,6 +727,34 @@
             </div>
         </div>
         <!-- Modal Restore Password End -->
+
+        <!-- Modal Mutate User Start -->
+        <div class="modal fade" id="mutateUser" aria-labelledby="modalMutateUser" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Login') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>
+                            ¿Está seguro de iniciar sesión como <strong>{{ $orientation->getFullName() }}</strong>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ route('orientation.mutate', $orientation) }}" method="POST">
+                            @csrf
+                            <button type="button" class="btn btn-danger"
+                                data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                            <button type="submit" class="btn btn-outline-primary">
+                                {{ __('Login') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Mutate User End -->
     @endhasanyrole
 
     @hasanyrole('SUPPORT|COORDINATOR')
@@ -784,33 +812,5 @@
             </div>
         </div>
         <!-- Modal Accept or Deny Permit End -->
-
-        <!-- Modal Mutate User Start -->
-        <div class="modal fade" id="mutateUser" aria-labelledby="modalMutateUser" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ __('Login') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <p>
-                            ¿Está seguro de iniciar sesión como <strong>{{ $orientation->getFullName() }}</strong>
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <form action="{{ route('orientation.mutate', $orientation) }}" method="POST">
-                            @csrf
-                            <button type="button" class="btn btn-danger"
-                                data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-                            <button type="submit" class="btn btn-outline-primary">
-                                {{ __('Login') }}</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal Mutate User End -->
     @endhasanyrole
 @endsection
