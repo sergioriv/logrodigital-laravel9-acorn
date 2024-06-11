@@ -1505,10 +1505,18 @@ class StudentController extends Controller
             'social_stratum' => $request->has('columns.social_stratum'),
             'dwelling_type' => $request->has('columns.dwelling_type'),
             'neighborhood' => $request->has('columns.neighborhood'),
-            'sisben' => $request->has('columns.sisben'),
             'health_manager' => $request->has('columns.health_manager'),
+            'school_insurance' => $request->has('columns.school_insurance'),
+            'sisben' => $request->has('columns.sisben'),
+            'disability' => $request->has('columns.disability'),
+            'ethnic_group' => $request->has('columns.ethnic_group'),
+            'reservation' => $request->has('columns.reservation'),
             'tutor' => $request->has('columns.tutor'),
-            'enrolled_date' => $request->has('columns.enrolled_date')
+            'enrolled_date' => $request->has('columns.enrolled_date'),
+            'housing_services' => $request->has('columns.housing_services'),
+            'inclusive' => $request->has('columns.inclusive'),
+            'repeat' => $request->has('columns.repeat'),
+            'new' => $request->has('columns.new'),
         ];
 
         $fileName = !$request->has('retired') ? __('enrolled') : 'retirados';

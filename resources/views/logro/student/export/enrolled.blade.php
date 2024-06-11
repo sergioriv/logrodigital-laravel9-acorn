@@ -250,6 +250,28 @@
                             </div>
                         </div>
 
+                        <!-- Health Manager -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[health_manager]"
+                                        value="1">
+                                    {{ __('health manager') }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- School Insuarance -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[school_insurance]"
+                                        value="1">
+                                    {{ __('school insurance') }}
+                                </label>
+                            </div>
+                        </div>
+
                         <!-- Sisben -->
                         <div class="position-relative form-group">
                             <div class="form-check form-check-inline">
@@ -261,13 +283,35 @@
                             </div>
                         </div>
 
-                        <!-- Health Manager -->
+                        <!-- Disability -->
                         <div class="position-relative form-group">
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label logro-label">
-                                    <input class="form-check-input" type="checkbox" name="columns[health_manager]"
+                                    <input class="form-check-input" type="checkbox" name="columns[disability]"
                                         value="1">
-                                    {{ __('health manager') }}
+                                    {{ __('disability') }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Ethnic Group -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[ethnic_group]"
+                                        value="1">
+                                    {{ __('ethnic group') }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Reservation -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[reservation]"
+                                        value="1">
+                                    {{ __('reservation') }}
                                 </label>
                             </div>
                         </div>
@@ -293,6 +337,50 @@
                                 </label>
                             </div>
                         </div>
+
+                        <!-- Housing Services -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[housing_services]"
+                                        value="1">
+                                    Servicios de la vivienda
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Inclusive -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[inclusive]"
+                                        value="1">
+                                    Es inlusivo
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Repeat -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[repeat]"
+                                        value="1">
+                                    Es repitente
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- New -->
+                        <div class="position-relative form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label logro-label">
+                                    <input class="form-check-input" type="checkbox" name="columns[new]"
+                                        value="1">
+                                    Es nuevo
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     <hr>
@@ -304,10 +392,10 @@
                             <label class="form-check-label" for="repeats">Solo estudiantes repitentes</label>
                         </div>
 
-                        <!-- Inclusive -->
+                        <!-- Inclusives -->
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="inclusive" name="inclusive" value="1" />
-                            <label class="form-check-label" for="inclusive">Solo estudiantes inclusivos</label>
+                            <input class="form-check-input" type="checkbox" id="inclusives" name="inclusives" value="1" />
+                            <label class="form-check-label" for="inclusives">Solo estudiantes inclusivos</label>
                         </div>
 
                         <!-- Retired -->

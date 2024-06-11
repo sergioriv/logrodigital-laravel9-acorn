@@ -50,8 +50,12 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
                     $enrolled->withWhereHas('groupYear', $fn_gs);
                 })
         ->when($this->Y->available, fn($Yavailable) => $Yavailable->where('enrolled', TRUE))
-        ->when($this->request->has('inclusive'), function ($inclusive) { $inclusive->where('inclusive', TRUE); })
+        ->when($this->request->has('inclusives'), function ($inclusive) { $inclusive->where('inclusive', TRUE); })
         ->when($this->request->has('repeats'), function ($repeats) { $repeats->where('status', 'repeat'); })
+
+        ->when($this->attributes['disability'], function ($disability) { $disability->with('disability'); })
+        ->when($this->attributes['ethnic_group'], function ($ethnic) { $ethnic->with('ethnicGroup'); })
+        ->when($this->attributes['reservation'], function ($reservation) { $reservation->with('reservation'); })
         ->get();
 
         $array = [];
@@ -106,10 +110,18 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
                 array_push($row, __($student->dwellingType?->name));
             if ($this->attributes['neighborhood'])
                 array_push($row, $student->neighborhood);
-            if ($this->attributes['sisben'])
-                array_push($row, $student->sisben?->name);
             if ($this->attributes['health_manager'])
                 array_push($row, $student->healthManager?->name);
+            if ($this->attributes['school_insurance'])
+                array_push($row, $student->school_insurance);
+            if ($this->attributes['sisben'])
+                array_push($row, $student->sisben?->name);
+            if ($this->attributes['disability'])
+                array_push($row, __($student->disability?->name));
+            if ($this->attributes['ethnic_group'])
+                array_push($row, $student->ethnicGroup?->name);
+            if ($this->attributes['reservation'])
+                array_push($row, $student->reservation?->name);
             if ($this->attributes['tutor']) {
                 array_push($row, $student->myTutorIs?->name);
                 array_push($row, $student->myTutorIs?->telephone ?: $student->myTutorIs?->cellphone);
@@ -117,6 +129,21 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
             }
             if ($this->attributes['enrolled_date'])
                 array_push($row, $student->enrolled_date);
+
+            if ($this->attributes['housing_services']) {
+                array_push($row, !$student->electrical_energy ? null : 'SI');
+                array_push($row, !$student->natural_gas ? null : 'SI');
+                array_push($row, !$student->sewage_system ? null : 'SI');
+                array_push($row, !$student->aqueduct ? null : 'SI');
+                array_push($row, !$student->internet ? null : 'SI');
+            }
+
+            if ($this->attributes['inclusive'])
+                array_push($row, $student->inclusive ? 'SI' : null);
+            if ($this->attributes['repeat'])
+                array_push($row, $student->status === 'repeat' ? 'SI' : null);
+            if ($this->attributes['new'])
+                array_push($row, $student->status === 'new' ? 'SI' : null);
 
 
             array_push($array, $row);
@@ -175,10 +202,18 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
             array_push($titles, "Tipo de vivienda");
         if ($this->attributes['neighborhood'])
             array_push($titles, "Barrio");
-        if ($this->attributes['sisben'])
-            array_push($titles, "Sisben");
         if ($this->attributes['health_manager'])
             array_push($titles, "Administradora de salud");
+        if ($this->attributes['school_insurance'])
+            array_push($titles, "Seguro escolar");
+        if ($this->attributes['sisben'])
+            array_push($titles, "Sisben");
+        if ($this->attributes['disability'])
+            array_push($titles, "Discapacidad");
+        if ($this->attributes['ethnic_group'])
+            array_push($titles, "Grupo étnico");
+        if ($this->attributes['reservation'])
+            array_push($titles, "Resguardo");
         if ($this->attributes['tutor']) {
             array_push($titles, "Nombre del acudiente");
             array_push($titles, "Teléfono del acudiente");
@@ -186,6 +221,21 @@ class StudentsEnrolledExport implements FromArray, WithHeadings, ShouldAutoSize,
         }
         if ($this->attributes['enrolled_date'])
             array_push($titles, "Fecha de matrícula");
+
+        if ($this->attributes['housing_services']) {
+            array_push($titles, "Energía eléctrica");
+            array_push($titles, "Gas natural");
+            array_push($titles, "Alcantarillado");
+            array_push($titles, "Acueducto");
+            array_push($titles, "Internet");
+        }
+
+        if ($this->attributes['inclusive'])
+            array_push($titles, "Inclusivo");
+        if ($this->attributes['repeat'])
+            array_push($titles, "Repitente");
+        if ($this->attributes['new'])
+            array_push($titles, "Nuevo");
 
 
         return $titles;

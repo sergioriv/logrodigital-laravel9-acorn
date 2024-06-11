@@ -227,6 +227,10 @@ class Student extends Model
     {
         return $this->belongsTo(EthnicGroup::class);
     }
+    public function reservation()
+    {
+        return $this->belongsTo(Reservation::class);
+    }
     public function expeditionCity()
     {
         return $this->belongsTo(City::class, 'expedition_city_id', 'id');
