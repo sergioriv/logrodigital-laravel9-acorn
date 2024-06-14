@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CoordinationsExport;
 use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\City;
@@ -20,13 +21,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CoordinationController extends Controller
 {
     function __construct()
     {
         $this->middleware('can:coordination.create')->only('create', 'store');
-        $this->middleware('can:teachers.index')->only('show');
+        $this->middleware('can:coordination.index')->only('show');
+        $this->middleware('can:coordination.export')->only('export');
         $this->middleware('hasroles:COORDINATOR')->only('profile', 'profile_update');
         $this->middleware('hasroles:SUPPORT,SECRETARY')->only('mutateUser');
     }
@@ -292,6 +295,10 @@ class CoordinationController extends Controller
         return redirect()->route('user.profile.edit');
     }
 
+    public function export()
+    {
+        return Excel::download(new CoordinationsExport, __('coordinations') . '.xlsx');
+    }
 
 
     private function tab()

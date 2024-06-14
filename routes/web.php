@@ -214,6 +214,10 @@ Route::middleware('active_plataform')->group(function () {
 
 
         /* Route Coordination */
+        Route::controller(CoordinationController::class)->group( function () {
+            Route::get('coordination/export', 'export')->name('coordination.export');
+            Route::post('coordination/{coordination}/mutate', 'mutateUser')->name('coordination.mutate');
+        });
         Route::resource('coordination', CoordinationController::class)->only('index', 'show', 'create','store')->names('coordination');
         // Route::post('coordination/{coordination}/permit', [CoordinationPermitController::class, 'store'])->name('coordination.permits.store');
         Route::patch('coordination/{coordination}/permit', [CoordinationPermitController::class, 'store_document'])->name('coordination.permits.document');
@@ -222,7 +226,6 @@ Route::middleware('active_plataform')->group(function () {
         Route::post('coordination/degree', [CoordinationDegreeController::class, 'store'])->name('coordination.degree.store');
         Route::post('coordination/employment', [CoordinationEmploymentHistoryController::class, 'store'])->name('coordination.employment.store');
         Route::get('coordination/{coordination}/permit-tab', [CoordinationController::class, 'permitTab'])->name('coordination.show.permit-tab');
-        Route::post('coordination/{coordination}/mutate', [CoordinationController::class, 'mutateUser'])->name('coordination.mutate');
 
 
         /* Route Rector */
