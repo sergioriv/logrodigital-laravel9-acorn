@@ -28,8 +28,7 @@ class CoordinationController extends Controller
     function __construct()
     {
         $this->middleware('can:coordination.create')->only('create', 'store');
-        $this->middleware('can:coordination.index')->only('show');
-        $this->middleware('can:coordination.export')->only('export');
+        $this->middleware('can:coordination.index')->only('show','export');
         $this->middleware('hasroles:COORDINATOR')->only('profile', 'profile_update');
         $this->middleware('hasroles:SUPPORT,SECRETARY')->only('mutateUser');
     }
