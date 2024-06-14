@@ -85,9 +85,15 @@ $title = $school->name;
                                 data-bs-toggle="tab" href="#securityTab" role="tab">
                                 <span class="align-middle">{{ __('Security') }}</span>
                             </a>
+                            @can('rector.index')
+                            <a class="nav-link @if(session('tab') === 'rector') active @endif logro-toggle px-0 border-bottom border-separator-light"
+                                data-bs-toggle="tab" href="#rectorTab" role="tab">
+                                <span class="align-middle">{{ __('Rectors') }}</span>
+                            </a>
+                            @endcan
                             <a class="nav-link @if(session('tab') === 'signature') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#signaureTab" role="tab">
-                                <span class="align-middle">{{ __('Info Rector') }}</span>
+                                <span class="align-middle">{{ __('Current Rector') }}</span>
                             </a>
                             <a class="nav-link @if(session('tab') === 'additional') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#additionalTab" role="tab">
@@ -717,6 +723,98 @@ $title = $school->name;
                 </div>
                 <!-- Security Tab End -->
 
+
+                <!-- Rector Tab Start -->
+                <div class="tab-pane fade @if(session('tab') === 'rector') active show @endif" id="rectorTab" role="tabpanel">
+
+                    <!-- Rector Content Start -->
+                    <h2 class="small-title">{{ __('Rectors') }}</h2>
+                    <section class="card mb-5">
+                        <div class="card-body">
+                            <!-- Controls Start -->
+                            <div class="row mb-3">
+                                <!-- Search Start -->
+                                <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3 mb-1">
+                                    <div
+                                        class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
+                                        <input class="form-control datatable-search" placeholder="{{ __('Search') }}"
+                                            data-datatable="#datatable_rector" />
+                                        <span class="search-magnifier-icon">
+                                            <i data-acorn-icon="search"></i>
+                                        </span>
+                                        <span class="search-delete-icon d-none">
+                                            <i data-acorn-icon="close"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Search End -->
+
+                                @can('rector.create')
+                                    <!-- Top Buttons Start -->
+                                    <div class="col-sm-12 col-md-6 col-lg-8 col-xxl-9 d-flex align-items-start justify-content-end">
+
+                                        <!-- Add New Button Start -->
+                                        <a href="{{ route('rector.create') }}"
+                                            class="btn btn-sm btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto">
+                                            <i data-acorn-icon="plus"></i>
+                                            <span>{{ __('Add New') }}</span>
+                                        </a>
+                                        <!-- Add New Button End -->
+
+                                    </div>
+                                    <!-- Top Buttons End -->
+                                @endcan
+
+                            </div>
+                            <!-- Controls End -->
+
+                            <!-- Table Start -->
+                            <div class="">
+                                <table id="datatable_rector"
+                                    class="data-table responsive nowrap stripe dataTable no-footer dtr-inline"
+                                    data-order='[[ 0, "asc" ]]'>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('names') }}</th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('last names') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">{{ __('email') }}
+                                            </th>
+                                            <th class="text-muted text-small text-uppercase p-0 pb-2">
+                                                {{ __('cellphone') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($rectors as $rector)
+                                            <tr>
+                                                <td>
+                                                    <a href="{{ route('rector.show', $rector) }}"
+                                                        class="list-item-heading body">
+                                                        {{ $rector->names }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('rector.show', $rector) }}"
+                                                        class="list-item-heading body">
+                                                        {{ $rector->last_names }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ $rector->institutional_email }}</td>
+                                                <td>{{ $rector->cellphone }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Table End -->
+                        </div>
+                    </section>
+                    <!-- Rector Content End -->
+
+                </div>
+                <!-- Rector Tab End -->
+
                 <!-- Info Rector Tab Start -->
                 <div class="tab-pane fade @if(session('tab') === 'signature') active show @endif" id="signaureTab">
                     <form method="POST" action="{{ route('myinstitution.security.signature') }}" class="tooltip-end-bottom"
@@ -725,7 +823,7 @@ $title = $school->name;
                         @method('PATCH')
 
                         <!-- Security Email Start -->
-                        <h2 class="small-title">{{ __('Info Rector') }}</h2>
+                        <h2 class="small-title">{{ __('Current Rector') }}</h2>
                         <section class="card mb-5">
                             <div class="card-body">
                                 <label class="form-label" for="signature_rector">{{ __('Signature Rector') }}</label>

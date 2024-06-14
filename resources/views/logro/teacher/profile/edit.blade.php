@@ -107,6 +107,8 @@
                                     <div class="text-muted text-uppercase">{{ __('orientator') }}</div>
                                 @elseif ($teacher instanceof \App\Models\Teacher)
                                     <div class="text-muted text-uppercase">{{ __('Teacher') }}</div>
+                                @elseif ($teacher instanceof \App\Models\Rector)
+                                    <div class="text-muted text-uppercase">{{ __('Rector') }}</div>
                                 @endif
                                 <div class="text-muted">{{ __($teacher->type_appointment) }}</div>
                             </div>
@@ -118,10 +120,12 @@
                                 data-bs-toggle="tab" href="#infoTab" role="tab">
                                 <span class="align-middle">{{ __('Information') }}</span>
                             </a>
+                            @hasanyrole('TEACHER|COORDINATOR|ORIENTATION')
                             <a class="nav-link @if (session('tab') === 'permits') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#permitsTab" role="tab">
                                 <span class="align-middle">{{ __('Permits') }}</span>
                             </a>
+                            @endhasanyrole
                             <a class="nav-link @if (session('tab') === 'hierarchies') active @endif logro-toggle px-0 border-bottom border-separator-light"
                                 data-bs-toggle="tab" href="#hierarchyTab" role="tab">
                                 <span class="align-middle">{{ __('Hierarchy') }}</span>
@@ -379,6 +383,7 @@
                             </div>
                             <!-- Appointment, possession, transfer End -->
 
+                            @hasanyrole('TEACHER|COORDINATOR|ORIENTATION')
                             <div class="card mb-5">
                                 <div class="card-body">
 
@@ -400,6 +405,7 @@
 
                                 </div>
                             </div>
+                            @endhasanyrole
 
                             <x-button class="btn-primary" type="submit">{{ __('Save') }}</x-button>
 
@@ -409,6 +415,7 @@
 
                 </div>
 
+                @hasanyrole('TEACHER|COORDINATOR|ORIENTATION')
                 <!-- Permits Tab Start -->
                 <div class="tab-pane fade @if (session('tab') === 'permits') active show @endif" id="permitsTab"
                     role="tabpanel">
@@ -522,6 +529,7 @@
 
                 </div>
                 <!-- Permits Tab End -->
+                @endhasanyrole
 
                 <!-- Hierarchy Tab Start -->
                 <div class="tab-pane fade show @if (session('tab') === 'hierarchies') active show @endempty" id="hierarchyTab"
@@ -763,6 +771,10 @@
                     {{ route('teacher.hierarchy.store') }}
                     @endhasrole
 
+                    @hasrole('RECTOR')
+                    {{ route('rector.hierarchy.store') }}
+                    @endhasrole
+
                     @hasrole('COORDINATOR')
                     {{ route('coordination.hierarchy.store') }}
                     @endhasrole
@@ -833,6 +845,10 @@
                     {{ route('teacher.degree.store') }}
                     @endhasrole
 
+                    @hasrole('RECTOR')
+                    {{ route('rector.degree.store') }}
+                    @endhasrole
+
                     @hasrole('COORDINATOR')
                     {{ route('coordination.degree.store') }}
                     @endhasrole
@@ -901,6 +917,10 @@
 
                     @hasrole('TEACHER')
                     {{ route('teacher.employment.store') }}
+                    @endhasrole
+
+                    @hasrole('RECTOR')
+                    {{ route('rector.employment.store') }}
                     @endhasrole
 
                     @hasrole('COORDINATOR')

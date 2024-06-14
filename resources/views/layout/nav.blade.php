@@ -250,7 +250,7 @@
 
 
             <!-- User Nav Start -->
-            @hasanyrole('STUDENT|TEACHER|SECRETARY|COORDINATOR|ORIENTATION')
+            @hasanyrole('STUDENT|TEACHER|SECRETARY|COORDINATOR|ORIENTATION|RECTOR')
             <li>
                 <a href="{{ route('user.profile.edit') }}" data-href="/profile">
                     <i data-acorn-icon="user" class="icon" data-acorn-size="18"></i>

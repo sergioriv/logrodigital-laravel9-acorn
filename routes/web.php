@@ -31,6 +31,10 @@ use App\Http\Controllers\PeriodPermitController;
 use App\Http\Controllers\PermitController;
 use App\Http\Controllers\PersonChargeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RectorController;
+use App\Http\Controllers\RectorDegreeController;
+use App\Http\Controllers\RectorEmploymentHistoryController;
+use App\Http\Controllers\RectorHierarchyController;
 use App\Http\Controllers\RemarkController;
 use App\Http\Controllers\ResourceAreaController;
 use App\Http\Controllers\ResourceSubjectController;
@@ -219,6 +223,14 @@ Route::middleware('active_plataform')->group(function () {
         Route::post('coordination/employment', [CoordinationEmploymentHistoryController::class, 'store'])->name('coordination.employment.store');
         Route::get('coordination/{coordination}/permit-tab', [CoordinationController::class, 'permitTab'])->name('coordination.show.permit-tab');
         Route::post('coordination/{coordination}/mutate', [CoordinationController::class, 'mutateUser'])->name('coordination.mutate');
+
+
+        /* Route Rector */
+        Route::resource('rector', RectorController::class)->only('index', 'show', 'create','store')->names('rector');
+        Route::post('rector/hierarchy', [RectorHierarchyController::class, 'store'])->name('rector.hierarchy.store');
+        Route::post('rector/degree', [RectorDegreeController::class, 'store'])->name('rector.degree.store');
+        Route::post('rector/employment', [RectorEmploymentHistoryController::class, 'store'])->name('rector.employment.store');
+        Route::post('rector/{rector}/mutate', [RectorController::class, 'mutateUser'])->name('rector.mutate');
 
 
         /* Route Orientation */

@@ -6,6 +6,7 @@ use App\Http\Controllers\support\Notify;
 use App\Http\Controllers\support\UserController;
 use App\Models\Coordination;
 use App\Models\Orientation;
+use App\Models\Rector;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\User;
@@ -26,6 +27,11 @@ class ProfileController extends Controller
             case 'SUPPORT':
                 $support = User::findOrFail(Auth::id());
                 return view('profile.support-edit', ['support' => $support]);
+                break;
+
+            case 'RECTOR':
+                $rector = Rector::where('id', Auth::id())->first();
+                return (new RectorController)->profile($rector);
                 break;
 
             case 'COORDINATOR':
@@ -91,6 +97,11 @@ class ProfileController extends Controller
             case 'SUPPORT':
                 $support = User::findOrFail(Auth::id());
                 UserController::profile_update($request, $support);
+                break;
+
+            case 'RECTOR':
+                $rector = Rector::where('id', Auth::id())->first();
+                return (new RectorController)->profile_update($rector, $request);
                 break;
 
             case 'COORDINATOR':

@@ -7,6 +7,7 @@ use App\Http\Controllers\support\Notify;
 use App\Models\Coordination;
 use App\Models\HeadersAndFooters;
 use App\Models\Orientation;
+use App\Models\Rector;
 use App\Models\School;
 use App\Models\Secretariat;
 use App\Models\SecurityCode;
@@ -43,6 +44,7 @@ class SchoolController extends Controller
             'secretariats' => Secretariat::all(),
             'coordinations' => Coordination::all(),
             'orientations' => Orientation::all(),
+            'rectors' => Rector::all(),
             'headers_footers' => HeadersAndFooters::first()
         ]);
     }
