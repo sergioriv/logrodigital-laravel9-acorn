@@ -413,7 +413,8 @@
         </table>
 
         <div class="text-center bold table-title" style="padding: 5px 0;">
-            {{ \App\Http\Controllers\GradeController::verifiedPassOrFail($studyTime, $lossesArea) }}
+            {{-- {{ \App\Http\Controllers\GradeController::verifiedPassOrFail($studyTime, $lossesArea) }} --}}
+            {{ $lossesArea == 0 ? 'APROBADO' : 'REPROBADO' }}
         </div>
     </section>
 

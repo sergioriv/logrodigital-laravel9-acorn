@@ -16,13 +16,18 @@ use Illuminate\Support\Str;
 
 class CertificateFinalController extends Controller
 {
-    public function make()
+    public function make(Request $request)
     {
         $merge = new Merger();
 
         $Y = SchoolYearController::current_year();
         $SCHOOL = SchoolController::myschool()->getData();
 
+        $hq = $request->has('hq') ? explode(',', $request->get('hq')) : [];
+        $st = $request->has('st') ? explode(',', $request->get('st')) : [];
+        $sy = $request->has('sy') ? explode(',', $request->get('sy')) : [];
+
+        if (!$hq && !$st && !$sy) return back();
         // Principal 1
         // Corzo 2
         // San Jose 3
@@ -37,7 +42,9 @@ class CertificateFinalController extends Controller
         $groups = Group::query()
         ->where('school_year_id', $Y->id)
 
-        ->where(1, 0)
+        ->when($hq, fn($whenHQ) => $whenHQ->whereIn('headquarters_id', $hq))
+        ->when($st, fn($whenST) => $whenST->whereIn('study_time_id', $st))
+        ->when($sy, fn($whenSY) => $whenSY->whereIn('study_year_id', $sy))
 
         // Corzo
         // ->where('headquarters_id', 2)
